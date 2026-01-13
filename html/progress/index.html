@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>year life progress</title>
+    <style>
+        :root {
+            --bar-height: 28px;
+            /*--bar-radius: 10px;*/
+            --bg: #fff;
+            --frame: #e9e9e9;
+            --fill: #333333;
+            --empty: #cccccc;
+            /*--bar-radius: calc(var(--bar-height) / 2);*/
+            --text: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 18px
+        }
+
+        h2 {
+            font-size: 18px;
+            margin: 24px 0 10px
+        }
+
+        .panel {
+            display: grid;
+            gap: 16px;
+            max-width: 980px;
+            margin-inline: auto;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            align-items: center;
+        }
+
+        input[type="date"], select {
+            background: #eee;
+            color: var(--text);
+            border: 1px solid #2a2a2a;
+            /*border-radius: 8px;*/
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #eee;
+            border: none;
+            color: #000;
+            padding: 8px 14px;
+            /*border-radius: 10px;*/
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:active {
+            transform: translateY(1px)
+        }
+
+        .frame {
+            position: relative;
+            border: 2px solid var(--frame);
+            /*border-radius: 16px;*/
+            padding: 16px;
+        }
+
+        .bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bar {
+            position: relative;
+            flex: 1;
+            height: var(--bar-height);
+            background: var(--empty);
+            border-radius: var(--bar-radius);
+            overflow: visible;
+            box-shadow: inset 0 0 0 2px #222;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: var(--fill);
+            transition: width 320ms ease;
+        }
+
+        .over {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            height: 100%;
+            background: var(--fill);
+            opacity: .6;
+            pointer-events: none;
+        }
+
+        .label {
+            position: absolute;
+            inset: -14px 0 auto 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .percent {
+            min-width: 72px;
+            text-align: right;
+            font-weight: bold;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .meta {
+            margin-top: 6px;
+            font-size: 13px;
+            opacity: .9;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 820px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <h1>Progress Bars: Year & Life</h1>
+    <div>
+        <!-- YEAR PROGRESS -->
+        <section>
+            <h2 id="year-progress-title"></h2>
+            <div class="controls">
+                <label for="date" id="label-date"></label>
+                <input id="date" type="date"/>
+                <button id="use-today"></button>
+                <div id="info" aria-live="polite"></div>
+                <div id="bar-title" class="label">2025 Progress Bar</div>
+            </div>
+            <br><br>
+            <h2 id="year-label"></h2>
+            <div class="frame" role="group" aria-labelledby="bar-title">
+                <div class="bar-container">
+                    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                         aria-valuenow="0" aria-label="Year progress">
+                        <div class="fill" id="fill"></div>
+                        <span class="sr-only" id="sr"></span>
+                    </div>
+                    <div class="percent" id="percent">0.00%</div>
+                </div>
+            </div>
+            <div class="meta" id="meta-year"></div>
+        </section>
+
+        <!-- LIFE ESTIMATION -->
+        <section>
+            <h2 id="label-life-estimated"></h2>
+            <div class="frame" role="group" aria-labelledby="life-title">
+                <div class="bar-container">
+                    <div class="bar" id="life-bar" role="progressbar" aria-valuemin="0"
+                         aria-valuemax="100" aria-valuenow="0"
+                         aria-label="Estimated life progress">
+                        <div class="fill" id="life-fill"></div>
+                        <div class="over" id="life-over"></div>
+                        <span class="sr-only" id="life-sr"></span>
+                    </div>
+                    <div class="percent" id="life-percent">0.00%</div>
+                </div>
+            </div>
+            <br><br>
+
+            <!-- LIFE CONTROLS -->
+            <section>
+                <h2 id="label-life-strip"></h2>
+                <div class="controls">
+                    <label for="dob" id="label-dob"></label>
+                    <input id="dob" type="date"/>
+                    <label for="sex" id="label-sex"></label>
+                    <select id="sex" aria-label="Sex">
+                        <option value="M">Male (74.93)</option>
+                        <option value="K">Female (82.26)</option>
+                    </select>
+                    <button id="life-today"></button>
+                    <div id="life-info" aria-live="polite"></div>
+                    <div id="life-title" class="label">Life Progress Bar</div>
+                </div>
+                <br><br>
+            </section>
+            <div class="meta" id="life-meta"></div>
+        </section>
+    </div>
+</div>
+
+<script>
+    const DAY_MS = 86400000;
+    const toUTCDate = (y, m, d) => new Date(Date.UTC(y, m, d));
+    const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+    const LABELS = {
+        dob: "Date of Birth",
+        sex: "Sex",
+        lifeTitle: "Life Progress Bar",
+        yearProgressTitle: "Year Progress Bar",
+        dateLabel: "Reference Date:",
+        useToday: "Use Today",
+        yearLabelPrefix: "Year",
+        lifeLabel: "Life Estimated",
+        lifeStrip: "Life Strip",
+        useTodayLife: "Use Today"
+    };
+
+    // Year progress calculation
+    function yearProgressPercent(date) {
+        const start = toUTCDate(date.getUTCFullYear(), 0, 1);
+        const end = toUTCDate(date.getUTCFullYear() + 1, 0, 1);
+        const now = new Date(Date.UTC(
+            date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23
+        ));
+        return clamp(((now - start) / (end - start)) * 100, 0, 100);
+    }
+
+    // Update year UI
+    const fillEl = document.getElementById('fill');
+    const pctEl = document.getElementById('percent');
+    const srEl = document.getElementById('sr');
+    const infoEl = document.getElementById('info');
+    const metaYear = document.getElementById('meta-year');
+    const input = document.getElementById('date');
+    const btnToday = document.getElementById('use-today');
+    const barTitleEl = document.getElementById('bar-title');
+
+    function updateYear(date) {
+        const pct = yearProgressPercent(date);
+        fillEl.style.width = pct.toFixed(2) + '%';
+        pctEl.textContent = pct.toFixed(2) + '%';
+        srEl.textContent = `Elapsed ${pct.toFixed(2)}% of year ${date.getUTCFullYear()}.`;
+        barTitleEl.textContent = `${date.getUTCFullYear()} Progress Bar`;
+        infoEl.textContent = `Calculated for: ${date.toISOString().slice(0, 10)} (UTC)`;
+        metaYear.textContent = '';
+        document.getElementById('year-label').textContent = `${LABELS.yearLabelPrefix} ${date.getUTCFullYear()}`;
+    }
+
+    input.addEventListener('input', () => {
+        if (!input.value) return;
+        const [y, m, d] = input.value.split('-').map(Number);
+        updateYear(toUTCDate(y, m - 1, d));
+    });
+
+    btnToday.addEventListener('click', () => updateYear(new Date()));
+
+    // Life progress
+    const EXPECTANCY = {M: 74.93, K: 82.26};
+
+    function lifeProgress(dobUTC, sex, ref = new Date()) {
+        const expectancyYears = EXPECTANCY[sex] || EXPECTANCY.M;
+        const totalMs = expectancyYears * 365.2425 * DAY_MS;
+        const endMs = dobUTC.getTime() + totalMs;
+        const nowUTC = new Date(Date.UTC(
+            ref.getUTCFullYear(), ref.getUTCMonth(), ref.getUTCDate() + 1
+        ));
+        const elapsedMs = Math.max(0, nowUTC - dobUTC);
+        const pct = (elapsedMs / totalMs) * 100;
+        const ageYears = elapsedMs / (365.2425 * DAY_MS);
+        const leftYears = Math.max(0, expectancyYears - ageYears);
+        return {pct, ageYears, leftYears, expectedEndDate: new Date(endMs), refUTC: nowUTC};
+    }
+
+    const lifeFill = document.getElementById('life-fill');
+    const lifePct = document.getElementById('life-percent');
+    const lifeSr = document.getElementById('life-sr');
+    const lifeInfo = document.getElementById('life-info');
+    const lifeMeta = document.getElementById('life-meta');
+    const dobInput = document.getElementById('dob');
+    const sexSelect = document.getElementById('sex');
+    const lifeTodayBtn = document.getElementById('life-today');
+    const lifeOver = document.getElementById('life-over');
+    const lifeBar = document.getElementById('life-bar');
+    const lifeTitleEl = document.getElementById('life-title');
+
+    function updateLife() {
+        if (!dobInput.value) return;
+        const [y, m, d] = dobInput.value.split('-').map(Number);
+        const dobUTC = toUTCDate(y, m - 1, d);
+        const {pct, ageYears, leftYears, expectedEndDate, refUTC} = lifeProgress(dobUTC, sexSelect.value);
+
+        if (pct <= 100) {
+            lifeBar.style.flex = '1 1 auto';
+            lifeFill.style.width = pct.toFixed(2) + '%';
+            lifeOver.style.width = '0px';
+        } else {
+            const container = lifeBar.parentElement;
+            const base = container.clientWidth - lifePct.offsetWidth - 12;
+            const desired = Math.max(0, base * (pct / 100));
+            lifeBar.style.flex = `0 0 ${desired}px`;
+            lifeBar.style.width = desired + 'px';
+            lifeFill.style.width = '100%';
+            lifeOver.style.width = '0px';
+        }
+
+        lifePct.textContent = pct.toFixed(2) + '%';
+        lifeSr.textContent = `Elapsed ${pct.toFixed(2)}% of expected life.`;
+        lifeTitleEl.textContent = `Life Progress Bar — ${sexSelect.value === 'M' ? 'Male' : 'Female'}`;
+        lifeInfo.textContent = `As of: ${refUTC.toISOString().slice(0, 10)} (UTC)`;
+        lifeMeta.textContent =
+            `Age: ${ageYears.toFixed(2)} years • Remaining ~${leftYears.toFixed(2)} years • Est. end: ${expectedEndDate.toISOString().slice(0, 10)} (UTC)`;
+    }
+
+    dobInput.addEventListener('input', updateLife);
+    sexSelect.addEventListener('change', updateLife);
+    lifeTodayBtn.addEventListener('click', updateLife);
+    window.addEventListener('resize', updateLife);
+
+    (function init() {
+        const now = new Date();
+        updateYear(now);
+        input.value = now.toISOString().slice(0, 10);
+
+        const hint = new Date();
+        hint.setUTCFullYear(hint.getUTCFullYear() - 50);
+        dobInput.value = hint.toISOString().slice(0, 10);
+        updateLife();
+
+        const labelMap = {
+            'label-dob': 'dob',
+            'label-sex': 'sex',
+            'life-title': 'lifeTitle',
+            'year-progress-title': 'yearProgressTitle',
+            'label-date': 'dateLabel',
+            'use-today': 'useToday',
+            'label-life-estimated': 'lifeLabel',
+            'label-life-strip': 'lifeStrip',
+            'life-today': 'useTodayLife'
+        };
+        for (const [id, key] of Object.entries(labelMap)) {
+            document.getElementById(id).textContent = LABELS[key];
+        }
+        document.getElementById('year-label').textContent = `${LABELS.yearLabelPrefix} ${now.getUTCFullYear()}`;
+    })();
+</script>
+</body>
+</html>
