@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!doctype html>
+        <html lang="pl">
+        <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Zero Shooter — laser / tarcza / boss / ranking</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0b0b0f;
+            color: #e8e8ff;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        pre {
+            user-select: none;
+            -webkit-user-select: none;
+            line-height: 1.05;
+            font-size: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #111122;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+            overflow: hidden;
+            white-space: pre;
+        }
+
+        .hint {
+            opacity: .85;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .hint kbd {
+            background: #1a1a2e;
+            border: 1px solid #2a2a48;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <pre id="screen"></pre>
+    <div class="hint">
+        <div>Sterowanie: <kbd>←</kbd>/<kbd>→</kbd> ruch, <kbd>Spacja</kbd> laser (trzymaj), <kbd>F</kbd> strzał
+            kropkami, <kbd>R</kbd> restart.
+        </div>
+        <div>Cel: zestrzel spadające <b>0</b>, nie przepuść ich na dół, a co jakiś czas rozwal bossa.</div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        // ====== "KONSOLA" ======
+        const W = 48;          // szerokość w znakach
+        const H = 26;          // wysokość w znakach (łącznie)
+        const HUD = 3;         // linie HUD
+        const PLAY_H = H - HUD;
+
+        // ====== ZNAKI ======
+        const PLAYER = '0';
+        const ENEMY = '0';
+        const BULLET = '.';
+        const LASER = '|';
+        const BOSS_CH = '0';
+        const BOSS_SHOT = ':'; // pocisk bossa
+        const EMPTY = ' ';
+
+        // ====== localStorage ======
+        const LS_KEY = 'zeroShooterScoresV1';
+
+        // ====== STAN ======
+        let screenEl = document.getElementById('screen');
+        let keys = new Set();
+
+        let player, bullets, enemies, boss, bossShots;
+        let score, lives, level, gameOver;
+
+        // Laser + tarcza
+        let laserEnergy, shield;
+
+        // Timingi
+        let lastTime = 0;
+        let acc = 0;
+        const STEP = 1 / 30; // 30 ticków / sek
+
+        // Spawn/difficulty
+        let spawnTimer = 0;
+        let spawnEvery = 0.55;  // sek
+        let fallSpeed = 6.0;    // komórek / sek
+        let bulletSpeed = 16.0; // komórek / sek
+
+        // cooldown strzału kropkami
+        let shootCd = 0;
+        const shootCdBase = 0.12;
+
+        // Boss cykl
+        let nextBossAt = 40; // pierwszy boss przy 40 pkt
+
+        function clamp(v, a, b) {
+            return Math.max(a, Math.min(b, v));
+        }
+
+        function padRight(s, n) {
+            return (s + ' '.repeat(n)).slice(0, n);
+        }
+
+        function loadScores() {
+            try {
+                const raw = localStorage.getItem(LS_KEY);
+                const arr = raw ? JSON.parse(raw) : [];
+                return Array.isArray(arr) ? arr : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveScore(newScore) {
+            if (!Number.isFinite(newScore) || newScore <= 0) return;
+            const arr = loadScores();
+            arr.push({score: Math.floor(newScore), at: new Date().toISOString()});
+            arr.sort((a, b) => b.score - a.score);
+            const top10 = arr.slice(0, 10);
+            localStorage.setItem(LS_KEY, JSON.stringify(top10));
+        }
+
+        function bestScore() {
+            const arr = loadScores();
+            return arr.length ? arr[0].score : 0;
+        }
+
+        function reset() {
+            player = {x: Math.floor(W / 2), y: PLAY_H - 1};
+
+            bullets = [];
+            enemies = [];
+            bossShots = [];
+            boss = null;
+
+            score = 0;
+            lives = 3;
+            level = 1;
+            gameOver = false;
+
+            laserEnergy = 100; // 0..100
+            shield = 100;      // 0..100
+
+            spawnTimer = 0;
+            spawnEvery = 0.55;
+            fallSpeed = 6.0;
+            bulletSpeed = 16.0;
+
+            shootCd = 0;
+            nextBossAt = 40;
+
+            lastTime = performance.now() / 1000;
+            acc = 0;
+        }
+
+        function updateDifficulty() {
+            level = 1 + Math.floor(score / 25);
+
+            // Bazowa trudność (wrogowie)
+            spawnEvery = clamp(0.55 - (level - 1) * 0.04, 0.18, 0.55);
+            fallSpeed = clamp(6.0 + (level - 1) * 0.65, 6.0, 14.0);
+
+            // Kiedy boss żyje, spawn robi się nerwowy
+            if (boss?.alive) {
+                spawnEvery = clamp(spawnEvery * 0.7, 0.12, 0.55);
+            }
+        }
+
+        function spawnEnemy() {
+            const x = Math.floor(Math.random() * W);
+            enemies.push({x, y: 0, vy: fallSpeed});
+        }
+
+        function spawnBoss() {
+            const w = 13;                 // szerokość bossa
+            const x = Math.floor((W - w) / 2);
+            const hp = 50 + level * 10;   // skalowanie
+            boss = {
+                alive: true,
+                x,
+                y: 2,
+                w,
+                vx: 10,         // komórek/s (ruch poziomy)
+                dir: 1,
+                hp,
+                maxHp: hp,
+                shotTimer: 0,
+                shotEvery: 0.65 // sek
+            };
+        }
+
+        function bossBodyAt(ix) {
+            // prosty "ASCII boss": 0000[000]0000 (ale wszystko to '0' żeby trzymać motyw)
+            // i tak rysujemy jako same '0' w renderze, tutaj tylko placeholder
+            return BOSS_CH;
+        }
+
+        function tryShootDot() {
+            if (shootCd > 0 || gameOver) return;
+            shootCd = shootCdBase;
+            bullets.push({x: player.x, y: player.y - 1, vy: -bulletSpeed});
+        }
+
+        function applyDamageToPlayer(amount) {
+            // najpierw tarcza, potem życie
+            if (shield > 0) {
+                const take = Math.min(shield, amount);
+                shield -= take;
+                amount -= take;
+            }
+            if (amount > 0) {
+                lives -= amount;
+                if (lives <= 0) {
+                    lives = 0;
+                    gameOver = true;
+                    saveScore(score);
+                }
+            }
+        }
+
+        function tick(dt) {
+            if (gameOver) return;
+
+            // === INPUT ===
+            const left = keys.has('ArrowLeft') || keys.has('a') || keys.has('A');
+            const right = keys.has('ArrowRight') || keys.has('d') || keys.has('D');
+            const laserOn = keys.has(' ') || keys.has('Space');
+            const dotFire = keys.has('f') || keys.has('F');
+
+            if (left) player.x -= 1;
+            if (right) player.x += 1;
+            player.x = clamp(player.x, 0, W - 1);
+
+            if (dotFire) tryShootDot();
+
+            // cooldown
+            shootCd = Math.max(0, shootCd - dt);
+
+            // === Laser energy + regen ===
+            const LASER_DRAIN = 32; // /sek
+            const LASER_REGEN = 16; // /sek
+            if (laserOn && laserEnergy > 0) {
+                laserEnergy = Math.max(0, laserEnergy - LASER_DRAIN * dt);
+            } else {
+                laserEnergy = Math.min(100, laserEnergy + LASER_REGEN * dt);
+            }
+
+            // === Shield regen ===
+            // regen wolniejszy, gdy trwa walka z bossem
+            const SHIELD_REGEN = boss?.alive ? 6 : 10;
+            shield = Math.min(100, shield + SHIELD_REGEN * dt);
+
+            // === Boss spawn logic ===
+            if (!boss?.alive && score >= nextBossAt) {
+                spawnBoss();
+                nextBossAt += 60; // następny boss za +60 pkt
+            }
+
+            // === Spawn wrogów ===
+            spawnTimer += dt;
+            while (spawnTimer >= spawnEvery) {
+                spawnTimer -= spawnEvery;
+                // jeśli boss żyje, spawn częściej, ale ogranicz max liczbę "śmieci" na ekranie
+                if (enemies.length < 90) spawnEnemy();
+            }
+
+            // === Aktualizacja obiektów ===
+            for (const b of bullets) b.y += b.vy * dt;
+            for (const e of enemies) e.y += e.vy * dt;
+
+            // Boss ruch/strzały
+            if (boss?.alive) {
+                boss.x += boss.dir * boss.vx * dt;
+                if (boss.x <= 0) {
+                    boss.x = 0;
+                    boss.dir = 1;
+                }
+                if (boss.x + boss.w >= W) {
+                    boss.x = W - boss.w;
+                    boss.dir = -1;
+                }
+
+                boss.shotTimer += dt;
+                while (boss.shotTimer >= boss.shotEvery) {
+                    boss.shotTimer -= boss.shotEvery;
+                    const sx = Math.floor(boss.x + Math.random() * boss.w);
+                    bossShots.push({x: sx, y: boss.y + 1, vy: 10 + level * 1.5});
+                }
+            }
+
+            for (const s of bossShots) s.y += s.vy * dt;
+
+            // === Kolizje: kropki vs wrogowie/boss ===
+            const bulletMap = new Map(); // "x,y" -> index
+            for (let i = 0; i < bullets.length; i++) {
+                const bx = bullets[i].x;
+                const by = Math.round(bullets[i].y);
+                bulletMap.set(bx + ',' + by, i);
+            }
+
+            let deadEnemies = new Set();
+            let deadBullets = new Set();
+
+            for (let ei = 0; ei < enemies.length; ei++) {
+                const ex = enemies[ei].x;
+                const ey = Math.round(enemies[ei].y);
+                const key = ex + ',' + ey;
+                if (bulletMap.has(key)) {
+                    deadEnemies.add(ei);
+                    deadBullets.add(bulletMap.get(key));
+                    score += 1;
+                }
+            }
+
+            // pociski trafiają bossa (pozycja bossa na jednej linii y)
+            if (boss?.alive) {
+                const by = boss.y;
+                for (let bi = 0; bi < bullets.length; bi++) {
+                    const b = bullets[bi];
+                    const y = Math.round(b.y);
+                    if (y !== by) continue;
+                    if (b.x >= boss.x && b.x < boss.x + boss.w) {
+                        deadBullets.add(bi);
+                        boss.hp -= 2;
+                        if (boss.hp <= 0) {
+                            boss.hp = 0;
+                            boss.alive = false;
+                            // nagroda
+                            score += 25 + level * 3;
+                        }
+                    }
+                }
+            }
+
+            enemies = enemies.filter((_, idx) => !deadEnemies.has(idx));
+            bullets = bullets.filter((_, idx) => !deadBullets.has(idx));
+
+            // === Laser damage (ciągłe) ===
+            // Jeśli laser aktywny i jest energia -> usuwa wrogów na kolumnie gracza
+            if ((keys.has(' ') || keys.has('Space')) && laserEnergy > 0.01) {
+                // wrogowie w kolumnie
+                let killed = 0;
+                const px = player.x;
+
+                // usuń pierwszych kilka wrogów w tej kolumnie (żeby nie było OP totalnie)
+                // sort po y najbliżej gracza
+                const candidates = enemies
+                    .map((e, i) => ({e, i, y: Math.round(e.y)}))
+                    .filter(o => o.e.x === px && o.y >= 0 && o.y < player.y)
+                    .sort((a, b) => b.y - a.y);
+
+                const maxPerTick = 3; // limit (balans)
+                const toKill = candidates.slice(0, maxPerTick).map(o => o.i);
+                if (toKill.length) {
+                    enemies = enemies.filter((_, idx) => !toKill.includes(idx));
+                    killed += toKill.length;
+                    score += killed; // 1 punkt / kill
+                }
+
+                // boss damage (jeśli laser trafia w jego zakres x)
+                if (boss?.alive) {
+                    if (px >= boss.x && px < boss.x + boss.w) {
+                        boss.hp -= 10 * dt; // DPS
+                        if (boss.hp <= 0) {
+                            boss.hp = 0;
+                            boss.alive = false;
+                            score += 25 + level * 3;
+                        }
+                    }
+                }
+            }
+
+            // === Wrogowie, którzy spadli na dół ===
+            let leaked = 0;
+            enemies = enemies.filter(e => {
+                if (Math.round(e.y) >= PLAY_H) {
+                    leaked++;
+                    return false;
+                }
+                return true;
+            });
+            if (leaked > 0) applyDamageToPlayer(leaked);
+
+            // === Kontakt wroga z graczem ===
+            for (const e of enemies) {
+                if (e.x === player.x && Math.round(e.y) === player.y) {
+                    applyDamageToPlayer(999); // instant (tarcza i tak pójdzie pierwsza)
+                    break;
+                }
+            }
+
+            // === Pociski bossa trafiają gracza / spadają ===
+            bossShots = bossShots.filter(s => Math.round(s.y) < PLAY_H);
+            for (let i = bossShots.length - 1; i >= 0; i--) {
+                const s = bossShots[i];
+                if (s.x === player.x && Math.round(s.y) === player.y) {
+                    bossShots.splice(i, 1);
+                    applyDamageToPlayer(2);
+                }
+            }
+
+            // === Usuwanie pocisków poza ekranem ===
+            bullets = bullets.filter(b => Math.round(b.y) >= 0);
+
+            updateDifficulty();
+        }
+
+        function renderHUDLine1() {
+            const best = bestScore();
+            const bossInfo = boss?.alive
+                ? `  BOSS: ${Math.ceil(boss.hp)}/${boss.maxHp}`
+                : '';
+            const s = `SCORE:${String(score).padStart(5)}  BEST:${String(best).padStart(5)}  LIVES:${lives}  LVL:${level}${bossInfo}`;
+            return padRight(s, W);
+        }
+
+        function renderHUDLine2() {
+            const le = Math.round(laserEnergy);
+            const sh = Math.round(shield);
+            const laserBar = 'L[' + '#'.repeat(Math.round(le / 10)) + '-'.repeat(10 - Math.round(le / 10)) + `] ${String(le).padStart(3)}%`;
+            const shieldBar = 'S[' + '#'.repeat(Math.round(sh / 10)) + '-'.repeat(10 - Math.round(sh / 10)) + `] ${String(sh).padStart(3)}%`;
+            const s = `${laserBar}   ${shieldBar}`;
+            return padRight(s, W);
+        }
+
+        function renderHUDLine3() {
+            if (!gameOver) {
+                return padRight(`Co ${nextBossAt - (score % 9999)} pkt boss pojawia się w swoim czasie.`, W);
+            }
+            return padRight(`GAME OVER — R restart | wynik zapisany w rankingu TOP10 (localStorage)`, W);
+        }
+
+        function renderGameOverScreen() {
+            const grid = Array.from({length: PLAY_H}, () => Array.from({length: W}, () => EMPTY));
+
+            const scores = loadScores();
+            const title = `=== RANKING TOP10 (localStorage) ===`;
+            const your = `Twój wynik: ${score}`;
+            const hint = `Naciśnij R żeby zagrać ponownie.`;
+
+            const lines = [];
+            lines.push(title);
+            lines.push(your);
+            lines.push('');
+            if (!scores.length) {
+                lines.push('(brak zapisanych wyników)');
+            } else {
+                for (let i = 0; i < scores.length; i++) {
+                    const d = scores[i];
+                    const dt = new Date(d.at);
+                    const dateStr = isNaN(dt.getTime()) ? '' : dt.toISOString().slice(0, 10);
+                    lines.push(`${String(i + 1).padStart(2)}. ${String(d.score).padStart(5)}  ${dateStr}`);
+                }
+            }
+            lines.push('');
+            lines.push(hint);
+
+            // Wklej w środek
+            const startY = Math.max(0, Math.floor((PLAY_H - lines.length) / 2));
+            for (let i = 0; i < lines.length; i++) {
+                const y = startY + i;
+                if (y < 0 || y >= PLAY_H) continue;
+                const txt = padRight(lines[i], W);
+                for (let x = 0; x < W; x++) grid[y][x] = txt[x];
+            }
+
+            return grid.map(row => row.join(''));
+        }
+
+        function render() {
+            const lines = [];
+            lines.push(renderHUDLine1());
+            lines.push(renderHUDLine2());
+            lines.push(renderHUDLine3());
+
+            if (gameOver) {
+                lines.push(...renderGameOverScreen());
+                screenEl.textContent = lines.join('\n');
+                return;
+            }
+
+            // Bufor
+            const grid = Array.from({length: PLAY_H}, () => Array.from({length: W}, () => EMPTY));
+
+            // Laser (wizual) — tylko gdy aktywny i energia > 0
+            const laserOn = (keys.has(' ') || keys.has('Space')) && laserEnergy > 0.01;
+            if (laserOn) {
+                for (let y = 0; y < player.y; y++) grid[y][player.x] = LASER;
+            }
+
+            // Boss
+            if (boss?.alive) {
+                const y = boss.y;
+                if (y >= 0 && y < PLAY_H) {
+                    for (let i = 0; i < boss.w; i++) {
+                        const x = Math.round(boss.x + i);
+                        if (x >= 0 && x < W) grid[y][x] = bossBodyAt(i);
+                    }
+                }
+            }
+
+            // Wrogowie
+            for (const e of enemies) {
+                const y = Math.round(e.y);
+                if (y >= 0 && y < PLAY_H) grid[y][e.x] = ENEMY;
+            }
+
+            // Pociski gracza
+            for (const b of bullets) {
+                const y = Math.round(b.y);
+                if (y >= 0 && y < PLAY_H) grid[y][b.x] = BULLET;
+            }
+
+            // Pociski bossa
+            for (const s of bossShots) {
+                const y = Math.round(s.y);
+                if (y >= 0 && y < PLAY_H) grid[y][s.x] = BOSS_SHOT;
+            }
+
+            // Gracz + tarcza jako (0)
+            grid[player.y][player.x] = PLAYER;
+            if (shield > 0.1) {
+                if (player.x - 1 >= 0) grid[player.y][player.x - 1] = '(';
+                if (player.x + 1 < W) grid[player.y][player.x + 1] = ')';
+            }
+
+            // Złóż
+            for (let y = 0; y < PLAY_H; y++) lines.push(grid[y].join(''));
+            screenEl.textContent = lines.join('\n');
+        }
+
+        function loop(nowMs) {
+            const now = nowMs / 1000;
+            let dt = now - lastTime;
+            lastTime = now;
+            dt = Math.min(dt, 0.08);
+
+            acc += dt;
+            while (acc >= STEP) {
+                tick(STEP);
+                acc -= STEP;
+            }
+
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        // ===== INPUT =====
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                reset();
+                return;
+            }
+            if (e.key === ' ' || e.code === 'Space') e.preventDefault();
+            keys.add(e.key);
+            keys.add(e.code);
+        }, {passive: false});
+
+        window.addEventListener('keyup', (e) => {
+            keys.delete(e.key);
+            keys.delete(e.code);
+        });
+
+        // Start
+        reset();
+        requestAnimationFrame(loop);
+    })();
+</script>
+</body>
+</html>
