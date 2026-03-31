@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="assets/the-datepicker.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         var tLive = ''; //'&f=live'; // user/image/video
-        var tUrl = 'https://twitter.com/search?q=';
+        var tUrl = 'https://x.com/search?q=';
         var tEnd = '&src=typed_query';
         var qUrl = '';
 
@@ -63,105 +64,308 @@
 
     <link href="assets/the-datepicker.css" rel="stylesheet"/>
     <style>
+        :root {
+            --bg: #0f172a;
+            --bg-accent: radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 34%), linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            --panel: rgba(255, 255, 255, 0.88);
+            --panel-border: rgba(148, 163, 184, 0.28);
+            --text: #0f172a;
+            --muted: #475569;
+            --input-bg: rgba(248, 250, 252, 0.96);
+            --input-border: #cbd5e1;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-color: #525559;
-            font-family: monospace;
-            line-height: 2.1em;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            padding: 32px 16px;
+            background: var(--bg-accent);
+            color: var(--text);
+            font-family: Inter, Verdana, Arial, Helvetica, sans-serif;
+            line-height: 1.55;
             font-size: 14px;
         }
 
+        input, select, button {
+            font: inherit;
+        }
+
         input, select {
-            border: 2px solid #333;
-            background-color: #eee;
-            border-radius: 4px;
-            padding: 6px;
-            margin: 2px 6px;
+            width: 100%;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin: 0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+            background-color: #fff;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .ttSearchFormBtn {
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.28);
+        }
+
+        .ttSearchFormBtn:hover {
+            background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+        }
+
+        .clearBtn {
+            background: #e2e8f0;
+            color: #0f172a;
         }
 
         #allOfTheseWords {
-            padding: 9px;
-            margin: 4px 9px;
-            width: 75%;
-            font-size: 1.4em;
+            padding: 14px 16px;
+            width: 100%;
+            font-size: 1.05rem;
         }
 
         fieldset {
-            margin: 20px 5px;
-            border: 2px solid #ccc;
-            border-radius: 6px;
-            background: white;
+            margin: 0;
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.74);
+            padding: 18px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
         legend {
-            width: 85%;
-            border: 2px solid #666;
-            border-radius: 6px;
-            padding: 2px 9px;
+            width: 100%;
+            border: 0;
+            border-radius: 12px;
+            padding: 0;
             cursor: pointer;
-            background-color: #fff;
+            background: transparent;
         }
 
         legend label {
             width: 100%;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
             cursor: inherit;
-            padding: 3px;
+            padding: 2px 0 12px;
+            font-weight: 700;
+            color: #0f172a;
         }
 
         legend label::after {
             content: "▼";
-            float: right;
+            font-size: 0.8rem;
+            color: #64748b;
         }
 
-        fieldset .inputText{
-            float: right;
-            width: 70%;
-            border: solid 1px #999;
+        fieldset .inputText {
+            float: none;
+            width: 100%;
+            border: 1px solid var(--input-border);
         }
 
-        hr { background: #777; height: 1px; border: none }
+        hr {
+            background: #e2e8f0;
+            height: 1px;
+            border: none;
+            margin: 16px 0;
+        }
 
         #ttForm {
-            margin: 0px auto;
-            width: 800px;
-            background-color: #eeefee;
-            padding: 20px;
+            margin: 0 auto;
+            width: min(1100px, 100%);
+            background: var(--panel);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow);
         }
 
-        #toggle + #content,
-        #toggle2 + #content2,
-        #toggle4 + #content4,
-        #toggle5 + #content5 { display: none; }
-        #toggle:checked + #content,
-        #toggle2:checked + #content2,
-        #toggle4:checked + #content4,
-        #toggle5:checked + #content5 { display: block; }
+        #ttQueryUrl {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px dashed rgba(37, 99, 235, 0.25);
+            word-break: break-word;
+            min-height: 54px;
+        }
 
-        #toggle1 + #content1,
-        #toggle3 + #content3 { display: block; }
-        #toggle1:checked + #content1,
-        #toggle3:checked + #content3 { display: none; }
+        #ttQueryUrl:empty {
+            display: none;
+        }
 
+        #ttQueryUrl a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        #ttSearch {
+            display: grid;
+            gap: 18px;
+        }
+
+        .ttActions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .ttActions button {
+            min-width: 132px;
+        }
+
+        .basicLayout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 180px;
+            gap: 16px;
+            align-items: end;
+        }
+
+        .basicField,
+        .feedField {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .fieldRow {
+            display: grid;
+            grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+            gap: 16px;
+            align-items: center;
+        }
+
+        .fieldLabel {
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .filtersGrid,
+        .engagementGrid,
+        .dateGrid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .filtersGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .filterCard {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .filterCardTitle {
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .filterRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            align-items: center;
+        }
+
+        .filterRow label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+        }
+
+        .filterRow input[type="checkbox"],
+        .filterRow input[type="radio"] {
+            width: auto;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .engagementGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .metricCard {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .metricCard label,
+        .dateField label,
+        .feedField label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .dateGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
         .tooltip {
             position: relative;
-            display: inline-block;
-            /*border-bottom: 1px dotted black;*/
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
         }
 
         .tooltip .tooltiptext {
             visibility: hidden;
-            width: 512px;
-            background-color: #1DA1F2;
+            width: min(320px, calc(100vw - 64px));
+            background-color: #1e293b;
             color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 3px 3px;
-
-            /* Position the tooltip */
+            text-align: left;
+            border-radius: 10px;
+            padding: 10px 12px;
             position: absolute;
-            z-index: 1;
+            z-index: 10;
+            left: 0;
+            top: calc(100% + 10px);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.28);
+            line-height: 1.45;
         }
 
         .tooltip:hover .tooltiptext {
@@ -169,11 +373,45 @@
         }
 
         .footer {
-            font-size: 0.85em; text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            text-align: center;
+            color: var(--muted);
         }
 
         .footer a {
-            color: #666
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            #ttForm {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .basicLayout,
+            .fieldRow,
+            .filtersGrid,
+            .engagementGrid,
+            .dateGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 10px;
+            }
+
+            #ttForm {
+                padding: 16px;
+            }
+
+            .ttActions button {
+                flex: 1 1 100%;
+            }
         }
     </style>
 
@@ -183,39 +421,48 @@
 
 <div id="ttForm">
 
+    <div class="ttHeader">
+        <h1 style="margin: 0 0 8px; font-size: 2rem; line-height: 1.1;">Advanced X Search Builder</h1>
+        <p style="margin: 0 0 24px; color: #475569; max-width: 720px;">Build complex search queries faster with a cleaner layout, responsive filters, and a generated search URL ready to open in a new tab.</p>
+    </div>
+
     <div id="ttQueryUrl"></div>
 
     <form id="ttSearch">
-        <button class="ttSearchFormBtn">search</button>
-        <button class="clearBtn">clear</button>
+        <div class="ttActions">
+            <button class="ttSearchFormBtn">Search</button>
+            <button class="clearBtn">Clear</button>
+        </div>
 
         <fieldset>
             <legend><label for="toggle">Basic</label></legend>
             <input type="checkbox" id="toggle" checked="" hidden=""/>
 
             <div id="content">
-                <div style="width: 80%; float: left;">
-                <span class="tooltip">All of these words
-                    <span class="tooltiptext">
-                        Example: what’s happening · contains both “what’s” and “happening”
-                    </span>
-                </span>
-                <input name="allOfTheseWords"
-                       id="allOfTheseWords"
-                       class="inputText"
-                       value="">
-                </div>
-                <div style="width: 20%; float: right;">
-                feed:
-                <select name="f"
-                        id="f"
-                        aria-label="Language" data-focusable="true" data-testid="">
-                    <option value="">top</option>
-                    <option value="live"selected="selected">live</option>
-                    <option value="user">user</option>
-                    <option value="image">image</option>
-                    <option value="video">videp</option>
-                </select>
+                <div class="basicLayout">
+                    <div class="basicField">
+                        <span class="tooltip fieldLabel">All of these words
+                            <span class="tooltiptext">
+                                Example: what’s happening · contains both “what’s” and “happening”
+                            </span>
+                        </span>
+                        <input name="allOfTheseWords"
+                               id="allOfTheseWords"
+                               class="inputText"
+                               value="">
+                    </div>
+                    <div class="feedField">
+                        <label for="f">Feed</label>
+                        <select name="f"
+                                id="f"
+                                aria-label="Feed" data-focusable="true" data-testid="">
+                            <option value="">top</option>
+                            <option value="live" selected="selected">live</option>
+                            <option value="user">user</option>
+                            <option value="image">image</option>
+                            <option value="video">video</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </fieldset>
@@ -224,98 +471,108 @@
             <legend><label for="toggle1">Words</label></legend>
             <input type="checkbox" id="toggle1" checked="" hidden=""/>
             <div id="content1">
-                <span class="tooltip">This exact phrase
-                    <span class="tooltiptext">
-                        Example: happy hour · contains the exact phrase “happy hour”
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">This exact phrase
+                        <span class="tooltiptext">
+                            Example: happy hour · contains the exact phrase “happy hour”
+                        </span>
                     </span>
-                </span>
-                <input name="thisExactPhrase"
-                       id="thisExactPhrase"
-                       class="inputText"
-                       value="">
+                    <input name="thisExactPhrase"
+                           id="thisExactPhrase"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                <span class="tooltip">Any of these words
-                    <span class="tooltiptext">
-                        Example: cats dogs · contains either “cats” or “dogs” (or both)
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">Any of these words
+                        <span class="tooltiptext">
+                            Example: cats dogs · contains either “cats” or “dogs” (or both)
+                        </span>
                     </span>
-                </span>
-                <input name="anyOfTheseWords"
-                       id="anyOfTheseWords"
-                       class="inputText"
-                       value="">
+                    <input name="anyOfTheseWords"
+                           id="anyOfTheseWords"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                <span class="tooltip">None of these words
-                    <span class="tooltiptext">
-                        Example: cats dogs · does not contain “cats” and does not contain “dogs”
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">None of these words
+                        <span class="tooltiptext">
+                            Example: cats dogs · does not contain “cats” and does not contain “dogs”
+                        </span>
                     </span>
-                </span>
-                <input name="noneOfTheseWords"
-                       id="noneOfTheseWords"
-                       class="inputText"
-                       value="">
+                    <input name="noneOfTheseWords"
+                           id="noneOfTheseWords"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                <span class="tooltip">These hashtags
-                    <span class="tooltiptext">
-                        Example: #ThrowbackThursday · contains the hashtag #ThrowbackThursday
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">These hashtags
+                        <span class="tooltiptext">
+                            Example: #ThrowbackThursday · contains the hashtag #ThrowbackThursday
+                        </span>
                     </span>
-                </span>
-                <input name="theseHashtags"
-                       id="theseHashtags"
-                       class="inputText"
-                       value="">
+                    <input name="theseHashtags"
+                           id="theseHashtags"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                Language
-                <select name="Language"
-                        id="Language"
-                        aria-label="Language" data-focusable="true" data-testid="">
-                    <option value="any">Any language</option>
-                    <option value="ar">Arabic</option>
-                    <option value="bn">Bangla</option>
-                    <option value="eu">Basque</option>
-                    <option value="bg">Bulgarian</option>
-                    <option value="ca">Catalan</option>
-                    <option value="hr">Croatian</option>
-                    <option value="cs">Czech</option>
-                    <option value="da">Danish</option>
-                    <option value="nl">Dutch</option>
-                    <option value="en">English</option>
-                    <option value="fi">Finnish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                    <option value="el">Greek</option>
-                    <option value="gu">Gujarati</option>
-                    <option value="he">Hebrew</option>
-                    <option value="hi">Hindi</option>
-                    <option value="hu">Hungarian</option>
-                    <option value="id">Indonesian</option>
-                    <option value="it">Italian</option>
-                    <option value="ja">Japanese</option>
-                    <option value="kn">Kannada</option>
-                    <option value="ko">Korean</option>
-                    <option value="mr">Marathi</option>
-                    <option value="no">Norwegian</option>
-                    <option value="fa">Persian</option>
-                    <option value="pl">Polish</option>
-                    <option value="pt">Portuguese</option>
-                    <option value="ro">Romanian</option>
-                    <option value="ru">Russian</option>
-                    <option value="sr">Serbian</option>
-                    <option value="zh-cn">Simplified Chinese</option>
-                    <option value="sk">Slovak</option>
-                    <option value="es">Spanish</option>
-                    <option value="sv">Swedish</option>
-                    <option value="ta">Tamil</option>
-                    <option value="th">Thai</option>
-                    <option value="zh-tw">Traditional Chinese</option>
-                    <option value="tr">Turkish</option>
-                    <option value="uk">Ukrainian</option>
-                    <option value="ur">Urdu</option>
-                    <option value="vi">Vietnamese</option>
-                </select>
+                <div class="fieldRow">
+                    <label class="fieldLabel" for="Language">Language</label>
+                    <select name="Language"
+                            id="Language"
+                            aria-label="Language" data-focusable="true" data-testid="">
+                        <option value="any">Any language</option>
+                        <option value="ar">Arabic</option>
+                        <option value="bn">Bangla</option>
+                        <option value="eu">Basque</option>
+                        <option value="bg">Bulgarian</option>
+                        <option value="ca">Catalan</option>
+                        <option value="hr">Croatian</option>
+                        <option value="cs">Czech</option>
+                        <option value="da">Danish</option>
+                        <option value="nl">Dutch</option>
+                        <option value="en">English</option>
+                        <option value="fi">Finnish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="el">Greek</option>
+                        <option value="gu">Gujarati</option>
+                        <option value="he">Hebrew</option>
+                        <option value="hi">Hindi</option>
+                        <option value="hu">Hungarian</option>
+                        <option value="id">Indonesian</option>
+                        <option value="it">Italian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="kn">Kannada</option>
+                        <option value="ko">Korean</option>
+                        <option value="mr">Marathi</option>
+                        <option value="no">Norwegian</option>
+                        <option value="fa">Persian</option>
+                        <option value="pl">Polish</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ro">Romanian</option>
+                        <option value="ru">Russian</option>
+                        <option value="sr">Serbian</option>
+                        <option value="zh-cn">Simplified Chinese</option>
+                        <option value="sk">Slovak</option>
+                        <option value="es">Spanish</option>
+                        <option value="sv">Swedish</option>
+                        <option value="ta">Tamil</option>
+                        <option value="th">Thai</option>
+                        <option value="zh-tw">Traditional Chinese</option>
+                        <option value="tr">Turkish</option>
+                        <option value="uk">Ukrainian</option>
+                        <option value="ur">Urdu</option>
+                        <option value="vi">Vietnamese</option>
+                    </select>
+                </div>
             </div>
         </fieldset>
 
@@ -323,115 +580,146 @@
             <legend><label for="toggle2">Accounts</label></legend>
             <input type="checkbox" id="toggle2" checked="" hidden=""/>
             <div id="content2">
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">From these accounts
+                        <span class="tooltiptext">
+                            Example: @X · sent from @X
+                        </span>
+                    </span>
+                    <input name="fromTheseAccounts"
+                           id="fromTheseAccounts"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                <span class="tooltip">From these accounts
-                    <span class="tooltiptext">
-                        Example: @Twitter · sent from @Twitter
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">To these accounts
+                        <span class="tooltiptext">
+                            Example: @X · sent in reply to @X
+                        </span>
                     </span>
-                </span>
-                <input name="fromTheseAccounts"
-                       id="fromTheseAccounts"
-                       class="inputText"
-                       value="">
+                    <input name="toTheseAccounts"
+                           id="toTheseAccounts"
+                           class="inputText"
+                           value="">
+                </div>
                 <hr/>
 
-                <span class="tooltip">To these accounts
-                    <span class="tooltiptext">
-                        Example: @Twitter · sent in reply to @Twitter
+                <div class="fieldRow">
+                    <span class="tooltip fieldLabel">Mentioning these accounts
+                        <span class="tooltiptext">
+                            Example: @elonmusk @x · mentions @SFBART or mentions @x
+                        </span>
                     </span>
-                </span>
-                <input name="toTheseAccounts"
-                       id="toTheseAccounts"
-                       class="inputText"
-                       value="">
-                <hr/>
-
-                <span class="tooltip">Mentioning these accounts
-                    <span class="tooltiptext">
-                        Example: @SFBART @Caltrain · mentions @SFBART or mentions @Caltrain
-                    </span>
-                </span>
-                <input name="mentioningTheseAccounts"
-                       id="mentioningTheseAccounts"
-                       class="inputText"
-                       value="">
+                    <input name="mentioningTheseAccounts"
+                           id="mentioningTheseAccounts"
+                           class="inputText"
+                           value="">
+                </div>
             </div>
         </fieldset>
 
         <fieldset>
             <legend><label for="toggle3">Filters</label></legend>
             <input type="checkbox" id="toggle3" checked="" hidden=""/>
-            <div id="content3">
-                Replies
-                <input id="reply"
-                       name="reply"
-                       type="checkbox" role="switch" checked="">
-                Include replies and original Tweets
-                <input id="replyFilter"
-                       name="replyFilter"
-                       type="radio"
-                       checked="">
-                Only show replies
-                <input name="replyFilter" type="radio">
-                <hr/>
+            <div id="content3" class="filtersGrid">
+                <div class="filterCard">
+                    <div class="filterCardTitle">Replies</div>
+                    <div class="filterRow">
+                        <label>
+                            <input id="reply"
+                                   name="reply"
+                                   type="checkbox" role="switch" checked="">
+                            Include replies and original Tweets
+                        </label>
+                    </div>
+                    <div class="filterRow" style="margin-top: 10px;">
+                        <label>
+                            <input id="replyFilter"
+                                   name="replyFilter"
+                                   type="radio"
+                                   checked="">
+                            Only show replies
+                        </label>
+                        <label>
+                            <input name="replyFilter" type="radio">
+                            Exclude replies
+                        </label>
+                    </div>
+                </div>
 
-                Links
-                <input id="link"
-                       name="link"
-                       type="checkbox" role="switch" checked="">
-                Include Tweets with links
-                <input id="linkFilter"
-                       name="linkFilter"
-                       type="radio" checked="">
-                Only show Tweets with links
-                <input name="linkFilter" type="radio">
+                <div class="filterCard">
+                    <div class="filterCardTitle">Links</div>
+                    <div class="filterRow">
+                        <label>
+                            <input id="link"
+                                   name="link"
+                                   type="checkbox" role="switch" checked="">
+                            Include Tweets with links
+                        </label>
+                    </div>
+                    <div class="filterRow" style="margin-top: 10px;">
+                        <label>
+                            <input id="linkFilter"
+                                   name="linkFilter"
+                                   type="radio" checked="">
+                            Only show Tweets with links
+                        </label>
+                        <label>
+                            <input name="linkFilter" type="radio">
+                            Exclude links
+                        </label>
+                    </div>
+                </div>
             </div>
         </fieldset>
 
         <fieldset>
             <legend><label for="toggle4">Engagement</label></legend>
             <input type="checkbox" id="toggle4" checked="checked" hidden=""/>
-            <div id="content4">
-
-                <div style="float: left; width: 30%">
-                    <span class="tooltip">
-                    Minimum replies
-                        <span class="tooltiptext">
-                    Example: 280 · Tweets with at least 280 replies
+            <div id="content4" class="engagementGrid">
+                <div class="metricCard">
+                    <label for="minReplies">
+                        <span class="tooltip">
+                            Minimum replies
+                            <span class="tooltiptext">
+                                Example: 280 · Tweets with at least 280 replies
+                            </span>
                         </span>
-                    </span>
+                    </label>
                     <input id="minReplies"
                            name="minReplies"
-                           style="width: 20%"
                            spellcheck="true" type="number" dir="auto"
                            value="">
                 </div>
 
-                <div style="float: left; width: 30%">
-                    <span class="tooltip">
-                    Minimum Likes
-                        <span class="tooltiptext">
-                    Example: 280 · Tweets with at least 280 Likes
+                <div class="metricCard">
+                    <label for="minLikes">
+                        <span class="tooltip">
+                            Minimum Likes
+                            <span class="tooltiptext">
+                                Example: 280 · Tweets with at least 280 Likes
+                            </span>
                         </span>
-                    </span>
+                    </label>
                     <input id="minLikes"
                            name="minLikes"
-                           style="width: 20%"
                            spellcheck="true" type="number" dir="auto"
                            value="">
                 </div>
 
-                <div style="float: left; width: 30%">
-                    <span class="tooltip">
-                    Minimum Retweets
-                        <span class="tooltiptext">
-                    Example: 280 · Tweets with at least 280 Retweets
+                <div class="metricCard">
+                    <label for="minRetweets">
+                        <span class="tooltip">
+                            Minimum Retweets
+                            <span class="tooltiptext">
+                                Example: 280 · Tweets with at least 280 Retweets
+                            </span>
                         </span>
-                    </span>
+                    </label>
                     <input id="minRetweets"
                            name="minRetweets"
-                           style="width: 20%"
                            spellcheck="true" type="number" dir="auto"
                            value="">
                 </div>
@@ -441,26 +729,32 @@
         <fieldset>
             <legend><label for="toggle5">Dates</label></legend>
             <input type="checkbox" id="toggle5" checked="checked" hidden=""/>
-            <div id="content5">
-                FROM:
-                <input autocomplete="off" autocorrect="off"
-                       type="text"
-                       name="dateFrom"
-                       id="dateFrom"
-                       value="">
-                TO:
-                <input autocomplete="off" autocorrect="off"
-                       type="text"
-                       id="dateTo"
-                       name="dateTo"
-                       value="">
+            <div id="content5" class="dateGrid">
+                <div class="dateField">
+                    <label for="dateFrom">From</label>
+                    <input autocomplete="off" autocorrect="off"
+                           type="text"
+                           name="dateFrom"
+                           id="dateFrom"
+                           value="">
+                </div>
+                <div class="dateField">
+                    <label for="dateTo">To</label>
+                    <input autocomplete="off" autocorrect="off"
+                           type="text"
+                           id="dateTo"
+                           name="dateTo"
+                           value="">
+                </div>
             </div>
         </fieldset>
 
-        <button class="ttSearchFormBtn">search</button>
-        <button class="clearBtn">clear</button>
+        <div class="ttActions">
+            <button class="ttSearchFormBtn">Search</button>
+            <button class="clearBtn">Clear</button>
+        </div>
     </form>
-    <div class="footer"><a href="https://twitter.com/search-advanced" target="_blank">twitter.com/search-advanced</a></div>
+    <div class="footer"><a href="https://x.com/search-advanced" target="_blank">Reference: x.com/search-advanced</a></div>
 </div>
 
 </body>
@@ -593,6 +887,7 @@
     }
 
     function collectSearchForm() {
+        clearResults();
         for (let fieldId in ttFields) {
             let fieldName = ttFields[fieldId];
             let fieldVal = document.getElementById(fieldName);
