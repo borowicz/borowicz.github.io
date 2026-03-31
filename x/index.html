@@ -61,7 +61,6 @@
 
     </script>
 
-
     <link href="assets/the-datepicker.css" rel="stylesheet"/>
     <style>
         :root {
@@ -276,6 +275,19 @@
             font-weight: 600;
         }
 
+        .sectionToggle {
+            display: none;
+        }
+
+        .sectionToggleContent {
+            display: none;
+            margin-top: 4px;
+        }
+
+        .sectionToggle:checked + .sectionToggleContent {
+            display: grid;
+        }
+
         .filtersGrid,
         .engagementGrid,
         .dateGrid {
@@ -283,7 +295,8 @@
             gap: 16px;
         }
 
-        .filtersGrid {
+        .filtersGrid,
+        .engagementGrid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
@@ -319,10 +332,6 @@
             margin: 0;
             padding: 0;
             box-shadow: none;
-        }
-
-        .engagementGrid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
         .metricCard {
@@ -385,6 +394,10 @@
             font-weight: 600;
         }
 
+        .sectionToggle:not(:checked) + .sectionToggleContent {
+            display: none;
+        }
+
         @media (max-width: 900px) {
             #ttForm {
                 padding: 20px;
@@ -395,7 +408,8 @@
             .fieldRow,
             .filtersGrid,
             .engagementGrid,
-            .dateGrid {
+            .dateGrid,
+            .sectionToggleContent {
                 grid-template-columns: 1fr;
             }
         }
@@ -414,7 +428,6 @@
             }
         }
     </style>
-
 </head>
 
 <body>
@@ -469,8 +482,8 @@
 
         <fieldset>
             <legend><label for="toggle1">Words</label></legend>
-            <input type="checkbox" id="toggle1" checked="" hidden=""/>
-            <div id="content1">
+            <input type="checkbox" id="toggle1" class="sectionToggle" checked="" hidden=""/>
+            <div id="content1" class="sectionToggleContent">
                 <div class="fieldRow">
                     <span class="tooltip fieldLabel">This exact phrase
                         <span class="tooltiptext">
@@ -578,8 +591,8 @@
 
         <fieldset>
             <legend><label for="toggle2">Accounts</label></legend>
-            <input type="checkbox" id="toggle2" checked="" hidden=""/>
-            <div id="content2">
+            <input type="checkbox" id="toggle2" class="sectionToggle" checked="" hidden=""/>
+            <div id="content2" class="sectionToggleContent">
                 <div class="fieldRow">
                     <span class="tooltip fieldLabel">From these accounts
                         <span class="tooltiptext">
@@ -622,8 +635,8 @@
 
         <fieldset>
             <legend><label for="toggle3">Filters</label></legend>
-            <input type="checkbox" id="toggle3" checked="" hidden=""/>
-            <div id="content3" class="filtersGrid">
+            <input type="checkbox" id="toggle3" class="sectionToggle" checked="" hidden=""/>
+            <div id="content3" class="filtersGrid sectionToggleContent">
                 <div class="filterCard">
                     <div class="filterCardTitle">Replies</div>
                     <div class="filterRow">
@@ -677,8 +690,8 @@
 
         <fieldset>
             <legend><label for="toggle4">Engagement</label></legend>
-            <input type="checkbox" id="toggle4" checked="checked" hidden=""/>
-            <div id="content4" class="engagementGrid">
+            <input type="checkbox" id="toggle4" class="sectionToggle" checked="checked" hidden=""/>
+            <div id="content4" class="engagementGrid sectionToggleContent">
                 <div class="metricCard">
                     <label for="minReplies">
                         <span class="tooltip">
@@ -760,7 +773,6 @@
 </body>
 
 <script>
-
     var resultUrlField = document.getElementById('ttQueryUrl');
 
     function clearResults()
@@ -784,7 +796,7 @@
             }
         }
 
-        let queryFilter = ['reply', 'link', 'verified', 'follows', 'social', 'trusted',];
+        let queryFilter = ['reply', 'link', 'verified', 'follows', 'social', 'trusted'];
 
         switch (fieldName) {
             case 'allOfTheseWords':
@@ -811,7 +823,7 @@
                 let hashTag = '#';
                 if (fieldValue.indexOf(' ') >= 0) {
                     fieldValue = fieldValue.split(" ").join(" " + hashTag);
-                    queryString = fieldValue
+                    queryString = fieldValue;
                 } else {
                     queryString += hashTag + fieldValue;
                 }
@@ -844,7 +856,7 @@
                 queryString = 'lang:' + fieldValue;
                 break;
 
-            case 'f': // feed
+            case 'f':
                 if (fieldValue.length > 2) {
                     tLive = '&f=' + fieldValue;
                 } else {
@@ -852,8 +864,6 @@
                 }
                 break;
 
-            // filters
-            // case 'link':
             case 'linkFilter':
                 let link = document.getElementById('link');
                 if (link.checked) {
@@ -865,7 +875,7 @@
                     }
                 }
                 break;
-            // case 'reply':
+
             case 'replyFilter':
                 let reply = document.getElementById('reply');
                 if (reply.checked) {
@@ -893,27 +903,22 @@
             let fieldVal = document.getElementById(fieldName);
             if (fieldVal.value) {
                 if (fieldVal.value.trim().length > 0) {
-                    qUrl += collectSearchQuery(fieldName, fieldVal.value)
+                    qUrl += collectSearchQuery(fieldName, fieldVal.value);
                 }
-            } else {
-// console.log(fieldName);
             }
         }
 
         if (qUrl.length > 0) {
             let resultUri = tUrl + qUrl + tEnd + tLive;
-            resultUrlField.innerHTML = '';
             resultUrlField.innerHTML = '<a href="' + resultUri + '" target="_blank">' + resultUri + '</a>';
-            // window.open(resultUri, '_blank').focus();
         } else {
             clearResults();
         }
     }
 
     (function () {
-        let today = new Date().toISOString().slice(0, 10)
+        let today = new Date().toISOString().slice(0, 10);
 
-        // thedatepicker.github.io  /  thedatepicker
         const inputDateFrom = document.getElementById('dateFrom');
         const datepickerDateFrom = new TheDatepicker.Datepicker(inputDateFrom);
         datepickerDateFrom.options.setInputFormat("Y-m-d");
@@ -931,7 +936,6 @@
         for (_i = 0; _i < searchBtn.length; _i++) {
             searchBtn[_i].addEventListener('click', function (event) {
                 event.preventDefault();
-
                 collectSearchForm();
             });
         }
@@ -940,15 +944,20 @@
         for (_i = 0; _i < clearBtn.length; _i++) {
             clearBtn[_i].addEventListener('click', function (event) {
                 event.preventDefault();
+                clearResults();
+            });
+        }
 
+        var sectionToggles = document.querySelectorAll('.sectionToggle');
+        for (_i = 0; _i < sectionToggles.length; _i++) {
+            sectionToggles[_i].addEventListener('change', function () {
                 clearResults();
             });
         }
 
         var formBtn = document.getElementById('ttSearch');
         formBtn.addEventListener('submit', function (event) {
-            // event.preventDefault();
-
+            event.preventDefault();
             clearResults();
             collectSearchForm();
         });
@@ -961,8 +970,6 @@
             }
         });
     })();
-
-
 </script>
 
 </html>
