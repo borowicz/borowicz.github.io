@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationship HTTP Status Codes</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-soft: #121933;
+            --card: rgba(255,255,255,0.06);
+            --card-border: rgba(255,255,255,0.12);
+            --text: #eef2ff;
+            --muted: #aab4d6;
+            --accent: #6ea8fe;
+            --accent-2: #7ef0c2;
+            --shadow: 0 20px 50px rgba(0,0,0,0.35);
+            --radius: 18px;
+            --max: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                    radial-gradient(circle at top left, rgba(110,168,254,0.18), transparent 30%),
+                    radial-gradient(circle at top right, rgba(126,240,194,0.12), transparent 30%),
+                    linear-gradient(180deg, #09101d 0%, #0d1328 100%);
+            color: var(--text);
+            line-height: 1.6;
+            background-color: #0b1020;
+        }
+    </style>
+</head>
+<body>
+
+<div id="http-relationships-app" style="max-width:1200px; margin:0 auto; padding:20px 14px 40px; font-family:Inter, Segoe UI, Arial, sans-serif; background:#0f172a; color:#e5e7eb;">
+    <div style="margin-bottom:20px; padding:22px 18px; border:1px solid rgba(255,255,255,0.08); border-radius:24px; background:linear-gradient(135deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98)); box-shadow:0 18px 50px rgba(0,0,0,0.28);">
+        <div style="display:inline-block; margin-bottom:10px; padding:6px 12px; border-radius:999px; background:rgba(96,165,250,0.16); color:#93c5fd; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;">HTTP x Relationships</div>
+        <h1 style="margin:0 0 10px; font-size:28px; line-height:1.15; color:#f8fafc;">Relationship Status Codes</h1>
+        <p style="margin:0; font-size:15px; line-height:1.65; color:#94a3b8;">Dynamic, mobile-first version with generated cards, filters, search, and grouped sections. Same chaos, cleaner code.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:20px;">
+        <div style="padding:16px; border-radius:20px; background:rgba(15,23,42,0.78); border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 30px rgba(0,0,0,0.22);">
+            <label for="status-search" style="display:block; margin-bottom:8px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#93c5fd;">Search</label>
+            <input
+                    id="status-search"
+                    type="text"
+                    placeholder="Search by code or name..."
+                    style="width:100%; box-sizing:border-box; padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.05); color:#f8fafc; outline:none; font-size:14px;"
+            />
+        </div>
+
+        <div style="padding:16px; border-radius:20px; background:rgba(15,23,42,0.78); border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 30px rgba(0,0,0,0.22);">
+            <div style="margin-bottom:10px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#93c5fd;">Filters</div>
+            <div id="status-filters" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+        </div>
+
+        <div style="padding:16px; border-radius:20px; background:rgba(15,23,42,0.78); border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 30px rgba(0,0,0,0.22); display:grid; gap:14px;">
+            <div>
+                <label for="status-sort" style="display:block; margin-bottom:8px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#93c5fd;">Sort</label>
+                <select
+                        id="status-sort"
+                        style="width:100%; box-sizing:border-box; padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.05); color:#f8fafc; outline:none; font-size:14px;"
+                >
+                    <option value="code-asc">Code: ascending</option>
+                    <option value="code-desc">Code: descending</option>
+                    <option value="title-asc">Title: A–Z</option>
+                    <option value="title-desc">Title: Z–A</option>
+                </select>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;">
+                <div id="active-filters-count" style="padding:10px 12px; border-radius:999px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); font-size:12px; font-weight:700; color:#94a3b8;">
+                    Active filters: 0
+                </div>
+                <button
+                        id="status-reset"
+                        type="button"
+                        style="cursor:pointer; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:#f8fafc; font-size:13px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;"
+                >
+                    Reset filters
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-summary" style="margin-bottom:18px; font-size:14px; color:#94a3b8;"></div>
+    <div id="status-groups"></div>
+</div>
+
+<script>
+    (function () {
+        const statuses = [
+            { code: 100, group: '1xx', title: 'Continue', joke: 'Keep going, I’m still interested… maybe.' },
+            { code: 101, group: '1xx', title: 'Switching Protocols', joke: 'Switching partners — emotionally.' },
+            { code: 102, group: '1xx', title: 'Processing', joke: 'Processing your mixed signals.' },
+            { code: 103, group: '1xx', title: 'Early Hints', joke: 'Early hints: not going anywhere.' },
+
+            { code: 200, group: '2xx', title: 'OK', joke: 'All good. We’re finally on the same page.' },
+            { code: 201, group: '2xx', title: 'Created', joke: 'It’s official — we’re a thing!' },
+            { code: 202, group: '2xx', title: 'Accepted', joke: 'Accepted your apology, but still mad.' },
+            { code: 204, group: '2xx', title: 'No Content', joke: 'No talking. Just cuddles.' },
+            { code: 206, group: '2xx', title: 'Partial Content', joke: 'Half-committed. Classic situationship.' },
+
+            { code: 300, group: '3xx', title: 'Multiple Choices', joke: 'Too many matches on Tinder.' },
+            { code: 301, group: '3xx', title: 'Moved Permanently', joke: 'Moved on — permanently.' },
+            { code: 302, group: '3xx', title: 'Found', joke: 'Found someone else.' },
+            { code: 303, group: '3xx', title: 'See Other', joke: 'See other people 😬.' },
+            { code: 307, group: '3xx', title: 'Temporary Redirect', joke: 'We’re on a break (sure…).' },
+            { code: 308, group: '3xx', title: 'Permanent Redirect', joke: 'I’ve moved on — for real this time.' },
+
+            { code: 400, group: '4xx', title: 'Bad Request', joke: 'You said what? Try again nicely.' },
+            { code: 401, group: '4xx', title: 'Unauthorized', joke: 'You’re not on my Netflix anymore.' },
+            { code: 403, group: '4xx', title: 'Forbidden', joke: 'Access denied — emotional firewall active.' },
+            { code: 404, group: '4xx', title: 'Not Found', joke: 'Love not found 💔.' },
+            { code: 408, group: '4xx', title: 'Request Timeout', joke: 'You took too long to reply ⏳.' },
+            { code: 409, group: '4xx', title: 'Conflict', joke: 'Same argument, again.' },
+            { code: 410, group: '4xx', title: 'Gone', joke: 'Ghosted 👻.' },
+            { code: 411, group: '4xx', title: 'Length Required', joke: 'Size does matter 😏.' },
+            { code: 422, group: '4xx', title: 'Unprocessable Entity', joke: 'Emotionally unavailable 💔.' },
+            { code: 423, group: '4xx', title: 'Locked', joke: 'Heart closed for maintenance 🔒.' },
+            { code: 429, group: '4xx', title: 'Too Many Requests', joke: 'Stop texting me every 3 seconds 📱.' },
+            { code: 451, group: '4xx', title: 'Unavailable for Legal Reasons', joke: 'Blocked. By the court 🚫.' },
+
+            { code: 500, group: '5xx', title: 'Internal Server Error', joke: 'Emotional breakdown. Send ice cream 🍦.' },
+            { code: 501, group: '5xx', title: 'Not Implemented', joke: 'Still learning how to love.' },
+            { code: 502, group: '5xx', title: 'Bad Gateway', joke: 'Bad advice from friends.' },
+            { code: 503, group: '5xx', title: 'Service Unavailable', joke: 'Not in the mood 😴.' },
+            { code: 504, group: '5xx', title: 'Gateway Timeout', joke: 'Didn’t text back. Blames Wi-Fi 📶.' },
+            { code: 507, group: '5xx', title: 'Insufficient Storage', joke: 'Out of emotional space 😞.' },
+            { code: 508, group: '5xx', title: 'Loop Detected', joke: 'Same fight, every single time 🔁.' },
+            { code: 510, group: '5xx', title: 'Not Extended', joke: 'Just friends.' },
+            { code: 511, group: '5xx', title: 'Network Authentication Required', joke: 'Password = trust 🔒❤️.' }
+        ];
+
+        const groupMeta = {
+            '1xx': {
+                label: 'Informational / Mixed Signals',
+                tint: 'rgba(59,130,246,0.12)',
+                tintSoft: 'rgba(59,130,246,0.09)',
+                border: 'rgba(147,197,253,0.18)',
+                badge: '#bfdbfe',
+                code: '#dbeafe',
+                text: '#cbd5e1'
+            },
+            '2xx': {
+                label: 'Successful / It’s Complicated but Working',
+                tint: 'rgba(34,197,94,0.12)',
+                tintSoft: 'rgba(34,197,94,0.09)',
+                border: 'rgba(187,247,208,0.18)',
+                badge: '#bbf7d0',
+                code: '#dcfce7',
+                text: '#d1fae5'
+            },
+            '3xx': {
+                label: 'Redirects / Looking Elsewhere',
+                tint: 'rgba(250,204,21,0.12)',
+                tintSoft: 'rgba(250,204,21,0.09)',
+                border: 'rgba(253,230,138,0.18)',
+                badge: '#fde68a',
+                code: '#fef3c7',
+                text: '#fef3c7'
+            },
+            '4xx': {
+                label: 'Client Errors / Personal Failures',
+                tint: 'rgba(248,113,113,0.12)',
+                tintSoft: 'rgba(248,113,113,0.09)',
+                border: 'rgba(254,202,202,0.18)',
+                badge: '#fecaca',
+                code: '#fee2e2',
+                text: '#fee2e2'
+            },
+            '5xx': {
+                label: 'Server Errors / Full Emotional Collapse',
+                tint: 'rgba(168,85,247,0.12)',
+                tintSoft: 'rgba(168,85,247,0.09)',
+                border: 'rgba(233,213,255,0.18)',
+                badge: '#e9d5ff',
+                code: '#f3e8ff',
+                text: '#f3e8ff'
+            }
+        };
+
+        const orderedGroups = ['1xx', '2xx', '3xx', '4xx', '5xx'];
+        const defaultSort = 'code-asc';
+        let activeGroup = 'all';
+        let searchTerm = '';
+        let sortMode = defaultSort;
+
+        const filtersEl = document.getElementById('status-filters');
+        const searchEl = document.getElementById('status-search');
+        const sortEl = document.getElementById('status-sort');
+        const resetEl = document.getElementById('status-reset');
+        const activeFiltersCountEl = document.getElementById('active-filters-count');
+        const groupsEl = document.getElementById('status-groups');
+        const summaryEl = document.getElementById('status-summary');
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function sortStatuses(items) {
+            const sorted = [...items];
+
+            sorted.sort((a, b) => {
+                switch (sortMode) {
+                    case 'code-desc':
+                        return b.code - a.code;
+                    case 'title-asc':
+                        return a.title.localeCompare(b.title);
+                    case 'title-desc':
+                        return b.title.localeCompare(a.title);
+                    case 'code-asc':
+                    default:
+                        return a.code - b.code;
+                }
+            });
+
+            return sorted;
+        }
+
+        function getActiveFiltersCount() {
+            let count = 0;
+            if (activeGroup !== 'all') count += 1;
+            if (searchTerm.trim()) count += 1;
+            if (sortMode !== defaultSort) count += 1;
+            return count;
+        }
+
+        function updateHash() {
+            const params = new URLSearchParams();
+
+            if (activeGroup !== 'all') {
+                params.set('group', activeGroup);
+            }
+
+            if (searchTerm.trim()) {
+                params.set('search', searchTerm.trim());
+            }
+
+            if (sortMode !== defaultSort) {
+                params.set('sort', sortMode);
+            }
+
+            const newHash = params.toString();
+            history.replaceState(null, '', newHash ? `#${newHash}` : '#');
+        }
+
+        function readHashState() {
+            const rawHash = window.location.hash.replace(/^#/, '');
+            const params = new URLSearchParams(rawHash);
+            const hashGroup = params.get('group');
+            const hashSearch = params.get('search');
+            const hashSort = params.get('sort');
+
+            if (hashGroup && ['all', ...orderedGroups].includes(hashGroup)) {
+                activeGroup = hashGroup;
+            }
+
+            if (typeof hashSearch === 'string') {
+                searchTerm = hashSearch;
+            }
+
+            if (hashSort && ['code-asc', 'code-desc', 'title-asc', 'title-desc'].includes(hashSort)) {
+                sortMode = hashSort;
+            }
+        }
+
+        function syncControls() {
+            searchEl.value = searchTerm;
+            sortEl.value = sortMode;
+            activeFiltersCountEl.textContent = `Active filters: ${getActiveFiltersCount()}`;
+        }
+
+        function buildFilters() {
+            const filterItems = ['all', ...orderedGroups];
+            filtersEl.innerHTML = filterItems.map((item) => {
+                const isActive = item === activeGroup;
+                const meta = groupMeta[item] || null;
+                const label = item === 'all' ? 'All' : item;
+                const bg = isActive
+                    ? 'rgba(96,165,250,0.20)'
+                    : 'rgba(255,255,255,0.05)';
+                const color = isActive
+                    ? '#dbeafe'
+                    : (meta ? meta.badge : '#cbd5e1');
+                const border = isActive
+                    ? 'rgba(147,197,253,0.45)'
+                    : 'rgba(255,255,255,0.10)';
+
+                return `
+                <button
+                    type="button"
+                    data-filter="${escapeHtml(item)}"
+                    style="cursor:pointer; padding:10px 14px; border-radius:999px; border:1px solid ${border}; background:${bg}; color:${color}; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;">
+                    ${escapeHtml(label)}
+                </button>
+            `;
+            }).join('');
+
+            filtersEl.querySelectorAll('[data-filter]').forEach((button) => {
+                button.addEventListener('click', function () {
+                    activeGroup = this.getAttribute('data-filter') || 'all';
+                    render();
+                });
+            });
+        }
+
+        function getFilteredStatuses() {
+            const term = searchTerm.trim().toLowerCase();
+
+            return sortStatuses(statuses.filter((item) => {
+                const matchesGroup = activeGroup === 'all' || item.group === activeGroup;
+                const haystack = `${item.code} ${item.title} ${item.group} ${item.joke}`.toLowerCase();
+                const matchesSearch = !term || haystack.includes(term);
+                return matchesGroup && matchesSearch;
+            }));
+        }
+
+        function render() {
+            syncControls();
+            updateHash();
+            buildFilters();
+
+            const filtered = getFilteredStatuses();
+            const grouped = orderedGroups.map((group) => ({
+                group,
+                items: filtered.filter((item) => item.group === group)
+            })).filter((entry) => entry.items.length > 0);
+
+            if (sortMode === 'code-desc' || sortMode === 'title-desc') {
+                grouped.reverse();
+            }
+
+            summaryEl.innerHTML = filtered.length
+                ? `Showing <strong style="color:#f8fafc;">${filtered.length}</strong> status code${filtered.length === 1 ? '' : 's'}${activeGroup !== 'all' ? ` in <strong style="color:#f8fafc;">${escapeHtml(activeGroup)}</strong>` : ''}${searchTerm.trim() ? ` matching <strong style="color:#f8fafc;">“${escapeHtml(searchTerm.trim())}”</strong>` : ''}.`
+                : `No results${activeGroup !== 'all' ? ` in <strong style="color:#f8fafc;">${escapeHtml(activeGroup)}</strong>` : ''}${searchTerm.trim() ? ` for <strong style="color:#f8fafc;">“${escapeHtml(searchTerm.trim())}”</strong>` : ''}.`;
+
+            if (!grouped.length) {
+                groupsEl.innerHTML = `
+                <div style="padding:26px 18px; border-radius:20px; border:1px solid rgba(255,255,255,0.08); background:rgba(15,23,42,0.78); color:#94a3b8; text-align:center;">
+                    Nothing here. Relationship status: 404.
+                </div>
+            `;
+                return;
+            }
+
+            groupsEl.innerHTML = grouped.map(({ group, items }) => {
+                const meta = groupMeta[group];
+
+                const cards = items.map((item, index) => {
+                    const cardBackground = index % 2 === 0 ? meta.tint : meta.tintSoft;
+
+                    return `
+                    <div style="padding:18px; border-radius:20px; background:${cardBackground}; border:1px solid ${meta.border}; box-shadow:0 10px 24px rgba(0,0,0,0.12);">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                            <span style="font-size:28px; font-weight:900; line-height:1; color:${meta.code};">${escapeHtml(item.code)}</span>
+                            <span style="padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:${meta.badge};">${escapeHtml(item.group)}</span>
+                        </div>
+                        <div style="margin-bottom:8px; font-size:16px; font-weight:800; color:#f8fafc;">${escapeHtml(item.title)}</div>
+                        <div style="font-size:14px; line-height:1.6; color:${meta.text};">${escapeHtml(item.joke)}</div>
+                    </div>
+                `;
+                }).join('');
+
+                return `
+                <section style="margin-bottom:24px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+                        <div>
+                            <div style="display:inline-block; margin-bottom:6px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:${meta.badge};">${escapeHtml(group)}</div>
+                            <h2 style="margin:0; font-size:20px; line-height:1.2; color:#f8fafc;">${escapeHtml(meta.label)}</h2>
+                        </div>
+                        <div style="padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); font-size:12px; font-weight:700; color:#94a3b8;">
+                            ${items.length} item${items.length === 1 ? '' : 's'}
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+                        ${cards}
+                    </div>
+                </section>
+            `;
+            }).join('');
+        }
+
+        searchEl.addEventListener('input', function () {
+            searchTerm = this.value || '';
+            render();
+        });
+
+        sortEl.addEventListener('change', function () {
+            sortMode = this.value || defaultSort;
+            render();
+        });
+
+        resetEl.addEventListener('click', function () {
+            activeGroup = 'all';
+            searchTerm = '';
+            sortMode = defaultSort;
+            render();
+        });
+
+        window.addEventListener('hashchange', function () {
+            activeGroup = 'all';
+            searchTerm = '';
+            sortMode = defaultSort;
+            readHashState();
+            render();
+        });
+
+        readHashState();
+        render();
+    })();
+</script>
+<div class="footer">&copy; borowicz.github.io/html/</div>
+</body>
+</html>

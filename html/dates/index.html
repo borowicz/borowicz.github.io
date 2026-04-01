@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App-Like Date Calculator</title>
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+    <style>
+        :root {
+            --bg: #0b1220;
+            --bg-2: #10192d;
+            --card: rgba(20, 29, 49, 0.9);
+            --card-2: rgba(29, 40, 66, 0.9);
+            --text: #edf3ff;
+            --muted: #9fb0cf;
+            --line: rgba(255,255,255,0.08);
+            --accent: #6ea8fe;
+            --accent-2: #7af0c6;
+            --danger: #ff8d8d;
+            --shadow: 0 20px 50px rgba(0,0,0,0.35);
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at top left, rgba(110,168,254,0.18), transparent 28%),
+                    radial-gradient(circle at bottom right, rgba(122,240,198,0.10), transparent 24%),
+                    linear-gradient(180deg, #09101d 0%, #0d1424 100%);
+        }
+
+        body { padding: 20px; }
+
+        .app-shell {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding: 18px 20px;
+            border-radius: 26px;
+            border: 1px solid var(--line);
+            background: rgba(16, 25, 45, 0.8);
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .brand-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--accent), #447cf1);
+            box-shadow: 0 12px 24px rgba(68,124,241,0.35);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: clamp(22px, 3vw, 34px);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .brand p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 18px;
+        }
+
+        .sidebar,
+        .content-card {
+            border: 1px solid var(--line);
+            background: rgba(16, 25, 45, 0.82);
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar {
+            border-radius: 28px;
+            padding: 18px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            margin: 0 0 14px;
+            font-size: 15px;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .nav-btn,
+        .ghost-btn,
+        .primary-btn {
+            appearance: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .nav-btn {
+            width: 100%;
+            text-align: left;
+            padding: 14px 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .nav-btn span:last-child {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: rgba(110,168,254,0.12);
+            border-color: rgba(110,168,254,0.35);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-box {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+        }
+
+        .sidebar-box h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+        }
+
+        .sidebar-box p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .content {
+            display: grid;
+            gap: 18px;
+        }
+
+        .content-card {
+            border-radius: 30px;
+            padding: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .pill {
+            white-space: nowrap;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .tool-card {
+            border-radius: 24px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(29,40,66,0.86), rgba(18,27,46,0.88));
+            border: 1px solid var(--line);
+        }
+
+        .tool-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .tool-card h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .tool-card .desc {
+            margin: 0 0 16px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .form-grid,
+        .form-grid-3 {
+            display: grid;
+            gap: 14px;
+        }
+
+        .form-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .form-grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+            font-size: 15px;
+        }
+
+        input, button {
+            font: inherit;
+        }
+
+        .app-input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
+            padding: 13px 14px 13px 42px;
+            outline: none;
+            transition: 0.18s ease;
+            min-height: 48px;
+        }
+
+        .app-input.plain-pad {
+            padding-left: 14px;
+        }
+
+        .app-input:focus {
+            border-color: rgba(110,168,254,0.7);
+            box-shadow: 0 0 0 4px rgba(110,168,254,0.14);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .primary-btn,
+        .ghost-btn {
+            min-height: 46px;
+            border-radius: 16px;
+            padding: 0 16px;
+            font-weight: 700;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent), #447cf1);
+            box-shadow: 0 10px 24px rgba(68,124,241,0.28);
+        }
+
+        .primary-btn:hover,
+        .ghost-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .ghost-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--line);
+        }
+
+        .result {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            min-height: 86px;
+            line-height: 1.6;
+        }
+
+        .result strong {
+            color: var(--accent-2);
+        }
+
+        .error {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .stat {
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+        }
+
+        .stat .label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat .value {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .preset-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preset-btn,
+        .seg-btn {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .preset-btn:hover,
+        .seg-btn:hover {
+            background: rgba(110,168,254,0.12);
+            border-color: rgba(110,168,254,0.35);
+        }
+
+        .segmented {
+            display: inline-flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .seg-btn.active {
+            background: rgba(110,168,254,0.18);
+            border-color: rgba(110,168,254,0.45);
+            box-shadow: inset 0 0 0 1px rgba(110,168,254,0.25);
+        }
+
+        .mode-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .footer {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .flatpickr-calendar {
+            background: #121c31;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+        }
+
+        .flatpickr-months .flatpickr-month,
+        .flatpickr-current-month input.cur-year,
+        span.flatpickr-weekday {
+            color: #edf3ff;
+        }
+
+        .flatpickr-day {
+            color: #d9e6ff;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background: #6ea8fe;
+            border-color: #6ea8fe;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(110,168,254,0.18);
+            border-color: rgba(110,168,254,0.18);
+        }
+
+        @media (max-width: 1024px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+        }
+
+        @media (max-width: 840px) {
+            body { padding: 14px; }
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .quick-actions {
+                justify-content: stretch;
+            }
+            .quick-actions > * {
+                flex: 1 1 auto;
+            }
+            .cards-grid,
+            .form-grid,
+            .form-grid-3,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-card,
+            .sidebar {
+                border-radius: 22px;
+            }
+            .tool-card {
+                border-radius: 20px;
+            }
+            .section-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-badge">📅</div>
+            <div>
+                <h1>Date Calculator</h1>
+                <p>App-like layout with date pickers and timestamp/date converter.</p>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="ghost-btn" id="fillTodayBtn" type="button">Fill today</button>
+            <button class="ghost-btn" id="clearAllBtn" type="button">Clear</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-title">Tools</div>
+
+            <div class="nav-list">
+                <button class="nav-btn active" type="button" data-target="between-card">
+                    <span>Days between</span>
+                    <span>2 dates</span>
+                </button>
+                <button class="nav-btn" type="button" data-target="offset-card">
+                    <span>Before / after</span>
+                    <span>offset</span>
+                </button>
+                <button class="nav-btn" type="button" data-target="minutes-card">
+                    <span>To minutes</span>
+                    <span>convert</span>
+                </button>
+                <button class="nav-btn" type="button" data-target="year-card">
+                    <span>End of year</span>
+                    <span>remaining</span>
+                </button>
+                <button class="nav-btn" type="button" data-target="ts-card">
+                    <span>Date ↔ TS</span>
+                    <span>converter</span>
+                </button>
+            </div>
+
+            <div class="sidebar-box">
+                <h3>Quick presets</h3>
+                <p>Tap a preset below to auto-fill the “days between” section from today.</p>
+                <div class="preset-row" style="margin-top:12px;">
+                    <button class="preset-btn" data-days="7" type="button">+7</button>
+                    <button class="preset-btn" data-days="30" type="button">+30</button>
+                    <button class="preset-btn" data-days="90" type="button">+90</button>
+                    <button class="preset-btn" data-days="-7" type="button">-7</button>
+                    <button class="preset-btn" data-days="-30" type="button">-30</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <section class="content-card">
+                <div class="section-header">
+                    <div>
+                        <h2>Smart Date Tools</h2>
+                        <p>All sections work independently. Click into any field to open the date picker.</p>
+                    </div>
+                    <div class="pill" id="todayBadge">Today</div>
+                </div>
+
+                <div class="cards-grid">
+                    <article class="tool-card" id="between-card">
+                        <h3>Days Between 2 Dates</h3>
+                        <p class="desc">Calculate calendar-day difference between any two dates.</p>
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="betweenStart">Start date</label>
+                                <div class="input-wrap">
+                                    <span class="icon">📆</span>
+                                    <input class="app-input datepicker" type="text" id="betweenStart" placeholder="Select start date" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="betweenEnd">End date</label>
+                                <div class="input-wrap">
+                                    <span class="icon">📆</span>
+                                    <input class="app-input datepicker" type="text" id="betweenEnd" placeholder="Select end date" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="primary-btn" id="calcBetweenBtn" type="button">Calculate</button>
+                            <button class="ghost-btn" id="swapDatesBtn" type="button">Swap</button>
+                        </div>
+
+                        <div class="result" id="betweenResult">Choose two dates and calculate.</div>
+                    </article>
+
+                    <article class="tool-card" id="offset-card">
+                        <h3>Days Before / After</h3>
+                        <p class="desc">Add or subtract a number of days from a chosen date.</p>
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="baseDate">Base date</label>
+                                <div class="input-wrap">
+                                    <span class="icon">📆</span>
+                                    <input class="app-input datepicker" type="text" id="baseDate" placeholder="Select base date" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="daysOffset">Number of days</label>
+                                <div class="input-wrap">
+                                    <span class="icon">#</span>
+                                    <input class="app-input plain-pad" type="number" id="daysOffset" min="0" step="1" value="30" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="primary-btn" id="calcBeforeAfterBtn" type="button">Calculate</button>
+                        </div>
+
+                        <div class="result" id="beforeAfterResult">Choose a date and enter an offset.</div>
+                    </article>
+
+                    <article class="tool-card" id="minutes-card">
+                        <h3>Days / Hours to Minutes</h3>
+                        <p class="desc">Convert a combination of days, hours, and minutes to total minutes.</p>
+
+                        <div class="form-grid-3">
+                            <div class="field">
+                                <label for="daysInput">Days</label>
+                                <div class="input-wrap">
+                                    <span class="icon">D</span>
+                                    <input class="app-input plain-pad" type="number" id="daysInput" min="0" step="1" value="1" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="hoursInput">Hours</label>
+                                <div class="input-wrap">
+                                    <span class="icon">H</span>
+                                    <input class="app-input plain-pad" type="number" id="hoursInput" min="0" step="1" value="12" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="minutesInput">Extra minutes</label>
+                                <div class="input-wrap">
+                                    <span class="icon">M</span>
+                                    <input class="app-input plain-pad" type="number" id="minutesInput" min="0" step="1" value="0" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="primary-btn" id="convertMinutesBtn" type="button">Convert</button>
+                        </div>
+
+                        <div class="result" id="minutesResult">Enter values and convert.</div>
+                    </article>
+
+                    <article class="tool-card" id="year-card">
+                        <h3>Days to End of Year</h3>
+                        <p class="desc">Calculate how many days remain until December 31.</p>
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="yearDate">Reference date</label>
+                                <div class="input-wrap">
+                                    <span class="icon">📆</span>
+                                    <input class="app-input datepicker" type="text" id="yearDate" placeholder="Select date or use today" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label>&nbsp;</label>
+                                <button class="primary-btn" id="calcYearBtn" type="button">Calculate</button>
+                            </div>
+                        </div>
+
+                        <div class="result" id="yearResult">Choose a date or leave empty to use today.</div>
+
+                        <div class="stats-grid" id="yearStats" hidden>
+                            <div class="stat">
+                                <div class="label">Day of year</div>
+                                <div class="value" id="dayOfYearValue">-</div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">Days left</div>
+                                <div class="value" id="daysLeftValue">-</div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">Year</div>
+                                <div class="value" id="yearValue">-</div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">Month</div>
+                                <div class="value" id="monthValue">-</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="tool-card full" id="ts-card">
+                        <h3>Date / Timestamp Converter</h3>
+                        <p class="desc">Switch between date → timestamp and timestamp → date. Supports Unix seconds and milliseconds.</p>
+
+                        <div class="mode-panel">
+                            <div class="field">
+                                <label>Mode</label>
+                                <div class="segmented">
+                                    <button class="seg-btn active" type="button" data-mode="date-to-ts">Date → Timestamp</button>
+                                    <button class="seg-btn" type="button" data-mode="ts-to-date">Timestamp → Date</button>
+                                </div>
+                            </div>
+
+                            <div id="dateToTsPanel">
+                                <div class="form-grid">
+                                    <div class="field">
+                                        <label for="tsDateInput">Date</label>
+                                        <div class="input-wrap">
+                                            <span class="icon">📆</span>
+                                            <input class="app-input datepicker" type="text" id="tsDateInput" placeholder="Select date" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label for="tsTimeInput">Time</label>
+                                        <div class="input-wrap">
+                                            <span class="icon">⏰</span>
+                                            <input class="app-input plain-pad" type="time" id="tsTimeInput" step="1" value="00:00:00" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="actions">
+                                    <button class="primary-btn" id="convertDateToTsBtn" type="button">Convert to timestamp</button>
+                                    <button class="ghost-btn" id="useNowBtn" type="button">Use now</button>
+                                </div>
+                            </div>
+
+                            <div id="tsToDatePanel" class="hidden">
+                                <div class="form-grid">
+                                    <div class="field">
+                                        <label for="timestampInput">Timestamp</label>
+                                        <div class="input-wrap">
+                                            <span class="icon">#</span>
+                                            <input class="app-input plain-pad" type="number" id="timestampInput" placeholder="e.g. 1711929600 or 1711929600000" />
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label for="timestampUnit">Unit</label>
+                                        <div class="input-wrap">
+                                            <span class="icon">⎘</span>
+                                            <select class="app-input plain-pad" id="timestampUnit">
+                                                <option value="auto">Auto detect</option>
+                                                <option value="seconds">Seconds</option>
+                                                <option value="milliseconds">Milliseconds</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="actions">
+                                    <button class="primary-btn" id="convertTsToDateBtn" type="button">Convert to date</button>
+                                    <button class="ghost-btn" id="useCurrentTsBtn" type="button">Use current TS</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result" id="tsResult">Choose mode and convert.</div>
+                    </article>
+                </div>
+            </section>
+
+            <div class="footer">
+                Plain HTML/CSS/JS + Flatpickr date picker.
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    let tsMode = 'date-to-ts';
+
+    function formatDateLocal(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    function formatTimeLocal(date) {
+        const h = String(date.getHours()).padStart(2, '0');
+        const m = String(date.getMinutes()).padStart(2, '0');
+        const s = String(date.getSeconds()).padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    }
+
+    function formatPrettyDate(date) {
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
+    function formatPrettyDateTime(date) {
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+
+    function parseDateInput(value) {
+        if (!value) return null;
+        const [y, m, d] = value.split('-').map(Number);
+        return new Date(y, m - 1, d);
+    }
+
+    function parseDateTimeLocal(dateValue, timeValue = '00:00:00') {
+        if (!dateValue) return null;
+        const [y, m, d] = dateValue.split('-').map(Number);
+        const [hh = 0, mm = 0, ss = 0] = timeValue.split(':').map(Number);
+        return new Date(y, m - 1, d, hh, mm, ss);
+    }
+
+    function startOfDay(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function diffInDays(date1, date2) {
+        const a = startOfDay(date1).getTime();
+        const b = startOfDay(date2).getTime();
+        return Math.round((b - a) / MS_PER_DAY);
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + Number(days));
+        return result;
+    }
+
+    function dayOfYear(date) {
+        const start = new Date(date.getFullYear(), 0, 1);
+        return Math.floor((startOfDay(date) - start) / MS_PER_DAY) + 1;
+    }
+
+    function daysToEndOfYear(date) {
+        const end = new Date(date.getFullYear(), 11, 31);
+        return diffInDays(date, end);
+    }
+
+    function isValidDate(date) {
+        return date instanceof Date && !isNaN(date.getTime());
+    }
+
+    function setHTML(id, html) {
+        document.getElementById(id).innerHTML = html;
+    }
+
+    function getInputValue(id) {
+        return document.getElementById(id).value.trim();
+    }
+
+    function calcBetween() {
+        const start = parseDateInput(getInputValue('betweenStart'));
+        const end = parseDateInput(getInputValue('betweenEnd'));
+
+        if (!isValidDate(start) || !isValidDate(end)) {
+            setHTML('betweenResult', '<span class="error">Please select both dates.</span>');
+            return;
+        }
+
+        const days = diffInDays(start, end);
+        const absDays = Math.abs(days);
+
+        setHTML(
+            'betweenResult',
+            `
+          Difference: <strong>${absDays}</strong> day(s)<br>
+          Direction: <strong>${days === 0 ? 'same date' : days > 0 ? 'forward' : 'backward'}</strong><br>
+          Start: <strong>${formatPrettyDate(start)}</strong><br>
+          End: <strong>${formatPrettyDate(end)}</strong>
+        `
+        );
+    }
+
+    function calcBeforeAfter() {
+        const baseDate = parseDateInput(getInputValue('baseDate'));
+        const offset = Number(document.getElementById('daysOffset').value);
+
+        if (!isValidDate(baseDate)) {
+            setHTML('beforeAfterResult', '<span class="error">Please select a base date.</span>');
+            return;
+        }
+
+        if (Number.isNaN(offset) || offset < 0) {
+            setHTML('beforeAfterResult', '<span class="error">Please enter a valid non-negative number of days.</span>');
+            return;
+        }
+
+        const before = addDays(baseDate, -offset);
+        const after = addDays(baseDate, offset);
+
+        setHTML(
+            'beforeAfterResult',
+            `
+          <strong>${offset}</strong> day(s) before: <strong>${formatPrettyDate(before)}</strong><br>
+          Base date: <strong>${formatPrettyDate(baseDate)}</strong><br>
+          <strong>${offset}</strong> day(s) after: <strong>${formatPrettyDate(after)}</strong>
+        `
+        );
+    }
+
+    function convertToMinutes() {
+        const days = Number(document.getElementById('daysInput').value) || 0;
+        const hours = Number(document.getElementById('hoursInput').value) || 0;
+        const minutes = Number(document.getElementById('minutesInput').value) || 0;
+
+        if (days < 0 || hours < 0 || minutes < 0) {
+            setHTML('minutesResult', '<span class="error">Values cannot be negative.</span>');
+            return;
+        }
+
+        const totalMinutes = (days * 24 * 60) + (hours * 60) + minutes;
+        const totalHours = totalMinutes / 60;
+        const totalDays = totalMinutes / 1440;
+
+        setHTML(
+            'minutesResult',
+            `
+          Total minutes: <strong>${totalMinutes.toLocaleString()}</strong><br>
+          Total hours: <strong>${totalHours.toLocaleString()}</strong><br>
+          Total days: <strong>${totalDays.toLocaleString()}</strong>
+        `
+        );
+    }
+
+    function calcYearEnd() {
+        const raw = getInputValue('yearDate');
+        const date = raw ? parseDateInput(raw) : startOfDay(new Date());
+
+        if (!isValidDate(date)) {
+            setHTML('yearResult', '<span class="error">Please enter a valid date.</span>');
+            document.getElementById('yearStats').hidden = true;
+            return;
+        }
+
+        const currentDayOfYear = dayOfYear(date);
+        const left = daysToEndOfYear(date);
+        const year = date.getFullYear();
+        const month = date.toLocaleString('en-US', { month: 'short' });
+
+        setHTML(
+            'yearResult',
+            `
+          For <strong>${formatPrettyDate(date)}</strong>, there are <strong>${left}</strong> day(s) until the end of <strong>${year}</strong>.
+        `
+        );
+
+        document.getElementById('dayOfYearValue').textContent = currentDayOfYear;
+        document.getElementById('daysLeftValue').textContent = left;
+        document.getElementById('yearValue').textContent = year;
+        document.getElementById('monthValue').textContent = month;
+        document.getElementById('yearStats').hidden = false;
+    }
+
+    function detectTimestampUnit(ts) {
+        const abs = Math.abs(Number(ts));
+        return abs >= 1e12 ? 'milliseconds' : 'seconds';
+    }
+
+    function convertDateToTimestamp() {
+        const dateValue = getInputValue('tsDateInput');
+        const timeValue = getInputValue('tsTimeInput') || '00:00:00';
+        const date = parseDateTimeLocal(dateValue, timeValue);
+
+        if (!isValidDate(date)) {
+            setHTML('tsResult', '<span class="error">Please select a valid date and time.</span>');
+            return;
+        }
+
+        const seconds = Math.floor(date.getTime() / 1000);
+        const milliseconds = date.getTime();
+
+        setHTML(
+            'tsResult',
+            `
+          Local date/time: <strong>${formatPrettyDateTime(date)}</strong><br>
+          Unix timestamp (seconds): <strong>${seconds}</strong><br>
+          Unix timestamp (milliseconds): <strong>${milliseconds}</strong><br>
+          ISO: <strong>${date.toISOString()}</strong>
+        `
+        );
+    }
+
+    function convertTimestampToDate() {
+        const raw = getInputValue('timestampInput');
+
+        if (!raw) {
+            setHTML('tsResult', '<span class="error">Please enter a timestamp.</span>');
+            return;
+        }
+
+        let ts = Number(raw);
+
+        if (Number.isNaN(ts)) {
+            setHTML('tsResult', '<span class="error">Timestamp must be a valid number.</span>');
+            return;
+        }
+
+        const selectedUnit = document.getElementById('timestampUnit').value;
+        const unit = selectedUnit === 'auto' ? detectTimestampUnit(ts) : selectedUnit;
+        const ms = unit === 'seconds' ? ts * 1000 : ts;
+        const date = new Date(ms);
+
+        if (!isValidDate(date)) {
+            setHTML('tsResult', '<span class="error">Invalid timestamp.</span>');
+            return;
+        }
+
+        setHTML(
+            'tsResult',
+            `
+          Detected unit: <strong>${unit}</strong><br>
+          Local date/time: <strong>${formatPrettyDateTime(date)}</strong><br>
+          Date only: <strong>${formatDateLocal(date)}</strong><br>
+          Time only: <strong>${formatTimeLocal(date)}</strong><br>
+          ISO: <strong>${date.toISOString()}</strong>
+        `
+        );
+    }
+
+    function switchTsMode(mode) {
+        tsMode = mode;
+
+        document.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+
+        document.getElementById('dateToTsPanel').classList.toggle('hidden', mode !== 'date-to-ts');
+        document.getElementById('tsToDatePanel').classList.toggle('hidden', mode !== 'ts-to-date');
+
+        setHTML('tsResult', mode === 'date-to-ts'
+            ? 'Choose a date and time, then convert to timestamp.'
+            : 'Enter a timestamp, then convert to date.');
+    }
+
+    function fillToday() {
+        const now = new Date();
+        const today = formatDateLocal(now);
+
+        ['betweenStart', 'betweenEnd', 'baseDate', 'yearDate', 'tsDateInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = today;
+        });
+
+        const timeEl = document.getElementById('tsTimeInput');
+        if (timeEl) timeEl.value = formatTimeLocal(now);
+
+        updateTodayBadge();
+    }
+
+    function clearAll() {
+        ['betweenStart', 'betweenEnd', 'baseDate', 'yearDate', 'tsDateInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+
+        document.getElementById('daysOffset').value = 30;
+        document.getElementById('daysInput').value = 1;
+        document.getElementById('hoursInput').value = 12;
+        document.getElementById('minutesInput').value = 0;
+        document.getElementById('tsTimeInput').value = '00:00:00';
+        document.getElementById('timestampInput').value = '';
+        document.getElementById('timestampUnit').value = 'auto';
+
+        setHTML('betweenResult', 'Choose two dates and calculate.');
+        setHTML('beforeAfterResult', 'Choose a date and enter an offset.');
+        setHTML('minutesResult', 'Enter values and convert.');
+        setHTML('yearResult', 'Choose a date or leave empty to use today.');
+        setHTML('tsResult', 'Choose mode and convert.');
+
+        document.getElementById('yearStats').hidden = true;
+        updateTodayBadge();
+        switchTsMode('date-to-ts');
+    }
+
+    function applyPreset(days) {
+        const today = startOfDay(new Date());
+        const target = addDays(today, days);
+
+        document.getElementById('betweenStart').value = formatDateLocal(today);
+        document.getElementById('betweenEnd').value = formatDateLocal(target);
+
+        setActiveNav('between-card');
+        scrollToCard('between-card');
+        calcBetween();
+    }
+
+    function updateTodayBadge() {
+        const today = new Date();
+        document.getElementById('todayBadge').textContent =
+            `Today • ${today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`;
+    }
+
+    function scrollToCard(id) {
+        document.getElementById(id).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    function setActiveNav(targetId) {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.target === targetId);
+        });
+    }
+
+    function initDatepickers() {
+        flatpickr('.datepicker', {
+            dateFormat: 'Y-m-d',
+            allowInput: true,
+            disableMobile: false
+        });
+    }
+
+    document.getElementById('calcBetweenBtn').addEventListener('click', calcBetween);
+    document.getElementById('swapDatesBtn').addEventListener('click', () => {
+        const start = document.getElementById('betweenStart');
+        const end = document.getElementById('betweenEnd');
+        [start.value, end.value] = [end.value, start.value];
+        calcBetween();
+    });
+
+    document.getElementById('calcBeforeAfterBtn').addEventListener('click', calcBeforeAfter);
+    document.getElementById('convertMinutesBtn').addEventListener('click', convertToMinutes);
+    document.getElementById('calcYearBtn').addEventListener('click', calcYearEnd);
+
+    document.getElementById('convertDateToTsBtn').addEventListener('click', convertDateToTimestamp);
+    document.getElementById('convertTsToDateBtn').addEventListener('click', convertTimestampToDate);
+
+    document.getElementById('useNowBtn').addEventListener('click', () => {
+        const now = new Date();
+        document.getElementById('tsDateInput').value = formatDateLocal(now);
+        document.getElementById('tsTimeInput').value = formatTimeLocal(now);
+        convertDateToTimestamp();
+    });
+
+    document.getElementById('useCurrentTsBtn').addEventListener('click', () => {
+        const nowMs = Date.now();
+        document.getElementById('timestampInput').value = nowMs;
+        document.getElementById('timestampUnit').value = 'milliseconds';
+        convertTimestampToDate();
+    });
+
+    document.querySelectorAll('[data-mode]').forEach(btn => {
+        btn.addEventListener('click', () => switchTsMode(btn.dataset.mode));
+    });
+
+    document.getElementById('fillTodayBtn').addEventListener('click', () => {
+        fillToday();
+        calcBetween();
+        calcBeforeAfter();
+        calcYearEnd();
+        if (tsMode === 'date-to-ts') {
+            convertDateToTimestamp();
+        }
+    });
+
+    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyPreset(Number(btn.dataset.days)));
+    });
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.target;
+            setActiveNav(target);
+            scrollToCard(target);
+        });
+    });
+
+    initDatepickers();
+    fillToday();
+    calcBetween();
+    calcBeforeAfter();
+    convertToMinutes();
+    calcYearEnd();
+    switchTsMode('date-to-ts');
+</script>
+<div class="footer">&copy; borowicz.github.io/html/</div>
+</body>
+</html>

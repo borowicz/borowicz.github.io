@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Base64 Tools</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827cc;
+            --card: #1e293b;
+            --card-2: #334155;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(255,255,255,0.08);
+            --shadow: 0 20px 40px rgba(0,0,0,0.35);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                    radial-gradient(circle at top left, rgba(59,130,246,0.18), transparent 30%),
+                    radial-gradient(circle at bottom right, rgba(16,185,129,0.12), transparent 30%),
+                    linear-gradient(135deg, #020617, #0f172a 40%, #111827);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 28px 28px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 2vw, 2.4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            padding: 24px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 240px;
+            resize: vertical;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            background: rgba(2, 6, 23, 0.65);
+            color: var(--text);
+            font-size: 0.96rem;
+            line-height: 1.5;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus {
+            border-color: rgba(59,130,246,0.8);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 24px 24px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .secondary {
+            background: #1f2937;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .secondary:hover {
+            background: #273449;
+        }
+
+        .success {
+            background: var(--success);
+            color: white;
+        }
+
+        .danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 0 24px 24px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .status {
+            min-height: 20px;
+        }
+
+        .switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(2,6,23,0.45);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        .switch input {
+            transform: scale(1.1);
+            accent-color: var(--primary);
+        }
+
+        @media (max-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            textarea {
+                min-height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <h1>Base64 Encode / Decode</h1>
+        <p>Modern, responsive tool built with pure HTML, CSS, and JavaScript.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Input</h2>
+            <label for="inputText">Text or Base64</label>
+            <textarea id="inputText" placeholder="Paste text or Base64 here..."></textarea>
+        </div>
+
+        <div class="card">
+            <h2>Output</h2>
+            <label for="outputText">Result</label>
+            <textarea id="outputText" placeholder="The result will appear here..."></textarea>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button class="primary" id="encodeBtn">Encode → Base64</button>
+        <button class="success" id="decodeBtn">Decode → Text</button>
+        <button class="secondary" id="swapBtn">Swap Fields</button>
+        <button class="secondary" id="copyBtn">Copy Result</button>
+        <button class="danger" id="clearBtn">Clear</button>
+
+        <label class="switch">
+            <input type="checkbox" id="unicodeMode" checked />
+            <span>UTF-8 / Unicode</span>
+        </label>
+    </div>
+
+    <div class="footer">
+        <div class="status" id="status">Ready.</div>
+        <div id="meta">0 characters</div>
+    </div>
+</div>
+
+<script>
+    const inputText = document.getElementById('inputText');
+    const outputText = document.getElementById('outputText');
+    const encodeBtn = document.getElementById('encodeBtn');
+    const decodeBtn = document.getElementById('decodeBtn');
+    const swapBtn = document.getElementById('swapBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const statusEl = document.getElementById('status');
+    const metaEl = document.getElementById('meta');
+    const unicodeMode = document.getElementById('unicodeMode');
+
+    function setStatus(message, isError = false) {
+        statusEl.textContent = message;
+        statusEl.style.color = isError ? '#fca5a5' : '#94a3b8';
+    }
+
+    function updateMeta() {
+        metaEl.textContent = `${inputText.value.length} characters`;
+    }
+
+    function encodeBase64(str) {
+        if (unicodeMode.checked) {
+            const bytes = new TextEncoder().encode(str);
+            let binary = '';
+            bytes.forEach(byte => binary += String.fromCharCode(byte));
+            return btoa(binary);
+        }
+        return btoa(str);
+    }
+
+    function decodeBase64(base64) {
+        if (unicodeMode.checked) {
+            const binary = atob(base64);
+            const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        }
+        return atob(base64);
+    }
+
+    encodeBtn.addEventListener('click', () => {
+        try {
+            const value = inputText.value;
+            outputText.value = encodeBase64(value);
+            setStatus('Successfully encoded to Base64.');
+        } catch (error) {
+            outputText.value = '';
+            setStatus('Encoding failed. Please check the input.', true);
+        }
+    });
+
+    decodeBtn.addEventListener('click', () => {
+        try {
+            const value = inputText.value.trim();
+            outputText.value = decodeBase64(value);
+            setStatus('Successfully decoded from Base64.');
+        } catch (error) {
+            outputText.value = '';
+            setStatus('Decoding failed. The input may not be valid Base64.', true);
+        }
+    });
+
+    swapBtn.addEventListener('click', () => {
+        const temp = inputText.value;
+        inputText.value = outputText.value;
+        outputText.value = temp;
+        updateMeta();
+        setStatus('Fields swapped.');
+    });
+
+    copyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(outputText.value);
+            setStatus('Result copied to clipboard.');
+        } catch (error) {
+            setStatus('Failed to copy the result.', true);
+        }
+    });
+
+    clearBtn.addEventListener('click', () => {
+        inputText.value = '';
+        outputText.value = '';
+        updateMeta();
+        setStatus('Fields cleared.');
+    });
+
+    inputText.addEventListener('input', updateMeta);
+    updateMeta();
+</script>
+<div class="footer">&copy; borowicz.github.io/html/</div>
+</body>
+</html>

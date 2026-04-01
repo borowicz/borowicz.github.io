@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Regex Tester</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1020;--panel:#121933;--panel-2:#1a2347;--text:#e8ecff;--muted:#aab4da;
+  --accent:#7c9cff;--accent-2:#4ee1c1;--danger:#ff6b81;--border:rgba(255,255,255,.08);
+  --shadow:0 10px 30px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0a0f1d,#0f1630 35%,#0a1020);color:var(--text);min-height:100%}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:var(--shadow)}
+.title h1{margin:0;font-size:1.25rem}
+.title p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn,.file{border:1px solid var(--border);background:linear-gradient(180deg,var(--panel-2),var(--panel));color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{transform:translateY(-1px)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{grid-column:span 12;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);backdrop-filter: blur(4px)}
+@media(min-width:860px){
+  .span-5{grid-column:span 5}
+  .span-7{grid-column:span 7}
+  .span-6{grid-column:span 6}
+  .span-4{grid-column:span 4}
+  .span-8{grid-column:span 8}
+  .span-12{grid-column:span 12}
+}
+label{display:block;font-size:.88rem;color:var(--muted);margin:0 0 8px}
+input,select,textarea{width:100%;background:#0b1228;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:12px 14px;outline:none}
+textarea{min-height:220px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:rgba(124,156,255,.7);box-shadow:0 0 0 3px rgba(124,156,255,.15)}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.col-6{grid-column:span 12}
+.col-4{grid-column:span 12}
+.col-3{grid-column:span 12}
+.col-8{grid-column:span 12}
+@media(min-width:860px){
+  .col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-8{grid-column:span 8}
+}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+pre,code,.output{background:#091022;border:1px solid var(--border);border-radius:14px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(124,156,255,.12);border:1px solid rgba(124,156,255,.25);font-size:.8rem;color:#dbe4ff}
+.list{display:grid;gap:10px}
+.kv{display:grid;grid-template-columns:180px 1fr;gap:10px}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+.table th{color:var(--muted);font-weight:600}
+.hero{margin:4px 0 16px;color:var(--muted)}
+nav.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+nav.links a{display:block;padding:16px;border-radius:18px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--border);box-shadow:var(--shadow)}
+nav.links a strong{display:block;margin-bottom:6px}
+.hl{background:rgba(255,230,102,.18);border-radius:6px;padding:0 2px}
+.footer{margin-top:18px;color:var(--muted);font-size:.86rem}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div class="title">
+        <h1>Regex Tester</h1>
+        <p>Test expressions with live matches</p>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="./index.html">← Back to toolbox</a>
+    </div>
+  </div>
+  
+<div class="grid">
+  <div class="card span-4">
+    <label>Pattern</label>
+    <input id="pattern" value="\b[a-z]{4}\b">
+    <div class="row" style="margin-top:12px">
+      <div class="col-4"><label>Flags</label><input id="flags" value="gi"></div>
+      <div class="col-8"><label>Quick examples</label><select id="preset" onchange="loadPreset()"><option value="">Choose…</option><option value="emails">Emails</option><option value="ipv4">IPv4</option><option value="dates">Dates</option></select></div>
+    </div>
+    <div class="toolbar"><button class="btn" onclick="testRegex()">Run test</button></div>
+  </div>
+  <div class="card span-8">
+    <label>Test text</label>
+    <textarea id="regexText">This text contains mail@example.com, 2026-04-01 and many four letter words like tool and hash.</textarea>
+  </div>
+  <div class="card span-8">
+    <h3 style="margin-top:0">Highlighted result</h3>
+    <div id="highlighted" class="output"></div>
+  </div>
+  <div class="card span-4">
+    <h3 style="margin-top:0">Matches</h3>
+    <div id="matches" class="output"></div>
+  </div>
+</div>
+
+  <div class="footer">Static GitHub Pages ready • Client-side only</div>
+</div>
+
+<script>
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function loadPreset(){
+  const v = document.getElementById('preset').value;
+  const presets = {
+    emails: ['[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}','gi'],
+    ipv4: ['\\b(?:(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\b','g'],
+    dates: ['\\b\\d{4}-\\d{2}-\\d{2}\\b','g']
+  };
+  if(presets[v]){
+    document.getElementById('pattern').value = presets[v][0];
+    document.getElementById('flags').value = presets[v][1];
+    testRegex();
+  }
+}
+function testRegex(){
+  const text = document.getElementById('regexText').value;
+  const pattern = document.getElementById('pattern').value;
+  const flags = document.getElementById('flags').value;
+  try{
+    const re = new RegExp(pattern, flags);
+    const items = [...text.matchAll(new RegExp(pattern, flags.includes('g')?flags:flags+'g'))];
+    document.getElementById('matches').innerHTML = items.length ? items.map((m,i)=>`<div><strong>#${i+1}</strong> ${escapeHtml(m[0])}</div>`).join('') : '<span class="muted">No matches</span>';
+    const highlighted = escapeHtml(text).replace(new RegExp(pattern, flags), m=>`<span class="hl">${escapeHtml(m)}</span>`);
+    document.getElementById('highlighted').innerHTML = highlighted;
+  }catch(e){
+    document.getElementById('matches').textContent = e.message;
+    document.getElementById('highlighted').textContent = '';
+  }
+}
+testRegex();
+</script>
+<div class="footer">&copy; borowicz.github.io/html/</div>
+</body>
+</html>
