@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IQ Matrix Premium</title>
+    <style>
+        :root {
+            --bg-1: #020611;
+            --bg-2: #071327;
+            --panel: rgba(10, 18, 35, 0.82);
+            --panel-2: rgba(16, 28, 52, 0.9);
+            --line: rgba(163, 184, 255, 0.16);
+            --text: #edf3ff;
+            --muted: #9bb0d3;
+            --accent: #7dd3fc;
+            --accent-2: #c084fc;
+            --accent-3: #86efac;
+            --warn: #fcd34d;
+            --bad: #fb7185;
+            --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at 15% 10%, rgba(125, 211, 252, 0.18), transparent 24%),
+                    radial-gradient(circle at 84% 12%, rgba(192, 132, 252, 0.16), transparent 25%),
+                    radial-gradient(circle at 50% 100%, rgba(134, 239, 172, 0.08), transparent 24%),
+                    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 90%);
+        }
+
+        .container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .glass {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: var(--radius-xl);
+        }
+
+        .hidden { display: none !important; }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: -60px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(125, 211, 252, 0.22), transparent 65%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+        h1, h2, h3, h4 { margin: 0 0 12px; line-height: 1.08; }
+        h1 { font-size: clamp(2.35rem, 5vw, 4.2rem); letter-spacing: -0.04em; }
+        h2 { font-size: 1.8rem; }
+        h3 { font-size: 1.08rem; }
+        p { margin: 0; color: var(--muted); line-height: 1.65; }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(125, 211, 252, 0.09);
+            border: 1px solid rgba(125, 211, 252, 0.18);
+            color: #dff7ff;
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .subline {
+            max-width: 760px;
+            font-size: 1.02rem;
+            margin-top: 10px;
+        }
+
+        .badges, .btn-row, .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badges { margin-top: 18px; }
+
+        .badge, .chip {
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+            color: #e7eeff;
+        }
+
+        .hero-side,
+        .card,
+        .side-card,
+        .stats-card,
+        .result-card {
+            background: var(--panel-2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+        }
+
+        .hero-side { padding: 22px; }
+        .card, .side-card, .stats-card, .result-card { padding: 22px; }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .field {
+            background: rgba(8, 13, 25, 0.55);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #09111f;
+            color: var(--text);
+            outline: none;
+        }
+
+        .btn-row { margin-top: 20px; }
+
+        button {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 16px;
+            padding: 12px 18px;
+            font-weight: 800;
+            color: var(--text);
+            transition: transform .14s ease, box-shadow .2s ease, opacity .2s ease, background .2s ease;
+        }
+
+        button:hover { transform: translateY(-1px); }
+        button:disabled { opacity: 0.48; cursor: not-allowed; transform: none; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #60a5fa);
+            color: #03243b;
+            box-shadow: 0 12px 30px rgba(125, 211, 252, 0.22);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-3), #4ade80);
+            color: #042613;
+            box-shadow: 0 12px 30px rgba(134, 239, 172, 0.18);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px dashed var(--line);
+            color: var(--muted);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.72fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .side-stack {
+            display: grid;
+            gap: 18px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .progress-wrap { margin-bottom: 18px; }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(5, 10, 20, 0.8);
+            border: 1px solid var(--line);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width .3s ease;
+        }
+
+        .question-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .question-type-wrap {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+            color: #ecf4ff;
+        }
+
+        .prompt-box {
+            margin-top: 18px;
+            background: rgba(6, 11, 21, 0.55);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 22px;
+        }
+
+        .question-text {
+            font-size: 1.02rem;
+            margin-bottom: 16px;
+        }
+
+        .matrix-stage {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 22px;
+            border: 1px solid rgba(125, 211, 252, 0.15);
+            background: radial-gradient(circle at top, rgba(125, 211, 252, 0.06), transparent 45%), rgba(6, 11, 21, 0.82);
+        }
+
+        .matrix-grid {
+            width: min(100%, 700px);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .matrix-cell,
+        .option-panel {
+            position: relative;
+            border-radius: 22px;
+            border: 1px solid rgba(163, 184, 255, 0.14);
+            background: linear-gradient(180deg, rgba(16, 29, 52, 0.95), rgba(7, 13, 24, 0.98));
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+        }
+
+        .matrix-cell::before,
+        .option-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 24%, rgba(255,255,255,0.05), transparent 35%);
+            pointer-events: none;
+        }
+
+        .matrix-cell.missing {
+            border-style: dashed;
+            border-color: rgba(252, 211, 77, 0.55);
+            box-shadow: inset 0 0 0 1px rgba(252, 211, 77, 0.22);
+        }
+
+        .matrix-cell .missing-mark {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--warn);
+            text-shadow: 0 0 18px rgba(252, 211, 77, 0.22);
+        }
+
+        .matrix-cell canvas,
+        .option-panel canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .answer {
+            text-align: left;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 14px;
+            display: grid;
+            gap: 12px;
+            transition: transform .14s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .answer:hover {
+            transform: translateY(-1px);
+            border-color: rgba(125, 211, 252, 0.35);
+        }
+
+        .answer.selected {
+            border-color: rgba(125, 211, 252, 0.7);
+            box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.12);
+            background: rgba(125, 211, 252, 0.07);
+        }
+
+        .answer.correct-preview {
+            border-color: rgba(134, 239, 172, 0.6);
+        }
+
+        .answer-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        .text-answer {
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.18rem, 2vw, 1.55rem);
+            font-weight: 900;
+            border-radius: 18px;
+            border: 1px solid rgba(163,184,255,0.1);
+            background: rgba(5, 10, 18, 0.7);
+        }
+
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .side-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .metric-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(163,184,255,0.1);
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .metric strong { color: var(--text); }
+
+        .history-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 380px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .history-item {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(163,184,255,0.1);
+        }
+
+        .history-item .sub { margin-top: 4px; font-size: 0.88rem; color: var(--muted); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(163,184,255,0.1);
+        }
+
+        .stat .label {
+            font-size: 0.84rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stat .value {
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+
+        .highlight-band {
+            margin-top: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid rgba(192, 132, 252, 0.22);
+            color: #eddcff;
+            font-weight: 900;
+        }
+
+        .charts {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .chart-card {
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(163,184,255,0.1);
+        }
+
+        .chart-card h3 { margin-bottom: 10px; }
+
+        .chart-wrap {
+            height: 260px;
+            border-radius: 18px;
+            background: rgba(5, 10, 18, 0.75);
+            border: 1px solid rgba(163,184,255,0.08);
+            padding: 12px;
+        }
+
+        .chart-wrap canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .review-list {
+            margin-top: 20px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .review-item {
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(163,184,255,0.12);
+        }
+
+        .review-item.good { border-color: rgba(134,239,172,0.28); }
+        .review-item.bad { border-color: rgba(251,113,133,0.3); }
+
+        .review-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .review-meta {
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+
+        .review-answer {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .footer-note {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1080px) {
+            .hero, .layout, .controls, .stats-grid, .charts { grid-template-columns: 1fr; }
+            .side-stack { position: static; }
+        }
+
+        @media (max-width: 760px) {
+            .answers { grid-template-columns: 1fr; }
+            .container { padding: 14px; }
+            .hero, .card, .side-card, .result-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="glass hero" id="startScreen">
+        <div>
+            <div class="eyebrow">Premium Edition • Matrix Reasoning Lab</div>
+            <h1>Interaktywny test IQ Premium</h1>
+            <p class="subline">
+                Wersja premium z dużymi matrycami canvas, historią wyników, percentile, analizą kategorii,
+                wykresami postępu i generowaną pulą 1000 pytań. Wyniki zapisują się lokalnie w przeglądarce.
+            </p>
+
+            <div class="badges">
+                <span class="badge">1000 pytań</span>
+                <span class="badge">matryce 3×3</span>
+                <span class="badge">analiza kategorii</span>
+                <span class="badge">localStorage</span>
+                <span class="badge">wykresy</span>
+            </div>
+
+            <div class="controls">
+                <div class="field">
+                    <label for="questionCount">Liczba pytań</label>
+                    <select id="questionCount">
+                        <option value="12">12</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="difficulty">Poziom</label>
+                    <select id="difficulty">
+                        <option value="mixed" selected>Mieszany</option>
+                        <option value="easy">Łatwy</option>
+                        <option value="medium">Średni</option>
+                        <option value="hard">Trudny</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="mode">Tryb</label>
+                    <select id="mode">
+                        <option value="mixed" selected>Mieszany</option>
+                        <option value="matrix">Matryce</option>
+                        <option value="logic">Logika/liczby</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="playerName">Nazwa gracza</label>
+                    <input type="text" id="playerName" placeholder="np. Andrzej" maxlength="24">
+                </div>
+                <div class="field">
+                    <label for="questionTimeLimit">Limit na pytanie</label>
+                    <select id="questionTimeLimit">
+                        <option value="0" selected>Bez limitu</option>
+                        <option value="15">15 s</option>
+                        <option value="20">20 s</option>
+                        <option value="30">30 s</option>
+                        <option value="45">45 s</option>
+                        <option value="60">60 s</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-primary" id="startBtn">Uruchom test</button>
+                <button class="btn-secondary" id="reshuffleBtn">Losuj nowy zestaw</button>
+                <button class="btn-ghost" id="clearHistoryBtn">Wyczyść historię</button>
+            </div>
+        </div>
+
+        <div class="hero-side">
+            <h3>Co zawiera wersja premium</h3>
+            <div class="metric-list">
+                <div class="metric"><span>Wygenerowana pula</span><strong id="poolInfo">1000</strong></div>
+                <div class="metric"><span>Ostatni wynik</span><strong id="lastResultBox">Brak</strong></div>
+                <div class="metric"><span>Najlepsze IQ</span><strong id="bestIqBox">Brak</strong></div>
+                <div class="metric"><span>Liczba prób</span><strong id="attemptsBox">0</strong></div>
+            </div>
+            <p class="footer-note">
+                To nadal test orientacyjny, inspirowany zadaniami logicznymi i matrycami. Nie jest standaryzowanym testem klinicznym.
+            </p>
+        </div>
+    </section>
+
+    <section class="layout hidden" id="testScreen">
+        <main class="card glass">
+            <div class="progress-wrap">
+                <div class="progress-top">
+                    <span id="questionCounter">Pytanie 1 / 20</span>
+                    <span id="timer">00:00</span>
+                    <span id="questionTimeBox">Pozostało: —</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+
+            <div class="question-top">
+                <div>
+                    <h2 id="questionTitle">Pytanie</h2>
+                </div>
+                <div class="question-type-wrap">
+                    <span class="pill" id="questionType">Typ</span>
+                    <span class="pill" id="difficultyBadge">Poziom</span>
+                </div>
+            </div>
+
+            <div class="prompt-box">
+                <div class="question-text" id="questionText"></div>
+                <div id="matrixHolder" class="matrix-stage hidden"></div>
+            </div>
+
+            <div class="answers" id="answers"></div>
+
+            <div class="nav-row">
+                <div class="btn-row" style="margin-top:0;">
+                    <button class="btn-secondary" id="prevBtn">Wstecz</button>
+                    <button class="btn-secondary" id="nextBtn">Dalej</button>
+                </div>
+                <div class="btn-row" style="margin-top:0;">
+                    <button class="btn-success hidden" id="finishBtn">Zakończ test</button>
+                </div>
+            </div>
+        </main>
+
+        <aside class="side-stack">
+            <section class="side-card glass">
+                <h3>Status sesji</h3>
+                <div class="metric-list">
+                    <div class="metric"><span>Zaznaczone</span><strong id="statusAnswered">0 / 0</strong></div>
+                    <div class="metric"><span>Tryb</span><strong id="statusMode">mixed</strong></div>
+                    <div class="metric"><span>Poziom</span><strong id="statusDifficulty">mixed</strong></div>
+                    <div class="metric"><span>Gracz</span><strong id="statusPlayer">Anonim</strong></div>
+                </div>
+            </section>
+
+            <section class="side-card glass">
+                <h3>Historia wyników</h3>
+                <div class="history-list" id="historyList"></div>
+            </section>
+        </aside>
+    </section>
+
+    <section class="result-card glass hidden" id="resultScreen">
+        <h2>Raport końcowy</h2>
+        <p>Podsumowanie zapisane lokalnie. Możesz śledzić progres między kolejnymi podejściami.</p>
+
+        <div class="stats-grid">
+            <div class="stat"><div class="label">Poprawne</div><div class="value" id="scoreValue">0 / 0</div></div>
+            <div class="stat"><div class="label">Szac. IQ</div><div class="value" id="iqValue">100</div></div>
+            <div class="stat"><div class="label">Percentyl</div><div class="value" id="percentileValue">50</div></div>
+            <div class="stat"><div class="label">Czas</div><div class="value" id="timeValue">00:00</div></div>
+            <div class="stat"><div class="label">Dokładność</div><div class="value" id="accuracyValue">0%</div></div>
+        </div>
+
+        <div class="highlight-band" id="resultBand">Zakres przeciętny</div>
+
+        <div class="charts">
+            <div class="chart-card">
+                <h3>Skuteczność według kategorii</h3>
+                <div class="chart-wrap"><canvas id="categoryChart" width="600" height="320"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Progres ostatnich prób</h3>
+                <div class="chart-wrap"><canvas id="historyChart" width="600" height="320"></canvas></div>
+            </div>
+        </div>
+
+        <div class="review-list" id="reviewList"></div>
+
+        <div class="btn-row">
+            <button class="btn-primary" id="restartBtn">Nowy test</button>
+        </div>
+    </section>
+</div>
+
+<script>
+    const TOTAL_POOL_SIZE = 1000;
+    const HISTORY_KEY = 'iq_test_premium_history_v1';
+    const LAST_RESULT_KEY = 'iq_test_premium_last_v1';
+    const USED_QUESTION_IDS_KEY = 'iq_test_premium_used_question_ids_v1';
+
+    let fullQuestionPool = [];
+    let questions = [];
+    let userAnswers = [];
+    let current = 0;
+    let startTime = 0;
+    let timerId = null;
+    let sessionConfig = { difficulty: 'mixed', mode: 'mixed', player: 'Anonim', timeLimit: 0, available: 0 };
+    let questionStartedAt = 0;
+    let questionIntervalId = null;
+
+    const els = {
+        startScreen: document.getElementById('startScreen'),
+        testScreen: document.getElementById('testScreen'),
+        resultScreen: document.getElementById('resultScreen'),
+        questionCounter: document.getElementById('questionCounter'),
+        timer: document.getElementById('timer'),
+        progressFill: document.getElementById('progressFill'),
+        questionTitle: document.getElementById('questionTitle'),
+        questionType: document.getElementById('questionType'),
+        difficultyBadge: document.getElementById('difficultyBadge'),
+        questionText: document.getElementById('questionText'),
+        questionTimeBox: document.getElementById('questionTimeBox'),
+        matrixHolder: document.getElementById('matrixHolder'),
+        answers: document.getElementById('answers'),
+        historyList: document.getElementById('historyList'),
+        poolInfo: document.getElementById('poolInfo'),
+        lastResultBox: document.getElementById('lastResultBox'),
+        bestIqBox: document.getElementById('bestIqBox'),
+        attemptsBox: document.getElementById('attemptsBox'),
+        statusAnswered: document.getElementById('statusAnswered'),
+        statusMode: document.getElementById('statusMode'),
+        statusDifficulty: document.getElementById('statusDifficulty'),
+        statusPlayer: document.getElementById('statusPlayer'),
+        scoreValue: document.getElementById('scoreValue'),
+        iqValue: document.getElementById('iqValue'),
+        percentileValue: document.getElementById('percentileValue'),
+        timeValue: document.getElementById('timeValue'),
+        accuracyValue: document.getElementById('accuracyValue'),
+        resultBand: document.getElementById('resultBand'),
+        reviewList: document.getElementById('reviewList'),
+        categoryChart: document.getElementById('categoryChart'),
+        historyChart: document.getElementById('historyChart'),
+    };
+
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function choice(arr) {
+        return arr[randInt(0, arr.length - 1)];
+    }
+
+    function formatTime(ms) {
+        const total = Math.max(0, Math.floor(ms / 1000));
+        const mm = String(Math.floor(total / 60)).padStart(2, '0');
+        const ss = String(total % 60).padStart(2, '0');
+        return `${mm}:${ss}`;
+    }
+
+    function sampleDistinct(arr, n) {
+        return shuffle(arr).slice(0, n);
+    }
+
+    function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+    }
+
+    function createCanvas(size = 220) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        return canvas;
+    }
+
+    function drawPanelBackground(ctx, size) {
+        const g = ctx.createLinearGradient(0, 0, 0, size);
+        g.addColorStop(0, '#162745');
+        g.addColorStop(1, '#08111d');
+        ctx.fillStyle = g;
+        roundRect(ctx, 0, 0, size, size, 24, true, false);
+
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.strokeStyle = '#b8caff';
+        for (let i = 18; i < size; i += 22) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, size);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(size, i);
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+    }
+
+    function drawShape(ctx, shape, cx, cy, r, rotation, fillMode) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.lineWidth = 4;
+        const fillPalette = {
+            solid: '#edf3ff',
+            accent: '#7dd3fc',
+            outline: 'transparent',
+        };
+        const strokePalette = {
+            solid: 'rgba(255,255,255,0.05)',
+            accent: 'rgba(255,255,255,0.08)',
+            outline: '#edf3ff',
+        };
+        ctx.fillStyle = fillPalette[fillMode] || '#edf3ff';
+        ctx.strokeStyle = strokePalette[fillMode] || '#edf3ff';
+        ctx.shadowColor = 'rgba(125, 211, 252, 0.18)';
+        ctx.shadowBlur = fillMode === 'outline' ? 0 : 14;
+
+        ctx.beginPath();
+        if (shape === 'circle') {
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+        } else if (shape === 'square') {
+            roundRect(ctx, -r, -r, 2 * r, 2 * r, 6, false, false);
+        } else if (shape === 'triangle') {
+            ctx.moveTo(0, -r);
+            ctx.lineTo(r, r);
+            ctx.lineTo(-r, r);
+            ctx.closePath();
+        } else {
+            ctx.moveTo(0, -r);
+            ctx.lineTo(r, 0);
+            ctx.lineTo(0, r);
+            ctx.lineTo(-r, 0);
+            ctx.closePath();
+        }
+        if (fillMode !== 'outline') ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawSpecToCanvas(spec, canvas) {
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        drawPanelBackground(ctx, size);
+        const center = size / 2;
+        const positions = [
+            [0, 0], [-42, -42], [42, -42], [-42, 42], [42, 42], [0, -56], [0, 56], [-56, 0], [56, 0]
+        ];
+        const count = clamp(spec.count, 1, positions.length);
+        for (let i = 0; i < count; i++) {
+            const [dx, dy] = positions[i];
+            drawShape(ctx, spec.shape, center + dx, center + dy, 23, spec.rotation, spec.fillMode);
+        }
+    }
+
+    function buildMatrixQuestion(id, difficulty = 'medium') {
+        const shapes = ['circle', 'square', 'triangle', 'diamond'];
+        const fills = ['solid', 'accent', 'outline'];
+        const shape = choice(shapes);
+        const fillMode = choice(fills);
+        const startCount = difficulty === 'hard' ? randInt(1, 3) : randInt(1, 2);
+        const stepCount = difficulty === 'easy' ? 1 : randInt(1, 2);
+        const baseRotation = choice([0, 45, 90, 135]);
+        const rotationStep = difficulty === 'hard' ? choice([45, 90]) : 45;
+
+        const matrixCells = [];
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < 3; col++) {
+                if (row === 2 && col === 2) {
+                    matrixCells.push(null);
+                } else {
+                    matrixCells.push({
+                        shape,
+                        fillMode,
+                        count: startCount + row * stepCount + col * stepCount,
+                        rotation: (baseRotation + (row + col) * rotationStep) % 360,
+                    });
+                }
+            }
+        }
+
+        const answerSpec = {
+            shape,
+            fillMode,
+            count: startCount + 4 * stepCount,
+            rotation: (baseRotation + 4 * rotationStep) % 360,
+        };
+
+        const distractorSpecs = shuffle([
+            { ...answerSpec, count: Math.max(1, answerSpec.count - 1) },
+            { ...answerSpec, rotation: (answerSpec.rotation + 45) % 360 },
+            { ...answerSpec, shape: choice(shapes.filter(s => s !== shape)) },
+            { ...answerSpec, fillMode: choice(fills.filter(f => f !== fillMode)) },
+        ]).slice(0, 3);
+
+        const options = shuffle([
+            { spec: answerSpec, correct: true },
+            ...distractorSpecs.map(spec => ({ spec, correct: false }))
+        ]);
+
+        return {
+            id: `M-${id}`,
+            kind: 'matrix',
+            category: 'Matryce',
+            difficulty,
+            typeLabel: 'Matryca graficzna',
+            title: 'Wybierz brakujący element matrycy 3×3',
+            promptText: 'Liczba figur oraz ich rotacja rosną w sposób regularny w pionie i poziomie. Uzupełnij brakujące pole.',
+            matrixCells,
+            options,
+            answer: options.findIndex(o => o.correct),
+            explain: 'W każdym ruchu w prawo i w dół zwiększa się liczba figur oraz kąt obrotu o stały krok.',
+        };
+    }
+
+    function buildNumberQuestion(id, difficulty = 'medium') {
+        const patternType = choice(['arith', 'squares', 'doublePlus', 'fib', 'diff']);
+        let seq = [];
+        let answer = 0;
+        let explain = '';
+
+        if (patternType === 'arith') {
+            const start = randInt(2, 20);
+            const step = difficulty === 'hard' ? randInt(5, 11) : randInt(2, 6);
+            seq = [0,1,2,3,4].map(i => start + i * step);
+            answer = start + 5 * step;
+            explain = `Stała różnica +${step}.`;
+        } else if (patternType === 'squares') {
+            const base = randInt(2, 7);
+            seq = [0,1,2,3,4].map(i => (base + i) ** 2);
+            answer = (base + 5) ** 2;
+            explain = 'To kolejne kwadraty liczb.';
+        } else if (patternType === 'doublePlus') {
+            const add = difficulty === 'hard' ? randInt(2, 5) : randInt(1, 3);
+            let v = randInt(2, 6);
+            seq = [v];
+            for (let i = 0; i < 4; i++) {
+                v = v * 2 + add;
+                seq.push(v);
+            }
+            answer = seq[4] * 2 + add;
+            explain = `Każdy kolejny element: ×2 + ${add}.`;
+        } else if (patternType === 'fib') {
+            const a = randInt(1, 5);
+            const b = randInt(2, 6);
+            seq = [a, b];
+            for (let i = 0; i < 3; i++) seq.push(seq.at(-1) + seq.at(-2));
+            answer = seq.at(-1) + seq.at(-2);
+            explain = 'Każdy element jest sumą dwóch poprzednich.';
+        } else {
+            let current = randInt(20, 55);
+            const first = randInt(2, 5);
+            seq = [current];
+            for (let i = 0; i < 4; i++) {
+                current -= first + i;
+                seq.push(current);
+            }
+            answer = seq[4] - (first + 4);
+            explain = 'Różnice powiększają się o 1 w każdym kroku.';
+        }
+
+        const wrongs = new Set();
+        while (wrongs.size < 3) {
+            const delta = choice([-8, -6, -4, -2, 2, 4, 6, 8, 10]);
+            if (answer + delta !== answer) wrongs.add(answer + delta);
+        }
+        const options = shuffle([answer, ...wrongs]).map(v => ({ label: String(v), correct: v === answer }));
+
+        return {
+            id: `N-${id}`,
+            kind: 'logic',
+            category: 'Sekwencje liczb',
+            difficulty,
+            typeLabel: 'Sekwencja liczb',
+            title: 'Uzupełnij brakującą liczbę',
+            promptText: `${seq.join(', ')}, ?`,
+            options,
+            answer: options.findIndex(o => o.correct),
+            explain,
+        };
+    }
+
+    function buildAnalogyQuestion(id, difficulty = 'medium') {
+        const pairs = [
+            ['Pióro', 'pisać', 'Nóż', 'ciąć'],
+            ['Lekarz', 'szpital', 'Nauczyciel', 'szkoła'],
+            ['Klucz', 'zamek', 'Hasło', 'konto'],
+            ['Ptak', 'gniazdo', 'Lis', 'nora'],
+            ['Ogień', 'gorący', 'Lód', 'zimny'],
+            ['Minuta', 'godzina', 'Centymetr', 'metr'],
+            ['Programista', 'kod', 'Muzyk', 'utwór'],
+            ['Mikroskop', 'powiększać', 'Lornetka', 'obserwować'],
+        ];
+        const [a, b, c, d] = choice(pairs);
+        const pool = ['las', 'drzwi', 'telefon', 'dom', 'biurko', 'szyfr', 'pojazd', 'ekran'];
+        const options = shuffle([d, ...sampleDistinct(pool.filter(v => v !== d), 3)]).map(v => ({ label: v, correct: v === d }));
+        return {
+            id: `A-${id}`,
+            kind: 'logic',
+            category: 'Analogie',
+            difficulty,
+            typeLabel: 'Analogia',
+            title: 'Dokończ analogię',
+            promptText: `${a} : ${b} = ${c} : ?`,
+            options,
+            answer: options.findIndex(o => o.correct),
+            explain: 'Trzeba zachować ten sam rodzaj relacji między oboma parami.',
+        };
+    }
+
+    function buildQuestionPool() {
+        const pool = [];
+        for (let i = 1; i <= 400; i++) pool.push(buildMatrixQuestion(i, i <= 130 ? 'easy' : i <= 280 ? 'medium' : 'hard'));
+        for (let i = 1; i <= 350; i++) pool.push(buildNumberQuestion(i, i <= 120 ? 'easy' : i <= 250 ? 'medium' : 'hard'));
+        for (let i = 1; i <= 250; i++) pool.push(buildAnalogyQuestion(i, i <= 80 ? 'easy' : i <= 170 ? 'medium' : 'hard'));
+        return shuffle(pool).slice(0, TOTAL_POOL_SIZE);
+    }
+
+    function filterPool(pool, difficulty, mode) {
+        return pool.filter(q => {
+            const difficultyOk = difficulty === 'mixed' || q.difficulty === difficulty;
+            const modeOk = mode === 'mixed' || (mode === 'matrix' ? q.kind === 'matrix' : q.kind === 'logic');
+            return difficultyOk && modeOk;
+        });
+    }
+
+    function prepareTest() {
+        const count = Number(document.getElementById('questionCount').value);
+        const difficulty = document.getElementById('difficulty').value;
+        const mode = document.getElementById('mode').value;
+        const player = document.getElementById('playerName').value.trim() || 'Anonim';
+        const timeLimit = Number(document.getElementById('questionTimeLimit').value);
+        const filtered = filterPool(fullQuestionPool, difficulty, mode);
+        const usedIds = new Set(loadUsedQuestionIds());
+        let source = filtered.filter(q => !usedIds.has(q.id));
+        if (source.length < count) {
+            source = filtered.length >= count ? filtered : fullQuestionPool.filter(q => !usedIds.has(q.id));
+        }
+        if (source.length < count) {
+            source = filtered.length >= count ? filtered : fullQuestionPool;
+        }
+        questions = shuffle(source).slice(0, count);
+        userAnswers = Array(questions.length).fill(null);
+        current = 0;
+        sessionConfig = { difficulty, mode, player, available: filtered.length, timeLimit };
+        els.statusMode.textContent = mode;
+        els.statusDifficulty.textContent = difficulty;
+        els.statusPlayer.textContent = player;
+        els.statusAnswered.textContent = `0 / ${count}`;
+        els.questionTimeBox.textContent = timeLimit > 0 ? `Pozostało: ${timeLimit}s` : 'Pozostało: —';
+    }
+
+    function startTimer() {
+        startTime = Date.now();
+        timerId = setInterval(() => {
+            els.timer.textContent = formatTime(Date.now() - startTime);
+        }, 200);
+    }
+
+    function stopQuestionTimer() {
+        if (questionIntervalId) {
+            clearInterval(questionIntervalId);
+            questionIntervalId = null;
+        }
+    }
+
+    function startQuestionTimer() {
+        stopQuestionTimer();
+        questionStartedAt = Date.now();
+        if (!sessionConfig.timeLimit || sessionConfig.timeLimit <= 0) {
+            els.questionTimeBox.textContent = 'Pozostało: —';
+            return;
+        }
+        const tick = () => {
+            const elapsed = Math.floor((Date.now() - questionStartedAt) / 1000);
+            const left = Math.max(0, sessionConfig.timeLimit - elapsed);
+            els.questionTimeBox.textContent = `Pozostało: ${left}s`;
+            if (left <= 0) {
+                stopQuestionTimer();
+                if (current < questions.length - 1) {
+                    current += 1;
+                    renderQuestion();
+                } else {
+                    finishTest();
+                }
+            }
+        };
+        tick();
+        questionIntervalId = setInterval(tick, 250);
+    }
+
+    function stopTimer() {
+        clearInterval(timerId);
+        return Date.now() - startTime;
+    }
+
+    function renderMatrixStage(question) {
+        els.matrixHolder.innerHTML = '';
+        els.matrixHolder.classList.remove('hidden');
+        const grid = document.createElement('div');
+        grid.className = 'matrix-grid';
+        question.matrixCells.forEach(cell => {
+            const div = document.createElement('div');
+            div.className = 'matrix-cell' + (cell ? '' : ' missing');
+            if (cell) {
+                const canvas = createCanvas(220);
+                drawSpecToCanvas(cell, canvas);
+                div.appendChild(canvas);
+            } else {
+                const mark = document.createElement('div');
+                mark.className = 'missing-mark';
+                mark.textContent = '?';
+                div.appendChild(mark);
+            }
+            grid.appendChild(div);
+        });
+        els.matrixHolder.appendChild(grid);
+    }
+
+    function renderQuestion() {
+        const q = questions[current];
+        els.questionCounter.textContent = `Pytanie ${current + 1} / ${questions.length}`;
+        els.progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
+        els.questionTitle.textContent = q.title;
+        els.questionType.textContent = q.typeLabel;
+        els.difficultyBadge.textContent = `Poziom: ${q.difficulty}`;
+        els.questionText.textContent = q.promptText;
+        els.answers.innerHTML = '';
+
+        if (q.kind === 'matrix') {
+            renderMatrixStage(q);
+        } else {
+            els.matrixHolder.classList.add('hidden');
+            els.matrixHolder.innerHTML = '';
+        }
+
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'answer' + (userAnswers[current] === index ? ' selected' : '');
+            btn.addEventListener('click', () => {
+                userAnswers[current] = index;
+                renderQuestion();
+            });
+
+            const top = document.createElement('div');
+            top.className = 'answer-label';
+            top.innerHTML = `<span>${String.fromCharCode(65 + index)}</span><span>${q.kind === 'matrix' ? 'matryca' : 'odpowiedź'}</span>`;
+            btn.appendChild(top);
+
+            if (q.kind === 'matrix') {
+                const panel = document.createElement('div');
+                panel.className = 'option-panel';
+                const canvas = createCanvas(220);
+                drawSpecToCanvas(opt.spec, canvas);
+                panel.appendChild(canvas);
+                btn.appendChild(panel);
+            } else {
+                const text = document.createElement('div');
+                text.className = 'text-answer';
+                text.textContent = opt.label;
+                btn.appendChild(text);
+            }
+
+            els.answers.appendChild(btn);
+        });
+
+        els.statusAnswered.textContent = `${userAnswers.filter(v => v !== null).length} / ${questions.length}`;
+        document.getElementById('prevBtn').disabled = current === 0;
+        document.getElementById('nextBtn').classList.toggle('hidden', current === questions.length - 1);
+        document.getElementById('finishBtn').classList.toggle('hidden', current !== questions.length - 1);
+        startQuestionTimer();
+    }
+
+    function computeIQ(score, total, elapsedMs, difficulty) {
+        const accuracy = score / total;
+        const timeMin = elapsedMs / 60000;
+        let iq = 78 + accuracy * 48;
+        if (difficulty === 'hard') iq += 6;
+        if (difficulty === 'easy') iq -= 3;
+        if (accuracy >= 0.85 && timeMin <= Math.max(8, total * 0.55)) iq += 5;
+        if (timeMin > total * 1.45) iq -= 4;
+        return clamp(Math.round(iq), 70, 150);
+    }
+
+    function iqToPercentile(iq) {
+        return clamp(Math.round((1 / (1 + Math.exp(-(iq - 100) / 7.5))) * 100), 1, 99);
+    }
+
+    function getBand(iq) {
+        if (iq < 90) return 'Niższy wynik w tym teście orientacyjnym';
+        if (iq < 110) return 'Zakres przeciętny';
+        if (iq < 120) return 'Powyżej przeciętnej';
+        if (iq < 130) return 'Wysoki wynik';
+        return 'Bardzo wysoki wynik';
+    }
+
+    function loadHistory() {
+        try {
+            return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        } catch {
+            return [];
+        }
+    }
+
+    function loadUsedQuestionIds() {
+        try {
+            return JSON.parse(localStorage.getItem(USED_QUESTION_IDS_KEY) || '[]');
+        } catch {
+            return [];
+        }
+    }
+
+    function saveUsedQuestionIds(ids) {
+        localStorage.setItem(USED_QUESTION_IDS_KEY, JSON.stringify(ids.slice(-900)));
+    }
+
+    function saveHistory(entry) {
+        const history = loadHistory();
+        history.unshift(entry);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 30)));
+        localStorage.setItem(LAST_RESULT_KEY, JSON.stringify(entry));
+        renderHistory();
+        renderHeroStats();
+    }
+
+    function renderHeroStats() {
+        const history = loadHistory();
+        els.attemptsBox.textContent = String(history.length);
+        if (!history.length) {
+            els.lastResultBox.textContent = 'Brak';
+            els.bestIqBox.textContent = 'Brak';
+            return;
+        }
+        els.lastResultBox.textContent = `${history[0].iq} IQ`;
+        els.bestIqBox.textContent = `${Math.max(...history.map(h => h.iq))} IQ`;
+    }
+
+    function renderHistory() {
+        const history = loadHistory();
+        els.historyList.innerHTML = '';
+        if (!history.length) {
+            els.historyList.innerHTML = '<div class="history-item">Brak zapisanych wyników.</div>';
+            return;
+        }
+        history.slice(0, 10).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+          <strong>${item.player}</strong> • ${item.iq} IQ
+          <div class="sub">${item.score}/${item.total} • ${item.accuracy}% • ${item.time} • ${item.mode}/${item.difficulty}</div>
+          <div class="sub">${new Date(item.createdAt).toLocaleString('pl-PL')}</div>
+        `;
+            els.historyList.appendChild(div);
+        });
+    }
+
+    function drawBarChart(canvas, labels, values, maxValue) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#08111d';
+        ctx.fillRect(0, 0, w, h);
+
+        const left = 56;
+        const right = 18;
+        const top = 22;
+        const bottom = 48;
+        const chartW = w - left - right;
+        const chartH = h - top - bottom;
+
+        ctx.strokeStyle = 'rgba(163,184,255,0.14)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+            const y = top + (chartH / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(left, y);
+            ctx.lineTo(w - right, y);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = '#90a5c9';
+        ctx.font = '12px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 4; i++) {
+            const val = Math.round(maxValue - (maxValue / 4) * i);
+            const y = top + (chartH / 4) * i + 4;
+            ctx.fillText(String(val), left - 8, y);
+        }
+
+        const barGap = 18;
+        const barW = (chartW - (labels.length - 1) * barGap) / Math.max(labels.length, 1);
+        labels.forEach((label, i) => {
+            const x = left + i * (barW + barGap);
+            const value = values[i];
+            const barH = (value / maxValue) * chartH;
+            const y = top + chartH - barH;
+            const grad = ctx.createLinearGradient(0, y, 0, y + barH);
+            grad.addColorStop(0, '#7dd3fc');
+            grad.addColorStop(1, '#c084fc');
+            ctx.fillStyle = grad;
+            roundRect(ctx, x, y, barW, barH, 10, true, false);
+
+            ctx.fillStyle = '#edf3ff';
+            ctx.textAlign = 'center';
+            ctx.fillText(String(value), x + barW / 2, y - 8);
+            ctx.fillStyle = '#9bb0d3';
+            ctx.fillText(label, x + barW / 2, h - 18);
+        });
+    }
+
+    function drawLineChart(canvas, values) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#08111d';
+        ctx.fillRect(0, 0, w, h);
+
+        const left = 42, right = 18, top = 20, bottom = 36;
+        const chartW = w - left - right;
+        const chartH = h - top - bottom;
+        const min = Math.min(...values, 80);
+        const max = Math.max(...values, 120);
+        const range = Math.max(10, max - min);
+
+        ctx.strokeStyle = 'rgba(163,184,255,0.14)';
+        for (let i = 0; i <= 4; i++) {
+            const y = top + (chartH / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(left, y);
+            ctx.lineTo(w - right, y);
+            ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#7dd3fc';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        values.forEach((v, i) => {
+            const x = left + (i / Math.max(1, values.length - 1)) * chartW;
+            const y = top + chartH - ((v - min) / range) * chartH;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        values.forEach((v, i) => {
+            const x = left + (i / Math.max(1, values.length - 1)) * chartW;
+            const y = top + chartH - ((v - min) / range) * chartH;
+            ctx.fillStyle = '#c084fc';
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#edf3ff';
+            ctx.fillText(String(v), x, y - 10);
+        });
+
+        ctx.fillStyle = '#9bb0d3';
+        ctx.textAlign = 'center';
+        values.forEach((_, i) => {
+            const x = left + (i / Math.max(1, values.length - 1)) * chartW;
+            ctx.fillText(`#${i + 1}`, x, h - 14);
+        });
+    }
+
+    function finishTest() {
+        stopQuestionTimer();
+        const elapsed = stopTimer();
+        const score = questions.reduce((sum, q, i) => sum + (userAnswers[i] === q.answer ? 1 : 0), 0);
+        const accuracy = Math.round((score / questions.length) * 100);
+        const iq = computeIQ(score, questions.length, elapsed, sessionConfig.difficulty);
+        const percentile = iqToPercentile(iq);
+
+        const categoryStats = {};
+        questions.forEach((q, i) => {
+            categoryStats[q.category] ??= { total: 0, correct: 0 };
+            categoryStats[q.category].total += 1;
+            if (userAnswers[i] === q.answer) categoryStats[q.category].correct += 1;
+        });
+
+        els.scoreValue.textContent = `${score} / ${questions.length}`;
+        els.iqValue.textContent = iq;
+        els.percentileValue.textContent = percentile;
+        els.timeValue.textContent = formatTime(elapsed);
+        els.accuracyValue.textContent = `${accuracy}%`;
+        els.resultBand.textContent = `${getBand(iq)} • percentyl ${percentile}`;
+
+        const entry = {
+            createdAt: new Date().toISOString(),
+            player: sessionConfig.player,
+            score,
+            total: questions.length,
+            accuracy,
+            iq,
+            percentile,
+            time: formatTime(elapsed),
+            difficulty: sessionConfig.difficulty,
+            mode: sessionConfig.mode,
+            timeLimit: sessionConfig.timeLimit,
+        };
+        const usedIds = loadUsedQuestionIds();
+        saveUsedQuestionIds([...usedIds, ...questions.map(q => q.id)]);
+        saveHistory(entry);
+
+        const catLabels = Object.keys(categoryStats);
+        const catValues = catLabels.map(k => Math.round((categoryStats[k].correct / categoryStats[k].total) * 100));
+        drawBarChart(els.categoryChart, catLabels.map(v => v.length > 11 ? v.slice(0, 11) + '…' : v), catValues, 100);
+        const history = loadHistory().slice(0, 8).reverse();
+        drawLineChart(els.historyChart, history.map(h => h.iq));
+
+        els.reviewList.innerHTML = '';
+        questions.forEach((q, i) => {
+            const correct = userAnswers[i] === q.answer;
+            const div = document.createElement('div');
+            div.className = `review-item ${correct ? 'good' : 'bad'}`;
+            let answerText;
+            if (userAnswers[i] == null) answerText = 'brak odpowiedzi';
+            else answerText = q.kind === 'matrix' ? `opcja ${String.fromCharCode(65 + userAnswers[i])}` : q.options[userAnswers[i]].label;
+            const correctText = q.kind === 'matrix' ? `opcja ${String.fromCharCode(65 + q.answer)}` : q.options[q.answer].label;
+            div.innerHTML = `
+          <div class="review-top">
+            <strong>${i + 1}. ${q.title}</strong>
+            <span class="review-meta">${q.category} • ${q.difficulty}</span>
+          </div>
+          <div class="review-meta">${q.promptText}</div>
+          <div class="review-answer"><strong>Twoja odpowiedź:</strong> ${answerText}</div>
+          <div class="review-answer"><strong>Poprawna odpowiedź:</strong> ${correctText}</div>
+          <div class="review-answer">${q.explain}</div>
+        `;
+            els.reviewList.appendChild(div);
+        });
+
+        els.testScreen.classList.add('hidden');
+        els.resultScreen.classList.remove('hidden');
+        renderExportButtons(entry, categoryStats);
+    }
+
+    function startTest() {
+        prepareTest();
+        els.startScreen.classList.add('hidden');
+        els.resultScreen.classList.add('hidden');
+        els.testScreen.classList.remove('hidden');
+        els.timer.textContent = '00:00';
+        if (timerId) clearInterval(timerId);
+        stopQuestionTimer();
+        startTimer();
+        renderQuestion();
+    }
+
+    function downloadBlob(filename, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    function renderExportButtons(entry, categoryStats) {
+        let exportRow = document.getElementById('exportRow');
+        if (!exportRow) {
+            exportRow = document.createElement('div');
+            exportRow.id = 'exportRow';
+            exportRow.className = 'btn-row';
+            document.getElementById('restartBtn').parentElement.before(exportRow);
+        }
+        exportRow.innerHTML = '';
+
+        const btnJson = document.createElement('button');
+        btnJson.className = 'btn-secondary';
+        btnJson.textContent = 'Eksport JSON';
+        btnJson.addEventListener('click', () => {
+            const payload = {
+                summary: entry,
+                categoryStats,
+                questions: questions.map((q, i) => ({
+                    id: q.id,
+                    title: q.title,
+                    category: q.category,
+                    difficulty: q.difficulty,
+                    promptText: q.promptText,
+                    userAnswerIndex: userAnswers[i],
+                    correctAnswerIndex: q.answer,
+                    correct: userAnswers[i] === q.answer,
+                })),
+            };
+            downloadBlob(`iq-result-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`, JSON.stringify(payload, null, 2), 'application/json');
+        });
+
+        const btnTxt = document.createElement('button');
+        btnTxt.className = 'btn-secondary';
+        btnTxt.textContent = 'Eksport TXT';
+        btnTxt.addEventListener('click', () => {
+            const lines = [
+                'IQ Test Premium — raport',
+                '',
+                `Gracz: ${entry.player}`,
+                `IQ: ${entry.iq}`,
+                `Percentyl: ${entry.percentile}`,
+                `Wynik: ${entry.score}/${entry.total}`,
+                `Dokładność: ${entry.accuracy}%`,
+                `Czas: ${entry.time}`,
+                `Poziom: ${entry.difficulty}`,
+                `Tryb: ${entry.mode}`,
+                `Limit na pytanie: ${entry.timeLimit ? entry.timeLimit + ' s' : 'brak'}`,
+                '',
+                'Kategorie:'
+            ];
+            Object.entries(categoryStats).forEach(([k, v]) => lines.push(`- ${k}: ${v.correct}/${v.total}`));
+            lines.push('', 'Pytania:');
+            questions.forEach((q, i) => {
+                lines.push(`${i + 1}. ${q.title} [${q.category}/${q.difficulty}]`);
+                lines.push(`   ${q.promptText}`);
+                lines.push(`   Twoja odpowiedź: ${userAnswers[i] == null ? 'brak' : (q.kind === 'matrix' ? 'opcja ' + String.fromCharCode(65 + userAnswers[i]) : q.options[userAnswers[i]].label)}`);
+                lines.push(`   Poprawna: ${q.kind === 'matrix' ? 'opcja ' + String.fromCharCode(65 + q.answer) : q.options[q.answer].label}`);
+            });
+            downloadBlob(`iq-result-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.txt`, lines.join('\n'), 'text/plain;charset=utf-8');
+        });
+
+        exportRow.appendChild(btnJson);
+        exportRow.appendChild(btnTxt);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startTest);
+    document.getElementById('reshuffleBtn').addEventListener('click', () => {
+        prepareTest();
+        alert(`Wylosowano nowy zestaw. Dostępne dla filtrów: ${sessionConfig.available}.`);
+    });
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        localStorage.removeItem(HISTORY_KEY);
+        localStorage.removeItem(LAST_RESULT_KEY);
+        localStorage.removeItem(USED_QUESTION_IDS_KEY);
+        renderHistory();
+        renderHeroStats();
+    });
+    document.getElementById('restartBtn').addEventListener('click', () => {
+        els.startScreen.classList.remove('hidden');
+        els.testScreen.classList.add('hidden');
+        els.resultScreen.classList.add('hidden');
+        renderHistory();
+        renderHeroStats();
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (current > 0) {
+            current -= 1;
+            renderQuestion();
+        }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (current < questions.length - 1) {
+            current += 1;
+            renderQuestion();
+        }
+    });
+    document.getElementById('finishBtn').addEventListener('click', finishTest);
+
+    fullQuestionPool = buildQuestionPool();
+    els.poolInfo.textContent = String(fullQuestionPool.length);
+    renderHistory();
+    renderHeroStats();
+</script>
+</body>
+</html>

@@ -17,6 +17,46 @@
             margin-bottom: 20px;
         }
 
+        .search-wrap {
+            position: relative;
+            max-width: 700px;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 46px;
+            left: 0;
+            right: 86px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            max-height: 260px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .autocomplete-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: #f3f6fb;
+        }
+
+        .autocomplete-main {
+            font-weight: bold;
+        }
+
+        .autocomplete-sub {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+
         .search-bar {
             display: flex;
             gap: 10px;
@@ -79,14 +119,17 @@
 <body>
 <h1>Wyszukiwarka PLZ</h1>
 
-<div class="search-bar">
-    <input
-            type="text"
-            id="query"
-            placeholder="Wpisz ZIP, miasto, code, state lub note"
-            autocomplete="off"
-    >
-    <button id="searchBtn">Szukaj</button>
+<div class="search-wrap">
+    <div class="search-bar">
+        <input
+                type="text"
+                id="query"
+                placeholder="Wpisz ZIP, miasto, code, state lub note"
+                autocomplete="off"
+        >
+        <button id="searchBtn">Szukaj</button>
+    </div>
+    <div id="autocompleteList" class="autocomplete-list" style="display:none;"></div>
 </div>
 
 <div class="muted" id="status">Ładowanie bazy danych...</div>
@@ -109,20 +152,21 @@
 <div id="emptyState" class="empty" style="display:none;">
     Brak wyników.
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.min.js"></script>
 <script>
     let db = null;
+    let autocompleteIndex = -1;
+    let autocompleteItems = [];
 
     async function loadDatabase() {
         const SQL = await initSqlJs({
             locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}`
         });
 
-        const response = await fetch('./data/plz.sqlite');
+        const response = await fetch('./plz.sqlite', { cache: 'no-cache' });
 
         if (!response.ok) {
-            throw new Error(`Nie udało się pobrać bazy: ${response.status} ${response.statusText}`);
+            throw new Error(`Nie udało się pobrać bazy: ${response.status} ${response.statusText} (${response.url})`);
         }
 
         const buffer = await response.arrayBuffer();
@@ -146,14 +190,115 @@
         document.getElementById('emptyState').style.display = 'none';
     }
 
-    function search() {
+    function closeAutocomplete() {
+        const list = document.getElementById('autocompleteList');
+        if (list) {
+            list.innerHTML = '';
+            list.style.display = 'none';
+        }
+    }
+
+    function renderAutocomplete(items) {
+        const list = document.getElementById('autocompleteList');
+        list.innerHTML = '';
+        autocompleteItems = items;
+        autocompleteIndex = -1;
+
+        if (!items.length) {
+            list.style.display = 'none';
+            return;
+        }
+
+        items.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            div.dataset.index = index;
+            div.innerHTML = `
+                <div class="autocomplete-main">${escapeHtml(item.zip)} — ${escapeHtml(item.city)}</div>
+                <div class="autocomplete-sub">${escapeHtml(item.state)} | ${escapeHtml(item.code)}${item.note ? ' | ' + escapeHtml(item.note) : ''}</div>
+            `;
+
+            div.addEventListener('mousedown', function (event) {
+                event.preventDefault();
+                document.getElementById('query').value = item.zip;
+                closeAutocomplete();
+                search(item.zip);
+            });
+
+            list.appendChild(div);
+        });
+
+        list.style.display = 'block';
+    }
+
+    function setActiveAutocompleteItem() {
+        const items = document.querySelectorAll('.autocomplete-item');
+        items.forEach(item => item.classList.remove('active'));
+
+        if (autocompleteIndex >= 0 && items[autocompleteIndex]) {
+            items[autocompleteIndex].classList.add('active');
+            items[autocompleteIndex].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    function updateAutocomplete() {
         const q = document.getElementById('query').value.trim();
+
+        if (!db || q.length < 2) {
+            closeAutocomplete();
+            return;
+        }
+
+        const sql = `
+            SELECT city, zip, code, state, note
+            FROM plz
+            WHERE zip LIKE ?
+               OR city LIKE ?
+               OR code LIKE ?
+               OR state LIKE ?
+            ORDER BY
+                CASE
+                    WHEN zip LIKE ? THEN 0
+                    WHEN city LIKE ? THEN 1
+                    ELSE 2
+                END,
+                city ASC,
+                zip ASC
+            LIMIT 10
+        `;
+
+        const stmt = db.prepare(sql);
+        const prefix = `${q}%`;
+        const contains = `%${q}%`;
+
+        stmt.bind([
+            prefix,
+            contains,
+            contains,
+            contains,
+            prefix,
+            contains
+        ]);
+
+        const items = [];
+
+        while (stmt.step()) {
+            items.push(stmt.getAsObject());
+        }
+
+        stmt.free();
+        renderAutocomplete(items);
+    }
+
+    function search(forcedQuery = null) {
+        const q = (forcedQuery ?? document.getElementById('query').value).trim();
         const tbody = document.getElementById('resultsBody');
         const table = document.getElementById('resultsTable');
         const emptyState = document.getElementById('emptyState');
         const status = document.getElementById('status');
 
         clearResults();
+        closeAutocomplete();
 
         if (!db) {
             status.textContent = 'Baza nie jest jeszcze gotowa.';
@@ -236,15 +381,53 @@
 
     document.getElementById('searchBtn').addEventListener('click', search);
 
+    document.getElementById('query').addEventListener('input', updateAutocomplete);
+
     document.getElementById('query').addEventListener('keydown', function (event) {
+        if (autocompleteItems.length && event.key === 'ArrowDown') {
+            event.preventDefault();
+            autocompleteIndex = Math.min(autocompleteIndex + 1, autocompleteItems.length - 1);
+            setActiveAutocompleteItem();
+            return;
+        }
+
+        if (autocompleteItems.length && event.key === 'ArrowUp') {
+            event.preventDefault();
+            autocompleteIndex = Math.max(autocompleteIndex - 1, 0);
+            setActiveAutocompleteItem();
+            return;
+        }
+
         if (event.key === 'Enter') {
+            event.preventDefault();
+
+            if (autocompleteItems.length && autocompleteIndex >= 0) {
+                const selected = autocompleteItems[autocompleteIndex];
+                document.getElementById('query').value = selected.zip;
+                closeAutocomplete();
+                search(selected.zip);
+                return;
+            }
+
             search();
+        }
+
+        if (event.key === 'Escape') {
+            closeAutocomplete();
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        const list = document.getElementById('autocompleteList');
+        const input = document.getElementById('query');
+        if (list && !list.contains(event.target) && event.target !== input) {
+            closeAutocomplete();
         }
     });
 
     loadDatabase().catch(error => {
         console.error(error);
-        document.getElementById('status').textContent = 'Błąd ładowania bazy danych.';
+        document.getElementById('status').textContent = `Błąd ładowania bazy danych: ${error.message}`;
     });
 </script>
 </body>

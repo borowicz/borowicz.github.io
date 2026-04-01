@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Spheres with Selectable Movement</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button, select {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="controls">
+    <select id="parentSphere">
+        <option value="0">Main Sphere</option>
+    </select>
+    <button id="addSphere">Add Sphere</button>
+    <button id="increaseSize">Increase Size</button>
+    <button id="decreaseSize">Decrease Size</button>
+</div>
+
+<!-- Three.js script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- OrbitControls script -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+    // Scene
+    const scene = new THREE.Scene();
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 10;
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Sphere geometry
+    const sphereRadius = 1; // Define the radius of the sphere
+    const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 32, 32); // Radius, width segments, height segments
+    const sphereDiameter = 2 * sphereRadius; // Diameter of the sphere
+
+    // Main sphere
+    const mainSphereMaterial = new THREE.MeshBasicMaterial({
+        color: 0x0077ff,
+        wireframe: true
+    });
+    const mainSphere = new THREE.Mesh(sphereGeometry, mainSphereMaterial);
+    scene.add(mainSphere);
+
+    // Orbit Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enablePan = true;
+    controls.enableRotate = true;
+
+    let spheres = [mainSphere];  // Array to store all spheres
+    let lines = [];  // Array to store lines connecting spheres
+    let sphereIndex = 1;  // Index for new spheres
+    let dragObject = null; // Sphere being dragged
+    let mouse = new THREE.Vector2();
+    let raycaster = new THREE.Raycaster();
+    let selectedSphere = mainSphere; // Default to main sphere
+    let dragging = false; // To track whether a sphere is being dragged
+
+    // Function to generate a random color
+    function getRandomColor() {
+        return Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    // Function to create a line between two spheres
+    function createLine(sphere1, sphere2) {
+        const points = new Float32Array([
+            sphere1.position.x, sphere1.position.y, sphere1.position.z,
+            sphere2.position.x, sphere2.position.y, sphere2.position.z
+        ]);
+
+        const lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
+
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+        const line = new THREE.Line(lineGeometry, lineMaterial);
+        lines.push(line);
+        scene.add(line);
+    }
+
+    // Function to add a new sphere and connect it to a parent sphere
+    function addSphere() {
+        const parentIndex = parseInt(document.getElementById('parentSphere').value, 10);
+        const parentSphere = spheres[parentIndex];
+
+        // Create new sphere with random color
+        const newSphereMaterial = new THREE.MeshBasicMaterial({ color: `#${getRandomColor()}`, wireframe: true });
+        const newSphere = new THREE.Mesh(sphereGeometry, newSphereMaterial);
+
+        // Set new sphere position at 2 times the diameter (4 units) from the parent
+        const distance = 2 * sphereDiameter; // 2 * średnica (2 * 2 = 4 jednostki)
+        const randomDirection = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+        newSphere.position.copy(parentSphere.position.clone().add(randomDirection.multiplyScalar(distance)));
+
+        scene.add(newSphere);
+        spheres.push(newSphere);
+
+        // Create line between new sphere and parent
+        createLine(parentSphere, newSphere);
+
+        // Add option to select new sphere as a parent
+        const select = document.getElementById('parentSphere');
+        const option = document.createElement('option');
+        option.value = sphereIndex;
+        option.text = `Sphere ${sphereIndex}`;
+        select.appendChild(option);
+
+        // Automatically switch select to the newly added sphere
+        select.value = sphereIndex;
+
+        // Update the selectedSphere to the newly added one
+        selectedSphere = newSphere;
+
+        sphereIndex++;
+    }
+
+    // Function to update lines dynamically as spheres move
+    function updateLines() {
+        lines.forEach((line, i) => {
+            const positions = line.geometry.attributes.position.array;
+            const sphere1 = spheres[i];
+            const sphere2 = spheres[i + 1];
+            positions[0] = sphere1.position.x;
+            positions[1] = sphere1.position.y;
+            positions[2] = sphere1.position.z;
+            positions[3] = sphere2.position.x;
+            positions[4] = sphere2.position.y;
+            positions[5] = sphere2.position.z;
+            line.geometry.attributes.position.needsUpdate = true;
+        });
+    }
+
+    // Function to handle sphere selection from the dropdown
+    function onSphereSelect() {
+        const selectedIndex = parseInt(document.getElementById('parentSphere').value, 10);
+        selectedSphere = spheres[selectedIndex];
+    }
+
+    // Raycast and detect mouse over the selected sphere to drag it
+    function onDocumentMouseDown(event) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(selectedSphere);
+
+        if (intersects.length > 0) {
+            dragObject = selectedSphere;
+            dragging = true;
+        }
+    }
+
+    function onDocumentMouseMove(event) {
+        if (!dragObject || !dragging) return;
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const planeIntersect = raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), dragObject.position.z));
+        if (planeIntersect) {
+            dragObject.position.copy(planeIntersect);
+            updateLines(); // Update line positions when the object is moved
+        }
+    }
+
+    function onDocumentMouseUp() {
+        dragObject = null;
+        dragging = false;
+    }
+
+    // Scroll zoom function
+    function onDocumentMouseWheel(event) {
+        camera.position.z += event.deltaY * 0.01;
+    }
+
+    // Resize the selected sphere by 20%
+    function resizeSphere(factor) {
+        if (selectedSphere) {
+            selectedSphere.scale.multiplyScalar(factor);
+            updateLines(); // Update lines after resizing
+        }
+    }
+
+    // Animation function
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+
+    // Event listeners for dragging, scrolling, and resizing
+    window.addEventListener('mousedown', onDocumentMouseDown);
+    window.addEventListener('mousemove', onDocumentMouseMove);
+    window.addEventListener('mouseup', onDocumentMouseUp);
+    window.addEventListener('wheel', onDocumentMouseWheel);
+    document.getElementById('parentSphere').addEventListener('change', onSphereSelect);
+
+    document.getElementById('increaseSize').addEventListener('click', () => resizeSphere(1.2)); // Increase size by 20%
+    document.getElementById('decreaseSize').addEventListener('click', () => resizeSphere(0.8)); // Decrease size by 20%
+
+    // Start animation
+    animate();
+
+    // Resize handler
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
+
+    // Add sphere button
+    document.getElementById('addSphere').addEventListener('click', addSphere);
+</script>
+</body>
+</html>
