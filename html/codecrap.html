@@ -1000,7 +1000,7 @@
                 <pre><code>${escapeHtml(item.code || '')}</code></pre>
                 <div class="actions">
                     <div class="actions-left">
-                        <a class="muted" href="${escapeHtml(item.sourceUrl || '#')}" target="_blank" rel="noopener">//source</a>
+                        <a class="muted" title="${escapeHtml(item.sourceUrl || '#')}" target="_blank" rel="noopener">//source</a>
                         <button class="copy-btn" type="button" data-code="${encodeURIComponent(item.code || '')}">Copy code</button>
                     </div>
                     <a class="muted" href="#card-${item.id}">Card #${item.id}</a>
