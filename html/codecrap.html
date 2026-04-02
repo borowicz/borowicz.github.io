@@ -687,20 +687,18 @@
 <main class="wrap">
     <section class="hero">
         <div class="eyebrow">Code Crap Archive</div>
-        <div style="float: right;" class="header-toggle-row">
+        <div class="header-toggle-row" style="float: right; margin-top: -10px; margin-right: 10px;">
             <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">
                 Hide header details
             </button>
         </div>
-        <h3>Funny code...
-        <p class="lead">
-            Questionable life choices, one searchable wall of shame, museum of cursed software decisions.
-        </p>
-        </h3>
-
-
-
         <div id="heroBody" class="hero-body">
+            <header>
+                <h3>Funny code...</h3>
+                <p class="lead">
+                    Questionable life choices, one searchable wall of shame, museum of cursed software decisions.
+                </p>
+            </header>
             <div id="toolbar" class="toolbar">
                 <input id="searchInput" class="field" type="search" placeholder="Search code, title, author, tag, caption..." />
                 <select id="languageFilter" class="select">
@@ -978,34 +976,30 @@
 
         const codeLineCount = String(item.code || '').split('\n').length;
         const codeLength = String(item.code || '').length;
-        // const isWideCard = codeLineCount >= 7 || codeLength >= 400;
         const isWideCard = codeLength >= 400;
         const cardClassName = isWideCard ? 'card card-wide' : 'card';
 
         return `
-            <article class="${cardClassName}">
+            <article class="${cardClassName}" id="card-${item.id}">
+                <a class="muted" href="#card-${item.id}" style="font-size:13px;margin-bottom:0.25em;display:inline-block;text-decoration:none;">&#128279; Card #${item.id}</a>
                 <div class="card-head">
                     <h2 class="title">${escapeHtml(item.title)}</h2>
                     <div class="badge">${escapeHtml(item.votes || '0')}</div>
                 </div>
-
                 <div class="meta">
                     <span class="chip">${escapeHtml(item.languageLabel || formatLanguageLabel(item.language || 'plain'))}</span>
                     <span class="chip">${escapeHtml(item.author || 'anonymous')}</span>
                     <span class="chip">${escapeHtml(item.date || 'unknown date')}</span>
                 </div>
-
                 <div class="tag-list">${tagsHtml}</div>
-
                 <p class="caption">${escapeHtml(item.caption || '')}</p>
                 <pre><code>${escapeHtml(item.code || '')}</code></pre>
-
                 <div class="actions">
                     <div class="actions-left">
-                        <a class="muted" title="${escapeHtml(item.sourceUrl || '#')}">//source</a>
+                        <a class="muted" href="${escapeHtml(item.sourceUrl || '#')}" target="_blank" rel="noopener">//source</a>
                         <button class="copy-btn" type="button" data-code="${encodeURIComponent(item.code || '')}">Copy code</button>
                     </div>
-                    <span class="muted">Card #${item.id}</span>
+                    <a class="muted" href="#card-${item.id}">Card #${item.id}</a>
                 </div>
             </article>
         `;
@@ -1061,25 +1055,29 @@
     }
 
     function render() {
+        // Check hash for single card mode
+        const hash = window.location.hash;
+        let singleCardId = null;
+        if (hash && /^#card-(\d+)/.test(hash)) {
+            singleCardId = hash.replace('#card-', '');
+        }
         const filtered = getFilteredItems();
-        const visibleItems = filtered.slice(0, renderLimit);
-
+        let visibleItems = filtered.slice(0, renderLimit);
+        if (singleCardId) {
+            const card = normalizedSnippets.find(sn => String(sn.id) === String(singleCardId));
+            visibleItems = card ? [card] : [];
+        }
         updatePreloaderProgress(visibleItems.length, normalizedSnippets.length);
-
         visibleCount.textContent = filtered.length;
         renderedCount.textContent = visibleItems.length;
         activeTagLabel.textContent = activeTag === 'all' ? 'none' : activeTag;
-
-        emptyState.style.display = filtered.length ? 'none' : 'block';
+        emptyState.style.display = visibleItems.length ? 'none' : 'block';
         cards.innerHTML = visibleItems.map(createCard).join('');
         updateCopyButtons();
-
-        const hasMore = filtered.length > visibleItems.length;
-
-        if (!filtered.length) {
+        const hasMore = filtered.length > visibleItems.length && !singleCardId;
+        if (!visibleItems.length) {
             renderedCount.textContent = '0';
         }
-
         footerActions.classList.toggle('hidden', !hasMore);
     }
 
@@ -1138,6 +1136,11 @@
         requestAnimationFrame(() => {
             hidePreloader();
         });
+    });
+
+    // Listen for hashchange to support single card mode
+    window.addEventListener('hashchange', () => {
+        render();
     });
 </script>
 </body>
