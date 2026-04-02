@@ -359,6 +359,10 @@
             align-items: start;
         }
 
+        .grid.grid-single {
+            grid-template-columns: 1fr;
+        }
+
         .card {
             background: linear-gradient(180deg, rgba(18,26,48,.95), rgba(11,16,32,.95));
             border: 1px solid var(--line);
@@ -686,7 +690,7 @@
 
 <main class="wrap">
     <section class="hero">
-        <div class="eyebrow">Code Crap Archive</div>
+        <a href="codecrap.html"><div class="eyebrow">Code Crap Archive</div></a>
         <div class="header-toggle-row" style="float: right; margin-top: -10px; margin-right: 10px;">
             <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">
                 Hide header details
@@ -697,7 +701,7 @@
                 <h3>Funny code...</h3>
                 <p class="lead">
                     Questionable life choices, one searchable wall of shame, museum of cursed software decisions.
-                </p>
+                </p><br >
             </header>
             <div id="toolbar" class="toolbar">
                 <input id="searchInput" class="field" type="search" placeholder="Search code, title, author, tag, caption..." />
@@ -1072,6 +1076,7 @@
         renderedCount.textContent = visibleItems.length;
         activeTagLabel.textContent = activeTag === 'all' ? 'none' : activeTag;
         emptyState.style.display = visibleItems.length ? 'none' : 'block';
+        cards.classList.toggle('grid-single', visibleItems.length === 1);
         cards.innerHTML = visibleItems.map(createCard).join('');
         updateCopyButtons();
         const hasMore = filtered.length > visibleItems.length && !singleCardId;
