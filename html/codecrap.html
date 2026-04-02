@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Crap Museum</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: #121a30;
+            --panel-2: #17213d;
+            --line: rgba(255,255,255,.08);
+            --text: #e8eefc;
+            --muted: #97a3c4;
+            --accent: #7dd3fc;
+            --accent-2: #c084fc;
+            --good: #86efac;
+            --warning: #fbbf24;
+            --shadow: 0 20px 60px rgba(0,0,0,.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                    radial-gradient(circle at top left, rgba(125, 211, 252, .15), transparent 30%),
+                    radial-gradient(circle at top right, rgba(192, 132, 252, .12), transparent 30%),
+                    linear-gradient(180deg, #0a0f1d 0%, #0f172a 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .preloader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                    radial-gradient(circle at top left, rgba(125, 211, 252, .18), transparent 30%),
+                    radial-gradient(circle at top right, rgba(192, 132, 252, .14), transparent 30%),
+                    linear-gradient(180deg, rgba(10,15,29,.96) 0%, rgba(15,23,42,.98) 100%);
+            z-index: 9999;
+            transition: opacity .28s ease, visibility .28s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-card {
+            width: min(920px, 100%);
+            background: linear-gradient(135deg, rgba(23,33,61,.95), rgba(11,16,32,.92));
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .preloader-spinner {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,.10);
+            border-top-color: var(--accent);
+            animation: spin .9s linear infinite;
+        }
+
+        .preloader-head {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .preloader-progress {
+            margin: 12px 0 0;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .preloader-skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .preloader-skeleton-card {
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(18,26,48,.72), rgba(11,16,32,.72));
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skeleton-line,
+        .skeleton-pill,
+        .skeleton-code-line,
+        .skeleton-button {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,.06);
+        }
+
+        .skeleton-line::after,
+        .skeleton-pill::after,
+        .skeleton-code-line::after,
+        .skeleton-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+            animation: shimmer 1.3s linear infinite;
+        }
+
+        .skeleton-line {
+            height: 14px;
+            border-radius: 999px;
+        }
+
+        .skeleton-line.title-1 { width: 82%; height: 18px; }
+        .skeleton-line.title-2 { width: 54%; }
+        .skeleton-line.caption-1 { width: 100%; }
+        .skeleton-line.caption-2 { width: 88%; }
+
+        .skeleton-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skeleton-pill {
+            width: 72px;
+            height: 28px;
+            border-radius: 999px;
+        }
+
+        .skeleton-code {
+            margin-top: 4px;
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(125, 211, 252, .10);
+            background: rgba(9,17,33,.9);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skeleton-code-line {
+            height: 10px;
+            border-radius: 999px;
+        }
+
+        .skeleton-code-line.w-100 { width: 100%; }
+        .skeleton-code-line.w-86 { width: 86%; }
+        .skeleton-code-line.w-72 { width: 72%; }
+        .skeleton-code-line.w-58 { width: 58%; }
+
+        .skeleton-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: auto;
+            align-items: center;
+        }
+
+        .skeleton-button {
+            width: 110px;
+            height: 36px;
+            border-radius: 12px;
+        }
+
+        .skeleton-small {
+            width: 56px;
+            height: 12px;
+            border-radius: 999px;
+        }
+
+        .preloader-title {
+            margin: 0;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+
+        .preloader-text {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: min(1680px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 64px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(23,33,61,.95), rgba(11,16,32,.92));
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 12px;
+            z-index: 30;
+            backdrop-filter: blur(14px);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(125, 211, 252, .08);
+            border: 1px solid rgba(125, 211, 252, .15);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-size: clamp(28px, 4vw, 52px);
+            line-height: 1.02;
+        }
+
+        .lead {
+            margin: 0;
+            color: var(--muted);
+            max-width: 75ch;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .header-toggle-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .header-toggle {
+            min-height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            padding: 0 14px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .hero-body {
+            margin-top: 12px;
+            overflow: hidden;
+            max-height: 520px;
+            opacity: 1;
+            transition: max-height .32s ease, opacity .22s ease, margin-top .32s ease;
+        }
+
+        .hero-body.is-collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            pointer-events: none;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1.4fr .7fr .7fr auto;
+            gap: 12px;
+        }
+
+        .field, .select, .button {
+            min-height: 50px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            padding: 0 14px;
+            font: inherit;
+            outline: none;
+        }
+
+        .field::placeholder { color: #8a97bb; }
+
+        .button {
+            cursor: pointer;
+            font-weight: 700;
+            background: linear-gradient(135deg, rgba(125, 211, 252, .16), rgba(192, 132, 252, .16));
+        }
+
+        .filters {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-filter {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .tag-filter.active {
+            color: #08111f;
+            background: var(--accent);
+            border-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+            align-items: center;
+        }
+
+        .pill {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            color: var(--muted);
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+        }
+
+        .grid {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            align-items: start;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(18,26,48,.95), rgba(11,16,32,.95));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .card.card-wide {
+            grid-column: 1 / -1;
+            max-width: 100%;
+        }
+        .card-wide pre{
+            font-size: 0.85em;
+        }
+
+        .hero-meta-row {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-meta-row .filters,
+        .hero-meta-row .stats {
+            margin-top: 0;
+        }
+
+        .hero-meta-row .filters {
+            flex: 1 1 420px;
+        }
+
+        .hero-meta-row .stats {
+            flex: 0 1 auto;
+            justify-content: flex-end;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .badge {
+            flex: 0 0 auto;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(134, 239, 172, .08);
+            border: 1px solid rgba(134, 239, 172, .16);
+            color: var(--good);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .meta, .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        .tag-chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(251, 191, 36, .08);
+            border: 1px solid rgba(251, 191, 36, .16);
+            color: var(--warning);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .caption {
+            margin: 0;
+            color: #d7def7;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        pre {
+            margin: 0;
+            padding: 14px;
+            border-radius: 18px;
+            background: #091121;
+            border: 1px solid rgba(125, 211, 252, .12);
+            overflow: auto;
+            color: #d9e6ff;
+            font-size: 12px;
+            line-height: 1.55;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+
+        .actions-left {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .link, .copy-btn, .load-more {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            border-radius: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+        }
+
+        .copy-btn.copied {
+            color: #08111f;
+            background: var(--good);
+            border-color: transparent;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .empty {
+            margin-top: 22px;
+            display: none;
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px dashed var(--line);
+            text-align: center;
+            color: var(--muted);
+            background: rgba(255,255,255,.03);
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .footer-actions.hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 920px) {
+            .hero-body {
+                max-height: 760px;
+            }
+
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                position: static;
+            }
+
+            .preloader-skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+
+            .hero-meta-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .hero-meta-row .stats {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="loading">
+<div id="preloader" class="preloader" aria-live="polite" aria-busy="true">
+    <div class="preloader-card">
+        <div class="preloader-head">
+            <div class="preloader-spinner" aria-hidden="true"></div>
+            <h2 class="preloader-title">Loading cursed code…</h2>
+            <p class="preloader-text">
+                Sweeping the archive for legacy crimes, boolean atrocities and copy-paste felonies.
+            </p>
+            <p id="preloaderProgress" class="preloader-progress">Loading 0/0 code crimes…</p>
+        </div>
+
+        <div class="preloader-skeleton-grid" aria-hidden="true">
+            <div class="preloader-skeleton-card">
+                <div class="skeleton-line title-1"></div>
+                <div class="skeleton-line title-2"></div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-line caption-1"></div>
+                <div class="skeleton-line caption-2"></div>
+                <div class="skeleton-code">
+                    <div class="skeleton-code-line w-100"></div>
+                    <div class="skeleton-code-line w-86"></div>
+                    <div class="skeleton-code-line w-72"></div>
+                    <div class="skeleton-code-line w-58"></div>
+                </div>
+                <div class="skeleton-actions">
+                    <div class="skeleton-button"></div>
+                    <div class="skeleton-small"></div>
+                </div>
+            </div>
+
+            <div class="preloader-skeleton-card">
+                <div class="skeleton-line title-1"></div>
+                <div class="skeleton-line title-2"></div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-line caption-1"></div>
+                <div class="skeleton-line caption-2"></div>
+                <div class="skeleton-code">
+                    <div class="skeleton-code-line w-100"></div>
+                    <div class="skeleton-code-line w-86"></div>
+                    <div class="skeleton-code-line w-72"></div>
+                    <div class="skeleton-code-line w-58"></div>
+                </div>
+                <div class="skeleton-actions">
+                    <div class="skeleton-button"></div>
+                    <div class="skeleton-small"></div>
+                </div>
+            </div>
+
+            <div class="preloader-skeleton-card">
+                <div class="skeleton-line title-1"></div>
+                <div class="skeleton-line title-2"></div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-pill"></div>
+                    <div class="skeleton-pill"></div>
+                </div>
+                <div class="skeleton-line caption-1"></div>
+                <div class="skeleton-line caption-2"></div>
+                <div class="skeleton-code">
+                    <div class="skeleton-code-line w-100"></div>
+                    <div class="skeleton-code-line w-86"></div>
+                    <div class="skeleton-code-line w-72"></div>
+                    <div class="skeleton-code-line w-58"></div>
+                </div>
+                <div class="skeleton-actions">
+                    <div class="skeleton-button"></div>
+                    <div class="skeleton-small"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="wrap">
+    <section class="hero">
+        <div class="eyebrow">Code Crap Archive</div>
+        <div style="float: right;" class="header-toggle-row">
+            <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">
+                Hide header details
+            </button>
+        </div>
+        <h3>Funny code...
+        <p class="lead">
+            Questionable life choices, one searchable wall of shame, museum of cursed software decisions.
+        </p>
+        </h3>
+
+
+
+        <div id="heroBody" class="hero-body">
+            <div id="toolbar" class="toolbar">
+                <input id="searchInput" class="field" type="search" placeholder="Search code, title, author, tag, caption..." />
+                <select id="languageFilter" class="select">
+                    <option value="all">All languages</option>
+                </select>
+                <select id="sortFilter" class="select">
+                    <option value="votes">Sort: top voted</option>
+                    <option value="newest">Sort: newest</option>
+                    <option value="oldest">Sort: oldest</option>
+                    <option value="language">Sort: language</option>
+                </select>
+                <button id="resetButton" class="button" type="button">Reset</button>
+            </div>
+
+            <div class="hero-meta-row">
+                <div id="tagFilters" class="filters"></div>
+
+                <div class="stats">
+                    <div class="pill"><strong id="visibleCount">0</strong> visible</div>
+                    <div class="pill"><strong id="renderedCount">0</strong> rendered</div>
+                    <div class="pill"><strong id="totalCount">0</strong> total</div>
+                    <div class="pill"><strong id="activeTagLabel">none</strong> active tag</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cards" class="grid" aria-live="polite"></section>
+    <section id="emptyState" class="empty">
+        No cursed relics matched your search. Try fewer filters.
+    </section>
+
+    <div id="footerActions" class="footer-actions hidden">
+        <button id="loadMoreButton" class="load-more" type="button">Load more snippets</button>
+    </div>
+</main>
+
+<script src="./codecrap-data.min.js"></script>
+<script>
+    const snippets = Array.isArray(window.CODECRAP_SNIPPETS) ? window.CODECRAP_SNIPPETS : [];
+    const PAGE_SIZE = 48;
+
+    const cards = document.getElementById('cards');
+    const searchInput = document.getElementById('searchInput');
+    const languageFilter = document.getElementById('languageFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const resetButton = document.getElementById('resetButton');
+    const toolbar = document.getElementById('toolbar');
+    const heroBody = document.getElementById('heroBody');
+    const headerToggle = document.getElementById('headerToggle');
+    const visibleCount = document.getElementById('visibleCount');
+    const renderedCount = document.getElementById('renderedCount');
+    const totalCount = document.getElementById('totalCount');
+    const activeTagLabel = document.getElementById('activeTagLabel');
+    const emptyState = document.getElementById('emptyState');
+    const tagFilters = document.getElementById('tagFilters');
+    const footerActions = document.getElementById('footerActions');
+    const loadMoreButton = document.getElementById('loadMoreButton');
+    const preloader = document.getElementById('preloader');
+    const preloaderProgress = document.getElementById('preloaderProgress');
+
+    const PRELOADER_MIN_MS = 700;
+    const preloaderStartedAt = Date.now();
+    let activeTag = 'all';
+    let renderLimit = PAGE_SIZE;
+
+    const LANGUAGE_LABELS = {
+        js: 'JavaScript',
+        javascript: 'JavaScript',
+        ts: 'TypeScript',
+        typescript: 'TypeScript',
+        php: 'PHP',
+        java: 'Java',
+        cpp: 'C++',
+        cxx: 'C++',
+        cc: 'C++',
+        c: 'C',
+        cs: 'C#',
+        csharp: 'C#',
+        py: 'Python',
+        python: 'Python',
+        rb: 'Ruby',
+        ruby: 'Ruby',
+        go: 'Go',
+        rs: 'Rust',
+        rust: 'Rust',
+        css: 'CSS',
+        scss: 'SCSS',
+        sass: 'Sass',
+        html: 'HTML',
+        xml: 'XML',
+        sql: 'SQL',
+        sh: 'Shell',
+        bash: 'Bash',
+        plain: 'Plain text'
+    };
+
+    const DEFAULT_CAPTIONS = [
+        'Legacy code walked in and best practices walked out.',
+        'A tiny snippet with the confidence of a production outage.',
+        'Readable? No. Memorable? Tragically yes.',
+        'Somewhere, a code reviewer quietly closed the laptop.',
+        'The code works, the dignity does not.',
+        'A compact monument to bad decisions and strong opinions.'
+    ];
+
+    function escapeHtml(value = '') {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    function parseVotes(value) {
+        return Number(String(value).replace(/[^\d-]/g, '')) || 0;
+    }
+
+    function parseArchiveDate(value) {
+        const timestamp = Date.parse(value);
+        return Number.isNaN(timestamp) ? 0 : timestamp;
+    }
+
+    function normalizeLanguage(value) {
+        const normalized = String(value || 'plain').trim().toLowerCase();
+        return normalized || 'plain';
+    }
+
+    function formatLanguageLabel(value) {
+        const normalized = normalizeLanguage(value);
+        return LANGUAGE_LABELS[normalized] || normalized.toUpperCase();
+    }
+
+    function makeCaption(item, index) {
+        if (item.caption && String(item.caption).trim()) {
+            return String(item.caption).trim();
+        }
+
+        return DEFAULT_CAPTIONS[index % DEFAULT_CAPTIONS.length];
+    }
+
+    function inferTags(item) {
+        const existingTags = Array.isArray(item.tags)
+            ? item.tags.map(tag => String(tag).trim().toLowerCase()).filter(Boolean)
+            : [];
+
+        const text = [
+            item.title,
+            item.code,
+            item.language
+        ].join(' ').toLowerCase();
+
+        const inferred = new Set(existingTags);
+
+        if (/password|login|auth|token|session|admin|hash|md5|sha1/.test(text)) inferred.add('auth');
+        if (/null|nil|undefined|nullptr|none|nullpointer/.test(text)) inferred.add('null');
+        if (/for\s*\(|while\s*\(|do\s*\{|goto|sleep\s*\(86400\)/.test(text)) inferred.add('loop');
+        if (/ie\b|svn\b|mysql_|center>|table>|font>|var\s|function\s|legacy|deprecated/.test(text)) inferred.add('legacy');
+        if (/wtf|hack|sucker|terrible|wrong|return 5|if \(true\)|== true|== false|catch \(exception|catch\(exception/.test(text)) inferred.add('wtf');
+
+        return [...inferred].sort((a, b) => a.localeCompare(b));
+    }
+
+    function buildSnippetTitle(item, index) {
+        if (item.title && String(item.title).trim()) {
+            return String(item.title).trim();
+        }
+
+        const firstLine = String(item.code || '')
+            .split('\n')
+            .map(line => line.trim())
+            .find(Boolean);
+
+        if (firstLine) {
+            return firstLine.length > 80 ? `${firstLine.slice(0, 77)}...` : firstLine;
+        }
+
+        return `Crap #${item.id || index + 1}`;
+    }
+
+    function normalizeSnippet(item, index) {
+        const language = normalizeLanguage(item.language);
+        const code = String(item.code || '').replace(/\r\n/g, '\n').trim();
+
+        return {
+            ...item,
+            id: item.id || index + 1,
+            title: buildSnippetTitle(item, index),
+            caption: makeCaption(item, index),
+            language,
+            languageLabel: formatLanguageLabel(language),
+            author: item.author && String(item.author).trim() ? String(item.author).trim() : 'anonymous',
+            date: item.date && String(item.date).trim() ? String(item.date).trim() : 'unknown date',
+            votes: item.votes && String(item.votes).trim() ? String(item.votes).trim() : '0',
+            sourceUrl: item.sourceUrl && String(item.sourceUrl).trim() ? String(item.sourceUrl).trim() : '#',
+            code,
+            tags: inferTags({ ...item, language, code })
+        };
+    }
+
+    const normalizedSnippets = snippets.map(normalizeSnippet);
+
+    function buildLanguageOptions() {
+        const languages = [...new Set(normalizedSnippets.map(item => item.language).filter(Boolean))]
+            .sort((a, b) => a.localeCompare(b));
+
+        languages.forEach(language => {
+            const option = document.createElement('option');
+            option.value = language;
+            option.textContent = formatLanguageLabel(language);
+            languageFilter.appendChild(option);
+        });
+    }
+
+    function buildTagFilters() {
+        const tags = [...new Set(normalizedSnippets.flatMap(item => item.tags || []))].sort((a, b) => a.localeCompare(b));
+        const all = ['all', ...tags];
+
+        tagFilters.innerHTML = all.map(tag => `
+            <button class="tag-filter ${tag === 'all' ? 'active' : ''}" type="button" data-tag="${escapeHtml(tag)}">
+                ${tag === 'all' ? 'all tags' : '#' + escapeHtml(tag)}
+            </button>
+        `).join('');
+
+        tagFilters.querySelectorAll('.tag-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                activeTag = button.dataset.tag;
+                renderLimit = PAGE_SIZE;
+                tagFilters.querySelectorAll('.tag-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                render();
+            });
+        });
+    }
+
+    function getFilteredItems() {
+        const query = searchInput.value.trim().toLowerCase();
+        const language = languageFilter.value;
+        const sort = sortFilter.value;
+
+        const filtered = normalizedSnippets.filter(item => {
+            const haystack = [
+                item.title,
+                item.caption,
+                item.language,
+                item.author,
+                item.date,
+                item.votes,
+                item.code,
+                ...(item.tags || [])
+            ].join(' ').toLowerCase();
+
+            const matchesQuery = !query || haystack.includes(query);
+            const matchesLanguage = language === 'all' || item.language === language;
+            const matchesTag = activeTag === 'all' || (item.tags || []).includes(activeTag);
+
+            return matchesQuery && matchesLanguage && matchesTag;
+        });
+
+        filtered.sort((a, b) => {
+            if (sort === 'newest') return parseArchiveDate(b.date) - parseArchiveDate(a.date);
+            if (sort === 'oldest') return parseArchiveDate(a.date) - parseArchiveDate(b.date);
+            if (sort === 'language') return a.language.localeCompare(b.language) || parseVotes(b.votes) - parseVotes(a.votes);
+            return parseVotes(b.votes) - parseVotes(a.votes);
+        });
+
+        return filtered;
+    }
+
+    function createCard(item) {
+        const tagsHtml = (item.tags || []).length
+            ? item.tags.map(tag => `<span class="tag-chip">#${escapeHtml(tag)}</span>`).join('')
+            : '<span class="tag-chip">#uncategorized</span>';
+
+        const codeLineCount = String(item.code || '').split('\n').length;
+        const codeLength = String(item.code || '').length;
+        // const isWideCard = codeLineCount >= 7 || codeLength >= 400;
+        const isWideCard = codeLength >= 400;
+        const cardClassName = isWideCard ? 'card card-wide' : 'card';
+
+        return `
+            <article class="${cardClassName}">
+                <div class="card-head">
+                    <h2 class="title">${escapeHtml(item.title)}</h2>
+                    <div class="badge">${escapeHtml(item.votes || '0')}</div>
+                </div>
+
+                <div class="meta">
+                    <span class="chip">${escapeHtml(item.languageLabel || formatLanguageLabel(item.language || 'plain'))}</span>
+                    <span class="chip">${escapeHtml(item.author || 'anonymous')}</span>
+                    <span class="chip">${escapeHtml(item.date || 'unknown date')}</span>
+                </div>
+
+                <div class="tag-list">${tagsHtml}</div>
+
+                <p class="caption">${escapeHtml(item.caption || '')}</p>
+                <pre><code>${escapeHtml(item.code || '')}</code></pre>
+
+                <div class="actions">
+                    <div class="actions-left">
+                        <a class="muted" title="${escapeHtml(item.sourceUrl || '#')}">//source</a>
+                        <button class="copy-btn" type="button" data-code="${encodeURIComponent(item.code || '')}">Copy code</button>
+                    </div>
+                    <span class="muted">Card #${item.id}</span>
+                </div>
+            </article>
+        `;
+    }
+
+    function updateCopyButtons() {
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const code = decodeURIComponent(button.dataset.code || '');
+                try {
+                    await navigator.clipboard.writeText(code);
+                    const original = button.textContent;
+                    button.textContent = 'Copied';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.textContent = original;
+                        button.classList.remove('copied');
+                    }, 1400);
+                } catch {
+                    button.textContent = 'Copy failed';
+                    setTimeout(() => {
+                        button.textContent = 'Copy code';
+                    }, 1400);
+                }
+            });
+        });
+    }
+
+    function updatePreloaderProgress(current, total) {
+        if (!preloaderProgress) {
+            return;
+        }
+
+        preloaderProgress.textContent = `Loading ${current}/${total} code crimes…`;
+    }
+
+    function hidePreloader() {
+        const finish = () => {
+            if (!preloader) {
+                document.body.classList.remove('loading');
+                return;
+            }
+
+            preloader.classList.add('hidden');
+            preloader.setAttribute('aria-busy', 'false');
+            document.body.classList.remove('loading');
+        };
+
+        const elapsed = Date.now() - preloaderStartedAt;
+        const remaining = Math.max(0, PRELOADER_MIN_MS - elapsed);
+
+        window.setTimeout(finish, remaining);
+    }
+
+    function render() {
+        const filtered = getFilteredItems();
+        const visibleItems = filtered.slice(0, renderLimit);
+
+        updatePreloaderProgress(visibleItems.length, normalizedSnippets.length);
+
+        visibleCount.textContent = filtered.length;
+        renderedCount.textContent = visibleItems.length;
+        activeTagLabel.textContent = activeTag === 'all' ? 'none' : activeTag;
+
+        emptyState.style.display = filtered.length ? 'none' : 'block';
+        cards.innerHTML = visibleItems.map(createCard).join('');
+        updateCopyButtons();
+
+        const hasMore = filtered.length > visibleItems.length;
+
+        if (!filtered.length) {
+            renderedCount.textContent = '0';
+        }
+
+        footerActions.classList.toggle('hidden', !hasMore);
+    }
+
+    function resetFilters() {
+        searchInput.value = '';
+        languageFilter.value = 'all';
+        sortFilter.value = 'votes';
+        activeTag = 'all';
+        renderLimit = PAGE_SIZE;
+
+        tagFilters.querySelectorAll('.tag-filter').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tag === 'all');
+        });
+
+        render();
+        searchInput.focus();
+    }
+
+    function toggleHeader() {
+        const collapsed = heroBody.classList.toggle('is-collapsed');
+        headerToggle.textContent = collapsed ? 'Show header details' : 'Hide header details';
+        headerToggle.setAttribute('aria-expanded', String(!collapsed));
+    }
+
+    searchInput.addEventListener('input', () => {
+        renderLimit = PAGE_SIZE;
+        render();
+    });
+
+    languageFilter.addEventListener('change', () => {
+        renderLimit = PAGE_SIZE;
+        render();
+    });
+
+    sortFilter.addEventListener('change', () => {
+        renderLimit = PAGE_SIZE;
+        render();
+    });
+
+    resetButton.addEventListener('click', resetFilters);
+    headerToggle.addEventListener('click', toggleHeader);
+
+    loadMoreButton.addEventListener('click', () => {
+        renderLimit += PAGE_SIZE;
+        render();
+    });
+
+    totalCount.textContent = normalizedSnippets.length;
+    updatePreloaderProgress(0, normalizedSnippets.length);
+
+    window.addEventListener('load', () => {
+        updatePreloaderProgress(Math.min(PAGE_SIZE, normalizedSnippets.length), normalizedSnippets.length);
+        buildLanguageOptions();
+        buildTagFilters();
+        render();
+        requestAnimationFrame(() => {
+            hidePreloader();
+        });
+    });
+</script>
+</body>
+</html>
