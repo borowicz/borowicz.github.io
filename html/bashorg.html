@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bash.org Quote Archive</title>
+    <style>
+        .nsfw-blur { filter: blur(6px); cursor: pointer; }
+        .nsfw-visible { filter: none; }
+        .toolbar-extended { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+        .toggle { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
+        .counter { font-size:12px; color:var(--muted); }
+        :root {
+            --bg: #0b1020;
+            --panel: #121a30;
+            --panel-2: #17213d;
+            --line: rgba(255,255,255,.08);
+            --text: #e8eefc;
+            --muted: #97a3c4;
+            --accent: #7dd3fc;
+            --accent-2: #c084fc;
+            --good: #86efac;
+            --warning: #fbbf24;
+            --shadow: 0 20px 60px rgba(0,0,0,.35);
+            --radius: 22px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                    radial-gradient(circle at top left, rgba(125, 211, 252, .15), transparent 30%),
+                    radial-gradient(circle at top right, rgba(192, 132, 252, .12), transparent 30%),
+                    linear-gradient(180deg, #0a0f1d 0%, #0f172a 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        body.loading { overflow: hidden; }
+        .preloader {
+            position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            padding: 24px; z-index: 9999;
+            background:
+                    radial-gradient(circle at top left, rgba(125, 211, 252, .18), transparent 30%),
+                    radial-gradient(circle at top right, rgba(192, 132, 252, .14), transparent 30%),
+                    linear-gradient(180deg, rgba(10,15,29,.96) 0%, rgba(15,23,42,.98) 100%);
+            transition: opacity .28s ease, visibility .28s ease;
+        }
+        .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .preloader-card, .hero, .card {
+            background: linear-gradient(135deg, rgba(23,33,61,.95), rgba(11,16,32,.92));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        .preloader-card { width: min(920px, 100%); border-radius: 28px; padding: 28px; }
+        .preloader-spinner {
+            width: 58px; height: 58px; margin: 0 auto 18px; border-radius: 50%;
+            border: 4px solid rgba(255,255,255,.10); border-top-color: var(--accent);
+            animation: spin .9s linear infinite;
+        }
+        .preloader-head { text-align: center; margin-bottom: 18px; }
+        .preloader-progress {
+            margin-top: 12px; color: var(--accent); font-size: 13px; font-weight: 800;
+            letter-spacing: .04em; text-transform: uppercase;
+        }
+        .preloader-title { margin: 0; font-size: 22px; }
+        .preloader-text { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+        .wrap { width: min(1680px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 64px; }
+        .hero {
+            border-radius: 28px; padding: 24px; position: sticky; top: 12px;
+            z-index: 30; backdrop-filter: blur(14px);
+        }
+        .eyebrow {
+            display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 999px;
+            background: rgba(125, 211, 252, .08); border: 1px solid rgba(125, 211, 252, .15);
+            color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+        }
+        .header-toggle-row { margin-top: 20px; display: flex; justify-content: flex-end; }
+        .header-toggle, .button, .load-more, .copy-btn, .link {
+            min-height: 42px; border-radius: 999px; border: 1px solid var(--line);
+            background: rgba(255,255,255,.04); color: var(--text); padding: 0 14px;
+            font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none;
+        }
+        .hero-body {
+            margin-top: 12px; overflow: hidden; max-height: 640px; opacity: 1;
+            transition: max-height .32s ease, opacity .22s ease, margin-top .32s ease;
+        }
+        .hero-body.is-collapsed { max-height: 0; opacity: 0; margin-top: 0; pointer-events: none; }
+        .lead { color: var(--muted); max-width: 75ch; line-height: 1.6; font-size: 15px; }
+        .toolbar { display: grid; grid-template-columns: 1.4fr .7fr .7fr auto; gap: 12px; }
+        .field, .select, .button {
+            min-height: 50px; border-radius: 16px; border: 1px solid var(--line);
+            background: rgba(255,255,255,.04); color: var(--text); padding: 0 14px; font: inherit; outline: none;
+        }
+        .field::placeholder { color: #8a97bb; }
+        .button { background: linear-gradient(135deg, rgba(125, 211, 252, .16), rgba(192, 132, 252, .16)); }
+        .hero-meta-row {
+            margin-top: 14px; display: flex; flex-wrap: wrap; gap: 12px;
+            align-items: center; justify-content: space-between;
+        }
+        .filters, .stats, .meta, .actions-left { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag-filter, .pill, .chip {
+            border: 1px solid var(--line); background: rgba(255,255,255,.04); border-radius: 999px;
+            padding: 8px 12px; font-size: 13px;
+        }
+        .tag-filter { color: var(--muted); font-weight: 700; cursor: pointer; }
+        .tag-filter.active { color: #08111f; background: var(--accent); border-color: transparent; }
+        .pill, .chip { color: var(--muted); }
+        .grid {
+            margin-top: 22px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px; align-items: start;
+        }
+        .grid.grid-single { grid-template-columns: 1fr; }
+        .card { border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .card.card-wide { grid-column: 1 / -1; max-width: 100%; }
+        .card-wide pre { font-size: 0.85em; }
+        .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+        .title { margin: 0; font-size: 17px; line-height: 1.35; word-break: break-word; }
+        .badge {
+            flex: 0 0 auto; padding: 8px 10px; border-radius: 999px;
+            background: rgba(134, 239, 172, .08); border: 1px solid rgba(134, 239, 172, .16);
+            color: var(--good); font-size: 12px; font-weight: 800;
+        }
+        .caption { margin: 0; color: #d7def7; font-size: 14px; line-height: 1.6; }
+        pre {
+            margin: 0; padding: 14px; border-radius: 18px; background: #091121;
+            border: 1px solid rgba(125, 211, 252, .12); overflow: auto; color: #d9e6ff;
+            font-size: 12px; line-height: 1.55;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .actions {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 10px; margin-top: auto; flex-wrap: wrap;
+        }
+        .muted { color: var(--muted); font-size: 12px; text-decoration: none; }
+        .copy-btn.copied { color: #08111f; background: var(--good); border-color: transparent; }
+        .empty {
+            margin-top: 22px; display: none; padding: 28px; border-radius: 24px;
+            border: 1px dashed var(--line); text-align: center; color: var(--muted);
+            background: rgba(255,255,255,.03);
+        }
+        .footer-actions { display: flex; justify-content: center; margin-top: 24px; }
+        .footer-actions.hidden { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 920px) {
+            .toolbar { grid-template-columns: 1fr; }
+            .hero { position: static; }
+            .hero-meta-row { flex-direction: column; align-items: stretch; }
+            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body class="loading">
+<div id="preloader" class="preloader" aria-live="polite" aria-busy="true">
+    <div class="preloader-card">
+        <div class="preloader-head">
+            <div class="preloader-spinner" aria-hidden="true"></div>
+            <h2 class="preloader-title">Loading bash.org quotes…</h2>
+            <p class="preloader-text">Reading archive pages, scores and source groups from the JSON dataset.</p>
+            <p id="preloaderProgress" class="preloader-progress">Loading 0/0 quotes…</p>
+        </div>
+    </div>
+</div>
+
+<main class="wrap">
+    <section class="hero">
+        <a href="#" class="muted"><div class="eyebrow">Bash.org Archive</div></a>
+        <div class="header-toggle-row" style="float: right; margin-top: -10px; margin-right: 10px;">
+            <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">Hide header details</button>
+        </div>
+        <div id="heroBody" class="hero-body">
+            <header>
+                <h3>Funny IRC quotes…</h3>
+                <p class="lead">Searchable bash.org-style quotes with score, page number and source file metadata.</p><br>
+            </header>
+            <div id="toolbar" class="toolbar">
+                <input id="searchInput" class="field" type="search" placeholder="Search quote text, score, page, source file..." autocomplete="off" spellcheck="false" />
+                <select id="languageFilter" class="select"><option value="all">All pages</option></select>
+                <select id="sortFilter" class="select">
+                    <option value="score">Sort: top score</option>
+                    <option value="page-desc">Sort: page desc</option>
+                    <option value="page-asc">Sort: page asc</option>
+                    <option value="id-desc">Sort: newest id</option>
+                    <option value="id-asc">Sort: oldest id</option>
+                </select>
+                <button id="resetButton" class="button" type="button">Reset</button>
+                <div class="toolbar-extended">
+                    <label class="toggle"><input type="checkbox" id="toggleHideNSFW"> Hide NSFW</label>
+                    <label class="toggle"><input type="checkbox" id="toggleBlurNSFW" checked> Blur NSFW</label>
+                    <select id="safeFilter" class="select">
+                        <option value="all">ALL</option>
+                        <option value="safe">SAFE</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hero-meta-row">
+                <div id="tagFilters" class="filters"></div>
+                <div class="stats">
+                    <div class="pill"><strong id="visibleCount">0</strong> visible</div>
+                    <div class="pill"><strong id="renderedCount">0</strong> rendered</div>
+                    <div class="pill"><strong id="totalCount">0</strong> total</div>
+                    <div class="pill"><strong id="activeTagLabel">none</strong> active source</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cards" class="grid" aria-live="polite"></section>
+    <section id="emptyState" class="empty">No quotes matched your search. Try fewer filters.</section>
+    <div id="footerActions" class="footer-actions hidden"><button id="loadMoreButton" class="load-more" type="button">Load more quotes</button></div>
+</main>
+
+<script>
+    const DATA_URL = './bashorg.json';
+    const PAGE_SIZE = 48;
+
+    const cards = document.getElementById('cards');
+    const searchInput = document.getElementById('searchInput');
+    const languageFilter = document.getElementById('languageFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const resetButton = document.getElementById('resetButton');
+    const heroBody = document.getElementById('heroBody');
+    const headerToggle = document.getElementById('headerToggle');
+    const visibleCount = document.getElementById('visibleCount');
+    const renderedCount = document.getElementById('renderedCount');
+    const totalCount = document.getElementById('totalCount');
+    const activeTagLabel = document.getElementById('activeTagLabel');
+    const emptyState = document.getElementById('emptyState');
+    const tagFilters = document.getElementById('tagFilters');
+    const footerActions = document.getElementById('footerActions');
+    const loadMoreButton = document.getElementById('loadMoreButton');
+    const preloader = document.getElementById('preloader');
+    const preloaderProgress = document.getElementById('preloaderProgress');
+
+    const PRELOADER_MIN_MS = 450;
+    const preloaderStartedAt = Date.now();
+    let activeTag = 'all';
+    let renderLimit = PAGE_SIZE;
+    let normalizedSnippets = [];
+    let dataLoadWarningShown = false;
+    let hideNSFW = false;
+    let blurNSFW = true;
+    let safeMode = 'all';
+    let searchIndex = [];
+    let loadMoreObserver = null;
+
+    async function fetchSnippetData() {
+        if (Array.isArray(window.BASHORG_QUOTES)) {
+            return window.BASHORG_QUOTES;
+        }
+
+        if (Array.isArray(window.CODECRAP_SNIPPETS)) {
+            return window.CODECRAP_SNIPPETS;
+        }
+
+        const response = await fetch(DATA_URL, {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json, text/plain, */*' }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${DATA_URL}: HTTP ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        const source = (await response.text()).replace(/^\uFEFF/, '').trim();
+
+        if (!source) {
+            return [];
+        }
+
+        try {
+            const parsed = JSON.parse(source);
+            if (!Array.isArray(parsed)) {
+                throw new Error('JSON root is not an array');
+            }
+            return parsed;
+        } catch (error) {
+            throw new Error(`Invalid JSON in ${DATA_URL}${contentType ? ` (${contentType})` : ''}: ${error.message}`);
+        }
+    }
+
+    function escapeHtml(value = '') {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    function isNSFW(text) {
+        const t = String(text || '').toLowerCase();
+        return /(porn|sex|fuck|cock|pussy|asshole|masturbat|rape|nude)/.test(t);
+    }
+
+    function parseScore(value) {
+        return Number(value) || 0;
+    }
+
+    function parsePage(value) {
+        return Number(value) || 0;
+    }
+
+    function buildQuoteTitle(item, index) {
+        const firstLine = String(item.text || '')
+            .split('\n')
+            .map(line => line.trim())
+            .find(Boolean);
+
+        if (firstLine) {
+            return firstLine.length > 96 ? `${firstLine.slice(0, 93)}...` : firstLine;
+        }
+
+        return `Quote #${item.id || index + 1}`;
+    }
+
+    function buildSourceGroup(item) {
+        if (item.source_file && String(item.source_file).trim()) {
+            // item.source_file.replace('bashOrg_archive_', 'bashOrg_archive')
+            return String(item.source_file).trim();
+        }
+
+        if (item.page !== undefined && item.page !== null && item.page !== '') {
+            return `page-${item.page}`;
+        }
+
+        return 'unknown';
+    }
+
+    function normalizeSnippet(item, index) {
+        const text = String(item.text || '').replace(/\r\n/g, '\n').trim();
+        const page = parsePage(item.page);
+        const sourceFile = buildSourceGroup(item);
+        const nsfw = isNSFW(text);
+
+        return {
+            ...item,
+            id: item.id ?? index + 1,
+            title: buildQuoteTitle(item, index),
+            quote: text,
+            caption: sourceFile,
+            page,
+            pageLabel: page ? `Page ${page}` : 'Unknown page',
+            score: parseScore(item.score),
+            scoreLabel: item.score === null || item.score === undefined || item.score === '' ? '—' : String(item.score),
+            sourceFile,
+            sourceUrl: '#',
+            nsfw,
+            index: (text + ' ' + sourceFile + ' ' + page).toLowerCase()
+        };
+    }
+
+    function setSnippets(rawSnippets) {
+        const safeSnippets = Array.isArray(rawSnippets) ? rawSnippets : [];
+        normalizedSnippets = safeSnippets
+            .filter(item => item && typeof item === 'object')
+            .map((item, index) => normalizeSnippet(item, index));
+        searchIndex = normalizedSnippets.map(s => s.index);
+        totalCount.textContent = normalizedSnippets.length;
+        updatePreloaderProgress(0, normalizedSnippets.length);
+    }
+
+    function buildLanguageOptions() {
+        languageFilter.innerHTML = '<option value="all">All pages</option>';
+        const pages = [...new Set(
+            normalizedSnippets
+                .map(item => item.page)
+                .filter(page => Number.isFinite(page) && page > 0)
+        )].sort((a, b) => a - b);
+
+        pages.forEach(page => {
+            const option = document.createElement('option');
+            option.value = String(page);
+            option.textContent = `Page ${page}`;
+            languageFilter.appendChild(option);
+        });
+    }
+
+    function buildTagFilters() {
+        const sourceFiles = [...new Set(normalizedSnippets.map(item => item.sourceFile).filter(Boolean))]
+            .sort((a, b) => a.localeCompare(b));
+
+        const all = ['all', ...sourceFiles];
+        tagFilters.innerHTML = `
+            <select id="sourceFilter" class="select">
+                ${all.map(tag => `
+                    <option value="${escapeHtml(tag)}" ${tag === 'all' ? 'selected' : ''}>
+                        ${tag === 'all' ? 'all sources' : escapeHtml(tag)}
+                    </option>
+                `).join('')}
+            </select>
+        `;
+
+        const sourceFilter = document.getElementById('sourceFilter');
+
+        sourceFilter.addEventListener('change', () => {
+            activeTag = sourceFilter.value;
+            renderLimit = PAGE_SIZE;
+            render();
+        });
+    }
+
+    function getFilteredItems() {
+        const query = searchInput.value.trim().toLowerCase();
+        const pageFilter = languageFilter.value;
+        const sort = sortFilter.value;
+
+        const filtered = normalizedSnippets.filter((item, i) => {
+            const matchesQuery = !query || searchIndex[i].includes(query);
+            const matchesPage = pageFilter === 'all' || String(item.page) === pageFilter;
+            const matchesSource = activeTag === 'all' || item.sourceFile === activeTag;
+            const matchesSafe = safeMode === 'all' || !item.nsfw;
+
+            return matchesQuery && matchesPage && matchesSource && matchesSafe;
+        });
+
+        filtered.sort((a, b) => {
+            if (sort === 'page-desc') return b.page - a.page || b.id - a.id;
+            if (sort === 'page-asc') return a.page - b.page || a.id - b.id;
+            if (sort === 'id-desc') return b.id - a.id;
+            if (sort === 'id-asc') return a.id - b.id;
+            return b.score - a.score || b.id - a.id;
+        });
+
+        return filtered;
+    }
+
+    function createCard(item) {
+        const quoteLength = String(item.quote || '').length;
+        const isWideCard = quoteLength >= 420;
+        const cardClassName = isWideCard ? 'card card-wide' : 'card';
+        const nsfwClass = item.nsfw && blurNSFW ? 'nsfw-blur' : '';
+
+        return `
+            <article class="${cardClassName}" id="card-${item.id}">
+                <a class="muted" href="#card-${item.id}" style="font-size:13px;margin-bottom:0.25em;display:inline-block;">&#128279; Quote #${item.id}</a>
+                <div class="card-head">
+                    <h2 class="title">${escapeHtml(item.title)}</h2>
+                    <div class="badge">${escapeHtml(item.scoreLabel)}</div>
+                </div>
+                <div class="meta">
+                    <span class="chip">${escapeHtml(item.pageLabel)}</span>
+                    <span class="chip">${escapeHtml(item.sourceFile)}</span>
+                    <span class="chip">ID ${escapeHtml(String(item.id))}</span>
+                </div>
+                <p class="caption">${escapeHtml(item.caption || '')}</p>
+                <pre class="${nsfwClass}" data-nsfw="${item.nsfw}"><code>${escapeHtml(item.quote || '')}</code></pre>
+                <div class="actions">
+                    <div class="actions-left">
+                        <button class="copy-btn" type="button" data-code="${encodeURIComponent(item.quote || '')}">Copy quote</button>
+                    </div>
+                    <a class="muted" href="#card-${item.id}">Quote #${item.id}</a>
+                </div>
+            </article>
+        `;
+    }
+
+    function updateCopyButtons() {
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const quote = decodeURIComponent(button.dataset.code || '');
+                try {
+                    await navigator.clipboard.writeText(quote);
+                    const original = button.textContent;
+                    button.textContent = 'Copied';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.textContent = original;
+                        button.classList.remove('copied');
+                    }, 1400);
+                } catch {
+                    button.textContent = 'Copy failed';
+                    setTimeout(() => {
+                        button.textContent = 'Copy quote';
+                    }, 1400);
+                }
+            });
+        });
+        document.querySelectorAll('.nsfw-blur').forEach(el => {
+            el.addEventListener('click', () => {
+                el.classList.toggle('nsfw-visible');
+            });
+        });
+    }
+
+    function updatePreloaderProgress(current, total) {
+        if (!preloaderProgress) return;
+        preloaderProgress.textContent = `Loading ${current}/${total} quotes…`;
+    }
+
+    function hidePreloader() {
+        const finish = () => {
+            if (!preloader) {
+                document.body.classList.remove('loading');
+                return;
+            }
+            preloader.classList.add('hidden');
+            preloader.setAttribute('aria-busy', 'false');
+            document.body.classList.remove('loading');
+        };
+
+        const elapsed = Date.now() - preloaderStartedAt;
+        const remaining = Math.max(0, PRELOADER_MIN_MS - elapsed);
+        window.setTimeout(finish, remaining);
+    }
+
+    function showLocalFileWarning() {
+        if (dataLoadWarningShown) return;
+        if (window.location.protocol !== 'file:') return;
+
+        dataLoadWarningShown = true;
+        emptyState.style.display = 'block';
+        emptyState.textContent = 'This page is opened as file://, so JSON loading may be blocked by the browser. Run a local server or open it from GitHub Pages.';
+    }
+
+    function render() {
+        const hash = window.location.hash;
+        let singleCardId = null;
+
+        if (hash && /^#card-(\d+)$/.test(hash)) {
+            singleCardId = hash.replace('#card-', '');
+        }
+
+        let filtered = getFilteredItems();
+
+        // Counters per page/source
+        const pageCounts = {};
+        const sourceCounts = {};
+        filtered.forEach(i => {
+            pageCounts[i.page] = (pageCounts[i.page] || 0) + 1;
+            sourceCounts[i.sourceFile] = (sourceCounts[i.sourceFile] || 0) + 1;
+        });
+        // update labels
+        activeTagLabel.textContent = activeTag === 'all'
+            ? `pages:${Object.keys(pageCounts).length} / sources:${Object.keys(sourceCounts).length}`
+            : `${activeTag} (${sourceCounts[activeTag] || 0})`;
+
+        let visibleItems = filtered.slice(0, renderLimit);
+
+        if (singleCardId) {
+            const card = filtered.find(sn => String(sn.id) === String(singleCardId))
+                || normalizedSnippets.find(sn => String(sn.id) === String(singleCardId));
+            visibleItems = card ? [card] : [];
+        }
+
+        updatePreloaderProgress(visibleItems.length, normalizedSnippets.length);
+        visibleCount.textContent = filtered.length;
+        renderedCount.textContent = visibleItems.length;
+        emptyState.style.display = visibleItems.length ? 'none' : 'block';
+        cards.classList.toggle('grid-single', visibleItems.length === 1);
+        cards.innerHTML = visibleItems.map(createCard).join('');
+        updateCopyButtons();
+
+        const hasMore = filtered.length > visibleItems.length && !singleCardId;
+        footerActions.classList.toggle('hidden', !hasMore);
+        setupVirtualScroll();
+    }
+
+    function setupVirtualScroll() {
+        if (!loadMoreButton) return;
+
+        if (!loadMoreObserver) {
+            loadMoreObserver = new IntersectionObserver(entries => {
+                const first = entries[0];
+                if (!first || !first.isIntersecting) return;
+
+                const filteredCount = getFilteredItems().filter(item => !hideNSFW || !item.nsfw).length;
+                if (renderLimit >= filteredCount) return;
+
+                renderLimit += PAGE_SIZE;
+                render();
+            });
+        }
+
+        loadMoreObserver.disconnect();
+
+        if (!footerActions.classList.contains('hidden')) {
+            loadMoreObserver.observe(loadMoreButton);
+        }
+    }
+
+    function resetFilters() {
+        searchInput.value = '';
+        languageFilter.value = 'all';
+        sortFilter.value = 'score';
+        activeTag = 'all';
+        hideNSFW = false;
+        blurNSFW = true;
+        safeMode = 'all';
+        document.getElementById('toggleHideNSFW').checked = false;
+        document.getElementById('toggleBlurNSFW').checked = true;
+        document.getElementById('safeFilter').value = 'all';
+        renderLimit = PAGE_SIZE;
+
+        const sourceFilter = document.getElementById('sourceFilter');
+        if (sourceFilter) sourceFilter.value = 'all';
+
+        render();
+        searchInput.focus();
+    }
+
+    function toggleHeader() {
+        const collapsed = heroBody.classList.toggle('is-collapsed');
+        headerToggle.textContent = collapsed ? 'Show header details' : 'Hide header details';
+        headerToggle.setAttribute('aria-expanded', String(!collapsed));
+    }
+
+    searchInput.addEventListener('input', () => { renderLimit = PAGE_SIZE; render(); });
+    languageFilter.addEventListener('change', () => { renderLimit = PAGE_SIZE; render(); });
+    sortFilter.addEventListener('change', () => { renderLimit = PAGE_SIZE; render(); });
+    resetButton.addEventListener('click', resetFilters);
+    headerToggle.addEventListener('click', toggleHeader);
+    // loadMoreButton.addEventListener('click', () => { renderLimit += PAGE_SIZE; render(); });
+    window.addEventListener('hashchange', render);
+
+    document.getElementById('toggleHideNSFW').addEventListener('change', e => {
+        hideNSFW = e.target.checked;
+        safeMode = hideNSFW ? 'safe' : 'all';
+        renderLimit = PAGE_SIZE;
+        render();
+    });
+
+    document.getElementById('toggleBlurNSFW').addEventListener('change', e => {
+        blurNSFW = e.target.checked;
+        render();
+    });
+
+    document.getElementById('safeFilter').addEventListener('change', e => {
+        safeMode = e.target.value;
+        hideNSFW = safeMode === 'safe';
+        document.getElementById('toggleHideNSFW').checked = hideNSFW;
+        renderLimit = PAGE_SIZE;
+        render();
+    });
+
+    updatePreloaderProgress(0, 0);
+    showLocalFileWarning();
+
+    window.addEventListener('load', async () => {
+        try {
+            const rawSnippets = await fetchSnippetData();
+            setSnippets(rawSnippets);
+            updatePreloaderProgress(Math.min(PAGE_SIZE, normalizedSnippets.length), normalizedSnippets.length);
+            buildLanguageOptions();
+            buildTagFilters();
+            render();
+        } catch (error) {
+            console.error('Failed to load quote data.', error);
+            console.error('DATA_URL:', DATA_URL);
+            console.error('window.BASHORG_QUOTES type:', typeof window.BASHORG_QUOTES);
+            cards.innerHTML = '';
+            footerActions.classList.add('hidden');
+            emptyState.style.display = 'block';
+            emptyState.textContent = `Failed to load archive data. ${error.message}`;
+            renderedCount.textContent = '0';
+            visibleCount.textContent = '0';
+            totalCount.textContent = '0';
+            activeTagLabel.textContent = 'none';
+
+        } finally {
+            requestAnimationFrame(() => hidePreloader());
+        }
+    });
+</script>
+</body>
+</html>
