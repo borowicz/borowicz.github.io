@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postal Code Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: none;
+            margin: 40px 0;
+            padding: 20px 0;
+            line-height: 1.4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .search-wrap {
+            width: 80vw;
+            margin: 0 auto;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: calc(100% + 2px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            max-height: 260px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .autocomplete-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: #f3f6fb;
+        }
+
+        .autocomplete-main {
+            font-weight: bold;
+        }
+
+        .autocomplete-sub {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            align-items: stretch;
+        }
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        input, button, select {
+            padding: 10px 12px;
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+        select {
+            min-width: 180px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .muted {
+            color: #666;
+            margin: 8px 0 16px;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 16px;
+            color: #666;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #d9d9d9;
+            border-top-color: #1a2347;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+            flex: 0 0 auto;
+        }
+
+        .spinner.visible {
+            display: inline-block;
+        }
+
+        .autocomplete-loading {
+            padding: 10px 12px;
+            color: #666;
+            background: #fff;
+            border-top: 1px solid #f2f2f2;
+            font-size: 13px;
+        }
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .table-wrap {
+            overflow-x: visible;
+        }
+
+        table {
+            width: 80vw;
+            border-collapse: collapse;
+            margin: 8px auto 0;
+            table-layout: fixed;
+        }
+        th {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        th {
+            background: #f4f4f4;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .empty {
+            padding: 16px;
+            border: 1px dashed #ccc;
+            color: #666;
+            margin-top: 12px;
+        }
+
+        .map-frame {
+            width: 240px;
+            height: 180px;
+            border: 0;
+            border-radius: 6px;
+            background: #f4f4f4;
+        }
+
+        .map-link {
+            white-space: nowrap;
+        }
+
+        .single-map-wrap {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .single-map-wrap.visible {
+            display: block;
+        }
+
+        .single-map-frame {
+            width: 80vw;
+            height: 420px;
+            border: 0;
+            border-radius: 8px;
+            background: #f4f4f4;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-wrap">
+    <h1>Postal Code Search</h1>
+    <div class="search-bar">
+        <select id="datasetSelect">
+            <option value="pl" selected>Poland</option>
+            <option value="eu">Europe</option>
+            <option value="us">United States</option>
+        </select>
+        <div class="search-input-wrap">
+            <input
+                    type="text"
+                    id="query"
+                    placeholder="Enter postal code, city or regional dial code"
+                    autocomplete="off"
+            >
+            <div id="autocompleteList" class="autocomplete-list" style="display:none;"></div>
+        </div>
+        <button id="searchBtn">Search</button>
+    </div>
+    <div class="status-row">
+        <span id="dbLoader" class="spinner visible" aria-hidden="true"></span>
+        <div class="muted" id="status">Loading Poland database...</div>
+    </div>
+    <div class="hint" id="cacheHint">Cache: checking browser storage...</div>
+</div>
+
+
+<div class="table-wrap">
+    <table id="resultsTable" style="display:none;">
+        <thead>
+        <tr>
+            <th style="width: 10%">Country</th>
+            <th style="width: 10%">Postal Code</th>
+            <th style="width: 14%">City</th>
+            <th style="width: 12%">District</th>
+            <th style="width: 12%">County</th>
+            <th style="width: 12%">State</th>
+            <th style="width: 10%">Regional Dial Code</th>
+            <th style="width: 8%">Phone Prefix</th>
+            <th style="width: 12%">Timezone</th>
+            <th style="width: 10%">Map</th>
+        </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+    </table>
+    <p class="status" style="text-align: center; color: #1a2347">&copy; borowicz.github.io</p>
+</div>
+
+<div id="singleMapWrap" class="single-map-wrap">
+    <iframe id="singleMapFrame" class="single-map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="about:blank"></iframe>
+</div>
+
+<div id="emptyState" class="empty" style="display:none;">
+    No results.
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.min.js"></script>
+<script>
+    let db = null;
+    let autocompleteIndex = -1;
+    let autocompleteItems = [];
+    let isAutocompleteLoading = false;
+    let autocompleteTimer = null;
+
+    const DB_FILES = {
+        pl: './geo_locations_pl.sqlite',
+        eu: './geo_locations_eu.sqlite',
+        us: './geo_locations_us.sqlite'
+    };
+    const DB_CACHE_NAME = 'geo-locations-cache';
+    const DB_CACHE_STORE = 'files';
+    const DB_CACHE_VERSION = 'v4';
+    const DB_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
+    let hasFtsAutocomplete = false;
+    let selectedAutocompleteRowId = null;
+    let currentDatasetKey = 'pl';
+    function buildGoogleMapsEmbedUrl(row) {
+        const lat = row.latitude ?? row.lat;
+        const lon = row.longitude ?? row.lon;
+
+        if (lat !== null && lat !== undefined && lon !== null && lon !== undefined && String(lat).trim() !== '' && String(lon).trim() !== '') {
+            return `https://www.google.com/maps?q=${encodeURIComponent(String(lat).trim() + ',' + String(lon).trim())}&z=12&output=embed`;
+        }
+
+        return '';
+    }
+
+    function buildGoogleMapsLink(row) {
+        const lat = row.latitude ?? row.lat;
+        const lon = row.longitude ?? row.lon;
+
+        if (lat !== null && lat !== undefined && lon !== null && lon !== undefined && String(lat).trim() !== '' && String(lon).trim() !== '') {
+            return `https://www.google.com/maps?q=${encodeURIComponent(String(lat).trim() + ',' + String(lon).trim())}`;
+        }
+
+        const parts = [
+            row.city_name ?? row.city,
+            row.district_name ?? row.district,
+            row.county_name ?? row.county,
+            row.state_name ?? row.state,
+            row.postal_code ?? row.zip,
+            row.country_name ?? row.country
+        ].filter(value => value !== null && value !== undefined && String(value).trim() !== '');
+
+        if (!parts.length) {
+            return '';
+        }
+
+        return `https://www.google.com/maps?q=${encodeURIComponent(parts.join(', '))}`;
+    }
+
+    function getCurrentDbUrl() {
+        return DB_FILES[currentDatasetKey] || '';
+    }
+
+    function getCurrentCacheKey() {
+        return currentDatasetKey ? `geo_locations:${currentDatasetKey}:${DB_CACHE_VERSION}` : '';
+    }
+
+    function setDatasetStatusLabel() {
+        const labels = {
+            pl: 'Poland',
+            eu: 'Europe',
+            us: 'United States'
+        };
+        return labels[currentDatasetKey] || 'selected';
+    }
+
+    function setDbLoading(isLoading, message = null) {
+        const loader = document.getElementById('dbLoader');
+        const status = document.getElementById('status');
+
+        if (loader) {
+            loader.classList.toggle('visible', isLoading);
+        }
+
+        if (message !== null && status) {
+            status.textContent = message;
+        }
+    }
+
+    function setCacheHint(message) {
+        const hint = document.getElementById('cacheHint');
+        if (hint) {
+            hint.textContent = message;
+        }
+    }
+
+    function openDbCache() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_CACHE_NAME, 1);
+
+            request.onupgradeneeded = function () {
+                const database = request.result;
+                if (!database.objectStoreNames.contains(DB_CACHE_STORE)) {
+                    database.createObjectStore(DB_CACHE_STORE);
+                }
+            };
+
+            request.onsuccess = function () {
+                resolve(request.result);
+            };
+
+            request.onerror = function () {
+                reject(request.error);
+            };
+        });
+    }
+
+    function readCachedDatabase() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const database = await openDbCache();
+                const transaction = database.transaction(DB_CACHE_STORE, 'readonly');
+                const store = transaction.objectStore(DB_CACHE_STORE);
+                const cacheKey = getCurrentCacheKey();
+                if (!cacheKey) {
+                    resolve(null);
+                    return;
+                }
+                const request = store.get(cacheKey);
+
+                request.onsuccess = function () {
+                    resolve(request.result || null);
+                };
+
+                request.onerror = function () {
+                    reject(request.error);
+                };
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    function writeCachedDatabase(buffer) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const database = await openDbCache();
+                const transaction = database.transaction(DB_CACHE_STORE, 'readwrite');
+                const store = transaction.objectStore(DB_CACHE_STORE);
+                const payload = {
+                    updatedAt: Date.now(),
+                    bytes: buffer
+                };
+                const cacheKey = getCurrentCacheKey();
+                if (!cacheKey) {
+                    resolve(false);
+                    return;
+                }
+                const request = store.put(payload, cacheKey);
+
+                request.onsuccess = function () {
+                    localStorage.setItem(`geo_locations_cache_updated_at:${currentDatasetKey}:${DB_CACHE_VERSION}`, String(payload.updatedAt));
+                    resolve(true);
+                };
+
+                request.onerror = function () {
+                    reject(request.error);
+                };
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    function getCachedTimestamp() {
+        const raw = localStorage.getItem(`geo_locations_cache_updated_at:${currentDatasetKey}:${DB_CACHE_VERSION}`);
+        const value = Number(raw);
+        return Number.isFinite(value) ? value : 0;
+    }
+
+    function isCacheFresh() {
+        const updatedAt = getCachedTimestamp();
+        return updatedAt > 0 && (Date.now() - updatedAt) < DB_CACHE_TTL_MS;
+    }
+
+    async function initializeDatabaseFromBuffer(buffer) {
+        const SQL = await initSqlJs({
+            locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}`
+        });
+
+        db = new SQL.Database(new Uint8Array(buffer));
+
+        try {
+            db.exec('PRAGMA temp_store = MEMORY;');
+            db.exec('PRAGMA cache_size = -20000;');
+            db.exec('PRAGMA synchronous = OFF;');
+        } catch (error) {
+            console.warn('SQLite PRAGMA warning:', error);
+        }
+    }
+
+    function detectFtsSupport() {
+        try {
+            const tableResult = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='geo_locations_fts' LIMIT 1");
+            const hasFtsTable = Array.isArray(tableResult)
+                && tableResult.length > 0
+                && tableResult[0].values
+                && tableResult[0].values.length > 0;
+
+            if (!hasFtsTable) {
+                hasFtsAutocomplete = false;
+                return;
+            }
+
+            const stmt = db.prepare("SELECT rowid FROM geo_locations_fts WHERE geo_locations_fts MATCH ? LIMIT 1");
+            stmt.bind(['test*']);
+            stmt.free();
+
+            hasFtsAutocomplete = true;
+        } catch (error) {
+            console.warn('FTS detection warning:', error);
+            hasFtsAutocomplete = false;
+        }
+    }
+
+    function renderAutocompleteLoading() {
+        const list = document.getElementById('autocompleteList');
+        list.innerHTML = '<div class="autocomplete-loading">Loading suggestions...</div>';
+        list.style.display = 'block';
+    }
+
+    async function loadDatabase(datasetKey = currentDatasetKey) {
+        if (!DB_FILES[datasetKey]) {
+            return;
+        }
+
+        currentDatasetKey = datasetKey;
+        selectedAutocompleteRowId = null;
+        autocompleteItems = [];
+        autocompleteIndex = -1;
+        closeAutocomplete();
+        clearResults();
+        setDbLoading(true, `Loading ${setDatasetStatusLabel()} database...`);
+        setCacheHint('Cache: checking browser storage...');
+
+        if (db && typeof db.close === 'function') {
+            try {
+                db.close();
+            } catch (error) {
+                console.warn('Database close warning:', error);
+            }
+            db = null;
+        }
+
+        try {
+            const cached = await readCachedDatabase();
+
+            if (cached && cached.bytes && isCacheFresh()) {
+                setCacheHint('Cache: using local browser copy.');
+                await initializeDatabaseFromBuffer(cached.bytes);
+                detectFtsSupport();
+                setDbLoading(false, `${setDatasetStatusLabel()} database loaded from cache.`);
+                return;
+            }
+
+            if (cached && cached.bytes) {
+                setCacheHint('Cache: found expired copy, refreshing...');
+            } else {
+                setCacheHint('Cache: no local copy, downloading...');
+            }
+        } catch (error) {
+            console.warn('Cache read warning:', error);
+            setCacheHint('Cache: unavailable, downloading from server...');
+        }
+
+        const response = await fetch(getCurrentDbUrl(), { cache: 'no-cache' });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch database: ${response.status} ${response.statusText} (${response.url})`);
+        }
+
+        const buffer = await response.arrayBuffer();
+        await initializeDatabaseFromBuffer(buffer);
+        detectFtsSupport();
+        setDbLoading(false, `${setDatasetStatusLabel()} database loaded.`);
+
+        try {
+            await writeCachedDatabase(buffer);
+            setCacheHint('Cache: saved in browser storage for faster next load.');
+        } catch (error) {
+            console.warn('Cache write warning:', error);
+            setCacheHint('Cache: database loaded, but browser storage could not be updated.');
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function clearResults() {
+        document.getElementById('resultsBody').innerHTML = '';
+        document.getElementById('resultsTable').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'none';
+        hideSingleMap();
+    }
+
+    function hideSingleMap() {
+        const wrap = document.getElementById('singleMapWrap');
+        const frame = document.getElementById('singleMapFrame');
+
+        if (wrap) {
+            wrap.classList.remove('visible');
+        }
+
+        if (frame) {
+            frame.src = 'about:blank';
+        }
+    }
+
+    function showSingleMap(embedUrl) {
+        const wrap = document.getElementById('singleMapWrap');
+        const frame = document.getElementById('singleMapFrame');
+
+        if (!wrap || !frame || !embedUrl) {
+            hideSingleMap();
+            return;
+        }
+
+        frame.src = embedUrl;
+        wrap.classList.add('visible');
+    }
+
+    function closeAutocomplete() {
+        const list = document.getElementById('autocompleteList');
+        if (list) {
+            list.innerHTML = '';
+            list.style.display = 'none';
+            isAutocompleteLoading = false;
+        }
+    }
+
+    function renderAutocomplete(items) {
+        const list = document.getElementById('autocompleteList');
+        list.innerHTML = '';
+        autocompleteIndex = -1;
+        isAutocompleteLoading = false;
+
+        const uniqueItems = [];
+        const seen = new Set();
+
+        items.forEach(item => {
+            const key = [
+                item.postal_code ?? '',
+                item.city_name ?? '',
+                item.district_name ?? '',
+                item.county_name ?? '',
+                item.state_name ?? '',
+                item.regional_dial_code ?? ''
+            ].join('|').toLowerCase();
+
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueItems.push(item);
+            }
+        });
+
+        autocompleteItems = uniqueItems.slice(0, 30);
+
+        if (!autocompleteItems.length) {
+            list.style.display = 'none';
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        autocompleteItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            div.dataset.index = index;
+            div.innerHTML = `
+                <div class="autocomplete-main">${escapeHtml(item.postal_code)} — ${escapeHtml(item.city_name)}</div>
+                <div class="autocomplete-sub">${escapeHtml(item.state_name)}${item.county_name ? ' | ' + escapeHtml(item.county_name) : ''}${item.district_name ? ' | ' + escapeHtml(item.district_name) : ''}${item.regional_dial_code ? ' | ' + escapeHtml(item.regional_dial_code) : ''}</div>
+            `;
+
+            div.addEventListener('mousedown', function (event) {
+                event.preventDefault();
+                document.getElementById('query').value = item.postal_code;
+                selectedAutocompleteRowId = item.id ?? null;
+                closeAutocomplete();
+                search(item.postal_code);
+            });
+
+            fragment.appendChild(div);
+        });
+
+        list.appendChild(fragment);
+        list.style.display = 'block';
+    }
+
+    function setActiveAutocompleteItem() {
+        const items = document.querySelectorAll('.autocomplete-item');
+        items.forEach(item => item.classList.remove('active'));
+
+        if (autocompleteIndex >= 0 && items[autocompleteIndex]) {
+            items[autocompleteIndex].classList.add('active');
+            items[autocompleteIndex].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    function buildFtsQuery(input) {
+        const tokens = String(input || '')
+            .trim()
+            .split(/\s+/)
+            .map(token => token.replace(/["']/g, '').trim())
+            .filter(Boolean);
+
+        if (!tokens.length) {
+            return '';
+        }
+
+        return tokens.map(token => `${token}*`).join(' ');
+    }
+
+    function updateAutocomplete() {
+        const q = document.getElementById('query').value.trim();
+        selectedAutocompleteRowId = null;
+
+        if (!db || q.length < 2) {
+            closeAutocomplete();
+            return;
+        }
+
+        clearTimeout(autocompleteTimer);
+        isAutocompleteLoading = true;
+        renderAutocompleteLoading();
+
+        autocompleteTimer = setTimeout(function () {
+            const items = [];
+            const exact = q;
+            const prefix = `${q}%`;
+
+            try {
+                const sql = `
+                    SELECT
+                        id,
+                        country_name,
+                        postal_code,
+                        city_name,
+                        district_name,
+                        county_name,
+                        state_name,
+                        regional_dial_code,
+                        phone_prefix,
+                        timezone,
+                        latitude,
+                        longitude
+                    FROM geo_locations
+                    WHERE city_name LIKE ?
+                       OR postal_code LIKE ?
+                       OR regional_dial_code LIKE ?
+                    ORDER BY
+                        CASE
+                            WHEN postal_code = ? THEN 0
+                            WHEN postal_code LIKE ? THEN 1
+                            WHEN city_name LIKE ? THEN 2
+                            WHEN regional_dial_code LIKE ? THEN 3
+                            ELSE 4
+                        END,
+                        city_name ASC,
+                        postal_code ASC
+                    LIMIT 12
+                `;
+
+                const stmt = db.prepare(sql);
+                stmt.bind([
+                    prefix,
+                    prefix,
+                    prefix,
+                    exact,
+                    prefix,
+                    prefix,
+                    prefix
+                ]);
+
+                while (stmt.step()) {
+                    items.push(stmt.getAsObject());
+                }
+
+                stmt.free();
+                renderAutocomplete(items);
+            } catch (error) {
+                console.error('Autocomplete error:', error);
+                isAutocompleteLoading = false;
+                closeAutocomplete();
+                setCacheHint('Cache: autocomplete failed for selected dataset.');
+            }
+        }, 120);
+    }
+
+    function search(forcedQuery = null) {
+        const q = (forcedQuery ?? document.getElementById('query').value).trim();
+        const tbody = document.getElementById('resultsBody');
+        const table = document.getElementById('resultsTable');
+        const emptyState = document.getElementById('emptyState');
+        const status = document.getElementById('status');
+
+        clearResults();
+        closeAutocomplete();
+        setCacheHint(`Cache: ${db ? 'database ready in memory.' : 'database not loaded yet.'}`);
+
+        if (!db) {
+            status.textContent = 'Database is not ready yet.';
+            return;
+        }
+
+        if (!q) {
+            status.textContent = 'Enter a search phrase.';
+            return;
+        }
+
+        const sql = `
+            SELECT
+                id,
+                country_name,
+                postal_code,
+                city_name,
+                district_name,
+                county_name,
+                state_name,
+                regional_dial_code,
+                phone_prefix,
+                timezone,
+                latitude,
+                longitude
+            FROM geo_locations
+            WHERE (
+                    city_name LIKE ?
+                 OR postal_code LIKE ?
+                 OR regional_dial_code LIKE ?
+            )
+            AND (? IS NULL OR id = ?)
+            ORDER BY
+                CASE
+                    WHEN postal_code = ? THEN 0
+                    WHEN postal_code LIKE ? THEN 1
+                    WHEN city_name LIKE ? THEN 2
+                    WHEN regional_dial_code LIKE ? THEN 3
+                    ELSE 4
+                END,
+                country_name ASC,
+                city_name ASC,
+                postal_code ASC
+            LIMIT 200
+        `;
+
+        const stmt = db.prepare(sql);
+
+        const exact = q;
+        const zipPrefix = `${q}%`;
+        const exactId = selectedAutocompleteRowId;
+
+        stmt.bind([
+            zipPrefix,
+            zipPrefix,
+            zipPrefix,
+            exactId,
+            exactId,
+            exact,
+            zipPrefix,
+            zipPrefix,
+            zipPrefix
+        ]);
+
+        let found = 0;
+        let singleEmbedUrl = '';
+
+        while (stmt.step()) {
+            const row = stmt.getAsObject();
+
+            const tr = document.createElement('tr');
+            const mapsUrl = buildGoogleMapsLink(row);
+            const embedUrl = buildGoogleMapsEmbedUrl(row);
+
+            if (found === 0 && embedUrl) {
+                singleEmbedUrl = embedUrl;
+            }
+
+            tr.innerHTML = `
+                    <td>${escapeHtml(row.country_name)}</td>
+                    <td>${escapeHtml(row.postal_code)}</td>
+                    <td>${escapeHtml(row.city_name)}</td>
+                    <td>${escapeHtml(row.district_name)}</td>
+                    <td>${escapeHtml(row.county_name)}</td>
+                    <td>${escapeHtml(row.state_name)}</td>
+                    <td>${escapeHtml(row.regional_dial_code)}</td>
+                    <td>${escapeHtml(row.phone_prefix)}</td>
+                    <td>${escapeHtml(row.timezone)}</td>
+                    <td>${mapsUrl ? `<a class="map-link" href="${escapeHtml(mapsUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a>` : ''}</td>
+                `;
+            tbody.appendChild(tr);
+            found++;
+        }
+
+        stmt.free();
+
+        if (found > 0) {
+            table.style.display = 'table';
+            status.textContent = `Found ${found} result(s).`;
+
+            if (found === 1 && singleEmbedUrl) {
+                showSingleMap(singleEmbedUrl);
+            } else {
+                hideSingleMap();
+            }
+        } else {
+            emptyState.style.display = 'block';
+            status.textContent = 'No results found.';
+            hideSingleMap();
+        }
+    }
+
+    document.getElementById('datasetSelect').addEventListener('change', function () {
+        loadDatabase(this.value).catch(error => {
+            console.error(error);
+            setDbLoading(false, `Database loading error: ${error.message}`);
+            closeAutocomplete();
+            setCacheHint('Cache: unavailable because database loading failed.');
+        });
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', search);
+
+    document.getElementById('query').addEventListener('input', updateAutocomplete);
+
+    document.getElementById('query').addEventListener('keydown', function (event) {
+        if (!isAutocompleteLoading && autocompleteItems.length && event.key === 'ArrowDown') {
+            event.preventDefault();
+            autocompleteIndex = Math.min(autocompleteIndex + 1, autocompleteItems.length - 1);
+            setActiveAutocompleteItem();
+            return;
+        }
+
+        if (!isAutocompleteLoading && autocompleteItems.length && event.key === 'ArrowUp') {
+            event.preventDefault();
+            autocompleteIndex = Math.max(autocompleteIndex - 1, 0);
+            setActiveAutocompleteItem();
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+
+            if (!isAutocompleteLoading && autocompleteItems.length && autocompleteIndex >= 0) {
+                const selected = autocompleteItems[autocompleteIndex];
+                document.getElementById('query').value = selected.postal_code;
+                selectedAutocompleteRowId = selected.id ?? null;
+                closeAutocomplete();
+                search(selected.postal_code);
+                return;
+            }
+
+            search();
+        }
+
+        if (event.key === 'Escape') {
+            closeAutocomplete();
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        const list = document.getElementById('autocompleteList');
+        const input = document.getElementById('query');
+        if (list && !list.contains(event.target) && event.target !== input) {
+            closeAutocomplete();
+        }
+    });
+
+    loadDatabase('pl').catch(error => {
+        console.error(error);
+        setDbLoading(false, `Database loading error: ${error.message}`);
+        setCacheHint('Cache: unavailable because database loading failed.');
+    });
+</script>
+
+</body>
+</html>
