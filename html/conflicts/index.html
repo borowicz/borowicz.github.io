@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konflikty na świecie</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f8fc;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #5f6b85;
+            --line: #dbe3f0;
+            --accent: #1f5eff;
+            --accent-soft: #eaf0ff;
+            --success: #0f9d58;
+            --danger: #d93025;
+            --shadow: 0 14px 36px rgba(22, 33, 66, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: linear-gradient(180deg, #f8faff 0%, #eef3fb 100%);
+            color: var(--text);
+            line-height: 1.45;
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 28px 18px 56px;
+        }
+
+        .hero {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 14px 0 10px;
+            font-size: clamp(30px, 4vw, 48px);
+            line-height: 1.06;
+        }
+
+        .lead {
+            margin: 0;
+            max-width: 950px;
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .stat-card {
+            background: #f9fbff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr auto;
+            gap: 12px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .field input,
+        .field select,
+        .toolbar button {
+            min-height: 46px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            padding: 0 14px;
+            font-size: 15px;
+            background: #fff;
+            color: var(--text);
+        }
+
+        .toolbar button {
+            cursor: pointer;
+            font-weight: 700;
+            align-self: end;
+        }
+
+        .toolbar button:hover {
+            border-color: #bfd0f7;
+            background: #f8fbff;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 10px 2px 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .card h2 {
+            margin: 0 0 4px;
+            font-size: 24px;
+            line-height: 1.15;
+        }
+
+        .region {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .badge.ongoing {
+            background: rgba(217, 48, 37, 0.8);
+            color: #ffffff;
+        }
+
+        .badge.ended {
+            background: #d1d5db;
+            color: #374151;
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .fact {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: #fcfdff;
+        }
+
+        .fact-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 700;
+        }
+
+        .fact-value {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .desc {
+            margin: 0;
+            color: #33415c;
+            font-size: 15px;
+        }
+
+        .sources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .source-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fbfcff;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .source-link:hover {
+            background: var(--accent-soft);
+        }
+
+        .footnote {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            background: rgba(255,255,255,0.72);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px 16px;
+        }
+
+        .empty {
+            display: none;
+            background: var(--card);
+            border: 1px dashed #b8c6e1;
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            color: var(--muted);
+            box-shadow: var(--shadow);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 18px;
+        }
+
+        @media (max-width: 1080px) {
+            .top-grid,
+            .cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .toolbar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 14px 40px;
+            }
+
+            .top-grid,
+            .cards,
+            .toolbar,
+            .facts {
+                grid-template-columns: 1fr;
+            }
+
+            .card-head {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero">
+        <div class="eyebrow">Konflikty zbrojne • lista</div>
+        <h1>Lista wybranych konfliktów na świecie</h1>
+        <p class="lead">
+            Strona pokazuje wybrane wojny i konflikty zbrojne, datę początku, datę zakończenia — jeśli już nastąpiła — oraz liczbę dni trwania. Dla konfliktów aktywnych licznik liczy do dnia dzisiejszego.
+        </p>
+
+        <div class="top-grid" id="stats"></div>
+    </section>
+
+    <section class="toolbar">
+        <div class="field">
+            <label for="searchInput">Szukaj po nazwie, kraju lub regionie</label>
+            <input id="searchInput" type="text" placeholder="np. Ukraina, Iran, Sudan, Syria">
+        </div>
+        <div class="field">
+            <label for="statusFilter">Status</label>
+            <select id="statusFilter">
+                <option value="all">Wszystkie</option>
+                <option value="ongoing">Tylko aktywne</option>
+                <option value="ended">Tylko zakończone</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="sortFilter">Sortowanie</label>
+            <select id="sortFilter">
+                <option value="days-desc">Najdłużej trwające</option>
+                <option value="days-asc">Najkrócej trwające</option>
+                <option value="start-desc">Najnowszy początek</option>
+                <option value="start-asc">Najstarszy początek</option>
+                <option value="name-asc">Nazwa A–Z</option>
+            </select>
+        </div>
+        <button id="resetBtn" type="button">Reset</button>
+    </section>
+
+    <div class="meta-row">
+        <div id="resultsInfo">Ładowanie danych…</div>
+        <div id="updatedInfo"></div>
+    </div>
+
+    <section id="cards" class="cards"></section>
+    <section id="emptyState" class="empty">Brak wyników dla wybranych filtrów.</section>
+
+    <div class="footnote">
+        Uwaga: to nie jest pełna, oficjalna lista wszystkich konfliktów na świecie. To zestawienie wybranych, szeroko opisywanych konfliktów z datami startu obecnej fazy wojny lub starć, tak aby licznik dni był praktyczny i czytelny.
+    </div>
+
+    <div class="footer">&copy; borowicz.github.io</div>
+</div>
+
+<script>
+    const CONFLICTS = [
+        {
+            id: 'ukraine',
+            name: 'Ukraina — pełnoskalowa inwazja Rosji',
+            region: 'Europa Wschodnia',
+            countries: ['Ukraina', 'Rosja'],
+            startDate: '2022-02-24',
+            endDate: null,
+            description: 'Bieżąca faza wojny rozpoczęła się wraz z pełnoskalową inwazją Rosji 24 lutego 2022 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine' }
+            ]
+        },
+        {
+            id: 'gaza',
+            name: 'Izrael–Hamas / Gaza',
+            region: 'Bliski Wschód',
+            countries: ['Izrael', 'Gaza', 'Palestyna'],
+            startDate: '2023-10-07',
+            endDate: null,
+            description: 'Jako początek obecnej fazy przyjęto atak Hamasu z 7 października 2023 roku i następującą po nim wojnę w Gazie.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/israeli-palestinian-conflict' }
+            ]
+        },
+        {
+            id: 'iran-israel',
+            name: 'Iran–Izrael — bezpośrednia eskalacja',
+            region: 'Bliski Wschód',
+            countries: ['Iran', 'Izrael'],
+            startDate: '2024-04-01',
+            endDate: null,
+            description: 'Dla obecnej bezpośredniej fazy starć przyjęto 1 kwietnia 2024 roku, gdy po ataku na irański obiekt konsularny nastąpiła otwarta wymiana uderzeń.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/confrontation-between-united-states-and-iran' }
+            ]
+        },
+        {
+            id: 'sudan',
+            name: 'Sudan — wojna domowa',
+            region: 'Afryka Północno-Wschodnia',
+            countries: ['Sudan'],
+            startDate: '2023-04-15',
+            endDate: null,
+            description: 'Konflikt między Sudanese Armed Forces i Rapid Support Forces rozpoczął się 15 kwietnia 2023 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/power-struggle-sudan' }
+            ]
+        },
+        {
+            id: 'yemen',
+            name: 'Jemen',
+            region: 'Półwysep Arabski / Morze Czerwone',
+            countries: ['Jemen'],
+            startDate: '2014-09-01',
+            endDate: null,
+            description: 'Za start obecnej wojny domowej przyjęto przejęcie stolicy przez Hutich we wrześniu 2014 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/war-yemen' },
+                { label: 'CFR background', url: 'https://www.cfr.org/backgrounders/yemen-crisis' }
+            ]
+        },
+        {
+            id: 'myanmar',
+            name: 'Mjanma / Myanmar — wojna domowa po puczu',
+            region: 'Azja Południowo-Wschodnia',
+            countries: ['Myanmar'],
+            startDate: '2021-02-01',
+            endDate: null,
+            description: 'Jako początek obecnej fazy przyjęto wojskowy zamach stanu z 1 lutego 2021 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/backgrounders/myanmar-history-coup-military-rule-ethnic-conflict-rohingya' }
+            ]
+        },
+        {
+            id: 'lebanon-hezbollah',
+            name: 'Izrael–Hezbollah / południowy Liban',
+            region: 'Bliski Wschód',
+            countries: ['Izrael', 'Liban'],
+            startDate: '2023-10-07',
+            endDate: null,
+            description: 'Bieżąca faza eskalacji na granicy izraelsko-libańskiej trwa od 7 października 2023 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/political-instability-lebanon' }
+            ]
+        },
+        {
+            id: 'somalia',
+            name: 'Somalia — konflikt z Al-Shabaab',
+            region: 'Róg Afryki',
+            countries: ['Somalia'],
+            startDate: '2006-01-01',
+            endDate: null,
+            description: 'Trwający konflikt z Al‑Shabaab jest zwykle datowany od połowy pierwszej dekady XXI wieku; dla prostego licznika przyjęto początek 2006 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/al-shabab-somalia' }
+            ]
+        },
+        {
+            id: 'syria',
+            name: 'Syria — wojna domowa',
+            region: 'Bliski Wschód',
+            countries: ['Syria'],
+            startDate: '2011-03-15',
+            endDate: '2024-12-08',
+            description: 'Na potrzeby tej listy przyjęto datowanie CFR: Syria\'s Civil War (2011–24).',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/conflict-syria' }
+            ]
+        },
+        {
+            id: 'ethiopia-tigray',
+            name: 'Etiopia — wojna w Tigraju',
+            region: 'Róg Afryki',
+            countries: ['Etiopia', 'Erytrea'],
+            startDate: '2020-11-03',
+            endDate: '2022-11-02',
+            description: 'Za ramy konfliktu przyjęto wojnę w Tigraju od listopada 2020 roku do porozumienia z Pretorii w listopadzie 2022 roku.',
+            sources: [
+                { label: 'CFR', url: 'https://www.cfr.org/global-conflict-tracker/conflict/conflict-ethiopia' }
+            ]
+        }
+    ];
+
+    const today = new Date();
+    const cardsEl = document.getElementById('cards');
+    const emptyStateEl = document.getElementById('emptyState');
+    const searchInputEl = document.getElementById('searchInput');
+    const statusFilterEl = document.getElementById('statusFilter');
+    const sortFilterEl = document.getElementById('sortFilter');
+    const resultsInfoEl = document.getElementById('resultsInfo');
+    const updatedInfoEl = document.getElementById('updatedInfo');
+    const statsEl = document.getElementById('stats');
+
+    function parseDate(value) {
+        return new Date(`${value}T00:00:00`);
+    }
+
+    function formatDatePL(value) {
+        const date = parseDate(value);
+        return new Intl.DateTimeFormat('pl-PL', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    function diffDays(startDate, endDate) {
+        const msPerDay = 24 * 60 * 60 * 1000;
+        const start = parseDate(startDate);
+        const end = endDate ? parseDate(endDate) : new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        return Math.floor((end - start) / msPerDay) + 1;
+    }
+
+    function formatNumber(value) {
+        return new Intl.NumberFormat('pl-PL').format(value);
+    }
+
+    function isOngoing(item) {
+        return !item.endDate;
+    }
+
+    function enrich(item) {
+        return {
+            ...item,
+            status: isOngoing(item) ? 'ongoing' : 'ended',
+            days: diffDays(item.startDate, item.endDate)
+        };
+    }
+
+    function buildStats(items) {
+        const ongoing = items.filter(item => item.status === 'ongoing').length;
+        const ended = items.filter(item => item.status === 'ended').length;
+        const longest = items.slice().sort((a, b) => b.days - a.days)[0];
+        const newest = items.slice().sort((a, b) => parseDate(b.startDate) - parseDate(a.startDate))[0];
+
+        statsEl.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-label">Pozycji na liście</div>
+                <div class="stat-value">${formatNumber(items.length)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Aktywne</div>
+                <div class="stat-value">${formatNumber(ongoing)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Zakończone</div>
+                <div class="stat-value">${formatNumber(ended)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Najnowszy start</div>
+                <div class="stat-value" style="font-size:20px; line-height:1.15;">${newest ? newest.name.split(' — ')[0] : '—'}</div>
+            </div>
+        `;
+    }
+
+    function render(items) {
+        cardsEl.innerHTML = '';
+
+        if (!items.length) {
+            emptyStateEl.style.display = 'block';
+            resultsInfoEl.textContent = '0 wyników.';
+            return;
+        }
+
+        emptyStateEl.style.display = 'none';
+        resultsInfoEl.textContent = `Widoczne: ${items.length} z ${CONFLICTS.length} pozycji.`;
+
+        items.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'card';
+
+            const badgeLabel = item.status === 'ongoing' ? 'Aktywny' : 'Skończony';
+            const durationLabel = item.status === 'ongoing' ? 'Trwa' : 'Trwał';
+
+            card.innerHTML = `
+                <div class="card-head">
+                    <div>
+                        <h2>${item.name}</h2>
+                        <p class="region">${item.region} • ${item.countries.join(', ')}</p>
+                    </div>
+                    <div class="badge ${item.status}">${badgeLabel}</div>
+                </div>
+
+                <div class="facts">
+                    <div class="fact">
+                        <div class="fact-label">Data początku</div>
+                        <div class="fact-value">${formatDatePL(item.startDate)}</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-label">Data zakończenia</div>
+                        <div class="fact-value">${item.endDate ? formatDatePL(item.endDate) : '—'}</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-label">${durationLabel}</div>
+                        <div class="fact-value">${formatNumber(item.days)} dni</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-label">Status</div>
+                        <div class="fact-value">${badgeLabel}</div>
+                    </div>
+                </div>
+
+                <p class="desc">${item.description}</p>
+
+                <div class="sources">
+                    ${item.sources.map(source => `<a class="source-link" href="${source.url}" target="_blank" rel="noopener noreferrer">Źródło: ${source.label}</a>`).join('')}
+                </div>
+            `;
+
+            cardsEl.appendChild(card);
+        });
+    }
+
+    function applyFilters() {
+        const search = searchInputEl.value.trim().toLowerCase();
+        const status = statusFilterEl.value;
+        const sort = sortFilterEl.value;
+
+        let items = CONFLICTS.map(enrich).filter(item => {
+            const haystack = [
+                item.name,
+                item.region,
+                item.description,
+                ...item.countries
+            ].join(' ').toLowerCase();
+
+            const matchesSearch = !search || haystack.includes(search);
+            const matchesStatus = status === 'all' || item.status === status;
+
+            return matchesSearch && matchesStatus;
+        });
+
+        items.sort((a, b) => {
+            if (sort === 'days-desc') return b.days - a.days;
+            if (sort === 'days-asc') return a.days - b.days;
+            if (sort === 'start-desc') return parseDate(b.startDate) - parseDate(a.startDate);
+            if (sort === 'start-asc') return parseDate(a.startDate) - parseDate(b.startDate);
+            return a.name.localeCompare(b.name, 'pl');
+        });
+
+        render(items);
+    }
+
+    function resetFilters() {
+        searchInputEl.value = '';
+        statusFilterEl.value = 'all';
+        sortFilterEl.value = 'days-desc';
+        applyFilters();
+    }
+
+    searchInputEl.addEventListener('input', applyFilters);
+    statusFilterEl.addEventListener('change', applyFilters);
+    sortFilterEl.addEventListener('change', applyFilters);
+    document.getElementById('resetBtn').addEventListener('click', resetFilters);
+
+    buildStats(CONFLICTS.map(enrich));
+    updatedInfoEl.textContent = `Stan strony: ${new Intl.DateTimeFormat('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(today)}`;
+    applyFilters();
+</script>
+</body>
+</html>
