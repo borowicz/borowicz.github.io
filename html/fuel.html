@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuel Price Calculator</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: rgba(17,24,39,.92);
+            --panel: #1e293b;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --accent: #22c55e;
+            --accent2: #38bdf8;
+            --border: rgba(255,255,255,.08);
+            --shadow: 0 24px 60px rgba(0,0,0,.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at top right, rgba(56,189,248,.14), transparent 28%),
+                    radial-gradient(circle at bottom left, rgba(34,197,94,.12), transparent 34%),
+                    var(--bg);
+        }
+
+        .wrap {
+            width: min(1040px, calc(100% - 32px));
+            margin: 32px auto 48px;
+        }
+
+        .hero, .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .hero {
+            padding: 28px;
+            margin-bottom: 22px;
+            background: linear-gradient(135deg, rgba(34,197,94,.12), rgba(56,189,248,.10));
+        }
+
+        .hero h1 {
+            margin: 0 0 8px;
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1.05;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            margin-top: 14px;
+            display: inline-flex;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border);
+            color: #dbeafe;
+            font-size: 13px;
+        }
+
+        .shared-rate-card {
+            margin-top: 18px;
+            padding: 20px;
+            background: rgba(15,23,42,.45);
+        }
+
+        .shared-rate-card h2 {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+
+        .shared-rate-card .muted {
+            margin-bottom: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            padding: 22px;
+        }
+
+        .card h2 {
+            margin: 0 0 6px;
+            font-size: 22px;
+        }
+
+        .muted {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full { grid-column: 1 / -1; }
+
+        label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,.10);
+            background: #0b1220;
+            color: var(--text);
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 15px;
+            outline: none;
+            transition: .2s ease;
+        }
+
+        input:focus {
+            border-color: rgba(56,189,248,.7);
+            box-shadow: 0 0 0 4px rgba(56,189,248,.12);
+        }
+
+        input[readonly] {
+            background: #111827;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .12s ease;
+        }
+
+        button:hover { transform: translateY(-1px); }
+
+        .primary {
+            background: linear-gradient(135deg, var(--accent), #16a34a);
+            color: #fff;
+        }
+
+        .secondary {
+            background: #0b1220;
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.10);
+        }
+
+        .results {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .result {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 16px;
+            padding: 14px;
+        }
+
+        .result .k {
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 6px;
+        }
+
+        .result .v {
+            font-size: 22px;
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(56,189,248,.08);
+            color: #dbeafe;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 860px) {
+            .grid, .form-grid, .results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <section class="hero">
+        <h1>Fuel Price Calculator</h1>
+        <p>Form 1: enter price per liter in PLN and the USD exchange rate in PLN. It calculates price per liter in USD and price per US gallon in USD. Form 2: enter price per US gallon in USD, and it calculates price per liter in PLN and price per US gallon in PLN using the dollar rate from form 1.</p>
+        <div class="hero-badge">1 US gallon = 3.785411784 liters</div>
+        <div class="card shared-rate-card">
+            <h2>Shared currency rate</h2>
+            <p class="muted">This dollar rate is used by both calculators.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="usdPlnRate">1 USD = PLN</label>
+                    <input id="usdPlnRate" type="number" min="0" step="0.0001" value="3.70" />
+                </div>
+                <div class="field">
+                    <label for="plnUsdRate">1 PLN = USD</label>
+                    <input id="plnUsdRate" type="number" min="0" step="0.0001" value="0.2703" readonly />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="grid">
+        <article class="card">
+            <h2>PLN per liter → USD</h2>
+            <p class="muted">Enter the fuel price per liter in PLN. The shared dollar rate above is used automatically.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="pricePlnPerLiter">Price per liter (PLN)</label>
+                    <input id="pricePlnPerLiter" type="number" min="0" step="0.0001" value="7.30" />
+                </div>
+                <div class="field">
+                    <label for="priceUsdPerLiter">Price per liter (USD)</label>
+                    <input id="priceUsdPerLiter" type="number" min="0" step="0.0001" value="1.9730" readonly />
+                </div>
+                <div class="field">
+                    <label for="priceUsdPerGallon">Price per US gallon (USD)</label>
+                    <input id="priceUsdPerGallon" type="number" min="0" step="0.0001" value="7.4687" readonly />
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" id="resetForm1">Reset</button>
+            </div>
+
+            <div class="results">
+                <div class="result"><div class="k">PLN per liter</div><div class="v" id="resultPlnLiter">—</div></div>
+                <div class="result"><div class="k">1 USD = PLN</div><div class="v" id="resultUsdRate">—</div></div>
+                <div class="result"><div class="k">USD per liter</div><div class="v" id="resultUsdLiter">—</div></div>
+                <div class="result"><div class="k">USD per US gallon</div><div class="v" id="resultUsdGallon">—</div></div>
+            </div>
+        </article>
+
+        <article class="card">
+            <h2>USD per US gallon → PLN</h2>
+            <p class="muted">Enter the fuel price per US gallon in USD. The shared dollar rate above is used automatically.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="inputUsdPerGallon">Price per US gallon (USD)</label>
+                    <input id="inputUsdPerGallon" type="number" min="0" step="0.0001" value="2.95" />
+                </div>
+                <div class="field">
+                    <label for="pricePlnPerLiterFromUsd">Price per liter (PLN)</label>
+                    <input id="pricePlnPerLiterFromUsd" type="number" min="0" step="0.0001" value="2.8847" readonly />
+                </div>
+                <div class="field">
+                    <label for="pricePlnPerGallonFromUsd">Price per US gallon (PLN)</label>
+                    <input id="pricePlnPerGallonFromUsd" type="number" min="0" step="0.0001" value="10.9150" readonly />
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" id="resetForm2">Reset</button>
+            </div>
+
+            <div class="results">
+                <div class="result"><div class="k">USD per US gallon</div><div class="v" id="resultInputUsdGallon">—</div></div>
+                <div class="result"><div class="k">1 USD = PLN</div><div class="v" id="resultSharedRate">—</div></div>
+                <div class="result"><div class="k">PLN per liter</div><div class="v" id="resultPlnLiterFromUsd">—</div></div>
+                <div class="result"><div class="k">PLN per US gallon</div><div class="v" id="resultPlnGallonFromUsd">—</div></div>
+            </div>
+        </article>
+    </section>
+
+    <div class="note">
+        Both calculators use the shared dollar rate above. Conversion formulas: <strong>USD/liter = PLN/liter ÷ USD/PLN</strong>, <strong>USD/gallon = USD/liter × 3.785411784</strong>, <strong>PLN/gallon = USD/gallon × USD/PLN</strong>, <strong>PLN/liter = PLN/gallon ÷ 3.785411784</strong>, <strong>PLN/USD inverse = 1 ÷ USD/PLN</strong>.
+    </div>
+
+    <div class="footer">Static HTML + JavaScript • GitHub Pages ready</div>
+</div>
+
+<script>
+    const $ = (id) => document.getElementById(id);
+    const US_GALLON = 3.785411784;
+
+    function formatNumber(value, digits = 4) {
+        if (!Number.isFinite(value)) return '—';
+        return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits,
+        }).format(value);
+    }
+
+    function updateSharedRateFields() {
+        const usdPlnRate = parseFloat($('usdPlnRate').value) || 0;
+        const plnUsdRate = usdPlnRate > 0 ? 1 / usdPlnRate : 0;
+        $('plnUsdRate').value = plnUsdRate.toFixed(4);
+    }
+
+    function calculateForm1() {
+        const pricePlnPerLiter = parseFloat($('pricePlnPerLiter').value) || 0;
+        const usdPlnRate = parseFloat($('usdPlnRate').value) || 0;
+        updateSharedRateFields();
+
+        const priceUsdPerLiter = usdPlnRate > 0 ? pricePlnPerLiter / usdPlnRate : 0;
+        const priceUsdPerGallon = priceUsdPerLiter * US_GALLON;
+
+        $('priceUsdPerLiter').value = priceUsdPerLiter.toFixed(4);
+        $('priceUsdPerGallon').value = priceUsdPerGallon.toFixed(4);
+
+        $('resultPlnLiter').textContent = formatNumber(pricePlnPerLiter) + ' PLN';
+        $('resultUsdRate').textContent = formatNumber(usdPlnRate) + ' PLN';
+        $('resultUsdLiter').textContent = formatNumber(priceUsdPerLiter) + ' USD';
+        $('resultUsdGallon').textContent = formatNumber(priceUsdPerGallon) + ' USD';
+
+        calculateForm2();
+    }
+
+    function calculateForm2() {
+        const inputUsdPerGallon = parseFloat($('inputUsdPerGallon').value) || 0;
+        const usdPlnRate = parseFloat($('usdPlnRate').value) || 0;
+        updateSharedRateFields();
+
+        const pricePlnPerGallon = inputUsdPerGallon * usdPlnRate;
+        const pricePlnPerLiter = pricePlnPerGallon / US_GALLON;
+
+        $('pricePlnPerLiterFromUsd').value = pricePlnPerLiter.toFixed(4);
+        $('pricePlnPerGallonFromUsd').value = pricePlnPerGallon.toFixed(4);
+
+        $('resultInputUsdGallon').textContent = formatNumber(inputUsdPerGallon) + ' USD';
+        $('resultSharedRate').textContent = formatNumber(usdPlnRate) + ' PLN';
+        $('resultPlnLiterFromUsd').textContent = formatNumber(pricePlnPerLiter) + ' PLN';
+        $('resultPlnGallonFromUsd').textContent = formatNumber(pricePlnPerGallon) + ' PLN';
+    }
+
+    function resetForm1() {
+        $('pricePlnPerLiter').value = '7.30';
+        $('usdPlnRate').value = '3.70';
+        calculateForm1();
+    }
+
+    function resetForm2() {
+        $('inputUsdPerGallon').value = '2.95';
+        calculateForm2();
+    }
+
+    $('pricePlnPerLiter').addEventListener('input', calculateForm1);
+    $('usdPlnRate').addEventListener('input', () => {
+        updateSharedRateFields();
+        calculateForm1();
+    });
+    $('inputUsdPerGallon').addEventListener('input', calculateForm2);
+    $('resetForm1').addEventListener('click', resetForm1);
+    $('resetForm2').addEventListener('click', resetForm2);
+
+    updateSharedRateFields();
+    calculateForm1();
+</script>
+</body>
+</html>
