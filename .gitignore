@@ -1,1 +1,58 @@
 /tmp/
+############################
+# macOS
+############################
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+############################
+# Node / JS / HTML projects
+############################
+node_modules/
+dist/
+build/
+.tmp/
+.cache/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# Environment files
+############################
+.env
+.env.*
+
+############################
+# IDE: JetBrains (PhpStorm, WebStorm, IntelliJ)
+############################
+.idea/
+*.iml
+
+############################
+# VSCode (optional)
+############################
+.vscode/
+
+############################
+# OS / misc
+############################
+Thumbs.db
+*.swp
+*.swo
+*~
+
+############################
+# Optional: keep empty dirs
+############################
+!.gitkeep
