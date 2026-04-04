@@ -59,7 +59,23 @@
         .wrap { width: min(1680px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 64px; }
         .hero { border-radius: 28px; padding: 24px; position: sticky; top: 12px; z-index: 30; backdrop-filter: blur(14px); }
         .eyebrow { display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 999px; background: rgba(125, 211, 252, .08); border: 1px solid rgba(125, 211, 252, .15); color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-        .header-toggle-row { margin-top: 20px; display: flex; justify-content: flex-end; }
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-brand {
+            min-width: 0;
+            flex: 1 1 260px;
+        }
+        .header-toggle-row {
+            margin-top: 0;
+            display: flex;
+            justify-content: flex-end;
+            flex: 0 0 auto;
+        }
         .header-toggle, .button, .load-more, .copy-btn, .link {
             min-height: 42px; border-radius: 999px; border: 1px solid var(--line);
             background: rgba(255,255,255,.04); color: var(--text); padding: 0 14px;
@@ -109,11 +125,59 @@
         @media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 920px) {
             .toolbar { grid-template-columns: 1fr; }
-            .hero { position: static; }
+            .hero {
+                position: static;
+                padding: 18px;
+                border-radius: 22px;
+            }
+            .hero-body { max-height: none; }
             .hero-meta-row { flex-direction: column; align-items: stretch; }
             .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .header-top {
+                align-items: stretch;
+                gap: 10px;
+            }
+            .header-toggle-row {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .header-toggle {
+                width: 100%;
+            }
+            .filters, .stats {
+                width: 100%;
+            }
         }
-        @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) {
+            .wrap {
+                width: min(100% - 20px, 1680px);
+                padding: 16px 0 40px;
+            }
+            .hero {
+                top: 8px;
+                padding: 16px;
+                border-radius: 18px;
+            }
+            .eyebrow {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+            .lead {
+                font-size: 14px;
+            }
+            .hero-meta-row {
+                gap: 10px;
+            }
+            .filters, .stats, .meta, .tag-list, .actions-left {
+                gap: 6px;
+            }
+            .pill, .chip, .tag-filter, .tag-chip {
+                font-size: 12px;
+                padding: 7px 10px;
+            }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body class="loading">
@@ -130,14 +194,18 @@
 
 <main class="wrap">
     <section class="hero">
-        <a href="codecrap.html" class="muted"><div class="eyebrow">Code Crap Archive</div></a>
-        <div class="header-toggle-row" style="float: right; margin-top: -10px; margin-right: 10px;">
-            <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">Hide header details</button>
+        <div class="header-top">
+            <div class="header-brand">
+                <a href="codecrap.html" class="muted"><div class="eyebrow">Code Crap Archive</div></a>
+            </div>
+            <div class="header-toggle-row">
+                <button id="headerToggle" class="header-toggle" type="button" aria-expanded="true" aria-controls="heroBody">Hide header details</button>
+            </div>
         </div>
         <div id="heroBody" class="hero-body">
             <header>
-                <h3>Funny code...</h3>
-                <p class="lead">Questionable life choices, one searchable wall of shame, museum of cursed software decisions.</p><br>
+                <h3 style="margin: 0 0 10px; line-height: 1.2;">Funny code...</h3>
+                <p class="lead" style="margin: 0;">Questionable life choices, one searchable wall of shame, museum of cursed software decisions.</p>
             </header>
             <div id="toolbar" class="toolbar">
                 <input id="searchInput" class="field" type="search" placeholder="Search code, title, author, tag, caption..." autocomplete="off" spellcheck="false" />
