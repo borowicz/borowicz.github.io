@@ -102,46 +102,46 @@
 <script>
     (function () {
         const statuses = [
-            { code: 100, group: '1xx', title: 'Continue', joke: 'Keep going, I’m still interested… maybe.' },
-            { code: 101, group: '1xx', title: 'Switching Protocols', joke: 'Switching partners — emotionally.' },
-            { code: 102, group: '1xx', title: 'Processing', joke: 'Processing your mixed signals.' },
-            { code: 103, group: '1xx', title: 'Early Hints', joke: 'Early hints: not going anywhere.' },
+            { code: 100, group: '1xx', originalTitle: 'Continue', title: 'Still Loading My Life Choices', meaning: 'The initial part of the request has been received, and the client should continue.', description: 'Upload started. Coffee not finished yet.' },
+            { code: 101, group: '1xx', originalTitle: 'Switching Protocols', title: 'Changed the Plan Again', meaning: 'The server is switching to a different protocol as requested.', description: 'HTTP said goodbye. WebSocket entered the chat.' },
+            { code: 102, group: '1xx', originalTitle: 'Processing', title: 'Mentally Buffering', meaning: 'The server has received the request and is processing it, but no response is available yet.', description: 'Still thinking. Please do not poke the backend.' },
+            { code: 103, group: '1xx', originalTitle: 'Early Hints', title: 'Tiny Signs of Hope', meaning: 'The server sends preliminary headers before the final response.', description: 'Here is a teaser while the real payload gets dressed.' },
 
-            { code: 200, group: '2xx', title: 'OK', joke: 'All good. We’re finally on the same page.' },
-            { code: 201, group: '2xx', title: 'Created', joke: 'It’s official — we’re a thing!' },
-            { code: 202, group: '2xx', title: 'Accepted', joke: 'Accepted your apology, but still mad.' },
-            { code: 204, group: '2xx', title: 'No Content', joke: 'No talking. Just cuddles.' },
-            { code: 206, group: '2xx', title: 'Partial Content', joke: 'Half-committed. Classic situationship.' },
+            { code: 200, group: '2xx', originalTitle: 'OK', title: 'Surprisingly Doing Fine', meaning: 'The request succeeded.', description: 'It works in production. Nobody touch anything.' },
+            { code: 201, group: '2xx', originalTitle: 'Created', title: 'Accidentally Started a New Chapter', meaning: 'The request succeeded and a new resource was created.', description: 'New record created. Future bug report scheduled.' },
+            { code: 202, group: '2xx', originalTitle: 'Accepted', title: 'Fine, I’ll Deal With It', meaning: 'The request was accepted for processing, but it may not be completed yet.', description: 'Task accepted. See you after the queue finishes napping.' },
+            { code: 204, group: '2xx', originalTitle: 'No Content', title: 'Nothing to Say, Just Existing', meaning: 'The request succeeded, but there is no content to return.', description: 'Everything is fine. There is just absolutely nothing to show.' },
+            { code: 206, group: '2xx', originalTitle: 'Partial Content', title: 'Giving the Bare Minimum', meaning: 'The server is delivering only part of the requested resource.', description: 'Budget cut response. Full answer sold separately.' },
 
-            { code: 300, group: '3xx', title: 'Multiple Choices', joke: 'Too many matches on Tinder.' },
-            { code: 301, group: '3xx', title: 'Moved Permanently', joke: 'Moved on — permanently.' },
-            { code: 302, group: '3xx', title: 'Found', joke: 'Found someone else.' },
-            { code: 303, group: '3xx', title: 'See Other', joke: 'See other people 😬.' },
-            { code: 307, group: '3xx', title: 'Temporary Redirect', joke: 'We’re on a break (sure…).' },
-            { code: 308, group: '3xx', title: 'Permanent Redirect', joke: 'I’ve moved on — for real this time.' },
+            { code: 300, group: '3xx', originalTitle: 'Multiple Choices', title: 'Too Many Options, Zero Clarity', meaning: 'The request has more than one possible response.', description: 'Three docs, four tutorials, zero certainty.' },
+            { code: 301, group: '3xx', originalTitle: 'Moved Permanently', title: 'Left and Not Coming Back', meaning: 'The resource has been permanently moved to a new URL.', description: 'This endpoint has retired and moved to the countryside.' },
+            { code: 302, group: '3xx', originalTitle: 'Found', title: 'Ended Up Somewhere Else', meaning: 'The resource resides temporarily under a different URL.', description: 'You found it, just not where the README promised.' },
+            { code: 303, group: '3xx', originalTitle: 'See Other', title: 'Ask Somebody Else', meaning: 'The response can be found at another URL using GET.', description: 'Nice try. The useful thing is somewhere else.' },
+            { code: 307, group: '3xx', originalTitle: 'Temporary Redirect', title: 'Detour Because Life Said So', meaning: 'The resource is temporarily available at a different URL, using the same method.', description: 'Detour ahead. Same request, different drama.' },
+            { code: 308, group: '3xx', originalTitle: 'Permanent Redirect', title: 'New Direction, Same Problems', meaning: 'The resource has been permanently moved, and the same method should be used.', description: 'This route has committed to a new identity.' },
 
-            { code: 400, group: '4xx', title: 'Bad Request', joke: 'You said what? Try again nicely.' },
-            { code: 401, group: '4xx', title: 'Unauthorized', joke: 'You’re not on my Netflix anymore.' },
-            { code: 403, group: '4xx', title: 'Forbidden', joke: 'Access denied — emotional firewall active.' },
-            { code: 404, group: '4xx', title: 'Not Found', joke: 'Love not found 💔.' },
-            { code: 408, group: '4xx', title: 'Request Timeout', joke: 'You took too long to reply ⏳.' },
-            { code: 409, group: '4xx', title: 'Conflict', joke: 'Same argument, again.' },
-            { code: 410, group: '4xx', title: 'Gone', joke: 'Ghosted 👻.' },
-            { code: 411, group: '4xx', title: 'Length Required', joke: 'Size does matter 😏.' },
-            { code: 422, group: '4xx', title: 'Unprocessable Entity', joke: 'Emotionally unavailable 💔.' },
-            { code: 423, group: '4xx', title: 'Locked', joke: 'Heart closed for maintenance 🔒.' },
-            { code: 429, group: '4xx', title: 'Too Many Requests', joke: 'Stop texting me every 3 seconds 📱.' },
-            { code: 451, group: '4xx', title: 'Unavailable for Legal Reasons', joke: 'Blocked. By the court 🚫.' },
+            { code: 400, group: '4xx', originalTitle: 'Bad Request', title: '400: That Made Sense in My Head', meaning: 'The server could not understand the request because it was invalid.', description: 'Your request spoke fluent nonsense.' },
+            { code: 401, group: '4xx', originalTitle: 'Unauthorized', title: '401: Prove You Belong Here', meaning: 'Authentication is required and has failed or was not provided.', description: 'Nice request. Now show the token.' },
+            { code: 403, group: '4xx', originalTitle: 'Forbidden', title: '403: Not Today', meaning: 'The server understood the request but refuses to authorize it.', description: 'Access denied by the firewall wizard.' },
+            { code: 404, group: '4xx', originalTitle: 'Not Found', title: '404: Motivation Not Found', meaning: 'The server cannot find the requested resource.', description: 'The file escaped. The logs know nothing.' },
+            { code: 408, group: '4xx', originalTitle: 'Request Timeout', title: '408: Took Too Long, Missed the Chance', meaning: 'The server timed out waiting for the request.', description: 'The server waited. Then it gave up on you.' },
+            { code: 409, group: '4xx', originalTitle: 'Conflict', title: '409: My Plans and Reality Collided', meaning: 'The request conflicts with the current state of the resource.', description: 'Two truths entered. Git chose violence.' },
+            { code: 410, group: '4xx', originalTitle: 'Gone', title: '410: That Phase Is Over', meaning: 'The resource is no longer available and will not be available again.', description: 'Deleted means deleted. Even hope was removed.' },
+            { code: 411, group: '4xx', originalTitle: 'Length Required', title: '411: Please Explain Yourself', meaning: 'The server requires a valid Content-Length header.', description: 'Please specify the size of your chaos.' },
+            { code: 422, group: '4xx', originalTitle: 'Unprocessable Entity', title: '422: Technically Fine, Emotionally Questionable', meaning: 'The server understands the request but cannot process the contained instructions.', description: 'Technically valid. Spiritually unacceptable.' },
+            { code: 423, group: '4xx', originalTitle: 'Locked', title: '423: Closed Off for Maintenance', meaning: 'The resource that is being accessed is locked.', description: 'Resource is locked. Try again after the senior dev wakes up.' },
+            { code: 429, group: '4xx', originalTitle: 'Too Many Requests', title: '429: Too Much, Too Fast', meaning: 'The user has sent too many requests in a given amount of time.', description: 'Rate limit activated. Touch grass and retry later.' },
+            { code: 451, group: '4xx', originalTitle: 'Unavailable For Legal Reasons', title: '451: Life Said No', meaning: 'The resource is unavailable due to legal demands.', description: 'Content removed by people with better lawyers.' },
 
-            { code: 500, group: '5xx', title: 'Internal Server Error', joke: 'Emotional breakdown. Send ice cream 🍦.' },
-            { code: 501, group: '5xx', title: 'Not Implemented', joke: 'Still learning how to love.' },
-            { code: 502, group: '5xx', title: 'Bad Gateway', joke: 'Bad advice from friends.' },
-            { code: 503, group: '5xx', title: 'Service Unavailable', joke: 'Not in the mood 😴.' },
-            { code: 504, group: '5xx', title: 'Gateway Timeout', joke: 'Didn’t text back. Blames Wi-Fi 📶.' },
-            { code: 507, group: '5xx', title: 'Insufficient Storage', joke: 'Out of emotional space 😞.' },
-            { code: 508, group: '5xx', title: 'Loop Detected', joke: 'Same fight, every single time 🔁.' },
-            { code: 510, group: '5xx', title: 'Not Extended', joke: 'Just friends.' },
-            { code: 511, group: '5xx', title: 'Network Authentication Required', joke: 'Password = trust 🔒❤️.' }
+            { code: 500, group: '5xx', originalTitle: 'Internal Server Error', title: '500: I Am Having a Day', meaning: 'The server encountered an unexpected condition.', description: 'Everything exploded, but elegantly.' },
+            { code: 501, group: '5xx', originalTitle: 'Not Implemented', title: '501: Not Ready for That Yet', meaning: 'The server does not support the functionality required to fulfill the request.', description: 'Roadmap says soon. Code says absolutely not.' },
+            { code: 502, group: '5xx', originalTitle: 'Bad Gateway', title: '502: Wrong People, Wrong Timing', meaning: 'The server received an invalid response from an upstream server.', description: 'The proxy asked a question. Upstream replied with interpretive dance.' },
+            { code: 503, group: '5xx', originalTitle: 'Service Unavailable', title: '503: Currently Unavailable to Everyone', meaning: 'The server is temporarily unable to handle the request.', description: 'Service unavailable. It is either overloaded or emotionally tired.' },
+            { code: 504, group: '5xx', originalTitle: 'Gateway Timeout', title: '504: Waiting on Something That Will Never Happen', meaning: 'The server did not receive a timely response from an upstream server.', description: 'Timeout: somewhere, a server is still buffering with dignity.' },
+            { code: 507, group: '5xx', originalTitle: 'Insufficient Storage', title: '507: No Space Left for More Problems', meaning: 'The server is unable to store the representation needed to complete the request.', description: 'No storage left. Delete memes or perish.' },
+            { code: 508, group: '5xx', originalTitle: 'Loop Detected', title: '508: Same Mistake, Different Day', meaning: 'The server detected an infinite loop while processing the request.', description: 'The code entered a loop and found inner peace.' },
+            { code: 510, group: '5xx', originalTitle: 'Not Extended', title: '510: Extra Energy Required', meaning: 'Further extensions to the request are required for the server to fulfill it.', description: 'Apparently this request needs DLC.' },
+            { code: 511, group: '5xx', originalTitle: 'Network Authentication Required', title: '511: Trust Issues Detected', meaning: 'The client must authenticate to gain network access.', description: 'Before internet, please solve this captive portal side quest.' }
         ];
 
         const groupMeta = {
@@ -327,7 +327,7 @@
 
             return sortStatuses(statuses.filter((item) => {
                 const matchesGroup = activeGroup === 'all' || item.group === activeGroup;
-                const haystack = `${item.code} ${item.title} ${item.group} ${item.joke}`.toLowerCase();
+                const haystack = `${item.code} ${item.originalTitle} ${item.title} ${item.group} ${item.meaning} ${item.description}`.toLowerCase();
                 const matchesSearch = !term || haystack.includes(term);
                 return matchesGroup && matchesSearch;
             }));
@@ -373,8 +373,10 @@
                             <span style="font-size:28px; font-weight:900; line-height:1; color:${meta.code};">${escapeHtml(item.code)}</span>
                             <span style="padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:${meta.badge};">${escapeHtml(item.group)}</span>
                         </div>
+                        <div style="font-size:16px; color:${meta.text}; margin-bottom:6px; font-weight: bolder">${escapeHtml(item.originalTitle)}</div>
+                        <div style="font-size:12px; color:${meta.text}; margin-bottom:6px;">${escapeHtml(item.meaning)}</div>
                         <div style="margin-bottom:8px; font-size:16px; font-weight:800; color:#f8fafc;">${escapeHtml(item.title)}</div>
-                        <div style="font-size:14px; line-height:1.6; color:${meta.text};">${escapeHtml(item.joke)}</div>
+                        <div style="font-size:14px; font-style: italic; line-height:1.6; color:${meta.text};">${escapeHtml(item.description)}</div>
                     </div>
                 `;
                 }).join('');

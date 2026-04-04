@@ -58,11 +58,58 @@
             gap: 10px;
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--border);
             color: var(--muted);
             font-size: 0.92rem;
             backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: transform .18s ease, background .18s ease, border-color .18s ease;
+        }
+
+        .eyebrow:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .floating-nav {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 12px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .floating-nav .eyebrow {
+            pointer-events: auto;
+        }
+
+        .anchors {
+            display: flex;
+            justify-content: center;
+            pointer-events: auto;
+        }
+
+        .floating-nav .hero-actions {
+            margin: 0;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .floating-nav .btn {
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            min-height: auto;
+            white-space: nowrap;
         }
 
         h1 {
@@ -493,6 +540,24 @@
 
         @media (max-width: 720px) {
             .hero { padding-top: 46px; }
+            .floating-nav {
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .anchors {
+                grid-column: 1 / -1;
+                order: 3;
+            }
+            .floating-nav .hero-actions {
+                flex-wrap: wrap;
+            }
+            .floating-nav .btn,
+            .floating-nav .eyebrow {
+                justify-content: center;
+            }
             .stats { grid-template-columns: 1fr; }
             .timeline-shell, .legend-card { border-radius: 20px; }
             .timeline-progress { left: 24px; top: 24px; bottom: 24px; }
@@ -510,27 +575,24 @@
     </style>
 </head>
 <body>
-<header class="hero">
+<div class="floating-nav">
+    <a class="eyebrow" href="/" aria-label="Go to home page">🏚️ Home</a>
+    <nav class="anchors" aria-label="Section navigation">
+        <div class="hero-actions">
+            <a class="btn primary" href="#timeline">⏱️ Timeline</a>
+            <a class="btn" href="#legend">📚 Legend</a>
+        </div>
+    </nav>
+    <a class="eyebrow" href="#top" aria-label="Back to top">⬆️ Top</a>
+</div>
+
+<header class="hero" id="top">
     <div class="wrap">
-        <div class="eyebrow">💞 App-like GitHub Pages UI · HTML / CSS / JS only</div>
-        <h1><span class="gradient">Relationship as</span><br>HTTP Codes</h1>
+        <h1><span class="gradient">Relationship as </span>HTTP Codes</h1>
         <p class="lead">
             An unstable API: first signals, protocol upgrades, redirects, conflicts, emotional downtime,
-            and one suspiciously hopeful new start.
+            and ...
         </p>
-
-        <div class="hero-actions">
-            <a class="btn primary" href="#timeline">Open timeline</a>
-            <a class="btn" href="#legend">Open legend</a>
-            <button class="btn" id="replayBtn" type="button">Replay animation</button>
-        </div>
-
-        <div class="stats">
-            <div class="stat"><div class="k">12</div><div class="v">timeline events</div></div>
-            <div class="stat"><div class="k">5 groups</div><div class="v">1xx to 5xx colors</div></div>
-            <div class="stat"><div class="k">filterable</div><div class="v">legend by status class</div></div>
-            <div class="stat"><div class="k">vertical</div><div class="v">scroll-driven timeline layout</div></div>
-        </div>
     </div>
 </header>
 
@@ -539,10 +601,9 @@
         <div class="wrap">
             <div class="section-head">
                 <div>
-                    <h2>Vertical timeline</h2>
+                    <h2>Timeline</h2>
                     <p>
-                        Scroll down to reveal each stage of the relationship. As the timeline enters the viewport,
-                        the next cards appear one by one, the active stage lights up, and the progress line fills vertically.
+                        Scroll down to reveal each stage of the relationship...
                     </p>
                 </div>
             </div>
