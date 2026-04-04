@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shortcuts Quick Search</title>
+    <style>
+        :root{
+            --bg:#0b1020;
+            --bg2:#121933;
+            --card:rgba(255,255,255,.06);
+            --border:rgba(255,255,255,.12);
+            --text:#eef2ff;
+            --muted:#aab4d6;
+            --accent:#6ea8fe;
+            --accent2:#7ef0c2;
+            --danger:#ff8a8a;
+            --radius:18px;
+            --shadow:0 20px 50px rgba(0,0,0,.35);
+        }
+
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            margin:0;
+            font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color:var(--text);
+            background:
+                    radial-gradient(circle at top left, rgba(110,168,254,.18), transparent 28%),
+                    radial-gradient(circle at top right, rgba(126,240,194,.12), transparent 28%),
+                    linear-gradient(180deg, #09101d 0%, #0d1328 100%);
+        }
+
+        a{color:inherit;text-decoration:none}
+        .container{
+            width:min(100% - 24px, 1380px);
+            margin-inline:auto;
+        }
+
+        .hero{
+            padding:28px 0 16px;
+        }
+
+        .hero-card,
+        .panel{
+            background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+            border:1px solid var(--border);
+            border-radius:24px;
+            box-shadow:var(--shadow);
+        }
+
+        .hero-card{
+            padding:24px;
+        }
+
+        .eyebrow{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 12px;
+            border-radius:999px;
+            background:rgba(126,240,194,.08);
+            border:1px solid rgba(126,240,194,.18);
+            color:var(--accent2);
+            font-size:.85rem;
+            margin-bottom:14px;
+        }
+
+        h1{
+            margin:0 0 10px;
+            font-size:clamp(1.9rem, 4vw, 3.3rem);
+            line-height:1.08;
+            letter-spacing:-.03em;
+        }
+
+        p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.6;
+        }
+
+        .toolbar{
+            margin-top:18px;
+            display:grid;
+            grid-template-columns:1.4fr .8fr .8fr auto;
+            gap:12px;
+        }
+
+        .quick-filters{
+            margin-top:14px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+        }
+
+        .filter-chip{
+            min-height:40px;
+            padding:0 14px;
+            border-radius:999px;
+            border:1px solid rgba(255,255,255,.12);
+            background:rgba(255,255,255,.05);
+            color:var(--text);
+            font:inherit;
+            cursor:pointer;
+            transition:.18s ease;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active{
+            background:rgba(110,168,254,.16);
+            border-color:rgba(110,168,254,.45);
+        }
+
+        .field,
+        .select,
+        .btn{
+            min-height:48px;
+            border-radius:14px;
+            border:1px solid var(--border);
+            background:rgba(255,255,255,.05);
+            color:var(--text);
+            padding:0 14px;
+            font:inherit;
+            outline:none;
+        }
+
+        .field:focus,
+        .select:focus{
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px rgba(110,168,254,.15);
+        }
+
+        .btn{
+            cursor:pointer;
+            font-weight:700;
+            background:linear-gradient(135deg, var(--accent), #5a8df2);
+            border:none;
+        }
+
+        .stats{
+            margin-top:18px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+        }
+
+        .chip{
+            padding:8px 12px;
+            border-radius:999px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+            color:var(--muted);
+            font-size:.92rem;
+        }
+
+        .main{
+            padding:18px 0 40px;
+        }
+
+        .panel{
+            overflow:hidden;
+        }
+
+        .table-wrap{
+            overflow:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:1100px;
+        }
+
+        thead th{
+            position:sticky;
+            top:0;
+            z-index:2;
+            background:#111933;
+            color:var(--text);
+            text-align:left;
+            font-size:.94rem;
+            letter-spacing:.01em;
+        }
+
+        th, td{
+            padding:14px 16px;
+            border-bottom:1px solid rgba(255,255,255,.08);
+            vertical-align:top;
+        }
+
+        tbody tr:hover{
+            background:rgba(255,255,255,.04);
+        }
+
+        .cat{
+            white-space:nowrap;
+            font-weight:700;
+            color:#dbe6ff;
+        }
+
+        .action{
+            font-weight:600;
+        }
+
+        .kbd{
+            display:inline-block;
+            padding:5px 9px;
+            margin:2px 4px 2px 0;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.14);
+            background:rgba(255,255,255,.06);
+            color:var(--text);
+            font-size:.92rem;
+            line-height:1.2;
+            white-space:nowrap;
+        }
+
+        .kbd.muted{
+            color:var(--muted);
+        }
+
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 10px;
+            border-radius:999px;
+            font-size:.82rem;
+            font-weight:700;
+            line-height:1;
+            white-space:nowrap;
+            border:1px solid transparent;
+        }
+
+        .badge-group{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-bottom:10px;
+        }
+
+        .badge.windows{
+            background:rgba(110,168,254,.16);
+            border-color:rgba(110,168,254,.34);
+            color:#dcebff;
+        }
+
+        .badge.mac{
+            background:rgba(168,120,255,.16);
+            border-color:rgba(168,120,255,.34);
+            color:#efe2ff;
+        }
+
+        .badge.ubuntu{
+            background:rgba(255,145,77,.16);
+            border-color:rgba(255,145,77,.34);
+            color:#ffe6d5;
+        }
+
+        .cards{
+            display:none;
+            padding:14px;
+            gap:12px;
+        }
+
+        .shortcut-card{
+            padding:16px;
+            border-radius:18px;
+            border:1px solid rgba(255,255,255,.08);
+            background:rgba(255,255,255,.04);
+        }
+
+        .shortcut-card h3{
+            margin:0 0 6px;
+            font-size:1rem;
+            line-height:1.35;
+        }
+
+        .shortcut-card p{
+            margin:0 0 12px;
+            color:var(--muted);
+            font-size:.95rem;
+        }
+
+        .shortcut-platform{
+            display:grid;
+            gap:8px;
+        }
+
+        .shortcut-platform-row{
+            display:grid;
+            gap:8px;
+        }
+
+        .shortcut-platform-row .kbd{
+            margin-right:6px;
+        }
+
+        .empty{
+            padding:28px;
+            text-align:center;
+            color:var(--muted);
+            display:none;
+        }
+
+        .legend{
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:14px;
+            margin-top:18px;
+        }
+
+        .legend .card{
+            padding:16px 18px;
+            border-radius:18px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .legend strong{
+            display:block;
+            margin-bottom:6px;
+        }
+
+        .footer-note{
+            margin-top:18px;
+            font-size:.92rem;
+            color:var(--muted);
+        }
+
+        mark{
+            background:rgba(126,240,194,.22);
+            color:#fff;
+            padding:0 2px;
+            border-radius:4px;
+        }
+
+        @media (max-width: 980px){
+            .toolbar{
+                grid-template-columns:1fr 1fr;
+            }
+            .legend{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 640px){
+            .toolbar{
+                grid-template-columns:1fr;
+            }
+            .hero-card{
+                padding:18px;
+            }
+            .table-wrap{
+                display:none;
+            }
+            .cards{
+                display:grid;
+            }
+            .panel{
+                overflow:visible;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero">
+        <div class="hero-card">
+            <div class="eyebrow">⌨️ static shortcut finder</div>
+            <h1>Shortcuts Quick Search</h1>
+            <p>
+                Search keyboard shortcuts by action, category, platform or key combination.
+                Works as a simple static HTML page for GitHub Pages.
+            </p>
+
+            <div class="toolbar">
+                <input id="searchInput" class="field" type="text" placeholder="Search: copy, screenshot, Ctrl, Spotlight, desktop..." />
+                <select id="platformFilter" class="select">
+                    <option value="all">All platforms</option>
+                    <option value="windows">Windows 🪟</option>
+                    <option value="mac">macOS 🍎</option>
+                    <option value="ubuntu">Ubuntu 🐧</option>
+                </select>
+                <select id="categoryFilter" class="select">
+                    <option value="all">All categories</option>
+                </select>
+                <button id="clearBtn" class="btn" type="button">Clear</button>
+            </div>
+            <div class="quick-filters" id="quickFilters">
+                <button class="filter-chip" type="button" data-query="copy">📋 Copy</button>
+                <button class="filter-chip" type="button" data-query="screenshot">📸 Screenshot</button>
+                <button class="filter-chip" type="button" data-query="desktop">🖥️ Desktop</button>
+                <button class="filter-chip" type="button" data-query="search">🔎 Search</button>
+                <button class="filter-chip" type="button" data-query="folder">📁 Folder</button>
+                <button class="filter-chip" type="button" data-query="browser">🌐 Browser</button>
+                <button class="filter-chip" type="button" data-query="terminal">🖥️ Terminal</button>
+                <button class="filter-chip" type="button" data-query="snap">🧲 Snap</button>
+                <button class="filter-chip" type="button" data-query="hidden">👁️ Hidden</button>
+                <button class="filter-chip" type="button" data-query="tab">📂 Tab</button>
+                <button class="filter-chip" type="button" data-query="lock">🔒 Lock</button>
+                <button class="filter-chip" type="button" data-query="zoom">🔍 Zoom</button>
+            </div>
+
+            <div class="stats">
+                <div class="chip">Rows: <strong id="rowCount">0</strong></div>
+                <div class="chip">Visible: <strong id="visibleCount">0</strong></div>
+                <div class="chip">Platforms: Windows / macOS / Ubuntu</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main">
+        <div class="panel">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:180px;">Category</th>
+                        <th style="width:300px;">Action</th>
+                        <th>Windows 🪟</th>
+                        <th>macOS 🍎</th>
+                        <th>Ubuntu 🐧</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div id="cardsView" class="cards"></div>
+            <div id="emptyState" class="empty">No shortcuts found.</div>
+        </div>
+
+        <p class="footer-note">
+            Note: some shortcuts vary by desktop environment, keyboard layout or app version. Ubuntu values here are general desktop defaults, mostly GNOME-oriented.
+        </p>
+    </section>
+</div>
+
+<script>
+    const shortcuts = [
+        { category: "Basic Operations", action: "📋 Copy selected item", windows: "Ctrl + C", mac: "⌘ + C", ubuntu: "Ctrl + C" },
+        { category: "Basic Operations", action: "✂️ Cut selected item", windows: "Ctrl + X", mac: "⌘ + X", ubuntu: "Ctrl + X" },
+        { category: "Basic Operations", action: "📥 Paste", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V" },
+        { category: "Basic Operations", action: "↩️ Undo", windows: "Ctrl + Z", mac: "⌘ + Z", ubuntu: "Ctrl + Z" },
+        { category: "Basic Operations", action: "⏩ Redo", windows: "Ctrl + Y", mac: "⌘ + Shift + Z", ubuntu: "Ctrl + Shift + Z / Ctrl + Y" },
+        { category: "Basic Operations", action: "✅ Select all", windows: "Ctrl + A", mac: "⌘ + A", ubuntu: "Ctrl + A" },
+        { category: "Basic Operations", action: "🖨️ Print", windows: "Ctrl + P", mac: "⌘ + P", ubuntu: "Ctrl + P" },
+        { category: "Basic Operations", action: "💾 Save", windows: "Ctrl + S", mac: "⌘ + S", ubuntu: "Ctrl + S" },
+        { category: "Basic Operations", action: "📜 Context menu", windows: "Shift + F10 / Menu key", mac: "Control + Return", ubuntu: "Shift + F10 / Menu key" },
+        { category: "Basic Operations", action: "🔒 Lock PC", windows: "Win + L", mac: "Ctrl + ⌘ + Q", ubuntu: "Super + L" },
+        { category: "Basic Operations", action: "😀 Emoji picker", windows: "Win + .", mac: "Control + ⌘ + Space", ubuntu: "Ctrl + ;" },
+        { category: "Basic Operations", action: "⏻ Turn off", windows: "Ctrl + Alt + Del → Alt + U → U", mac: "⌘ + Option + Control + Power", ubuntu: "Ctrl + Alt + Del → Enter" },
+
+        { category: "Window Management", action: "🔄 Switch between open apps", windows: "Alt + Tab", mac: "⌘ + Tab", ubuntu: "Alt + Tab" },
+        { category: "Window Management", action: "❌ Close current app", windows: "Alt + F4", mac: "⌘ + Q", ubuntu: "Alt + F4" },
+        { category: "Window Management", action: "🖥️ Show / Hide desktop", windows: "Win + D", mac: "⌘ + H", ubuntu: "Super + D" },
+        { category: "Window Management", action: "📉 Minimize all windows", windows: "Win + M", mac: "⌘ + M", ubuntu: "Ctrl + Super + ↓" },
+        { category: "Window Management", action: "📈 Restore minimized windows", windows: "Win + Shift + M", mac: "–", ubuntu: "–" },
+        { category: "Window Management", action: "🪟 Minimize / Restore window", windows: "Win + ↓ / Win + ↑", mac: "–", ubuntu: "Ctrl + Super + ↓ / Ctrl + Super + ↑" },
+        { category: "Window Management", action: "🧭 Mission Control / all windows", windows: "Win + Tab", mac: "Control + ↑", ubuntu: "Super + W / Activities" },
+        { category: "Window Management", action: "🗂️ App Exposé / current app windows", windows: "–", mac: "Control + ↓", ubuntu: "Super + A / App overview" },
+        { category: "Window Management", action: "↔️ Switch desktops / spaces", windows: "–", mac: "Control + → / ←", ubuntu: "–" },
+
+        { category: "Taskbar & Start", action: "🚀 Open / Close Start menu", windows: "Win", mac: "–", ubuntu: "Super" },
+        { category: "Taskbar & Start", action: "🔢 Open taskbar app in position", windows: "Win + Number (1–9)", mac: "Dock click", ubuntu: "–" },
+        { category: "Taskbar & Start", action: "🔔 Focus system tray", windows: "Win + B", mac: "–", ubuntu: "–" },
+        { category: "Taskbar & Start", action: "🧰 Task manager", windows: "Ctrl + Shift + Esc", mac: "–", ubuntu: "–" },
+
+        { category: "Browser", action: "🌐 New tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T" },
+        { category: "Browser", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W" },
+        { category: "Browser", action: "↩️ Reopen closed tab", windows: "Ctrl + Shift + T", mac: "⌘ + Shift + T", ubuntu: "Ctrl + Shift + T" },
+        { category: "Browser", action: "🪟 New browser window", windows: "Ctrl + N", mac: "⌘ + N", ubuntu: "Ctrl + N" },
+        { category: "Browser", action: "🕵️ New private / incognito window", windows: "Ctrl + Shift + N", mac: "⌘ + Shift + N", ubuntu: "Ctrl + Shift + N" },
+        { category: "Browser", action: "🔁 Refresh page", windows: "Ctrl + R / F5", mac: "⌘ + R", ubuntu: "Ctrl + R / F5" },
+        { category: "Browser", action: "🧹 Hard refresh", windows: "Ctrl + F5 / Ctrl + Shift + R", mac: "⌘ + Shift + R", ubuntu: "Ctrl + Shift + R / Ctrl + F5" },
+        { category: "Browser", action: "🔎 Find on page", windows: "Ctrl + F", mac: "⌘ + F", ubuntu: "Ctrl + F" },
+        { category: "Browser", action: "📍 Focus address bar", windows: "Ctrl + L / Alt + D", mac: "⌘ + L", ubuntu: "Ctrl + L / Alt + D" },
+        { category: "Browser", action: "📥 Open downloads", windows: "Ctrl + J", mac: "⌘ + Option + L", ubuntu: "Ctrl + J" },
+        { category: "Browser", action: "📜 Open history", windows: "Ctrl + H", mac: "⌘ + Y", ubuntu: "Ctrl + H" },
+        { category: "Browser", action: "⭐ Open bookmarks manager", windows: "Ctrl + Shift + O", mac: "⌘ + Option + B", ubuntu: "Ctrl + Shift + O" },
+        { category: "Browser", action: "➕ Zoom in page", windows: "Ctrl + +", mac: "⌘ + +", ubuntu: "Ctrl + +" },
+        { category: "Browser", action: "➖ Zoom out page", windows: "Ctrl + -", mac: "⌘ + -", ubuntu: "Ctrl + -" },
+        { category: "Browser", action: "1️⃣ Reset page zoom", windows: "Ctrl + 0", mac: "⌘ + 0", ubuntu: "Ctrl + 0" },
+
+        { category: "Terminal", action: "🖥️ Open terminal", windows: "Win + X then I / Windows Terminal shortcut", mac: "⌘ + Space → Terminal", ubuntu: "Ctrl + Alt + T" },
+        { category: "Terminal", action: "📋 Copy in terminal", windows: "Ctrl + Shift + C", mac: "⌘ + C", ubuntu: "Ctrl + Shift + C" },
+        { category: "Terminal", action: "📥 Paste in terminal", windows: "Ctrl + Shift + V", mac: "⌘ + V", ubuntu: "Ctrl + Shift + V" },
+        { category: "Terminal", action: "⛔ Stop current process", windows: "Ctrl + C", mac: "Control + C", ubuntu: "Ctrl + C" },
+        { category: "Terminal", action: "🧹 Clear terminal", windows: "cls / Ctrl + L in many shells", mac: "⌘ + K / Ctrl + L", ubuntu: "Ctrl + L / clear" },
+        { category: "Terminal", action: "↩️ Previous command", windows: "↑", mac: "↑", ubuntu: "↑" },
+        { category: "Terminal", action: "↪️ Next command", windows: "↓", mac: "↓", ubuntu: "↓" },
+        { category: "Terminal", action: "⏮️ Move to line start", windows: "Home / Ctrl + A in some shells", mac: "Ctrl + A", ubuntu: "Ctrl + A" },
+        { category: "Terminal", action: "⏭️ Move to line end", windows: "End / Ctrl + E in some shells", mac: "Ctrl + E", ubuntu: "Ctrl + E" },
+        { category: "Terminal", action: "🪓 Delete previous word", windows: "Ctrl + Backspace", mac: "Option + Backspace / Ctrl + W", ubuntu: "Ctrl + W" },
+        { category: "Terminal", action: "🧨 Delete to line end", windows: "Ctrl + End / Ctrl + K in some shells", mac: "Ctrl + K", ubuntu: "Ctrl + K" },
+        { category: "Terminal", action: "📚 Search command history", windows: "F7 / Ctrl + R in modern shells", mac: "Ctrl + R", ubuntu: "Ctrl + R" },
+        { category: "Terminal", action: "🪟 New terminal tab", windows: "Ctrl + Shift + T", mac: "⌘ + T", ubuntu: "Ctrl + Shift + T" },
+        { category: "Terminal", action: "❎ Close terminal tab", windows: "Ctrl + Shift + W", mac: "⌘ + W", ubuntu: "Ctrl + Shift + W" },
+
+        { category: "File Explorer Extras", action: "🪄 Duplicate selected item", windows: "Ctrl + C then Ctrl + V", mac: "⌘ + D", ubuntu: "Ctrl + C then Ctrl + V" },
+        { category: "File Explorer Extras", action: "📦 Compress selected item", windows: "Shift + F10 → Send to → Compressed folder", mac: "Control + Click → Compress", ubuntu: "Right click → Compress" },
+        { category: "File Explorer Extras", action: "🪟 Open in new window", windows: "Ctrl + N", mac: "⌘ + N", ubuntu: "Ctrl + N" },
+        { category: "File Explorer Extras", action: "🔄 Refresh current folder", windows: "F5", mac: "⌘ + R", ubuntu: "F5 / Ctrl + R" },
+        { category: "File Explorer Extras", action: "📄 New file", windows: "Context menu → New", mac: "File menu / app-dependent", ubuntu: "Context menu / app-dependent" },
+        { category: "File Explorer Extras", action: "🧱 Switch view mode", windows: "Ctrl + Shift + 1..8 / View menu", mac: "⌘ + 1 / 2 / 3 / 4", ubuntu: "View menu / Ctrl + 1 / 2 in some managers" },
+        { category: "File Explorer Extras", action: "📏 Sort items", windows: "View / Sort by menu", mac: "⌘ + J / View options", ubuntu: "Sort menu / view controls" },
+        { category: "File Explorer Extras", action: "🏷️ Tags / labels", windows: "Properties / Details pane", mac: "⌘ + I", ubuntu: "Properties / emblems if supported" },
+        { category: "File Explorer Extras", action: "📌 Add to favorites / sidebar", windows: "Drag to Quick Access / context menu", mac: "Drag to sidebar", ubuntu: "Star / add bookmark if supported" },
+        { category: "File Explorer Extras", action: "🕘 Open recent files / recents", windows: "Quick Access / Home", mac: "Finder Recents", ubuntu: "Recent / Recents" },
+
+        { category: "Window Snapping", action: "⬅️ Snap window left", windows: "Win + ←", mac: "Green button hover / app-dependent", ubuntu: "Super + ←" },
+        { category: "Window Snapping", action: "➡️ Snap window right", windows: "Win + →", mac: "Green button hover / app-dependent", ubuntu: "Super + →" },
+        { category: "Window Snapping", action: "⬆️ Maximize window", windows: "Win + ↑", mac: "Control + ⌘ + F / green button", ubuntu: "Super + ↑" },
+        { category: "Window Snapping", action: "⬇️ Restore / unmaximize window", windows: "Win + ↓", mac: "Control + ⌘ + F / green button", ubuntu: "Super + ↓" },
+        { category: "Window Snapping", action: "🧲 Snap to top half / maximize", windows: "Win + ↑", mac: "app-dependent", ubuntu: "Super + ↑" },
+        { category: "Window Snapping", action: "🪟 Move window to next monitor", windows: "Win + Shift + ← / →", mac: "– / app-dependent", ubuntu: "Shift + Super + ← / →" },
+        { category: "Window Snapping", action: "📌 Tile window left workspace edge", windows: "Win + ←", mac: "app-dependent", ubuntu: "Super + ←" },
+        { category: "Window Snapping", action: "📌 Tile window right workspace edge", windows: "Win + →", mac: "app-dependent", ubuntu: "Super + →" },
+
+        { category: "File Explorer", action: "📂 Open File Explorer / Finder / Nautilus", windows: "Win + E", mac: "⌘ + Option + D / ⌘ + Shift + H", ubuntu: "Super + E" },
+        { category: "File Explorer", action: "📁 Go to folder / path", windows: "Win + R → shell:AppsFolder", mac: "⌘ + Shift + G", ubuntu: "Ctrl + L" },
+        { category: "File Explorer", action: "↩️ Enter directory / open selected item", windows: "Enter", mac: "⌘ + O / ⌘ + ↓", ubuntu: "Enter" },
+        { category: "File Explorer", action: "⬅️ Go back", windows: "Alt + ←", mac: "⌘ + [", ubuntu: "Alt + ←" },
+        { category: "File Explorer", action: "➡️ Go forward", windows: "Alt + →", mac: "⌘ + ]", ubuntu: "Alt + →" },
+        { category: "File Explorer", action: "⬆️ Go to parent folder", windows: "Alt + ↑", mac: "⌘ + ↑", ubuntu: "Alt + ↑" },
+        { category: "File Explorer", action: "🏠 Open home folder", windows: "Win + R → %USERPROFILE%", mac: "⌘ + Shift + H", ubuntu: "Alt + Home" },
+        { category: "File Explorer", action: "🖥️ Show desktop folder / desktop location", windows: "Win + D", mac: "⌘ + Shift + D", ubuntu: "Super + D" },
+        { category: "File Explorer", action: "🆕 New folder", windows: "Ctrl + Shift + N", mac: "⌘ + Shift + N", ubuntu: "Ctrl + Shift + N" },
+        { category: "File Explorer", action: "✏️ Rename selected item", windows: "F2", mac: "Enter", ubuntu: "F2" },
+        { category: "File Explorer", action: "🗑️ Move selected item to Trash", windows: "Delete", mac: "⌘ + Delete", ubuntu: "Delete" },
+        { category: "File Explorer", action: "❌ Delete immediately", windows: "Shift + Delete", mac: "⌘ + Option + Delete", ubuntu: "Shift + Delete" },
+        { category: "File Explorer", action: "👁️ Toggle preview pane / quick look", windows: "Alt + P", mac: "Space", ubuntu: "Space / preview if available" },
+        { category: "File Explorer", action: "📋 Copy selected file", windows: "Ctrl + C", mac: "⌘ + C", ubuntu: "Ctrl + C" },
+        { category: "File Explorer", action: "✂️ Cut selected file", windows: "Ctrl + X", mac: "⌘ + Option + V after copy", ubuntu: "Ctrl + X" },
+        { category: "File Explorer", action: "📥 Paste file", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V" },
+        { category: "File Explorer", action: "🔍 Search in current folder", windows: "Ctrl + E / F3", mac: "⌘ + F", ubuntu: "Ctrl + F" },
+        { category: "File Explorer", action: "📑 Open properties / get info", windows: "Alt + Enter", mac: "⌘ + I", ubuntu: "Alt + Enter" },
+        { category: "File Explorer", action: "📜 Open context menu", windows: "Shift + F10 / Menu key", mac: "Control + Click", ubuntu: "Shift + F10 / Menu key" },
+        { category: "File Explorer", action: "📂 Open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T" },
+        { category: "File Explorer", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W" },
+        { category: "File Explorer", action: "🧭 Focus location bar", windows: "Alt + D / Ctrl + L", mac: "⌘ + Option + L", ubuntu: "Ctrl + L" },
+        { category: "File Explorer", action: "📚 Toggle sidebar", windows: "Alt + Shift + P", mac: "⌘ + Option + S", ubuntu: "F9" },
+        { category: "File Explorer", action: "📂 Show hidden files", windows: "Ctrl + H (in some file managers) / View menu", mac: "⌘ + Shift + .", ubuntu: "Ctrl + H" },
+
+        { category: "Search & Tools", action: "🔎 Open Search", windows: "Win + S", mac: "⌘ + Space", ubuntu: "Super" },
+        { category: "Search & Tools", action: "⚙️ Open Settings", windows: "Win + I", mac: "⌘ + ,", ubuntu: "Super + S" },
+        { category: "Search & Tools", action: "🔒 Lock PC / Screen", windows: "Win + L", mac: "⌘ + Control + Q / ⌘ + Option + L", ubuntu: "Ctrl + Alt + L" },
+        { category: "Search & Tools", action: "💥 Force quit app", windows: "Ctrl + Shift + Esc / Task Manager", mac: "⌘ + Option + Esc", ubuntu: "Alt + F2 → xkill" },
+
+        { category: "Virtual Desktops", action: "🗂️ Task View", windows: "Win + Tab", mac: "Control + ↑", ubuntu: "Super + S / Ctrl + Alt + ↑" },
+        { category: "Virtual Desktops", action: "↔️ Switch desktops", windows: "Win + Ctrl + ← / →", mac: "Control + ← / →", ubuntu: "Ctrl + Alt + ← / →" },
+        { category: "Virtual Desktops", action: "❎ Close desktop", windows: "Win + Ctrl + F4", mac: "–", ubuntu: "– / workspace manager" },
+
+        { category: "Accessibility", action: "♿ Ease of Access / Accessibility", windows: "Win + U", mac: "System Settings > Accessibility", ubuntu: "Settings > Accessibility" },
+        { category: "Accessibility", action: "🔍 Zoom in (Magnifier)", windows: "Win + +", mac: "Control + Option + ⌘ + +", ubuntu: "Super + Alt + 8 / Super + +" },
+        { category: "Accessibility", action: "🔎 Zoom out (Magnifier)", windows: "Win + –", mac: "Control + Option + ⌘ + –", ubuntu: "Super + Alt + – / Super + –" },
+        { category: "Accessibility", action: "🚪 Exit Magnifier", windows: "Win + Esc", mac: "Control + Option + ⌘ + 8", ubuntu: "Super + Alt + 8" },
+        { category: "Accessibility", action: "🔁 Toggle Zoom", windows: "–", mac: "Control + Option + ⌘ + 8", ubuntu: "Super + Alt + 8" },
+
+        { category: "Screenshots", action: "📋 Copy screen to clipboard", windows: "PrtScn", mac: "⌘ + Shift + 3", ubuntu: "PrtScn" },
+        { category: "Screenshots", action: "🪟 Copy active window to clipboard", windows: "Alt + PrtScn", mac: "⌘ + Shift + 4 + Space", ubuntu: "Alt + PrtScn" },
+        { category: "Screenshots", action: "💾 Save screenshot automatically", windows: "Win + PrtScn", mac: "⌘ + Shift + 3 / 4 / 5 / 6", ubuntu: "PrtScn → ~/Pictures" },
+        { category: "Screenshots", action: "✂️ Select area to file", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "Shift + PrtScn" },
+        { category: "Screenshots", action: "🎯 Capture specific window", windows: "–", mac: "⌘ + Shift + 4 + Space", ubuntu: "–" },
+        { category: "Screenshots", action: "🎥 Screenshot / Screen recording options", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "–" },
+        { category: "Screenshots", action: "📺 Screenshot Touch Bar", windows: "–", mac: "⌘ + Shift + 6", ubuntu: "–" }
+    ];
+
+    const tableBody = document.getElementById("tableBody");
+    const searchInput = document.getElementById("searchInput");
+    const platformFilter = document.getElementById("platformFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const clearBtn = document.getElementById("clearBtn");
+    const rowCount = document.getElementById("rowCount");
+    const visibleCount = document.getElementById("visibleCount");
+    const emptyState = document.getElementById("emptyState");
+    const cardsView = document.getElementById("cardsView");
+    const quickFilters = document.getElementById("quickFilters");
+
+    rowCount.textContent = shortcuts.length;
+
+    const categories = [...new Set(shortcuts.map(item => item.category))];
+    categories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryFilter.appendChild(opt);
+    });
+
+    function escapeHtml(str) {
+        return String(str)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function highlight(text, query) {
+        const safe = escapeHtml(text);
+        if (!query) return safe;
+        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(`(${escapedQuery})`, "ig");
+        return safe.replace(regex, "<mark>$1</mark>");
+    }
+
+    function platformBadge(platform) {
+        if (platform === "windows") return '<span class="badge windows">🪟 Windows</span>';
+        if (platform === "mac") return '<span class="badge mac">🍎 macOS</span>';
+        return '<span class="badge ubuntu">🐧 Ubuntu</span>';
+    }
+
+    function renderInlineShortcutParts(value, query) {
+        if (!value || value === "–") {
+            return `<span class="kbd muted">–</span>`;
+        }
+
+        return value
+            .split(/\s*\/\s*/g)
+            .map(part => `<span class="kbd">${highlight(part, query)}</span>`)
+            .join("");
+    }
+
+    function renderShortcutCell(value, query) {
+        if (!value || value === "–") {
+            return `<span class="kbd muted">–</span>`;
+        }
+        return renderInlineShortcutParts(value, query);
+    }
+
+    function filterData() {
+        const q = searchInput.value.trim().toLowerCase();
+        const platform = platformFilter.value;
+        const category = categoryFilter.value;
+
+        const filtered = shortcuts.filter(item => {
+            const matchesCategory = category === "all" || item.category === category;
+
+            let platformValue = "";
+            if (platform === "windows") platformValue = item.windows;
+            if (platform === "mac") platformValue = item.mac;
+            if (platform === "ubuntu") platformValue = item.ubuntu;
+
+            const matchesPlatform = platform === "all" || (platformValue && platformValue !== "–");
+
+            const haystack = [
+                item.category,
+                item.action,
+                item.windows,
+                item.mac,
+                item.ubuntu
+            ].join(" ").toLowerCase();
+
+            const matchesSearch = !q || haystack.includes(q);
+
+            return matchesCategory && matchesPlatform && matchesSearch;
+        });
+
+        renderTable(filtered, q);
+    }
+
+    function renderTable(data, query = "") {
+        tableBody.innerHTML = data.map(item => `
+        <tr>
+            <td class="cat">${highlight(item.category, query)}</td>
+            <td class="action">${highlight(item.action, query)}</td>
+            <td>${renderShortcutCell(item.windows, query)}</td>
+            <td>${renderShortcutCell(item.mac, query)}</td>
+            <td>${renderShortcutCell(item.ubuntu, query)}</td>
+        </tr>
+    `).join("");
+
+        visibleCount.textContent = data.length;
+        renderCards(data, query);
+        emptyState.style.display = data.length ? "none" : "block";
+    }
+
+    function renderCards(data, query = "") {
+        cardsView.innerHTML = data.map(item => `
+        <article class="shortcut-card">
+            <div class="badge-group">
+                ${platformBadge("windows")}
+                ${platformBadge("mac")}
+                ${platformBadge("ubuntu")}
+            </div>
+            <h3>${highlight(item.action, query)}</h3>
+            <p>${highlight(item.category, query)}</p>
+            <div class="shortcut-platform">
+                <div class="shortcut-platform-row">
+                    ${platformBadge("windows")}
+                    <div>${renderInlineShortcutParts(item.windows, query)}</div>
+                </div>
+                <div class="shortcut-platform-row">
+                    ${platformBadge("mac")}
+                    <div>${renderInlineShortcutParts(item.mac, query)}</div>
+                </div>
+                <div class="shortcut-platform-row">
+                    ${platformBadge("ubuntu")}
+                    <div>${renderInlineShortcutParts(item.ubuntu, query)}</div>
+                </div>
+            </div>
+        </article>
+    `).join("");
+    }
+
+    searchInput.addEventListener("input", filterData);
+    platformFilter.addEventListener("change", filterData);
+    categoryFilter.addEventListener("change", filterData);
+
+    quickFilters.addEventListener("click", (event) => {
+        const button = event.target.closest(".filter-chip");
+        if (!button) return;
+
+        const query = button.dataset.query || "";
+        const isActive = button.classList.contains("active");
+
+        document.querySelectorAll(".filter-chip").forEach(chip => chip.classList.remove("active"));
+
+        if (isActive) {
+            searchInput.value = "";
+        } else {
+            button.classList.add("active");
+            searchInput.value = query;
+        }
+
+        filterData();
+    });
+
+    clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        platformFilter.value = "all";
+        categoryFilter.value = "all";
+        document.querySelectorAll(".filter-chip").forEach(chip => chip.classList.remove("active"));
+        filterData();
+        searchInput.focus();
+    });
+
+    renderTable(shortcuts);
+    renderCards(shortcuts);
+</script>
+</body>
+</html>
