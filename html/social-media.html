@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Social Media User Types</title>
+    <meta name="description" content="A sarcastic, GitHub Pages-ready guide to common social media user archetypes." />
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-soft: #121933;
+            --card: rgba(18, 25, 51, 0.88);
+            --text: #e8edf8;
+            --muted: #aab4d0;
+            --line: rgba(255,255,255,0.12);
+            --accent: #7cc7ff;
+            --accent-2: #8bffb0;
+            --warn: #ffd479;
+            --danger: #ff9a9a;
+            --shadow: 0 20px 60px rgba(0,0,0,.35);
+            --radius: 22px;
+            --max: 1180px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font: 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(124,199,255,.14), transparent 28%),
+                radial-gradient(circle at top right, rgba(139,255,176,.10), transparent 24%),
+                linear-gradient(180deg, #0a0f1f, #0b1020 36%, #0a0f1d);
+        }
+
+        a { color: inherit; }
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 2px 8px;
+        }
+
+        .wrap { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(12px);
+            background: rgba(11,16,32,.72);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 68px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: .02em;
+        }
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(124,199,255,.26), rgba(139,255,176,.22));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-links a,
+        .button,
+        .search,
+        .view-btn {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.03);
+            color: var(--text);
+            border-radius: 999px;
+        }
+        .nav-links a,
+        .button {
+            text-decoration: none;
+            padding: 10px 14px;
+            transition: transform .18s ease, background .18s ease, border-color .18s ease;
+            cursor: pointer;
+        }
+        .nav-links a:hover,
+        .button:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,.06);
+        }
+
+        .hero { padding: 72px 0 28px; }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.04);
+            color: var(--muted);
+            font-size: 14px;
+        }
+        h1 {
+            margin: 18px 0 14px;
+            font-size: clamp(2rem, 5vw, 4.4rem);
+            line-height: 1.03;
+            letter-spacing: -0.04em;
+            max-width: 10ch;
+        }
+        .hero p {
+            margin: 0;
+            max-width: 72ch;
+            color: var(--muted);
+            font-size: clamp(1rem, 1.4vw, 1.12rem);
+        }
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        .button.primary {
+            background: linear-gradient(135deg, rgba(124,199,255,.18), rgba(139,255,176,.18));
+            border-color: rgba(124,199,255,.38);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 18px;
+            margin: 28px 0 16px;
+        }
+        .card {
+            grid-column: span 12;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .card-pad { padding: 22px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .stat {
+            background: rgba(255,255,255,.035);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+        }
+        .stat .label {
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+        .stat .value {
+            margin-top: 6px;
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-weight: 800;
+        }
+
+        .section { padding: 18px 0 8px; }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .section-head h2 {
+            margin: 0;
+            font-size: clamp(1.5rem, 2.5vw, 2.4rem);
+            letter-spacing: -0.03em;
+        }
+        .section-head p {
+            margin: 0;
+            color: var(--muted);
+            max-width: 64ch;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0 18px;
+            align-items: center;
+        }
+        .pill {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.03);
+            color: var(--text);
+            cursor: pointer;
+            transition: background .18s ease, transform .18s ease, border-color .18s ease;
+        }
+        .pill:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,.05);
+        }
+        .pill.active,
+        .view-btn.active {
+            background: linear-gradient(135deg, rgba(124,199,255,.17), rgba(139,255,176,.16));
+            border-color: rgba(124,199,255,.38);
+        }
+        .search {
+            min-width: 240px;
+            flex: 1 1 280px;
+            padding: 11px 14px;
+            outline: none;
+        }
+        .search:focus {
+            border-color: rgba(124,199,255,.45);
+            box-shadow: 0 0 0 4px rgba(124,199,255,.08);
+        }
+        .view-switch {
+            display: inline-flex;
+            gap: 8px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        .view-btn {
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background .18s ease, transform .18s ease, border-color .18s ease;
+        }
+        .view-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,.05);
+        }
+
+        .view-panel[hidden] { display: none !important; }
+
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+        .type-card {
+            background: rgba(255,255,255,.035);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .type-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+        }
+        .type-title {
+            margin: 0;
+            font-size: 1.3rem;
+            line-height: 1.15;
+        }
+        .type-subtitle {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: .98rem;
+        }
+        .tag {
+            white-space: nowrap;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            font-size: 12px;
+            color: var(--muted);
+            background: rgba(255,255,255,.03);
+        }
+        .blurb {
+            margin: 0;
+            color: var(--text);
+        }
+        .meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .meta-item {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,.025);
+        }
+        .meta-item strong {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+        .quote {
+            border-left: 3px solid rgba(124,199,255,.38);
+            padding: 12px 14px;
+            border-radius: 0 14px 14px 0;
+            background: rgba(255,255,255,.03);
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,.02);
+        }
+        #typesTable {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 860px;
+        }
+        #typesTable th,
+        #typesTable td {
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+        #typesTable th {
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            background: rgba(255,255,255,.03);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 -1px 0 var(--line);
+        }
+        #typesTable tbody tr {
+            transition: background .18s ease;
+        }
+        #typesTable tbody tr:hover {
+            background: rgba(255,255,255,.03);
+        }
+        #typesTable td strong {
+            display: inline-block;
+            line-height: 1.35;
+        }
+
+        .sort-btn {
+            all: unset;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: inherit;
+        }
+        .sort-btn::after {
+            content: '↕';
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .sort-btn[data-dir="asc"]::after {
+            content: '↑';
+            color: var(--text);
+        }
+        .sort-btn[data-dir="desc"]::after {
+            content: '↓';
+            color: var(--text);
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .legend-item {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+            background: rgba(255,255,255,.03);
+        }
+        .legend-item h3 {
+            margin: 0 0 6px;
+            font-size: 1rem;
+        }
+        .legend-item p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .small { font-size: 14px; color: var(--muted); }
+        .muted { color: var(--muted); }
+        .empty {
+            display: none;
+            margin-top: 8px;
+            padding: 14px 16px;
+            border: 1px dashed var(--line);
+            border-radius: 16px;
+            color: var(--muted);
+            background: rgba(255,255,255,.02);
+        }
+
+        footer { padding: 32px 0 70px; color: var(--muted); }
+
+        @media (max-width: 980px) {
+            .type-grid,
+            .legend,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 760px) {
+            .nav-inner {
+                padding: 10px 0;
+                align-items: start;
+                flex-direction: column;
+            }
+            .meta { grid-template-columns: 1fr; }
+            .view-switch {
+                width: 100%;
+                margin-left: 0;
+            }
+            .hero { padding-top: 42px; }
+            .toolbar { align-items: stretch; }
+            .search { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<header class="nav">
+    <div class="wrap nav-inner">
+        <a class="brand" href="#top">
+            <span class="brand-badge">🧠</span>
+            <span>Social Media User Types</span>
+        </a>
+        <a href="/" class="brand">borowicz.github.io</a>
+        <nav class="nav-links" aria-label="Primary navigation">
+            <a href="#types">Types</a>
+            <a href="#legend">Why they exist</a>
+            <a href="#about">About</a>
+            <a href="#top">Top</a>
+        </nav>
+    </div>
+</header>
+
+<main id="top">
+    <section class="hero wrap">
+        <h1>A guide to social media creatures.</h1>
+        <p>
+            Meet the <strong>moral guardians</strong>, <strong>professional trolls</strong>, <strong>propagandists</strong>,
+            <strong>fanatics</strong>, and other algorithm-fed personalities that somehow turn every comment section
+            into a minor civilization collapse.
+        </p>
+        <div class="hero-actions">
+            <a class="button primary" href="#types">Open user types</a>
+            <a class="button" href="#legend">Open legend</a>
+        </div>
+
+        <div class="grid">
+            <section class="card">
+                <div class="card-pad stats">
+                    <article class="stat">
+                        <div class="label">Core fuel</div>
+                        <div class="value">Attention</div>
+                    </article>
+                    <article class="stat">
+                        <div class="label">Favorite tool</div>
+                        <div class="value">Outrage</div>
+                    </article>
+                    <article class="stat">
+                        <div class="label">Native habitat</div>
+                        <div class="value">Comment sections</div>
+                    </article>
+                    <article class="stat">
+                        <div class="label">Survival skill</div>
+                        <div class="value">Bad-faith confidence</div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section class="section wrap" id="types">
+        <div class="section-head">
+            <div>
+                <h2>User types</h2>
+                <p>Filter by behavior, search by keyword, and switch between cards and table view.</p>
+            </div>
+        </div>
+
+        <div class="toolbar" aria-label="Filters and search">
+            <button class="pill active" type="button" data-filter="all">All</button>
+            <button class="pill" type="button" data-filter="outrage">Outrage-driven</button>
+            <button class="pill" type="button" data-filter="manipulation">Manipulation</button>
+            <button class="pill" type="button" data-filter="ego">Ego / status</button>
+            <button class="pill" type="button" data-filter="chaos">Chaos</button>
+            <input id="searchInput" class="search" type="search" placeholder="Search types, tactics, or damage patterns…" aria-label="Search user types" />
+            <div class="view-switch" aria-label="View switcher">
+                <button class="view-btn active" type="button" data-view="cards">Cards</button>
+                <button class="view-btn" type="button" data-view="table">Table</button>
+            </div>
+        </div>
+
+        <div id="cardsView" class="view-panel">
+            <div class="type-grid" id="typeGrid">
+                <article class="type-card" data-tags="outrage ego" data-search="moral guardian morality defender virtue policing outrage ethics shame callout">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Moral Guardian</h3>
+                            <p class="type-subtitle">Online ethics patrol, self-appointed and permanently on duty.</p>
+                        </div>
+                        <span class="tag">Outrage</span>
+                    </div>
+                    <p class="blurb">Not here to talk — here to supervise humanity. Their natural instinct is to locate a flawed joke, a badly phrased sentence, or an impure opinion and turn it into a public moral emergency.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Turning nuance into evidence.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Everyone starts writing like they are being audited.</div>
+                    </div>
+                    <div class="quote">“I’m not attacking you. I’m holding you accountable for existing incorrectly.”</div>
+                </article>
+
+                <article class="type-card" data-tags="chaos" data-search="professional troll provocation bait reactions chaos rage comments">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Professional Troll</h3>
+                            <p class="type-subtitle">A chaos contractor paid in reactions.</p>
+                        </div>
+                        <span class="tag">Chaos</span>
+                    </div>
+                    <p class="blurb">Doesn’t need to believe anything. Belief is inefficient. The real goal is simple: make five strangers furious before lunch and call it content.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Posting the dumbest possible take with full confidence.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Reasonable people lose two hours of their lives forever.</div>
+                    </div>
+                    <div class="quote">“I don’t want truth. I want engagement.”</div>
+                </article>
+
+                <article class="type-card" data-tags="manipulation outrage" data-search="propagandist narrative messaging agenda slogans repetition enemy line ideological framing">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Propagandist</h3>
+                            <p class="type-subtitle">Every topic becomes a campaign. Every detail serves the narrative.</p>
+                        </div>
+                        <span class="tag">Manipulation</span>
+                    </div>
+                    <p class="blurb">Not interested in discussion, only message discipline. Can turn weather, cinema, sports, and breakfast into proof that the approved worldview was correct all along.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Reducing reality to one slogan and one enemy.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Facts become optional accessories.</div>
+                    </div>
+                    <div class="quote">“If reality disagrees with the narrative, reality needs better messaging.”</div>
+                </article>
+
+                <article class="type-card" data-tags="outrage chaos" data-search="fanatic absolutist cult believer black and white tribal debate war purity">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Fanatic</h3>
+                            <p class="type-subtitle">No opinions, only revelations.</p>
+                        </div>
+                        <span class="tag">Outrage</span>
+                    </div>
+                    <p class="blurb">Sees everything in binary: sacred or evil, ally or traitor, genius or trash. Talking to them is less like debate and more like being chased by certainty with Wi-Fi.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Total certainty with zero calibration.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Conversation instantly becomes holy war cosplay.</div>
+                    </div>
+                    <div class="quote">“I’m not extreme. Reality is just finally catching up to my comment history.”</div>
+                </article>
+
+                <article class="type-card" data-tags="ego outrage" data-search="permanently offended outrage addict scandal seeker headline screenshot anger">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Permanently Offended</h3>
+                            <p class="type-subtitle">Wakes up each morning asking what deserves outrage today.</p>
+                        </div>
+                        <span class="tag">Outrage</span>
+                    </div>
+                    <p class="blurb">Doesn’t need context, evidence, or a full clip. A headline fragment and the smell of disapproval is enough to launch a full emotional airstrike.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Reading half, reacting whole.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Everything turns into emergency theater.</div>
+                    </div>
+                    <div class="quote">“I didn’t read it, but I deeply oppose it.”</div>
+                </article>
+
+                <article class="type-card" data-tags="ego manipulation" data-search="expert know it all pseudo expert geopolitics finance medicine psychology instant authority">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Expert on Everything</h3>
+                            <p class="type-subtitle">A multidisciplinary genius, refreshed hourly.</p>
+                        </div>
+                        <span class="tag">Ego</span>
+                    </div>
+                    <p class="blurb">On Monday they explain war, Tuesday macroeconomics, Wednesday virology, Thursday child psychology. Sources are for cowards. Confidence is the credential.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Speaking far above available knowledge.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Ignorance gets premium packaging.</div>
+                    </div>
+                    <div class="quote">“I haven’t studied it, which is why I’m not biased.”</div>
+                </article>
+
+                <article class="type-card" data-tags="ego" data-search="attention seeker clout self branding thirst visibility followers performance validation">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Attention Harvester</h3>
+                            <p class="type-subtitle">Every post is bait with better lighting.</p>
+                        </div>
+                        <span class="tag">Ego</span>
+                    </div>
+                    <p class="blurb">Not publishing to say something, but to remain visible. Their ideology is reach. Their spirituality is analytics. Their inner life is a thumbnail strategy.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Turning every feeling into a performance asset.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Authenticity dies under ring-light conditions.</div>
+                    </div>
+                    <div class="quote">“I’m just being real. Real strategic.”</div>
+                </article>
+
+                <article class="type-card" data-tags="chaos manipulation" data-search="screen sniper screenshot context collapse callout receipts archive expose cancel">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Screenshot Sniper</h3>
+                            <p class="type-subtitle">Conversation is temporary. Receipts are forever.</p>
+                        </div>
+                        <span class="tag">Manipulation</span>
+                    </div>
+                    <p class="blurb">Never really debating. Just collecting future evidence. One badly phrased sentence, one joke without legal review, and suddenly you’re the star of a thread titled <code>Look at this clown</code>.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Extract, crop, repost, condemn.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Everyone speaks like a hostage negotiator.</div>
+                    </div>
+                    <div class="quote">“I’m preserving accountability, one out-of-context rectangle at a time.”</div>
+                </article>
+
+                <article class="type-card" data-tags="ego outrage" data-search="brand cult tribe party ideology loyalty defender stan sect worship infallible">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Brand or Party Zealot</h3>
+                            <p class="type-subtitle">A fan account with the emotional intensity of a medieval crusade.</p>
+                        </div>
+                        <span class="tag">Ego</span>
+                    </div>
+                    <p class="blurb">Not a supporter — a believer. Whether it is a politician, a company, a celebrity, or a movement, criticism is treated as blasphemy and facts are accepted only after doctrinal review.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Confusing loyalty with reasoning.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Truth becomes a membership benefit.</div>
+                    </div>
+                    <div class="quote">“I’m not biased. I’m faithful.”</div>
+                </article>
+
+                <article class="type-card" data-tags="manipulation chaos" data-search="bot npc slogan repeater automated talking points copy paste astroturf">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Human Bot</h3>
+                            <p class="type-subtitle">Whether organic or automated, the output is spiritually identical.</p>
+                        </div>
+                        <span class="tag">Manipulation</span>
+                    </div>
+                    <p class="blurb">Repeats the same slogans, the same templates, the same suspiciously synchronized talking points. Sometimes it is software. Sometimes it is just a person who outsourced thinking to repetition.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Volume over thought.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Feed quality drops to industrial sludge.</div>
+                    </div>
+                    <div class="quote">“Beep boop. Nuance not detected.”</div>
+                </article>
+
+                <article class="type-card" data-tags="ego manipulation" data-search="passive aggressive intellectual condescension smug literacy reading comprehension dismissive superior">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Passive-Aggressive Intellectual</h3>
+                            <p class="type-subtitle">Cruelty, but in a cardigan.</p>
+                        </div>
+                        <span class="tag">Ego</span>
+                    </div>
+                    <p class="blurb">Won’t insult you directly. That would be vulgar. Instead they imply that anyone with minimal literacy, an intact cortex, and basic historical awareness would obviously agree with them.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Condescension disguised as refinement.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>Snobbery gets mistaken for intelligence.</div>
+                    </div>
+                    <div class="quote">“I’m not rude. You’re just beneath the reading level of my disappointment.”</div>
+                </article>
+
+                <article class="type-card" data-tags="chaos ego" data-search="irony poster detached memelord joking nothing serious nihilism sarcasm shield">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Total Ironist</h3>
+                            <p class="type-subtitle">Believes in nothing, except maybe the safety of plausible deniability.</p>
+                        </div>
+                        <span class="tag">Chaos</span>
+                    </div>
+                    <p class="blurb">Everything is a joke until it is not, and by then they have already escaped through a trapdoor labeled <code>relax, it’s satire</code>. Irony is less a style than a panic room.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Posting sincerely from behind six layers of irony.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>No one can tell if the room is joking or infected.</div>
+                    </div>
+                    <div class="quote">“I was kidding. Unless it goes viral. Then I meant every word.”</div>
+                </article>
+
+                <article class="type-card" data-tags="manipulation outrage" data-search="report cop moderator snitch compliance rules flags platform safety policy enforcement">
+                    <div class="type-top">
+                        <div>
+                            <h3 class="type-title">The Report Officer</h3>
+                            <p class="type-subtitle">A bureaucrat of the feed.</p>
+                        </div>
+                        <span class="tag">Manipulation</span>
+                    </div>
+                    <p class="blurb">Doesn’t argue. Files paperwork. Their preferred move is not rebuttal but escalation: report, flag, summon moderation, and let policy do the emotional labor.</p>
+                    <div class="meta">
+                        <div class="meta-item"><strong>Favorite tactic</strong>Administrative warfare.</div>
+                        <div class="meta-item"><strong>Effect on discussion</strong>The comment section starts feeling like customs control.</div>
+                    </div>
+                    <div class="quote">“I won’t refute you. I’ll classify you.”</div>
+                </article>
+            </div>
+        </div>
+
+        <div id="tableView" class="view-panel" hidden>
+            <div class="card">
+                <div class="card-pad">
+                    <div class="table-wrap">
+                        <table id="typesTable">
+                            <thead>
+                            <tr>
+                                <th><button class="sort-btn" type="button" data-sort="type">Type</button></th>
+                                <th><button class="sort-btn" type="button" data-sort="traits">Traits</button></th>
+                                <th><button class="sort-btn" type="button" data-sort="tactic">Favorite tactic</button></th>
+                                <th><button class="sort-btn" type="button" data-sort="effect">Effect on discussion</button></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="type-row" data-tags="outrage ego" data-search="moral guardian morality defender virtue policing outrage ethics shame callout" data-type="The Moral Guardian" data-traits="Self-appointed ethics police. Lives to detect impurity, offense, or insufficient ideological hygiene." data-tactic="Turns awkward wording into a moral crime scene." data-effect="Everyone starts speaking like they are testifying in court.">
+                                    <td><strong>The Moral Guardian</strong></td>
+                                    <td>Self-appointed ethics police. Lives to detect impurity, offense, or insufficient ideological hygiene.</td>
+                                    <td>Turns awkward wording into a moral crime scene.</td>
+                                    <td>Everyone starts speaking like they are testifying in court.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="chaos" data-search="professional troll provocation bait reactions chaos rage comments" data-type="The Professional Troll" data-traits="Emotionally empty, strategically annoying, sustained entirely by attention and other people’s blood pressure." data-tactic="Posts obvious bait with maximum confidence and zero shame." data-effect="Five strangers waste half a day arguing with a man eating cereal in his underwear.">
+                                    <td><strong>The Professional Troll</strong></td>
+                                    <td>Emotionally empty, strategically annoying, sustained entirely by attention and other people’s blood pressure.</td>
+                                    <td>Posts obvious bait with maximum confidence and zero shame.</td>
+                                    <td>Five strangers waste half a day arguing with a man eating cereal in his underwear.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="manipulation outrage" data-search="propagandist narrative messaging agenda slogans repetition enemy line ideological framing" data-type="The Propagandist" data-traits="Can reduce any subject to one slogan, one villain, and one approved interpretation." data-tactic="Repeats the line until repetition is mistaken for truth." data-effect="Reality gets flattened into campaign material.">
+                                    <td><strong>The Propagandist</strong></td>
+                                    <td>Can reduce any subject to one slogan, one villain, and one approved interpretation.</td>
+                                    <td>Repeats the line until repetition is mistaken for truth.</td>
+                                    <td>Reality gets flattened into campaign material.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="outrage chaos" data-search="fanatic absolutist cult believer black and white tribal debate war purity" data-type="The Fanatic" data-traits="Sees no shades, only saints and enemies. Runs on certainty, tribal loyalty, and moral adrenaline." data-tactic="Treats disagreement as heresy." data-effect="Discussion turns into theological warfare with profile pictures.">
+                                    <td><strong>The Fanatic</strong></td>
+                                    <td>Sees no shades, only saints and enemies. Runs on certainty, tribal loyalty, and moral adrenaline.</td>
+                                    <td>Treats disagreement as heresy.</td>
+                                    <td>Discussion turns into theological warfare with profile pictures.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="ego outrage" data-search="permanently offended outrage addict scandal seeker headline screenshot anger" data-type="The Permanently Offended" data-traits="Needs outrage the way normal people need breakfast." data-tactic="Reads half a headline and launches a full emotional missile strike." data-effect="Every topic becomes an emergency performance.">
+                                    <td><strong>The Permanently Offended</strong></td>
+                                    <td>Needs outrage the way normal people need breakfast.</td>
+                                    <td>Reads half a headline and launches a full emotional missile strike.</td>
+                                    <td>Every topic becomes an emergency performance.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="ego manipulation" data-search="expert know it all pseudo expert geopolitics finance medicine psychology instant authority" data-type="The Expert on Everything" data-traits="Knows nothing slowly and everything instantly." data-tactic="Uses confidence as a substitute for evidence." data-effect="Nonsense gets dressed up as insight.">
+                                    <td><strong>The Expert on Everything</strong></td>
+                                    <td>Knows nothing slowly and everything instantly.</td>
+                                    <td>Uses confidence as a substitute for evidence.</td>
+                                    <td>Nonsense gets dressed up as insight.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="ego" data-search="attention seeker clout self branding thirst visibility followers performance validation" data-type="The Attention Harvester" data-traits="Every post is a mirror held up to the algorithm begging to be loved back." data-tactic="Packages every feeling as content." data-effect="Authenticity gets skinned and worn as branding.">
+                                    <td><strong>The Attention Harvester</strong></td>
+                                    <td>Every post is a mirror held up to the algorithm begging to be loved back.</td>
+                                    <td>Packages every feeling as content.</td>
+                                    <td>Authenticity gets skinned and worn as branding.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="chaos manipulation" data-search="screen sniper screenshot context collapse callout receipts archive expose cancel" data-type="The Screenshot Sniper" data-traits="Never debates in the moment; hunts future leverage." data-tactic="Extracts, crops, reposts, and condemns." data-effect="People stop talking like humans and start talking like legal departments.">
+                                    <td><strong>The Screenshot Sniper</strong></td>
+                                    <td>Never debates in the moment; hunts future leverage.</td>
+                                    <td>Extracts, crops, reposts, and condemns.</td>
+                                    <td>People stop talking like humans and start talking like legal departments.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="ego outrage" data-search="brand cult tribe party ideology loyalty defender stan sect worship infallible" data-type="The Brand or Party Zealot" data-traits="A loyalist so committed that facts must pass doctrinal screening." data-tactic="Confuses devotion with reasoning." data-effect="Truth becomes optional unless it flatters the tribe.">
+                                    <td><strong>The Brand or Party Zealot</strong></td>
+                                    <td>A loyalist so committed that facts must pass doctrinal screening.</td>
+                                    <td>Confuses devotion with reasoning.</td>
+                                    <td>Truth becomes optional unless it flatters the tribe.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="manipulation chaos" data-search="bot npc slogan repeater automated talking points copy paste astroturf" data-type="The Human Bot" data-traits="Whether machine or person, the content feels factory-made." data-tactic="Repeats the same lines until the feed smells like synthetic astroturf." data-effect="Discussion quality drops below industrial wastewater.">
+                                    <td><strong>The Human Bot</strong></td>
+                                    <td>Whether machine or person, the content feels factory-made.</td>
+                                    <td>Repeats the same lines until the feed smells like synthetic astroturf.</td>
+                                    <td>Discussion quality drops below industrial wastewater.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="ego manipulation" data-search="passive aggressive intellectual condescension smug literacy reading comprehension dismissive superior" data-type="The Passive-Aggressive Intellectual" data-traits="Smugness with punctuation. Condescension wearing a scarf." data-tactic="Insults people indirectly so the cruelty looks educated." data-effect="Snobbery gets mistaken for intelligence.">
+                                    <td><strong>The Passive-Aggressive Intellectual</strong></td>
+                                    <td>Smugness with punctuation. Condescension wearing a scarf.</td>
+                                    <td>Insults people indirectly so the cruelty looks educated.</td>
+                                    <td>Snobbery gets mistaken for intelligence.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="chaos ego" data-search="irony poster detached memelord joking nothing serious nihilism sarcasm shield" data-type="The Total Ironist" data-traits="Hides sincerity under twelve layers of irony and calls that emotional sophistication." data-tactic="Says something reckless, then retreats into “it was satire.”" data-effect="No one can tell whether the room is joking, lying, or just spiritually empty.">
+                                    <td><strong>The Total Ironist</strong></td>
+                                    <td>Hides sincerity under twelve layers of irony and calls that emotional sophistication.</td>
+                                    <td>Says something reckless, then retreats into “it was satire.”</td>
+                                    <td>No one can tell whether the room is joking, lying, or just spiritually empty.</td>
+                                </tr>
+                                <tr class="type-row" data-tags="manipulation outrage" data-search="report cop moderator snitch compliance rules flags platform safety policy enforcement" data-type="The Report Officer" data-traits="Too bureaucratic to argue, too petty to ignore." data-tactic="Uses reporting tools as a replacement for persuasion." data-effect="The platform becomes a digital HR department.">
+                                    <td><strong>The Report Officer</strong></td>
+                                    <td>Too bureaucratic to argue, too petty to ignore.</td>
+                                    <td>Uses reporting tools as a replacement for persuasion.</td>
+                                    <td>The platform becomes a digital HR department.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="emptyState" class="empty">No user types matched your search. Miraculously, the internet appears functional for about six seconds.</div>
+    </section>
+
+    <section class="section wrap" id="legend">
+        <div class="section-head">
+            <div>
+                <h2>Why these creatures thrive</h2>
+                <p>Because platforms reward intensity, not balance — and certainty performs better than thought.</p>
+            </div>
+        </div>
+        <div class="legend">
+            <article class="legend-item">
+                <h3>Attention beats truth</h3>
+                <p>Platforms optimize for reactions, retention, and repeat engagement. Calm accuracy loses to emotional velocity.</p>
+            </article>
+            <article class="legend-item">
+                <h3>Identity beats argument</h3>
+                <p>People defend tribes, aesthetics, and narratives long before they defend facts.</p>
+            </article>
+            <article class="legend-item">
+                <h3>Visibility beats depth</h3>
+                <p>Short, sharp, dramatic, and shameless usually outperform careful, slow, and qualified.</p>
+            </article>
+            <article class="legend-item">
+                <h3>Algorithms love conflict</h3>
+                <p>A peaceful thread is socially healthy but commercially underperforming. So naturally, it dies quietly.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section wrap" id="about">
+        <div class="card">
+            <div class="card-pad">
+                <div class="section-head">
+                    <div>
+                        <h2>About this page</h2>
+                        <p>This page is intentionally sarcastic, but the underlying pattern is real: social media rewards outrage, identity, status signaling, tribalism, and highly reactive behavior.</p>
+                    </div>
+                </div>
+                <p class="muted">Use it as a joke, a commentary piece, a landing page, or a GitHub Pages micro-site. The whole thing is a single HTML file, so you can drop it straight into a repo and publish it.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="wrap">
+    <p class="small">Field note: the most dangerous user type is still the one convinced they are above all of this while posting their 38th “final thought” of the day — now neatly organized in cards and table form, so the dysfunction looks professional.</p>
+</footer>
+
+<script>
+    const pills = [...document.querySelectorAll('.pill')];
+    const searchInput = document.getElementById('searchInput');
+    const emptyState = document.getElementById('emptyState');
+    const viewButtons = [...document.querySelectorAll('.view-btn')];
+    const cardsView = document.getElementById('cardsView');
+    const tableView = document.getElementById('tableView');
+    const cardItems = [...document.querySelectorAll('#cardsView .type-card')];
+    const tableRows = [...document.querySelectorAll('#tableView .type-row')];
+    const sortButtons = [...document.querySelectorAll('.sort-btn')];
+    const tableBody = document.querySelector('#typesTable tbody');
+
+    let activeFilter = 'all';
+    let sortState = { key: '', dir: 'asc' };
+
+    function getMatches(element, query) {
+        const tags = (element.dataset.tags || '').split(/\s+/).filter(Boolean);
+        const haystack = ((element.dataset.search || '') + ' ' + element.textContent).toLowerCase();
+        const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+        const matchesSearch = !query || haystack.includes(query);
+        return matchesFilter && matchesSearch;
+    }
+
+    function updateVisibility() {
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        cardItems.forEach(card => {
+            const show = getMatches(card, query);
+            card.hidden = !show;
+            if (show) visibleCount += 1;
+        });
+
+        tableRows.forEach(row => {
+            const show = getMatches(row, query);
+            row.hidden = !show;
+            if (show) visibleCount += 1;
+        });
+
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    function setView(view) {
+        cardsView.hidden = view !== 'cards';
+        tableView.hidden = view !== 'table';
+        viewButtons.forEach(button => {
+            button.classList.toggle('active', button.dataset.view === view);
+        });
+        updateVisibility();
+    }
+
+    function sortTable(key) {
+        const nextDir = sortState.key === key && sortState.dir === 'asc' ? 'desc' : 'asc';
+        sortState = { key, dir: nextDir };
+
+        sortButtons.forEach(button => {
+            button.dataset.dir = button.dataset.sort === key ? nextDir : '';
+        });
+
+        const rows = [...tableRows];
+        rows.sort((a, b) => {
+            const aValue = (a.dataset[key] || '').toLowerCase();
+            const bValue = (b.dataset[key] || '').toLowerCase();
+            return nextDir === 'asc'
+                ? aValue.localeCompare(bValue)
+                : bValue.localeCompare(aValue);
+        });
+
+        rows.forEach(row => tableBody.appendChild(row));
+    }
+
+    pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            activeFilter = pill.dataset.filter;
+            pills.forEach(item => item.classList.toggle('active', item === pill));
+            updateVisibility();
+        });
+    });
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            setView(button.dataset.view);
+        });
+    });
+
+    sortButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            sortTable(button.dataset.sort);
+            setView('table');
+        });
+    });
+
+    searchInput.addEventListener('input', updateVisibility);
+
+    setView('cards');
+    updateVisibility();
+</script>
+</body>
+</html>

@@ -1,0 +1,1234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Git Commands & GitGraph Viewer</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-2: #11182e;
+            --panel: rgba(17, 24, 46, 0.9);
+            --panel-2: rgba(10, 15, 28, 0.92);
+            --text: #edf2ff;
+            --muted: #9aa8cb;
+            --line: rgba(255,255,255,0.08);
+            --accent: #79c7ff;
+            --accent-2: #9e8cff;
+            --good: #5ad3a3;
+            --warn: #ffd479;
+            --danger: #ff7d7d;
+            --shadow: 0 20px 60px rgba(0,0,0,0.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at top left, rgba(121,199,255,0.18), transparent 24%),
+                    radial-gradient(circle at top right, rgba(158,140,255,0.16), transparent 30%),
+                    linear-gradient(180deg, #09101d 0%, #0d1426 100%);
+            min-height: 100vh;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+        .container {
+            width: min(1320px, calc(100% - 28px));
+            margin: 0 auto;
+        }
+
+        .hero {
+            padding: 28px 0 16px;
+        }
+
+        .hero-card {
+            background: linear-gradient(180deg, rgba(22,31,58,0.96), rgba(12,18,37,0.96));
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(121,199,255,0.1), transparent 36%, rgba(158,140,255,0.09));
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.03em;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(34px, 6vw, 58px);
+            line-height: 0.96;
+            letter-spacing: -0.045em;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 16px;
+            max-width: 70ch;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            min-height: 46px;
+            padding: 0 16px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.14);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(121,199,255,0.22), rgba(158,140,255,0.24));
+            border-color: rgba(121,199,255,0.26);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 12px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 27px;
+            margin-bottom: 6px;
+            letter-spacing: -0.03em;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(240px, .7fr) auto;
+            gap: 12px;
+            padding: 18px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(16px);
+        }
+
+        .field, .select, .toggle-group {
+            min-height: 54px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .field input, .select select {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            padding: 0 16px;
+        }
+
+        .select select { appearance: none; }
+
+        .toggle-group {
+            padding: 6px;
+            gap: 6px;
+        }
+
+        .toggle {
+            border: 0;
+            min-height: 40px;
+            padding: 0 14px;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .toggle.active {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 380px minmax(0, 1fr) 380px;
+            gap: 16px;
+            padding: 16px 0 36px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .panel-header span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .commands {
+            display: grid;
+            gap: 12px;
+            padding: 14px;
+            max-height: calc(100vh - 230px);
+            overflow: auto;
+        }
+
+        .command-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            padding: 15px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .command-card:hover,
+        .command-card.active {
+            transform: translateY(-2px);
+            border-color: rgba(121,199,255,0.35);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.2);
+        }
+
+        .command-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .command-name {
+            margin: 0 0 6px;
+            font-size: 17px;
+            letter-spacing: -0.02em;
+        }
+
+        .command-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.05);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .graph-wrap {
+            padding: 18px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .graph-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .graph-stage {
+            position: relative;
+            min-height: 600px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background:
+                    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+            overflow: auto;
+        }
+
+        #gitgraph {
+            min-height: 600px;
+            min-width: 880px;
+            padding: 24px 20px 18px;
+        }
+
+        .detail {
+            padding: 18px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .detail h3 {
+            margin: 0;
+            font-size: 25px;
+            letter-spacing: -0.03em;
+        }
+
+        .detail p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .meta .chip strong {
+            color: var(--accent);
+            margin-right: 6px;
+        }
+
+        .code-block {
+            background: var(--panel-2);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .code-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.24);
+        }
+
+        pre {
+            margin: 0;
+            padding: 16px;
+            overflow: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            line-height: 1.7;
+            font-size: 13px;
+            color: #d8f3ff;
+        }
+
+        .legend {
+            display: grid;
+            gap: 12px;
+        }
+
+        .legend-item {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            padding: 14px;
+        }
+
+        .legend-item strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .legend-item span {
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 14px;
+        }
+
+        .log-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .log-tab {
+            min-height: 38px;
+            padding: 0 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .log-tab.active {
+            background: rgba(121,199,255,0.12);
+            border-color: rgba(121,199,255,0.24);
+            color: var(--text);
+        }
+
+        .copy-feedback {
+            font-size: 13px;
+            color: var(--good);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: .2s ease;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .muted { color: var(--muted); }
+
+        .footer {
+            padding: 0 0 40px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 1180px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .commands {
+                max-height: none;
+            }
+
+            #gitgraph {
+                min-width: 760px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero-inner,
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container { width: min(100% - 18px, 1320px); }
+            .hero-inner { padding: 20px; }
+            .graph-wrap, .detail, .commands { padding-left: 14px; padding-right: 14px; }
+            #gitgraph { min-width: 640px; }
+            .stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero" id="top">
+        <div class="hero-card">
+            <div class="hero-inner">
+                <div>
+                    <div class="eyebrow">🌿 GitHub Pages · interactive git graph · single HTML file</div>
+                    <h1>Interactive Git Commands & Branch Graph Viewer</h1>
+                    <p>
+                        Static HTML/CSS/JS page that combines a Git command browser, a live <code>git log</code>
+                        inspector, and a visual branch graph rendered with <code>@gitgraph/js</code>.
+                        Good for github.io docs, onboarding pages, internal handbooks, and developer cheat sheets.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn primary" href="#viewer">Open viewer</a>
+                        <button class="btn" id="copyCurrentTop">Copy current command</button>
+                        <button class="btn" id="redrawGraph">Redraw graph</button>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <strong id="statCommands">0</strong>
+                        <span>Useful Git commands</span>
+                    </div>
+                    <div class="stat">
+                        <strong>4</strong>
+                        <span><code>git log</code> presets</span>
+                    </div>
+                    <div class="stat">
+                        <strong>3</strong>
+                        <span>Viewer modes</span>
+                    </div>
+                    <div class="stat">
+                        <strong>0</strong>
+                        <span>Build step required</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="toolbar" id="viewer">
+        <label class="field">
+            <input id="searchInput" type="text" placeholder="Search command, keyword, example, or tip..." />
+        </label>
+        <label class="select">
+            <select id="categorySelect">
+                <option value="all">All categories</option>
+            </select>
+        </label>
+        <div class="toggle-group" aria-label="view mode switcher">
+            <button class="toggle active" data-view="commands">Commands</button>
+            <button class="toggle" data-view="logs">Logs</button>
+            <button class="toggle" data-view="graph">Graph</button>
+        </div>
+    </section>
+
+    <section class="layout">
+        <aside class="panel" id="commandsPanel">
+            <div class="panel-header">
+                <div>
+                    <h2>Command library</h2>
+                    <span id="resultsCount">0 results</span>
+                </div>
+                <span>Pick one</span>
+            </div>
+            <div class="commands" id="commandList"></div>
+        </aside>
+
+        <main class="panel" id="graphPanel">
+            <div class="panel-header">
+                <div>
+                    <h2>GitGraph stage</h2>
+                    <span>Visual branch history rendered in-browser</span>
+                </div>
+                <span id="graphStatus">Ready</span>
+            </div>
+            <div class="graph-wrap">
+                <div class="graph-actions">
+                    <button class="btn primary" data-scenario="feature">Feature branch flow</button>
+                    <button class="btn" data-scenario="release">Release flow</button>
+                    <button class="btn" data-scenario="hotfix">Hotfix flow</button>
+                    <button class="btn" data-scenario="trunk">Trunk based</button>
+                </div>
+                <div class="graph-stage">
+                    <div id="gitgraph"></div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="panel" id="detailPanel">
+            <div class="panel-header">
+                <div>
+                    <h2>Inspector</h2>
+                    <span>Syntax, examples, presets, notes</span>
+                </div>
+                <span id="copyFeedback" class="copy-feedback">Copied</span>
+            </div>
+            <div class="detail" id="detailContent"></div>
+        </aside>
+    </section>
+
+    <section class="footer">
+        Tip: for github.io you can keep this as <code>index.html</code> and deploy directly. The page imports
+        <code>@gitgraph/js</code> from a CDN in a native ES module.
+    </section>
+</div>
+
+<script type="module">
+    import { createGitgraph, templateExtend } from "https://cdn.jsdelivr.net/npm/@gitgraph/js/+esm";
+
+    const commands = [
+        {
+            id: 'clone',
+            name: 'git clone',
+            category: 'setup',
+            short: 'Copy a remote repository to your machine.',
+            description: 'Use this when you want a full local copy of a remote repository, including history and branches.',
+            syntax: 'git clone <repo-url>',
+            example: 'git clone https://github.com/example/project.git',
+            tips: ['Use HTTPS or SSH.', 'Add a target folder name to clone into a custom directory.'],
+            output: `Cloning into 'project'...\nremote: Enumerating objects: 142, done.\nReceiving objects: 100% (142/142), 58.34 KiB | 1.12 MiB/s, done.`
+        },
+        {
+            id: 'status',
+            name: 'git status',
+            category: 'inspection',
+            short: 'Show changed, staged, and untracked files.',
+            description: 'This tells you what Git sees in your working tree and staging area right now.',
+            syntax: 'git status',
+            example: 'git status',
+            tips: ['Run it often.', 'It is the universal reality check before commit.'],
+            output: `On branch feature/ui-polish\nChanges to be committed:\n  modified:   src/app.js\nUntracked files:\n  docs/notes.md`
+        },
+        {
+            id: 'add',
+            name: 'git add',
+            category: 'staging',
+            short: 'Move file changes into the staging area.',
+            description: 'Stages content for the next commit. You can add one file, several files, or everything.',
+            syntax: 'git add <file>\ngit add .\ngit add -p',
+            example: 'git add src/app.js\ngit add -p',
+            tips: ['Use targeted staging for cleaner commits.', 'Use -p when you want surgical precision instead of emotional staging.'],
+            output: `# no output on success`
+        },
+        {
+            id: 'commit',
+            name: 'git commit',
+            category: 'staging',
+            short: 'Create a snapshot from staged changes.',
+            description: 'A commit stores what is staged, plus metadata and a commit message.',
+            syntax: 'git commit -m "message"',
+            example: 'git commit -m "Add GitGraph viewer"',
+            tips: ['Write why, not only what.', 'Good commit messages age better than rushed ones.'],
+            output: `[feature/ui-polish 3f21a8d] Add GitGraph viewer\n 4 files changed, 184 insertions(+), 12 deletions(-)`
+        },
+        {
+            id: 'switch',
+            name: 'git switch',
+            category: 'branching',
+            short: 'Move between branches with clearer intent.',
+            description: 'A modern command dedicated to switching branches without overloading checkout.',
+            syntax: 'git switch <branch>\ngit switch -c <new-branch>',
+            example: 'git switch main\ngit switch -c feature/search-panel',
+            tips: ['Use -c to create and switch in one move.', 'Cleaner onboarding than explaining ten meanings of checkout.'],
+            output: `Switched to branch 'main'`
+        },
+        {
+            id: 'branch',
+            name: 'git branch',
+            category: 'branching',
+            short: 'List, create, rename, or delete branches.',
+            description: 'Useful for seeing local branches, creating new ones, and cleaning up old feature work.',
+            syntax: 'git branch\ngit branch <name>\ngit branch -d <name>\ngit branch -m <new-name>',
+            example: 'git branch\ngit branch feature/navbar\ngit branch -d feature/navbar',
+            tips: ['Use -a for remote branches too.', 'Use -D only when you know exactly what you are deleting.'],
+            output: `  feature/log-viewer\n* main\n  release/v1.2.0`
+        },
+        {
+            id: 'merge',
+            name: 'git merge',
+            category: 'branching',
+            short: 'Combine another branch into the current one.',
+            description: 'Often used after feature work is complete. Can create merge commits or fast-forward depending on history.',
+            syntax: 'git merge <branch>\ngit merge --no-ff <branch>',
+            example: 'git merge feature/search-panel',
+            tips: ['Read the diff before merging.', 'The conflict was not spontaneous; it was scheduled.'],
+            output: `Updating a1cb910..8f019af\nFast-forward\n src/app.js | 24 ++++++++++++++++++++++++`
+        },
+        {
+            id: 'rebase',
+            name: 'git rebase',
+            category: 'branching',
+            short: 'Replay commits on top of a different base.',
+            description: 'Keeps history cleaner by moving your branch onto the latest base branch.',
+            syntax: 'git rebase main\ngit rebase -i HEAD~5',
+            example: 'git fetch origin\ngit rebase origin/main',
+            tips: ['Do not casually rebase shared public history.', 'Interactive rebase is the elegant lie detector for messy commit stacks.'],
+            output: `Successfully rebased and updated refs/heads/feature/search-panel.`
+        },
+        {
+            id: 'pull',
+            name: 'git pull',
+            category: 'sync',
+            short: 'Fetch and integrate remote changes.',
+            description: 'Convenient, but many teams prefer fetch then rebase or merge manually for more control.',
+            syntax: 'git pull\ngit pull --rebase',
+            example: 'git pull --rebase origin main',
+            tips: ['Rebase often keeps history neater.', 'Blind pull is a suspense genre.'],
+            output: `From github.com:example/project\n * branch            main       -> FETCH_HEAD\nUpdating a1cb910..8f019af\nFast-forward`
+        },
+        {
+            id: 'push',
+            name: 'git push',
+            category: 'sync',
+            short: 'Send local commits to a remote repository.',
+            description: 'Uploads your branch and commits to the remote. Usually paired with upstream tracking on first push.',
+            syntax: 'git push\ngit push -u origin <branch>\ngit push --force-with-lease',
+            example: 'git push -u origin feature/search-panel',
+            tips: ['Use force-with-lease, not force, when history rewriting is necessary.', 'Never surprise your team with a force push to shared main.'],
+            output: `Enumerating objects: 18, done.\nWriting objects: 100% (11/11), 1.19 KiB | 1.19 MiB/s, done.\nTo github.com:example/project.git`
+        },
+        {
+            id: 'fetch',
+            name: 'git fetch',
+            category: 'sync',
+            short: 'Download remote updates without changing your branch.',
+            description: 'Safer than pull when you want to inspect remote changes first.',
+            syntax: 'git fetch\ngit fetch --all --prune',
+            example: 'git fetch --all --prune',
+            tips: ['Use --prune to clean stale remote-tracking branches.', 'Fetch first, panic later.'],
+            output: `Fetching origin\nFetching upstream`
+        },
+        {
+            id: 'diff',
+            name: 'git diff',
+            category: 'inspection',
+            short: 'Compare changes between files, branches, or commits.',
+            description: 'Use it to inspect unstaged, staged, or branch-to-branch differences.',
+            syntax: 'git diff\ngit diff --staged\ngit diff main...feature/ui',
+            example: 'git diff --staged',
+            tips: ['Read before commit.', 'Three dots and two dots are not decorative punctuation.'],
+            output: `diff --git a/src/app.js b/src/app.js\nindex 2eb13ac..c7a61f2 100644\n--- a/src/app.js\n+++ b/src/app.js`
+        },
+        {
+            id: 'log',
+            name: 'git log',
+            category: 'history',
+            short: 'Inspect commit history.',
+            description: 'Becomes much more useful with formatting flags, graph mode, date options, and decorations.',
+            syntax: 'git log\ngit log --oneline --graph --decorate --all\ngit log --stat --summary',
+            example: 'git log --oneline --graph --decorate --all',
+            tips: ['A graph view explains branching visually.', 'The more flags you learn here, the less archaeology hurts later.'],
+            output: `* 3f21a8d (HEAD -> main) Add GitGraph viewer\n* 98b0acd Refine card spacing\n* 1ca8ee0 Initial static version`
+        },
+        {
+            id: 'reflog',
+            name: 'git reflog',
+            category: 'recovery',
+            short: 'Show where HEAD and branches pointed recently.',
+            description: 'A life-saving history of movement, especially after resets, rebases, or accidental disasters.',
+            syntax: 'git reflog',
+            example: 'git reflog\ngit reset --hard HEAD@{3}',
+            tips: ['Use it to recover lost commits.', 'Reflog is Git quietly keeping receipts.'],
+            output: `3f21a8d HEAD@{0}: commit: Add GitGraph viewer\n98b0acd HEAD@{1}: rebase finished: returning to refs/heads/main`
+        },
+        {
+            id: 'restore',
+            name: 'git restore',
+            category: 'recovery',
+            short: 'Discard or unstage changes using newer syntax.',
+            description: 'Lets you restore files from a commit or move changes out of the staging area.',
+            syntax: 'git restore <file>\ngit restore --staged <file>',
+            example: 'git restore src/app.js\ngit restore --staged src/app.js',
+            tips: ['Read carefully before using on unsaved work.', 'It is the polite version of “please undo my last bad decision.”'],
+            output: `# no output on success`
+        },
+        {
+            id: 'stash',
+            name: 'git stash',
+            category: 'recovery',
+            short: 'Temporarily shelve your current work.',
+            description: 'Useful when you need to switch context without making a half-baked commit.',
+            syntax: 'git stash\ngit stash push -m "message"\ngit stash pop\ngit stash list',
+            example: 'git stash push -m "WIP navbar search"\ngit stash pop',
+            tips: ['Name stashes when juggling multiple threads.', 'Unnamed stashes become archaeological layers.'],
+            output: `Saved working directory and index state WIP on main: 3f21a8d Add GitGraph viewer`
+        }
+    ];
+
+    const logPresets = {
+        compact: {
+            label: 'Compact',
+            command: 'git log --oneline',
+            description: 'Minimal one-line history for quick scanning.',
+            output: `3f21a8d Add GitGraph viewer\n98b0acd Refine card spacing\n1ca8ee0 Initial static version\n90a110f Add search state preservation`
+        },
+        graph: {
+            label: 'Graph',
+            command: 'git log --oneline --graph --decorate --all',
+            description: 'Graph view with branch labels and refs.',
+            output: `* 3f21a8d (HEAD -> main, origin/main) Add GitGraph viewer\n* 98b0acd Refine card spacing\n| * f820cc1 (feature/mobile-ui) Improve mobile header\n|/\n* 1ca8ee0 Initial static version`
+        },
+        stats: {
+            label: 'Stats',
+            command: 'git log --stat --summary',
+            description: 'Show files changed plus commit summaries.',
+            output: `commit 3f21a8d\nAuthor: Dev Example <dev@example.com>\nDate:   Sat Apr 4 19:22:10 2026 +0200\n\n    Add GitGraph viewer\n\n index.html | 214 ++++++++++++++++++++++++++++++++++++++\n styles.css |  82 +++++++++++++++\n 2 files changed, 296 insertions(+)`
+        },
+        custom: {
+            label: 'Pretty',
+            command: 'git log --pretty=format:"%C(auto)%h %ad %d %s" --date=short',
+            description: 'Neat formatted history for dashboards and internal docs.',
+            output: `3f21a8d 2026-04-04  (HEAD -> main, origin/main) Add GitGraph viewer\n98b0acd 2026-04-04  Refine card spacing\n1ca8ee0 2026-04-03  Initial static version`
+        }
+    };
+
+    const categoryLabels = {
+        all: 'All',
+        setup: 'Setup',
+        inspection: 'Inspection',
+        staging: 'Staging',
+        branching: 'Branching',
+        sync: 'Sync',
+        history: 'History',
+        recovery: 'Recovery'
+    };
+
+    const commandList = document.getElementById('commandList');
+    const detailContent = document.getElementById('detailContent');
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
+    const resultsCount = document.getElementById('resultsCount');
+    const statCommands = document.getElementById('statCommands');
+    const copyFeedback = document.getElementById('copyFeedback');
+    const copyCurrentTop = document.getElementById('copyCurrentTop');
+    const toggles = [...document.querySelectorAll('.toggle')];
+    const commandsPanel = document.getElementById('commandsPanel');
+    const graphPanel = document.getElementById('graphPanel');
+    const graphRoot = document.getElementById('gitgraph');
+    const graphStatus = document.getElementById('graphStatus');
+    const redrawGraph = document.getElementById('redrawGraph');
+
+    let activeCommandId = commands[0].id;
+    let activeView = 'commands';
+    let activeLogPreset = 'graph';
+    let activeScenario = 'feature';
+
+    function populateCategories() {
+        const categories = [...new Set(commands.map(c => c.category))];
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = categoryLabels[category] || category;
+            categorySelect.appendChild(option);
+        });
+    }
+
+    function getFilteredCommands() {
+        const q = searchInput.value.trim().toLowerCase();
+        const category = categorySelect.value;
+
+        return commands.filter(cmd => {
+            const haystack = [
+                cmd.name,
+                cmd.short,
+                cmd.description,
+                cmd.syntax,
+                cmd.example,
+                ...(cmd.tips || [])
+            ].join(' ').toLowerCase();
+
+            return (!q || haystack.includes(q)) && (category === 'all' || cmd.category === category);
+        });
+    }
+
+    function renderCommands() {
+        const filtered = getFilteredCommands();
+        resultsCount.textContent = `${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
+        statCommands.textContent = commands.length;
+
+        if (!filtered.find(item => item.id === activeCommandId) && filtered[0]) {
+            activeCommandId = filtered[0].id;
+        }
+
+        commandList.innerHTML = '';
+
+        if (!filtered.length) {
+            commandList.innerHTML = `
+          <article class="command-card">
+            <h3 class="command-name">No results</h3>
+            <p class="command-desc">Try another keyword or switch back to all categories.</p>
+          </article>`;
+            if (activeView === 'commands') {
+                detailContent.innerHTML = `
+            <h3>Nothing matched</h3>
+            <p>Search for commands like <strong>stash</strong>, <strong>reflog</strong>, <strong>rebase</strong>, or <strong>log</strong>.</p>`;
+            }
+            return;
+        }
+
+        filtered.forEach(cmd => {
+            const card = document.createElement('article');
+            card.className = `command-card ${cmd.id === activeCommandId ? 'active' : ''}`;
+            card.innerHTML = `
+          <div class="command-top">
+            <div>
+              <h3 class="command-name">${cmd.name}</h3>
+              <p class="command-desc">${cmd.short}</p>
+            </div>
+            <span class="chip">${categoryLabels[cmd.category] || cmd.category}</span>
+          </div>`;
+            card.addEventListener('click', () => {
+                activeCommandId = cmd.id;
+                renderCommands();
+                renderDetail();
+            });
+            commandList.appendChild(card);
+        });
+
+        if (activeView === 'commands') renderDetail();
+    }
+
+    function renderDetail() {
+        if (activeView === 'logs') {
+            const preset = logPresets[activeLogPreset];
+            detailContent.innerHTML = `
+          <h3>${preset.label} log view</h3>
+          <p>${preset.description}</p>
+
+          <div class="log-tabs">
+            ${Object.entries(logPresets).map(([key, value]) => `
+              <button class="log-tab ${key === activeLogPreset ? 'active' : ''}" data-log="${key}">${value.label}</button>
+            `).join('')}
+          </div>
+
+          <div class="code-block">
+            <div class="code-head">
+              <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <button class="btn" id="copyCurrentBtn">Copy command</button>
+            </div>
+            <pre><code>${escapeHtml(preset.command)}</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head">
+              <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <span class="muted">Sample output</span>
+            </div>
+            <pre><code>${escapeHtml(preset.output)}</code></pre>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item"><strong>--oneline</strong><span>Short hash plus subject line.</span></div>
+            <div class="legend-item"><strong>--graph</strong><span>ASCII branch and merge visualization.</span></div>
+            <div class="legend-item"><strong>--decorate</strong><span>Shows refs such as HEAD, branches, and tags.</span></div>
+          </div>`;
+
+            detailContent.querySelectorAll('.log-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    activeLogPreset = tab.dataset.log;
+                    renderDetail();
+                });
+            });
+
+            document.getElementById('copyCurrentBtn')?.addEventListener('click', () => copyText(preset.command));
+            return;
+        }
+
+        if (activeView === 'graph') {
+            detailContent.innerHTML = `
+          <h3>Graph scenario: ${prettyScenarioName(activeScenario)}</h3>
+          <p>
+            This panel uses <code>@gitgraph/js</code> to render a visual history. Switch scenarios in the middle panel
+            to simulate common workflows such as feature branches, release branches, hotfixes, or trunk-based development.
+          </p>
+
+          <div class="code-block">
+            <div class="code-head">
+              <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <button class="btn" id="copyCurrentBtn">Copy module import</button>
+            </div>
+            <pre><code>${escapeHtml(`import { createGitgraph, templateExtend } from "https://cdn.jsdelivr.net/npm/@gitgraph/js/+esm";`)}</code></pre>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item"><strong>Feature flow</strong><span>Main branch with short-lived features merged back.</span></div>
+            <div class="legend-item"><strong>Release flow</strong><span>Dedicated release branch with final fixes and version tag.</span></div>
+            <div class="legend-item"><strong>Hotfix flow</strong><span>Production patch split from main and merged back fast.</span></div>
+            <div class="legend-item"><strong>Trunk based</strong><span>Very short branches and rapid integration into trunk.</span></div>
+          </div>`;
+
+            document.getElementById('copyCurrentBtn')?.addEventListener('click', () => {
+                copyText('import { createGitgraph, templateExtend } from "https://cdn.jsdelivr.net/npm/@gitgraph/js/+esm";');
+            });
+            return;
+        }
+
+        const current = commands.find(c => c.id === activeCommandId) || commands[0];
+        detailContent.innerHTML = `
+        <h3>${current.name}</h3>
+        <p>${current.description}</p>
+
+        <div class="meta">
+          <span class="chip"><strong>Category</strong> ${categoryLabels[current.category] || current.category}</span>
+          <span class="chip"><strong>Best for</strong> ${current.short}</span>
+        </div>
+
+        <div class="code-block">
+          <div class="code-head">
+            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <button class="btn" id="copyCurrentBtn">Copy command</button>
+          </div>
+          <pre><code>${escapeHtml(current.syntax)}</code></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-head">
+            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <span class="muted">Example</span>
+          </div>
+          <pre><code>${escapeHtml(current.example)}</code></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-head">
+            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <span class="muted">Typical output</span>
+          </div>
+          <pre><code>${escapeHtml(current.output)}</code></pre>
+        </div>
+
+        <div class="legend">
+          ${current.tips.map(tip => `<div class="legend-item"><strong>Tip</strong><span>${tip}</span></div>`).join('')}
+        </div>`;
+
+        document.getElementById('copyCurrentBtn')?.addEventListener('click', () => copyText(current.syntax));
+    }
+
+    function prettyScenarioName(key) {
+        const map = {
+            feature: 'Feature branch flow',
+            release: 'Release flow',
+            hotfix: 'Hotfix flow',
+            trunk: 'Trunk-based development'
+        };
+        return map[key] || key;
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;');
+    }
+
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            copyFeedback.classList.add('show');
+            setTimeout(() => copyFeedback.classList.remove('show'), 1400);
+        } catch (error) {
+            console.error('Copy failed', error);
+        }
+    }
+
+    function renderGraph(scenario = activeScenario) {
+        activeScenario = scenario;
+        graphStatus.textContent = `Rendering: ${prettyScenarioName(scenario)}`;
+        graphRoot.innerHTML = '';
+
+        const template = templateExtend('metro', {
+            colors: ['#79c7ff', '#9e8cff', '#5ad3a3', '#ffd479', '#ff7d7d'],
+            backgroundColor: 'transparent',
+            branch: {
+                lineWidth: 6,
+                spacing: 58,
+                label: {
+                    font: '600 12pt Inter, system-ui, sans-serif',
+                    color: '#edf2ff',
+                    bgColor: '#182444',
+                    borderRadius: 999,
+                },
+            },
+            commit: {
+                spacing: 58,
+                dot: {
+                    size: 12,
+                    strokeWidth: 4,
+                },
+                message: {
+                    font: '500 13px Inter, system-ui, sans-serif',
+                    color: '#dfe7ff',
+                    displayAuthor: false,
+                    displayHash: false,
+                },
+            },
+            tag: {
+                font: '700 11px Inter, system-ui, sans-serif',
+                color: '#09101d',
+                bgColor: '#ffd479',
+                pointerWidth: 10,
+            },
+        });
+
+        const gitgraph = createGitgraph(graphRoot, {
+            template,
+            orientation: 'vertical',
+            author: 'Docs Bot <docs@example.com>',
+        });
+
+        if (scenario === 'feature') {
+            const main = gitgraph.branch('main');
+            main.commit('Initial scaffold');
+            main.commit('Set up CI');
+
+            const featureA = main.branch('feature/search');
+            featureA.commit('Search input');
+            featureA.commit('Filter results');
+
+            const featureB = main.branch('feature/theme');
+            featureB.commit('Theme tokens');
+            featureB.commit('Dark mode polish');
+
+            main.merge(featureA, 'Merge search');
+            main.commit('Refactor layout');
+            main.merge(featureB, 'Merge theme');
+            main.tag('v0.9.0');
+            main.commit('Prepare release notes');
+        }
+
+        if (scenario === 'release') {
+            const main = gitgraph.branch('main');
+            main.commit('Initial commit');
+            main.commit('Core features complete');
+
+            const develop = main.branch('develop');
+            develop.commit('Dashboard widgets');
+            develop.commit('API integration');
+            develop.commit('Accessibility pass');
+
+            const release = develop.branch('release/1.0');
+            release.commit('Bump version to 1.0.0');
+            release.commit('Docs and changelog');
+            release.commit('Final QA fix');
+
+            main.merge(release, 'Release 1.0');
+            main.tag('v1.0.0');
+            develop.merge(release, 'Back-merge release');
+        }
+
+        if (scenario === 'hotfix') {
+            const main = gitgraph.branch('main');
+            main.commit('Deploy v1.0.0').tag('v1.0.0');
+            main.commit('Monitoring updates');
+
+            const hotfix = main.branch('hotfix/login-patch');
+            hotfix.commit('Fix auth regression');
+            hotfix.commit('Add test coverage');
+
+            main.merge(hotfix, 'Hotfix merged');
+            main.tag('v1.0.1');
+
+            const develop = main.branch('develop');
+            develop.commit('Continue roadmap');
+            develop.merge(hotfix, 'Sync hotfix into develop');
+        }
+
+        if (scenario === 'trunk') {
+            const main = gitgraph.branch('trunk');
+            main.commit('Bootstrap app');
+
+            const shortA = main.branch('feat/ui');
+            shortA.commit('Add compact cards');
+            main.merge(shortA, 'Integrate UI tweak');
+
+            const shortB = main.branch('feat/search');
+            shortB.commit('Fast filter');
+            main.merge(shortB, 'Integrate search');
+
+            const shortC = main.branch('fix/mobile');
+            shortC.commit('Mobile spacing');
+            main.merge(shortC, 'Integrate mobile fix');
+
+            main.commit('Continuous deploy');
+            main.tag('deploy-2026-04-04');
+        }
+
+        graphStatus.textContent = `Rendered: ${prettyScenarioName(scenario)}`;
+        renderDetail();
+    }
+
+    searchInput.addEventListener('input', renderCommands);
+    categorySelect.addEventListener('change', renderCommands);
+
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            activeView = toggle.dataset.view;
+            toggles.forEach(btn => btn.classList.toggle('active', btn === toggle));
+            commandsPanel.style.display = activeView === 'commands' ? '' : 'none';
+            renderDetail();
+        });
+    });
+
+    document.querySelectorAll('[data-scenario]').forEach(button => {
+        button.addEventListener('click', () => renderGraph(button.dataset.scenario));
+    });
+
+    copyCurrentTop.addEventListener('click', () => {
+        if (activeView === 'logs') {
+            copyText(logPresets[activeLogPreset].command);
+            return;
+        }
+        if (activeView === 'graph') {
+            copyText('import { createGitgraph, templateExtend } from "https://cdn.jsdelivr.net/npm/@gitgraph/js/+esm";');
+            return;
+        }
+        const current = commands.find(c => c.id === activeCommandId) || commands[0];
+        copyText(current.syntax);
+    });
+
+    redrawGraph.addEventListener('click', () => renderGraph(activeScenario));
+
+    populateCategories();
+    renderCommands();
+    renderGraph('feature');
+</script>
+</body>
+</html>
