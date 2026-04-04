@@ -392,12 +392,16 @@
                 <button class="filter-chip" type="button" data-query="screenshot">📸 Screenshot</button>
                 <button class="filter-chip" type="button" data-query="desktop">🖥️ Desktop</button>
                 <button class="filter-chip" type="button" data-query="search">🔎 Search</button>
+                <button class="filter-chip" type="button" data-query="settings">⚙️ Settings</button>
+                <button class="filter-chip" type="button" data-query="notification">🔔 Notifications</button>
+                <button class="filter-chip" type="button" data-query="menu">📋 Menu</button>
                 <button class="filter-chip" type="button" data-query="folder">📁 Folder</button>
                 <button class="filter-chip" type="button" data-query="browser">🌐 Browser</button>
                 <button class="filter-chip" type="button" data-query="terminal">🖥️ Terminal</button>
                 <button class="filter-chip" type="button" data-query="snap">🧲 Snap</button>
                 <button class="filter-chip" type="button" data-query="hidden">👁️ Hidden</button>
                 <button class="filter-chip" type="button" data-query="tab">📂 Tab</button>
+                <button class="filter-chip" type="button" data-query="volume">🔊 Volume</button>
                 <button class="filter-chip" type="button" data-query="lock">🔒 Lock</button>
                 <button class="filter-chip" type="button" data-query="zoom">🔍 Zoom</button>
             </div>
@@ -465,6 +469,21 @@
         { category: "Taskbar & Start", action: "🔢 Open taskbar app in position", windows: "Win + Number (1–9)", mac: "Dock click", ubuntu: "–" },
         { category: "Taskbar & Start", action: "🔔 Focus system tray", windows: "Win + B", mac: "–", ubuntu: "–" },
         { category: "Taskbar & Start", action: "🧰 Task manager", windows: "Ctrl + Shift + Esc", mac: "–", ubuntu: "–" },
+
+        { category: "System & Notifications", action: "⚙️ Open system settings", windows: "Win + I", mac: "⌘ + , / System Settings", ubuntu: "Super + S / Settings" },
+        { category: "System & Notifications", action: "🔔 Open notifications / notification center", windows: "Win + N", mac: "Click date/time / Notification Center gesture", ubuntu: "Super + V / desktop-dependent" },
+        { category: "System & Notifications", action: "📅 Open calendar / date panel", windows: "Win + Alt + D", mac: "Click date/time in menu bar", ubuntu: "Click top bar clock / desktop-dependent" },
+        { category: "System & Notifications", action: "📶 Open quick settings / action center", windows: "Win + A", mac: "Click Control Center / menu bar icons", ubuntu: "Click system menu / quick settings" },
+        { category: "System & Notifications", action: "🔊 Volume up", windows: "Volume Up key", mac: "F12 / media key", ubuntu: "Volume Up key" },
+        { category: "System & Notifications", action: "🔉 Volume down", windows: "Volume Down key", mac: "F11 / media key", ubuntu: "Volume Down key" },
+        { category: "System & Notifications", action: "🔇 Mute / unmute sound", windows: "Mute key", mac: "F10 / media key", ubuntu: "Mute key" },
+        { category: "System & Notifications", action: "💡 Brightness up", windows: "Brightness Up key", mac: "F2 / brightness key", ubuntu: "Brightness Up key" },
+        { category: "System & Notifications", action: "🌘 Brightness down", windows: "Brightness Down key", mac: "F1 / brightness key", ubuntu: "Brightness Down key" },
+        { category: "System & Notifications", action: "🎛️ Open app menu / menu bar", windows: "Alt", mac: "Control + F2 / Fn + Control + F2", ubuntu: "F10 / Alt" },
+        { category: "System & Notifications", action: "📋 Open app context / system menu", windows: "Alt + Space", mac: "– / app-dependent", ubuntu: "Alt + Space / desktop-dependent" },
+        { category: "System & Notifications", action: "🛌 Sleep", windows: "Win + X then U then S / sleep key", mac: "Option + ⌘ + Power", ubuntu: "system menu / sleep option" },
+        { category: "System & Notifications", action: "🚪 Sign out / log out", windows: "Ctrl + Alt + Del → Sign out", mac: "Shift + ⌘ + Q", ubuntu: "system menu / log out" },
+        { category: "System & Notifications", action: "👤 Switch user", windows: "Win + L then switch user", mac: "system menu / login window", ubuntu: "system menu / switch user" },
 
         { category: "Browser", action: "🌐 New tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T" },
         { category: "Browser", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W" },
