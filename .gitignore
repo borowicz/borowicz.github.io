@@ -56,3 +56,4 @@ Thumbs.db
 # Optional: keep empty dirs
 ############################
 !.gitkeep
+/roadmap.md
