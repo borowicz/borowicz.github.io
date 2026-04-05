@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Programming Principles, Laws & Bug Types</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Programming principles, classic software laws, legendary bug types, and developer quotes in a polished GitHub Pages-ready interactive reference.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-2: #0f1630;
+            --panel: #121933;
+            --panel-2: #1a2347;
+            --panel-3: #0d1429;
+            --text: #e8ecff;
+            --muted: #aab4da;
+            --soft: #cdd7ff;
+            --accent: #7c9cff;
+            --accent-2: #4ee1c1;
+            --accent-3: #ffd166;
+            --border: rgba(255, 255, 255, .08);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .28);
+            --radius: 22px;
+            --sticky-offset: 16px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(124, 156, 255, .18), transparent 28%),
+            radial-gradient(circle at top right, rgba(78, 225, 193, .12), transparent 22%),
+            linear-gradient(180deg, var(--bg), var(--bg-2) 40%, #09101f);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            margin: 0 0 18px;
+            padding: 14px 0 10px;
+            backdrop-filter: blur(18px);
+            background: linear-gradient(180deg, rgba(11, 16, 32, .92), rgba(11, 16, 32, .72));
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            min-width: 0
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: var(--shadow);
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .logo::after {
+            content: "</>";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: #081121;
+            font-size: 14px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+            line-height: 1.15;
+        }
+
+        .title p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: .95rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: linear-gradient(180deg, var(--panel-2), var(--panel));
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+
+        .btn:hover,
+        .btn:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(124, 156, 255, .34);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+            gap: 18px;
+            align-items: stretch;
+            margin-bottom: 18px;
+        }
+
+        .hero-card,
+        .panel,
+        .content-card,
+        .reference-card {
+            border: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .015));
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .hero-card {
+            padding: 26px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 156, 255, .22), transparent 68%);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(124, 156, 255, .12);
+            border: 1px solid rgba(124, 156, 255, .22);
+            color: #dbe4ff;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            font-size: .74rem;
+            font-weight: 700;
+        }
+
+        .hero-card h2 {
+            margin: 16px 0 10px;
+            font-size: clamp(1.55rem, 3vw, 2.4rem);
+            line-height: 1.08;
+        }
+
+        .hero-card p {
+            margin: 0;
+            color: var(--muted);
+            max-width: 68ch;
+            line-height: 1.65;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: .82rem;
+            color: var(--soft);
+            border: 1px solid rgba(255, 255, 255, .1);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .panel {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .panel-header h3,
+        .section-title,
+        .content-card h3,
+        .reference-card h3,
+        .law-card h4,
+        .quote-card h4 {
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        .panel-header p,
+        .helper,
+        .content-card > p,
+        .reference-card > p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: .92rem;
+        }
+
+        .toolbar {
+            display: grid;
+            gap: 14px
+        }
+
+
+        .search-wrap {
+            position: relative
+        }
+
+        .search-wrap input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            outline: none;
+            background: #0b1228;
+            color: var(--text);
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .search-wrap::before {
+            content: "🔎";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            opacity: .75;
+        }
+
+        .search-wrap input:focus {
+            border-color: rgba(124, 156, 255, .65);
+            box-shadow: 0 0 0 3px rgba(124, 156, 255, .14);
+        }
+
+        .toggle-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+
+        .toggle-btn {
+            padding: 11px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            color: var(--soft);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all .18s ease;
+        }
+
+        .toggle-btn:hover,
+        .toggle-btn:focus-visible {
+            border-color: rgba(124, 156, 255, .34);
+            transform: translateY(-1px);
+        }
+
+        .toggle-btn.active {
+            color: #071120;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 10px 24px rgba(78, 225, 193, .14);
+        }
+
+        .result-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stat-pill {
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: var(--soft);
+            font-size: .8rem;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .main-column {
+            display: grid;
+            gap: 18px
+        }
+
+        .content-card {
+            padding: 22px;
+            overflow: hidden;
+        }
+
+        .content-card[hidden] {
+            display: none !important
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8rem;
+            color: var(--soft);
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, .06);
+            background: rgba(9, 16, 34, .56);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 760px;
+        }
+
+        .data-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: rgba(16, 24, 48, .96);
+            backdrop-filter: blur(8px);
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            vertical-align: top;
+            padding: 15px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .data-table th {
+            font-size: .8rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #cbd5e1;
+        }
+
+        .data-table td {
+            font-size: .94rem;
+            line-height: 1.6;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .rule-name {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+        }
+
+        .rule-name strong {
+            font-size: 1rem
+        }
+
+        .muted {
+            color: #9ca3af;
+            font-size: .82rem
+        }
+
+        .bug-grid,
+        .law-grid,
+        .quote-grid {
+            display: grid;
+            grid-template-columns:repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .law-card,
+        .quote-card,
+        .bug-item {
+            position: relative;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, .07);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+            transition: transform .16s ease, border-color .16s ease, background .16s ease;
+        }
+
+        .law-card:hover,
+        .quote-card:hover,
+        .bug-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(124, 156, 255, .25);
+            background: linear-gradient(180deg, rgba(124, 156, 255, .08), rgba(255, 255, 255, .02));
+        }
+
+        .law-head,
+        .quote-head,
+        .bug-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .law-card p,
+        .quote-card p,
+        .bug-item p {
+            margin: 0;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-size: .93rem;
+        }
+
+        .bug-item h4 {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.3;
+        }
+
+        .law-badge,
+        .quote-badge,
+        .kind-badge {
+            flex: 0 0 auto;
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: .72rem;
+            color: #dbe4ff;
+        }
+
+        .law-badge,
+        .quote-badge {
+            background: rgba(255, 209, 102, .12);
+            border: 1px solid rgba(255, 209, 102, .24);
+        }
+
+        .kind-badge {
+            background: rgba(124, 156, 255, .12);
+            border: 1px solid rgba(124, 156, 255, .24);
+        }
+
+        .reference-card {
+            position: sticky;
+            top: calc(88px + var(--sticky-offset));
+            padding: 20px;
+        }
+
+        .mini-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .mini-item {
+            padding: 13px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .mini-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: .92rem;
+        }
+
+        .mini-item span {
+            color: var(--muted);
+            font-size: .86rem;
+            line-height: 1.55;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .legend .badge {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        .empty-state {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px dashed rgba(255, 255, 255, .16);
+            color: var(--muted);
+            background: rgba(255, 255, 255, .02);
+        }
+
+        .empty-state.show {
+            display: block
+        }
+
+        .footer {
+            margin: 20px 0 12px;
+            text-align: center;
+            color: var(--muted);
+            font-size: .86rem;
+        }
+
+        .status {
+            margin: 0;
+            text-align: center;
+            color: #5c688e;
+            font-size: .84rem;
+        }
+
+        @media (max-width: 1080px) {
+            .hero,
+            .layout {
+                grid-template-columns:1fr
+            }
+
+            .reference-card {
+                position: static;
+                top: auto
+            }
+        }
+
+        @media (max-width: 860px) {
+            .container {
+                padding: 14px
+            }
+
+            .topbar {
+                padding-top: 10px
+            }
+
+            .topbar-inner,
+            .hero-card,
+            .panel,
+            .content-card,
+            .reference-card {
+                padding: 18px;
+                border-radius: 18px
+            }
+
+            .toggle-group {
+                justify-content: flex-start
+            }
+
+            .bug-grid,
+            .law-grid,
+            .quote-grid {
+                grid-template-columns:1fr
+            }
+        }
+
+        @media (max-width: 640px) {
+            .actions,
+            .brand,
+            .section-head,
+            .result-meta {
+                width: 100%
+            }
+
+            .topbar-inner {
+                align-items: flex-start
+            }
+
+            .btn {
+                width: 100%
+            }
+
+            .toggle-group {
+                width: 100%
+            }
+
+            .toggle-btn {
+                flex: 1 1 calc(33.333% - 8px);
+                text-align: center
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="logo"></div>
+                <div class="title">
+                    <h1>Programming Reference</h1>
+                    <p>Principles, laws, legendary bugs, and interactive filtering for GitHub Pages</p>
+                </div>
+            </div>
+            <div class="actions">
+                <a class="btn" href="./index.html">← Back to toolbox</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" aria-label="Introduction">
+        <article class="hero-card">
+            <span class="eyebrow">💻 Clean code survival kit</span>
+            <h2>Programming principles on one side. Bug folklore on the other.</h2>
+            <p>
+                A polished, client-side only reference page for GitHub Pages. Browse timeless coding rules,
+                classic programming laws, famous bug species, and golden developer quotes — all filterable without any
+                backend.
+            </p>
+            <div>
+                <label class="search-wrap" for="programmingSearch">
+                    <input id="programmingSearch" type="search"
+                           placeholder="Search DRY, Hofstadter, Heisenbug, caffeine..." autocomplete="off">
+                </label>
+            </div>
+            <div class="hero-badges">
+                <span class="badge">📌 Sticky header</span>
+                <span class="badge">🧭 Quick filter</span>
+                <span class="badge">⚖️ Laws & quotes</span>
+                <span class="badge">🏷️ Badges & cards</span>
+                <span class="badge">⚡ Static hosting friendly</span>
+            </div>
+        </article>
+
+        <aside class="panel" aria-label="Controls">
+            <div class="panel-header">
+                <h3>🔎 Explore the page</h3>
+                <p>Use the filter buttons to switch views and the search field on the left to search principles, laws, bugs, slang, quotes, and esolangs.</p>
+            </div>
+
+            <div class="toolbar">
+                <div class="toggle-group" aria-label="View switcher">
+                    <button class="toggle-btn active" type="button" data-view="all">All</button>
+                    <button class="toggle-btn" type="button" data-view="principles">Principles</button>
+                    <button class="toggle-btn" type="button" data-view="bugs">Bugs</button>
+                </div>
+
+                <div class="result-meta">
+                    <div class="stats">
+                        <span class="stat-pill">📚 <span id="principlesCount">38</span> principles & laws</span>
+                        <span class="stat-pill">🐞 <span id="bugsCount">30</span> bugs, quotes & slang</span>
+                    </div>
+                    <div class="helper" id="resultSummary">Showing all sections.</div>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <section class="layout" aria-label="Programming content">
+        <div class="main-column">
+            <article class="content-card" id="principlesSection" data-section="principles">
+                <div class="section-head">
+                    <div>
+                        <span class="section-kicker">📐 Principles</span>
+                        <h3 class="section-title">Programming Principles</h3>
+                        <p>Core ideas that keep code readable, maintainable, scalable, and slightly less haunted.</p>
+                    </div>
+                    <span class="badge">8 entries</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Rule</th>
+                            <th>Meaning</th>
+                            <th>Quick Dev Translation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-search="dry don't repeat yourself duplication logic structure knowledge avoid duplication">
+                            <td>
+                                <div class="rule-name"><strong>DRY</strong><span
+                                        class="muted">Don’t Repeat Yourself</span></div>
+                            </td>
+                            <td>Avoid duplication in logic, structure, and knowledge.</td>
+                            <td>If you copied it three times, the code is already judging you.</td>
+                        </tr>
+                        <tr data-search="kiss keep it simple stupid simple solutions cleverness">
+                            <td>
+                                <div class="rule-name"><strong>KISS</strong><span
+                                        class="muted">Keep It Simple, Stupid</span></div>
+                            </td>
+                            <td>Prefer simple solutions over complicated cleverness.</td>
+                            <td>The best code is the one nobody has to decode.</td>
+                        </tr>
+                        <tr data-search="yagni you aren't gonna need it future features unnecessary overengineering">
+                            <td>
+                                <div class="rule-name"><strong>YAGNI</strong><span class="muted">You Aren’t Gonna Need It</span>
+                                </div>
+                            </td>
+                            <td>Don’t build features before they are actually needed.</td>
+                            <td>Stop writing phase 9 architecture for a phase 1 button.</td>
+                        </tr>
+                        <tr data-search="slap single level of abstraction principle abstraction level function consistency">
+                            <td>
+                                <div class="rule-name"><strong>SLAP</strong><span class="muted">Single Level of Abstraction</span>
+                                </div>
+                            </td>
+                            <td>Keep code in a function at one abstraction level.</td>
+                            <td>Don’t mix business logic, SQL, regex, and existential pain in one method.</td>
+                        </tr>
+                        <tr data-search="4cs clean code clever code readable maintainable tricks">
+                            <td>
+                                <div class="rule-name"><strong>4Cs</strong><span class="muted">Clean Code over Clever Code</span>
+                                </div>
+                            </td>
+                            <td>Readable and maintainable code beats smart-looking tricks.</td>
+                            <td>Future you would like fewer wizard spells and more plain English.</td>
+                        </tr>
+                        <tr data-search="soc separation of concerns responsibilities split architecture layering">
+                            <td>
+                                <div class="rule-name"><strong>SOC</strong><span
+                                        class="muted">Separation of Concerns</span></div>
+                            </td>
+                            <td>Split responsibilities into distinct parts.</td>
+                            <td>Your controller should not also be therapist, database, and template engine.</td>
+                        </tr>
+                        <tr data-search="grasp general responsibility assignment software patterns assign responsibilities classes objects">
+                            <td>
+                                <div class="rule-name"><strong>GRASP</strong><span class="muted">General Responsibility Assignment Software Patterns</span>
+                                </div>
+                            </td>
+                            <td>Patterns for assigning responsibilities to classes and objects properly.</td>
+                            <td>Put logic where it actually belongs instead of wherever it first compiled.</td>
+                        </tr>
+                        <tr data-search="srp single responsibility principle one reason to change class module">
+                            <td>
+                                <div class="rule-name"><strong>SRP</strong><span class="muted">Single Responsibility Principle</span>
+                                </div>
+                            </td>
+                            <td>A class or module should have one reason to change.</td>
+                            <td>If one file handles login, billing, PDF export, and weather, something went wrong.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="content-card" id="lawsSection" data-section="principles">
+                <div class="section-head">
+                    <div>
+                        <span class="section-kicker">⚖️ Laws</span>
+                        <h3 class="section-title">Universal Programming Laws</h3>
+                        <p>Classic rules, planning traps, and hard-earned observations from software development
+                            culture.</p>
+                    </div>
+                    <span class="badge">30 entries</span>
+                </div>
+
+                <div class="law-grid">
+                    <article class="law-card"
+                             data-search="first law of programming if it works don't touch it universal laws stability legacy fear">
+                        <div class="law-head"><h4>🧷 The First Law of Programming</h4><span
+                                class="law-badge">Universal</span></div>
+                        <p>“If it works, don’t touch it.”</p></article>
+                    <article class="law-card"
+                             data-search="second law of programming if it breaks blame the last person who left recently universal laws blame">
+                        <div class="law-head"><h4>🕵️ The Second Law of Programming</h4><span
+                                class="law-badge">Universal</span></div>
+                        <p>“If it breaks, it was the guy who left most recently.”</p></article>
+                    <article class="law-card"
+                             data-search="murphy's law programming edition anything that can go wrong will go wrong live demo">
+                        <div class="law-head"><h4>🎭 Murphy’s Law (Programming Edition)</h4><span class="law-badge">Universal</span>
+                        </div>
+                        <p>Anything that can go wrong will go wrong, usually during a live demo.</p></article>
+                    <article class="law-card"
+                             data-search="derivation computer will do exactly what you write not what you want requirements intent">
+                        <div class="law-head"><h4>🖥️ Derivation</h4><span class="law-badge">Universal</span></div>
+                        <p>A computer will do exactly what you write, not what you want.</p></article>
+                    <article class="law-card"
+                             data-search="hofstadter's law always takes longer than you expect planning recursion time estimate">
+                        <div class="law-head"><h4>⏳ Hofstadter’s Law</h4><span class="law-badge">Planning</span></div>
+                        <p>It always takes longer than you expect, even when you take into account Hofstadter’s Law.</p>
+                    </article>
+                    <article class="law-card"
+                             data-search="brooks law adding manpower to a late software project makes it later management planning">
+                        <div class="law-head"><h4>👥 Brooks’s Law</h4><span class="law-badge">Management</span></div>
+                        <p>Adding manpower to a late software project makes it later.</p></article>
+                    <article class="law-card"
+                             data-search="ninety-ninety rule first 90 percent second 90 percent time estimate planning">
+                        <div class="law-head"><h4>📉 The Ninety-Ninety Rule</h4><span class="law-badge">Planning</span>
+                        </div>
+                        <p>The first 90% of the code accounts for the first 90% of the development time. The remaining
+                            10% accounts for the other 90%.</p></article>
+                    <article class="law-card"
+                             data-search="conway's law software reflects organizational structure communication teams architecture">
+                        <div class="law-head"><h4>🏢 Conway’s Law</h4><span class="law-badge">Organization</span></div>
+                        <p>Any piece of software reflects the organizational structure that produced it.</p></article>
+                    <article class="law-card"
+                             data-search="zawinski's law every program expands until it can read mail features scope creep">
+                        <div class="law-head"><h4>📬 Zawinski’s Law</h4><span class="law-badge">Features</span></div>
+                        <p>Every program eventually expands until it can read mail.</p></article>
+                    <article class="law-card"
+                             data-search="linus's law with enough eyes bugs are shallow easier to spot review open source">
+                        <div class="law-head"><h4>👀 Linus’s Law</h4><span class="law-badge">Bugs</span></div>
+                        <p>With enough eyes, bugs are easier to spot.</p></article>
+                    <article class="law-card"
+                             data-search="wirth's law software slows down faster than hardware speeds up performance">
+                        <div class="law-head"><h4>🐢 Wirth’s Law</h4><span class="law-badge">Performance</span></div>
+                        <p>Software slows down faster than hardware speeds up.</p></article>
+                    <article class="law-card"
+                             data-search="greenspun's tenth rule complex buggy systems bad imitations of common lisp">
+                        <div class="law-head"><h4>🧠 Greenspun’s Tenth Rule</h4><span class="law-badge">Complexity</span>
+                        </div>
+                        <p>Complex, buggy systems are often just bad imitations of Common Lisp.</p></article>
+                    <article class="law-card"
+                             data-search="hydra rule fixing one bug creates two new bugs daily bug fight">
+                        <div class="law-head"><h4>🐉 Hydra Rule</h4><span class="law-badge">Bugs</span></div>
+                        <p>Fixing one bug causes two new ones to appear.</p></article>
+                    <article class="law-card"
+                             data-search="murphy corollary if software is useless it will need documentation if useful it will need changing">
+                        <div class="law-head"><h4>📝 Murphy’s Corollary</h4><span class="law-badge">Maintenance</span>
+                        </div>
+                        <p>If software is useless, it will have to be documented. If it is useful, it will have to be
+                            changed.</p></article>
+                    <article class="law-card"
+                             data-search="works on my machine final argument tester bug discussion environment mismatch">
+                        <div class="law-head"><h4>💻 “Works on My Machine” Principle</h4><span class="law-badge">Daily life</span>
+                        </div>
+                        <p>The ultimate argument that ends every bug discussion — until production disagrees.</p>
+                    </article>
+                    <article class="law-card"
+                             data-search="eagleson's law code not seen for 6 months feels like written by someone else legacy maintenance memory">
+                        <div class="law-head"><h4>🦅 Eagleson’s Law</h4><span class="law-badge">Code</span></div>
+                        <p>Any code you haven’t looked at for 6 months might as well have been written by someone
+                            else.</p></article>
+                    <article class="law-card"
+                             data-search="baklava principle too many thin abstraction layers pass through unreadable stack architecture">
+                        <div class="law-head"><h4>🥮 Baklava Principle</h4><span class="law-badge">Architecture</span>
+                        </div>
+                        <p>Code with so many thin abstraction layers that each one merely passes the call along,
+                            creating an unreadable stack.</p></article>
+                    <article class="law-card"
+                             data-search="beyonce principle if you liked it you should have put a ci test on it testing continuous integration">
+                        <div class="law-head"><h4>🎤 Beyoncé Principle</h4><span class="law-badge">Testing</span></div>
+                        <p>If you liked it, then you should have put a CI test on it.</p></article>
+                    <article class="law-card"
+                             data-search="lubarsky cybernetic entomology law there is always one more bug testing bugs">
+                        <div class="law-head"><h4>🐛 Lubarsky’s Law of Cybernetic Entomology</h4><span class="law-badge">Bugs</span>
+                        </div>
+                        <p>There is always one more bug.</p></article>
+                    <article class="law-card"
+                             data-search="demo paradox probability of flawless demo inverse to number of viewers proportional to money involved">
+                        <div class="law-head"><h4>🎬 Demo Paradox</h4><span class="law-badge">Demos</span></div>
+                        <p>The probability of a flawless demo is inversely proportional to the number of viewers and
+                            directly tied to the amount of money involved.</p></article>
+                    <article class="law-card"
+                             data-search="woodpecker effect if builders built houses like programmers write programs first woodpecker would destroy civilization">
+                        <div class="law-head"><h4>🪵 Woodpecker Effect</h4><span class="law-badge">Quality</span></div>
+                        <p>If builders built houses the way programmers write programs, the first woodpecker to come
+                            along would destroy civilization.</p></article>
+                    <article class="law-card"
+                             data-search="hollywood principle don't call us we'll call you inversion of control frameworks control flow">
+                        <div class="law-head"><h4>🎥 Hollywood Principle</h4><span class="law-badge">Frameworks</span>
+                        </div>
+                        <p>“Don’t call us, we’ll call you.” A classic way to describe inversion of control in
+                            frameworks.</p></article>
+                    <article class="law-card"
+                             data-search="harper principle no book is lost by lending except the ones you wanted to keep psychology management">
+                        <div class="law-head"><h4>📚 Harper Principle</h4><span class="law-badge">Psychology</span></div>
+                        <p>No book is ever truly lost by lending — except the ones you actually wanted to keep.</p>
+                    </article>
+                    <article class="law-card"
+                             data-search="parkinson's law in it data expands to fill all available memory storage">
+                        <div class="law-head"><h4>💾 Parkinson’s Law in IT</h4><span class="law-badge">Data</span></div>
+                        <p>Data expands to fill all available memory.</p></article>
+                    <article class="law-card"
+                             data-search="nine women programmers cannot deliver baby in a month brooks law staffing project management">
+                        <div class="law-head"><h4>👶 “9 Programmers” Principle</h4><span
+                                class="law-badge">Management</span></div>
+                        <p>Nine programmers cannot deliver a baby in a month — a warning against naïve linear staffing
+                            assumptions.</p></article>
+                    <article class="law-card"
+                             data-search="murderous psychopath law always code as if maintainer is violent psychopath who knows where you live">
+                        <div class="law-head"><h4>🔪 Murderous Psychopath Law</h4><span
+                                class="law-badge">Maintainability</span></div>
+                        <p>Always code as if the person who ends up maintaining your code will be a violent psychopath
+                            who knows where you live.</p></article>
+                    <article class="law-card"
+                             data-search="golden optimism rule never worry if something does not work if everything worked you would not have a job">
+                        <div class="law-head"><h4>🌤️ Golden Rule of Optimism</h4><span class="law-badge">Career</span>
+                        </div>
+                        <p>Never worry that something doesn’t work. If everything worked perfectly, you wouldn’t have a
+                            job.</p></article>
+                    <article class="law-card"
+                             data-search="landfill law legacy module nobody understands nobody dares remove">
+                        <div class="law-head"><h4>🗑️ Landfill Law</h4><span class="law-badge">Legacy</span></div>
+                        <p>Every project contains at least one module that nobody understands, yet nobody dares to
+                            remove.</p>
+                    </article>
+
+                    <article class="law-card"
+                             data-search="last minute principle friday shift most serious bug appears 5 minutes before end">
+                        <div class="law-head"><h4>⏰ Last-Minute Principle</h4><span class="law-badge">Friday</span>
+                        </div>
+                        <p>The most serious bug appears exactly 5 minutes before the end of your Friday shift.</p>
+                    </article>
+
+                    <article class="law-card"
+                             data-search="inevitability theory bug should practically never happen important client first hour after deployment">
+                        <div class="law-head"><h4>🚨 Inevitability Theory</h4><span class="law-badge">Deployment</span>
+                        </div>
+                        <p>If a bug “should practically never happen,” it will happen to the most important client
+                            within the first hour after deployment.</p>
+                    </article>
+                </div>
+            </article>
+
+            <article class="content-card" id="bugsSection" data-section="bugs">
+                <div class="section-head">
+                    <div>
+                        <span class="section-kicker">🐞 Bugs</span>
+                        <h3 class="section-title">Kinds of Bugs</h3>
+                        <p>The unofficial software bestiary: rare, cursed, expensive, and occasionally profitable.</p>
+                    </div>
+                    <span class="badge">11 entries</span>
+                </div>
+
+                <div class="bug-grid">
+                    <article class="bug-item" data-search="bloombug money profit accidental generates money">
+                        <div class="bug-head"><h4>💸 Bloombug</h4><span class="kind-badge">Money bug</span></div>
+                        <p>A bug that accidentally generates money.</p></article>
+                    <article class="bug-item" data-search="counter bug caused by reporter counterattack blame reversal">
+                        <div class="bug-head"><h4>🔁 Counter Bug</h4><span class="kind-badge">Blame ping-pong</span>
+                        </div>
+                        <p>A bug you present when someone reports a bug that they themselves caused.</p></article>
+                    <article class="bug-item"
+                             data-search="excalibur bug impossible fix all developers tried worthy sword in the stone">
+                        <div class="bug-head"><h4>🗡️ Excalibur Bug</h4><span class="kind-badge">Legendary</span></div>
+                        <p>A bug that everyone has tried to fix, but nobody has proven worthy enough to pull from the
+                            stone.</p></article>
+                    <article class="bug-item"
+                             data-search="heisenbug disappears changes behavior under observation debugging inspection">
+                        <div class="bug-head"><h4>👻 Heisenbug</h4><span class="kind-badge">Observer effect</span></div>
+                        <p>A bug that disappears or changes behavior when you try to inspect it.</p></article>
+                    <article class="bug-item"
+                             data-search="higgs-bugson hypothetical vague logs user folklore hard to reproduce hadron debugger">
+                        <div class="bug-head"><h4>⚛️ Higgs-Bugson</h4><span
+                                class="kind-badge">Theoretical physics</span></div>
+                        <p>A hypothetical bug inferred from weird logs and user folklore, but impossible to reliably
+                            reproduce.</p></article>
+                    <article class="bug-item"
+                             data-search="hindenbug catastrophic data destroying destructive disaster production fire">
+                        <div class="bug-head"><h4>🔥 Hindenbug</h4><span class="kind-badge">Catastrophic</span></div>
+                        <p>A catastrophic bug that destroys data, confidence, and probably the weekend.</p></article>
+
+                    <article class="bug-item"
+                             data-search="schrodinbug schrodinger fluctuates between fine and broken until source code opened">
+                        <div class="bug-head"><h4>📦 Schrödinbug</h4><span class="kind-badge">Quantum chaos</span></div>
+                        <p>A feature that seems both fine and broken until someone opens the code, after which it
+                            becomes definitely broken.</p></article>
+                    <article class="bug-item"
+                             data-search="sorcerer's apprentice mode bug protocol message storm feedback loop recursion spam">
+                        <div class="bug-head"><h4>🪄 Sorcerer’s Apprentice Mode Bug</h4><span class="kind-badge">Protocol storm</span>
+                        </div>
+                        <p>A protocol bug where one message causes many more, each triggering the same bug again.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="ufo bug customer imaginary repeatedly reported doesn't exist">
+                        <div class="bug-head"><h4>🛸 UFO Bug</h4><span class="kind-badge">Customer folklore</span></div>
+                        <p>A customer-reported bug that keeps returning no matter how many times you prove it isn’t
+                            there.</p></article>
+                    <article class="bug-item" data-search="whitespace language spaces tabs newlines blank page">
+                        <div class="bug-head"><h4>⬜ Whitespace</h4><span class="kind-badge">Esolang</span></div>
+                        <p>A language made only of spaces, tabs, and newlines. Printed out, the program looks like a blank page.</p>
+                    </article>
+                    <article class="bug-item" data-search="brainfuck language 8 commands hello world headbutting keyboard">
+                        <div class="bug-head"><h4>🧠 Brainfuck</h4><span class="kind-badge">Esolang</span></div>
+                        <p>It has only 8 commands. Writing “Hello World” looks like randomly headbutting the keyboard.</p>
+                    </article>
+                </div>
+            </article>
+
+            <article class="content-card" id="quotesSection" data-section="bugs">
+                <div class="section-head">
+                    <div>
+                        <span class="section-kicker">💬 Quotes</span>
+                        <h3 class="section-title">Golden Programming Quotes</h3>
+                        <p>Short truths from the trenches: support debt, debugging guilt, and caffeine-powered software
+                            engineering.</p>
+                    </div>
+                    <span class="badge">7 entries</span>
+                </div>
+
+                <div class="quote-grid">
+                    <article class="quote-card"
+                             data-search="programming is like sex one mistake and you support it for life quote">
+                        <div class="quote-head"><h4>💘 Programming & Support</h4><span
+                                class="quote-badge">Classic quote</span></div>
+                        <p>“Programming is like sex: one mistake and you have to support it for the rest of your
+                            life.”</p></article>
+                    <article class="quote-card"
+                             data-search="debugging detective crime movie you are the murderer quote">
+                        <div class="quote-head"><h4>🕵️ Debugging</h4><span class="quote-badge">Classic quote</span>
+                        </div>
+                        <p>“Debugging is like being the detective in a crime movie where you are also the murderer.”</p>
+                    </article>
+                    <article class="quote-card" data-search="programmer machine that turns caffeine into code quote">
+                        <div class="quote-head"><h4>☕ Developer Fuel</h4><span class="quote-badge">Classic quote</span>
+                        </div>
+                        <p>“A programmer is a machine that turns caffeine into code.”</p></article>
+                    <article class="quote-card"
+                             data-search="most programmers spend 10 percent writing code and 90 percent wondering why it doesn't work quote">
+                        <div class="quote-head"><h4>🤔 Debugging Ratio</h4><span class="quote-badge">Modern quote</span>
+                        </div>
+                        <p>“Most programmers spend 10% of their time writing code and 90% wondering why what they wrote
+                            doesn’t work.”</p></article>
+                    <article class="quote-card"
+                             data-search="if your code works first time you are testing it the wrong way quote">
+                        <div class="quote-head"><h4>🧪 First-Time Success</h4><span
+                                class="quote-badge">Testing quote</span></div>
+                        <p>“If your code works the first time, you’re probably testing it the wrong way.”</p></article>
+                    <article class="quote-card" data-search="there are 10 types of people binary quote">
+                        <div class="quote-head"><h4>🔢 Binary Joke</h4><span class="quote-badge">One-liner</span></div>
+                        <p>“There are 10 types of people: those who understand binary, and those who don’t.”</p>
+                    </article>
+
+                    <article class="quote-card" data-search="cache invalidation naming things off by one errors quote">
+                        <div class="quote-head"><h4>🧠 Hard Things</h4><span class="quote-badge">Classic quote</span>
+                        </div>
+                        <p>“There are only two hard things in computer science: cache invalidation, naming things, and
+                            off-by-one errors.”</p></article>
+                </div>
+            </article>
+
+            <article class="content-card" id="slangSection" data-section="bugs">
+                <div class="section-head">
+                    <div>
+                        <span class="section-kicker">🗣️ Slang</span>
+                        <h3 class="section-title">Programming Slang & Weird Situations</h3>
+                        <p>From AI-era jargon to local classics, debugging rituals, cursed code styles, esolangs, and
+                            absurd bug types and project situations.</p>
+                    </div>
+                    <span class="badge">20 entries</span>
+                </div>
+
+                <div class="bug-grid">
+                    <article class="bug-item"
+                             data-search="vibecoding ai 2025 2026 describe intent chatbot accepts output without deep analysis">
+                        <div class="bug-head"><h4>🌊 Vibecoding</h4><span class="kind-badge">AI era</span></div>
+                        <p>A style of work where the developer does not write code line by line, but only gives the vibe
+                            — describes intent to an AI chatbot and accepts what the model outputs without deep
+                            analysis.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="are you proxy rhetorical question sounds artificial repeats ai generated responses">
+                        <div class="bug-head"><h4>🤖 Are you proxy?</h4><span class="kind-badge">AI era</span></div>
+                        <p>A rhetorical question aimed at someone who sounds too synthetic or mindlessly repeats
+                            AI-generated answers.</p>
+                    </article>
+                    <article class="bug-item" data-search="going dark side writing manually without copilot or chatgpt">
+                        <div class="bug-head"><h4>🌑 Going Dark Side</h4><span class="kind-badge">AI era</span></div>
+                        <p>A conscious decision to write something manually, without Copilot or ChatGPT.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="deep shallow looks brilliant deep code but turns out empty ai generated nonsense">
+                        <div class="bug-head"><h4>🕳️ Deep Shallow</h4><span class="kind-badge">AI era</span></div>
+                        <p>Something that looks brilliant and deep at first glance, but after inspection turns out to be
+                            empty, AI-generated nonsense.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="voodoo programming ritual stack overflow afraid to change code">
+                        <div class="bug-head"><h4>🪬 Voodoo Programming</h4><span class="kind-badge">Classic</span></div>
+                        <p>When a developer does not understand why the code works, but is afraid to change anything so
+                            as not to “jinx it.” Fixes happen through ritual copying from Stack Overflow.</p>
+                    </article>
+
+                    <article class="bug-item"
+                             data-search="cargo cult programming blindly copy patterns libraries because google does it">
+                        <div class="bug-head"><h4>📦 Cargo Cult Programming</h4><span class="kind-badge">Classic</span>
+                        </div>
+                        <p>Blindly copying design patterns or libraries just because “that’s what Google does,” without
+                            understanding whether they fit the project.</p>
+                    </article>
+
+                    <article class="bug-item"
+                             data-search="spaghetti code tangled unstructured code icon color breaks database">
+                        <div class="bug-head"><h4>🍝 Spaghetti Code</h4><span class="kind-badge">Classic</span></div>
+                        <p>Code so tangled and unstructured that changing an icon color causes a database failure in
+                            another country.</p>
+                    </article>
+
+                    <article class="bug-item" data-search="lasagna code too many abstraction layers">
+                        <div class="bug-head"><h4>🧀 Lasagna Code</h4><span class="kind-badge">Classic</span></div>
+                        <p>Code with so many layers of abstraction that getting to the real logic takes all day.</p>
+                    </article>
+
+                    <article class="bug-item" data-search="pizza code flat huge served in slices">
+                        <div class="bug-head"><h4>🍕 Pizza Code</h4><span class="kind-badge">Classic</span></div>
+                        <p>Code that is flat, huge, and served in slices because nobody can understand it as a
+                            whole.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="rubberducking rubber duck debugging explain problem to duck and solve it while talking">
+                        <div class="bug-head"><h4>🦆 Rubberducking</h4><span class="kind-badge">Classic</span></div>
+                        <p>A debugging method where you explain the problem step by step to a rubber duck on your desk.
+                            Halfway through, you solve it yourself, and the duck contributes exactly as planned:
+                            nothing.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="yoda conditions if 4 == foo avoid accidental assignment comparison">
+                        <div class="bug-head"><h4>🧙 Yoda Conditions</h4><span class="kind-badge">Classic</span></div>
+                        <p>Writing conditions like <code>if (4 == foo)</code>. It sounds like Yoda and is used to avoid
+                            accidental assignment instead of comparison.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="pokemon exception handling catch them all empty try catch ignores every error">
+                        <div class="bug-head"><h4>⚡ Pokémon Exception Handling</h4><span
+                                class="kind-badge">Classic</span></div>
+                        <p>The “catch them all” strategy: using an empty <code>try-catch</code> that captures every
+                            error and ignores it instead of fixing anything.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="bikeshedding bike shed effect team argues three hours about button color ignores database architecture bug">
+                        <div class="bug-head"><h4>🚲 Bikeshedding</h4><span class="kind-badge">Classic</span></div>
+                        <p>A team spends three hours arguing about the button color because everyone understands it,
+                            while ignoring the critical database architecture bug because that part is hard.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="loch ness monster bug seen once by one person never reproduced under controlled conditions absurd bug types situations">
+                        <div class="bug-head"><h4>🦕 Loch Ness Monster Bug</h4><span
+                                class="kind-badge">Absurd bug type</span></div>
+                        <p>A bug seen only once by one person in their lifetime and never reproduced again under
+                            controlled conditions.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="common law feature bug existed so long users treat it as official feature fixing it causes protests absurd bug types situations">
+                        <div class="bug-head"><h4>📜 Common Law Feature</h4><span
+                                class="kind-badge">Absurd bug type</span></div>
+                        <p>A bug that has been in the system so long that users got used to it and now treat it as an
+                            official feature. Fixing it triggers customer protests.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="fear driven development panic deadlines yesterday threats worst code in company history absurd bug types situations">
+                        <div class="bug-head"><h4>😱 Fear-Driven Development</h4><span class="kind-badge">Absurd situation</span>
+                        </div>
+                        <p>Project management by panic, deadlines moved to yesterday, and threats of being fired —
+                            resulting in the worst code in company history.</p>
+                    </article>
+                    <article class="bug-item"
+                             data-search="reality 101 failure software does exactly what client asked but function is useless in reality absurd bug types situations">
+                        <div class="bug-head"><h4>🧱 Reality 101 Failure</h4><span
+                                class="kind-badge">Absurd situation</span></div>
+                        <p>A situation where the program does exactly what the client asked for, but the feature turns
+                            out to be completely useless in the real world.</p>
+                    </article>
+                    <article class="bug-item" data-search="chef language recipe cooking bowl potatoes">
+                        <div class="bug-head"><h4>👨‍🍳 Chef</h4><span class="kind-badge">Esolang</span></div>
+                        <p>Code looks like a cooking recipe. If the program compiles, in theory you can also cook it.</p>
+                    </article>
+                    <article class="bug-item" data-search="lolcode hai kthxbye invisiblez cats meme language">
+                        <div class="bug-head"><h4>😹 LOLCODE</h4><span class="kind-badge">Esolang</span></div>
+                        <p>A cat-meme language where you begin with <code>HAI</code>, end with <code>KTHXBYE</code>, and errors sound like a meme in production.</p>
+                    </article>
+                </div>
+            </article>
+            <div class="empty-state" id="emptyState">No matching results for this filter. Try a broader search term or
+                switch back to <strong>All</strong>.
+            </div>
+        </div>
+
+        <aside class="reference-card" aria-label="Quick reference">
+            <h3>🧠 Quick reference</h3>
+            <p>Use this page as a compact glossary during coding, review, onboarding, or “why is production on fire?”
+                moments.</p>
+
+            <div class="mini-list">
+                <div class="mini-item"><strong>When to use DRY</strong><span>When duplicated logic or repeated knowledge starts leaking across files.</span>
+                </div>
+                <div class="mini-item"><strong>When to use YAGNI</strong><span>When somebody wants to build six future features before shipping the first useful one.</span>
+                </div>
+                <div class="mini-item"><strong>Best planning reminder</strong><span>Brooks’s Law, Hofstadter’s Law, and the Ninety-Ninety Rule are basically schedule destroyers in formal wear.</span>
+                </div>
+                <div class="mini-item"><strong>Best architecture warning</strong><span>Baklava Principle, Eagleson’s Law, and Greenspun’s Tenth Rule are what happen when abstractions multiply and memory fades.</span>
+                </div>
+                <div class="mini-item"><strong>Worst bug vibe</strong><span>Hindenbug for damage. Heisenbug for sanity loss. Excalibur bug for team-wide humiliation.</span>
+                </div>
+                <div class="mini-item"><strong>Best slang cluster</strong><span>Vibecoding, Deep Shallow, and Are you proxy? perfectly capture the 2025/2026 AI-flavored developer mood.</span>
+                </div>
+                <div class="mini-item"><strong>Best absurd cluster</strong><span>Loch Ness Monster Bug, Common Law Feature, Fear-Driven Development, and Reality 101 Failure cover the full spectrum from phantom bugs to real-world nonsense.</span>
+                </div>
+                <div class="mini-item"><strong>Best cursed code cluster</strong><span>Voodoo Programming, Cargo Cult Programming, Spaghetti Code, Lasagna Code, and Pizza Code cover the full spectrum from mystical fixes to structural disaster.</span>
+                </div>
+                <div class="mini-item"><strong>Best way to browse</strong><span>Use search for keywords and the view switcher for quick Principles-only or Bugs-only mode.</span>
+                </div>
+            </div>
+
+            <div class="legend" aria-label="Legend">
+                <span class="badge">📐 Principles = engineering rules</span>
+                <span class="badge">⚖️ Laws = dev folklore rules</span>
+                <span class="badge">🐞 Bugs = software folklore</span>
+                <span class="badge">💬 Quotes = trench wisdom</span>
+                <span class="badge">🗣️ Slang = dev dialect</span>
+                <span class="badge">🧠 Esolangs = cursed languages</span>
+                <span class="badge">🔎 Search = live client-side filter</span>
+            </div>
+        </aside>
+    </section>
+
+    <div class="footer">Static GitHub Pages ready • Client-side only • No dependencies</div>
+    <p class="status">&copy; borowicz.github.io</p>
+</div>
+
+<script>
+    const searchInput = document.querySelector('#programmingSearch');
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+    const principlesSection = document.querySelector('#principlesSection');
+    const lawsSection = document.querySelector('#lawsSection');
+    const bugsSection = document.querySelector('#bugsSection');
+    const quotesSection = document.querySelector('#quotesSection');
+    const slangSection = document.querySelector('#slangSection');
+    const principleRows = Array.from(document.querySelectorAll('#principlesSection tbody tr'));
+    const lawItems = Array.from(document.querySelectorAll('#lawsSection .law-card'));
+    const bugItems = Array.from(document.querySelectorAll('#bugsSection .bug-item'));
+    const quoteItems = Array.from(document.querySelectorAll('#quotesSection .quote-card'));
+    const slangItems = Array.from(document.querySelectorAll('#slangSection .bug-item'));
+    const principlesCount = document.querySelector('#principlesCount');
+    const bugsCount = document.querySelector('#bugsCount');
+    const resultSummary = document.querySelector('#resultSummary');
+    const emptyState = document.querySelector('#emptyState');
+
+    let activeView = 'all';
+
+    function matchesQuery(element, query) {
+        if (!query) return true;
+        const source = (element.dataset.search || element.textContent || '').toLowerCase();
+        return source.includes(query);
+    }
+
+    function updateSummary(query, visiblePrinciples, visibleBugs) {
+        const parts = [];
+        if (activeView === 'all') parts.push('Showing all sections.');
+        if (activeView === 'principles') parts.push('Showing principles only.');
+        if (activeView === 'bugs') parts.push('Showing bugs only.');
+        if (query) parts.push(`Search: “${query}”.`);
+        parts.push(`${visiblePrinciples} principle/law item${visiblePrinciples === 1 ? '' : 's'} visible.`);
+        parts.push(`${visibleBugs} bug/quote/slang item${visibleBugs === 1 ? '' : 's'} visible.`);
+        resultSummary.textContent = parts.join(' ');
+    }
+
+    function applyFilters() {
+        const query = (searchInput?.value || '').trim().toLowerCase();
+        let visiblePrinciples = 0;
+        let visibleLaws = 0;
+        let visibleBugs = 0;
+        let visibleQuotes = 0;
+        let visibleSlang = 0;
+
+        principleRows.forEach((row) => {
+            const visible = matchesQuery(row, query);
+            row.hidden = !visible;
+            if (visible) visiblePrinciples += 1;
+        });
+
+        lawItems.forEach((item) => {
+            const visible = matchesQuery(item, query);
+            item.hidden = !visible;
+            if (visible) visibleLaws += 1;
+        });
+
+        bugItems.forEach((item) => {
+            const visible = matchesQuery(item, query);
+            item.hidden = !visible;
+            if (visible) visibleBugs += 1;
+        });
+
+        quoteItems.forEach((item) => {
+            const visible = matchesQuery(item, query);
+            item.hidden = !visible;
+            if (visible) visibleQuotes += 1;
+        });
+
+        slangItems.forEach((item) => {
+            const visible = matchesQuery(item, query);
+            item.hidden = !visible;
+            if (visible) visibleSlang += 1;
+        });
+
+        const showPrinciples = activeView === 'all' || activeView === 'principles';
+        const showBugs = activeView === 'all' || activeView === 'bugs';
+
+        principlesSection.hidden = !(showPrinciples && visiblePrinciples > 0);
+        lawsSection.hidden = !(showPrinciples && visibleLaws > 0);
+        bugsSection.hidden = !(showBugs && visibleBugs > 0);
+        quotesSection.hidden = !(showBugs && visibleQuotes > 0);
+        slangSection.hidden = !(showBugs && visibleSlang > 0);
+
+        emptyState.classList.toggle(
+            'show',
+            (showPrinciples ? (visiblePrinciples + visibleLaws === 0) : true) &&
+            (showBugs ? (visibleBugs + visibleQuotes + visibleSlang === 0) : true)
+        );
+
+        principlesCount.textContent = visiblePrinciples + visibleLaws;
+        bugsCount.textContent = visibleBugs + visibleQuotes + visibleSlang;
+        updateSummary(query, visiblePrinciples + visibleLaws, visibleBugs + visibleQuotes + visibleSlang);
+    }
+
+    toggleButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            activeView = button.dataset.view || 'all';
+            toggleButtons.forEach((btn) => btn.classList.toggle('active', btn === button));
+            applyFilters();
+        });
+    });
+
+    searchInput?.addEventListener('input', applyFilters);
+    applyFilters();
+</script>
+</body>
+</html>
