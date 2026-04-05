@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a2347">
+    <meta name="description" content="Offline-ready postal code search for Poland, Europe and the United States.">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
     <title>Postal Code Search</title>
     <style>
         body {
@@ -62,6 +66,27 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
             align-items: stretch;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 0 0 12px;
+            align-items: center;
+        }
+
+        .install-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+        }
+
+        .install-help {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.45;
         }
         .search-input-wrap {
             position: relative;
@@ -204,6 +229,22 @@
             display: block;
             margin: 0 auto;
         }
+
+        @media (max-width: 900px) {
+            .search-wrap,
+            table,
+            .single-map-frame {
+                width: 94vw;
+            }
+
+            .action-row {
+                align-items: flex-start;
+            }
+
+            .install-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -226,6 +267,10 @@
             <div id="autocompleteList" class="autocomplete-list" style="display:none;"></div>
         </div>
         <button id="searchBtn">Search</button>
+    </div>
+    <div class="action-row">
+        <button id="installBtn" class="install-btn" type="button" style="display:none;">Install on this device</button>
+        <span id="installHelp" class="install-help">Tip: you can add this page to your home screen, desktop, or app launcher.</span>
     </div>
     <div class="status-row">
         <span id="dbLoader" class="spinner visible" aria-hidden="true"></span>
@@ -283,6 +328,130 @@
     let hasFtsAutocomplete = false;
     let selectedAutocompleteRowId = null;
     let currentDatasetKey = 'pl';
+    let deferredInstallPrompt = null;
+    let isStandaloneMode = false;
+    function registerServiceWorker() {
+        if (!('serviceWorker' in navigator)) {
+            return;
+        }
+
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('./sw.js').catch(function (error) {
+                console.warn('Service worker registration failed:', error);
+            });
+        });
+    }
+
+    function detectInstallPlatform() {
+        const ua = navigator.userAgent || '';
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(ua);
+        const isMac = /Macintosh|Mac OS X/i.test(ua) && !isIOS;
+        const isWindows = /Windows/i.test(ua);
+        const isLinux = /Linux/i.test(ua) && !isAndroid;
+
+        return {
+            isIOS,
+            isAndroid,
+            isMac,
+            isWindows,
+            isLinux
+        };
+    }
+
+    function getInstallHelpText() {
+        const platform = detectInstallPlatform();
+
+        if (platform.isIOS) {
+            return 'iPhone/iPad: tap Share → Add to Home Screen.';
+        }
+
+        if (platform.isAndroid) {
+            return deferredInstallPrompt
+                ? 'Android: tap Install on this device.'
+                : 'Android: open the browser menu and choose Add to Home Screen or Install app.';
+        }
+
+        if (platform.isWindows) {
+            return deferredInstallPrompt
+                ? 'Windows: click Install on this device to create a shortcut-like app.'
+                : 'Windows: open the browser menu and choose Install app or Create shortcut.';
+        }
+
+        if (platform.isMac) {
+            return deferredInstallPrompt
+                ? 'macOS: click Install on this device to add it like an app.'
+                : 'macOS: in Safari choose File → Add to Dock, or in Chromium choose Install app.';
+        }
+
+        if (platform.isLinux) {
+            return deferredInstallPrompt
+                ? 'Linux: click Install on this device to add a desktop launcher in supported browsers.'
+                : 'Linux: open the browser menu and choose Install app when available.';
+        }
+
+        return 'Use your browser menu to add this page to your home screen, desktop, or app launcher.';
+    }
+
+    function detectStandaloneMode() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    function updateInstallUi() {
+        const installBtn = document.getElementById('installBtn');
+        const installHelp = document.getElementById('installHelp');
+
+        if (!installBtn || !installHelp) {
+            return;
+        }
+
+        isStandaloneMode = detectStandaloneMode();
+
+        if (isStandaloneMode) {
+            installBtn.style.display = 'none';
+            installHelp.textContent = 'App installed. You can launch it from your home screen, desktop, or app launcher.';
+            return;
+        }
+
+        installBtn.style.display = deferredInstallPrompt ? 'inline-flex' : 'none';
+        installBtn.textContent = deferredInstallPrompt ? 'Install on this device' : 'Create shortcut / install app';
+        installHelp.textContent = getInstallHelpText();
+    }
+
+    async function triggerInstall() {
+        if (!deferredInstallPrompt) {
+            updateInstallUi();
+            return;
+        }
+
+        deferredInstallPrompt.prompt();
+
+        try {
+            await deferredInstallPrompt.userChoice;
+        } catch (error) {
+            console.warn('Install prompt warning:', error);
+        }
+
+        deferredInstallPrompt = null;
+        isStandaloneMode = detectStandaloneMode();
+        updateInstallUi();
+    }
+
+    function registerInstallPrompt() {
+        window.addEventListener('beforeinstallprompt', function (event) {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            updateInstallUi();
+        });
+
+        window.addEventListener('appinstalled', function () {
+            deferredInstallPrompt = null;
+            updateInstallUi();
+        });
+
+        window.matchMedia('(display-mode: standalone)').addEventListener('change', updateInstallUi);
+        updateInstallUi();
+    }
     function buildGoogleMapsEmbedUrl(row) {
         const lat = row.latitude ?? row.lat;
         const lon = row.longitude ?? row.lon;
@@ -731,10 +900,10 @@
                             WHEN city_name LIKE ? THEN 2
                             WHEN regional_dial_code LIKE ? THEN 3
                             ELSE 4
-                        END,
+                            END,
                         city_name ASC,
                         postal_code ASC
-                    LIMIT 12
+                        LIMIT 12
                 `;
 
                 const stmt = db.prepare(sql);
@@ -800,11 +969,11 @@
                 longitude
             FROM geo_locations
             WHERE (
-                    city_name LIKE ?
-                 OR postal_code LIKE ?
-                 OR regional_dial_code LIKE ?
-            )
-            AND (? IS NULL OR id = ?)
+                city_name LIKE ?
+                    OR postal_code LIKE ?
+                    OR regional_dial_code LIKE ?
+                )
+              AND (? IS NULL OR id = ?)
             ORDER BY
                 CASE
                     WHEN postal_code = ? THEN 0
@@ -812,11 +981,11 @@
                     WHEN city_name LIKE ? THEN 2
                     WHEN regional_dial_code LIKE ? THEN 3
                     ELSE 4
-                END,
+                    END,
                 country_name ASC,
                 city_name ASC,
                 postal_code ASC
-            LIMIT 200
+                LIMIT 200
         `;
 
         const stmt = db.prepare(sql);
@@ -895,6 +1064,7 @@
     });
 
     document.getElementById('searchBtn').addEventListener('click', search);
+    document.getElementById('installBtn').addEventListener('click', triggerInstall);
 
     document.getElementById('query').addEventListener('input', updateAutocomplete);
 
@@ -940,6 +1110,9 @@
             closeAutocomplete();
         }
     });
+
+    registerServiceWorker();
+    registerInstallPrompt();
 
     loadDatabase('pl').catch(error => {
         console.error(error);
