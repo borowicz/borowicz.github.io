@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Konwerter jednostek</title>
+    <title>Color Converter</title>
     <style>
         :root {
             --bg: #0b1020;
@@ -380,37 +380,46 @@
 <div class="page">
     <section class="hero">
         <div>
-            <div class="eyebrow">📏 github.io html / css / js</div>
-            <h1>Konwerter jednostek</h1>
-            <p>Konwersja długości, masy, temperatury i prędkości w jednej statycznej stronie.</p>
+            <div class="eyebrow">🎨 borowicz.github.io html / css / js</div>
+            <h1>Color Converter</h1>
+            <p>Konwerter kolorów HEX / RGB / HSL z generowaniem jaśniejszych i ciemniejszych wariantów oraz kopiowaniem
+                wartości CSS.</p>
         </div>
         <div class="hero-stats">
-            <div class="stat"><strong id="heroCategory">Długość</strong><span>Aktualna kategoria konwersji.</span></div>
-            <div class="stat"><strong id="heroValue">—</strong><span>Przeliczona wartość.</span></div>
+            <div class="stat"><strong id="heroHex">#7c9cff</strong><span>Aktualny kolor bazowy.</span></div>
+            <div class="stat"><strong id="heroRgb">rgb(124, 156,
+                255)</strong><span>Wersja RGB do CSS i design tokenów.</span></div>
         </div>
     </section>
 
     <section class="layout">
         <article class="card">
-            <div class="card-header"><h2>Wejście</h2><span>Kategoria i jednostki</span></div>
+            <div class="card-header"><h2>Wejście</h2><span>HEX / picker</span></div>
             <div class="card-body">
                 <div class="form-grid">
-                    <div class="field"><label for="category">Kategoria</label><select id="category"></select></div>
-                    <div class="field"><label for="valueIn">Wartość</label><input id="valueIn" type="number" value="1"
-                                                                                  step="0.01"></div>
-                    <div class="field"><label for="fromUnit">Z</label><select id="fromUnit"></select></div>
-                    <div class="field"><label for="toUnit">Na</label><select id="toUnit"></select></div>
+                    <div class="field"><label for="hexInput">HEX</label><input id="hexInput" type="text"
+                                                                               value="#7c9cff"></div>
+                    <div class="field"><label for="colorPicker">Picker</label><input id="colorPicker" type="color"
+                                                                                     value="#7c9cff"
+                                                                                     style="padding:6px;"></div>
                 </div>
                 <div class="actions">
-                    <button class="btn primary" id="convertBtn">Przelicz</button>
+                    <button class="btn primary" id="applyBtn">Zastosuj</button>
+                    <button class="btn" id="copyCssBtn">Kopiuj CSS</button>
+                </div>
+                <div class="result-main"><strong id="colorTitle">#7C9CFF</strong>
+                    <p id="colorDesc">Zmień kolor, aby zobaczyć formaty i paletę.</p></div>
+                <div class="details-grid" style="margin-top:14px;">
+                    <div class="detail"><strong id="rgbOut">—</strong><span>RGB</span></div>
+                    <div class="detail"><strong id="hslOut">—</strong><span>HSL</span></div>
+                    <div class="detail"><strong id="cssVarOut">—</strong><span>CSS variable</span></div>
                 </div>
             </div>
         </article>
         <article class="card">
-            <div class="card-header"><h2>Wynik</h2><span>Konwersja</span></div>
+            <div class="card-header"><h2>Paleta</h2><span>5 wariantów</span></div>
             <div class="card-body">
-                <div class="result-main"><strong id="outValue">—</strong>
-                    <p id="outDesc">Wybierz kategorię i jednostki.</p></div>
+                <div class="swatches" id="swatches"></div>
             </div>
         </article>
     </section>
@@ -420,52 +429,87 @@
     </div>
 </div>
 <script>
-    const defs = {
-        length: {label: 'Długość', units: {m: 1, km: 1000, cm: 0.01, mm: 0.001, mi: 1609.344, ft: 0.3048}},
-        mass: {label: 'Masa', units: {kg: 1, g: 0.001, lb: 0.45359237, oz: 0.028349523125}},
-        speed: {label: 'Prędkość', units: {'m/s': 1, 'km/h': 0.2777777778, mph: 0.44704}},
-        temp: {label: 'Temperatura', units: ['C', 'F', 'K']}
+    const hexInput = document.getElementById('hexInput'), picker = document.getElementById('colorPicker'),
+        swatches = document.getElementById('swatches');
+    const heroHex = document.getElementById('heroHex'), heroRgb = document.getElementById('heroRgb');
+
+    function normHex(v) {
+        v = v.trim().replace(/^#/, '');
+        if (v.length === 3) v = v.split('').map(c => c + c).join('');
+        return /^([0-9a-f]{6})$/i.test(v) ? '#' + v.toUpperCase() : null;
+    }
+
+    function hexToRgb(hex) {
+        const m = normHex(hex);
+        if (!m) return null;
+        const n = parseInt(m.slice(1), 16);
+        return {r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255};
+    }
+
+    function rgbToHsl(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max === min) {
+            h = s = 0
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                default:
+                    h = (r - g) / d + 4;
+            }
+            h /= 6;
+        }
+        return {h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100)};
+    }
+
+    function adjust(rgb, amt) {
+        return {
+            r: Math.max(0, Math.min(255, Math.round(rgb.r + amt))),
+            g: Math.max(0, Math.min(255, Math.round(rgb.g + amt))),
+            b: Math.max(0, Math.min(255, Math.round(rgb.b + amt)))
+        };
+    }
+
+    function rgbToHex({r, g, b}) {
+        return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+
+    function render() {
+        const hex = normHex(hexInput.value) || '#7C9CFF';
+        hexInput.value = hex;
+        picker.value = hex;
+        const rgb = hexToRgb(hex);
+        const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        heroHex.textContent = hex;
+        heroRgb.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        colorTitle.textContent = hex;
+        colorDesc.textContent = 'Gotowe do użycia w CSS, Tailwind config albo design tokenach.';
+        rgbOut.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        hslOut.textContent = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
+        cssVarOut.textContent = `--accent: ${hex};`;
+        swatches.innerHTML = [-80, -40, 0, 40, 80].map(a => {
+            const c = rgbToHex(adjust(rgb, a));
+            return `<div class="swatch"><div class="swatch-color" style="background:${c}"></div><div class="swatch-meta mono">${c}</div></div>`
+        }).join('');
+    }
+
+    applyBtn.onclick = render;
+    picker.oninput = () => {
+        hexInput.value = picker.value;
+        render();
     };
-
-    function fillCats() {
-        category.innerHTML = Object.entries(defs).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('');
-    }
-
-    function fillUnits() {
-        const def = defs[category.value];
-        if (Array.isArray(def.units)) {
-            fromUnit.innerHTML = toUnit.innerHTML = def.units.map(u => `<option value="${u}">${u}</option>`).join('');
-            toUnit.value = def.units[1] || def.units[0];
-        } else {
-            const opts = Object.keys(def.units).map(u => `<option value="${u}">${u}</option>`).join('');
-            fromUnit.innerHTML = toUnit.innerHTML = opts;
-            const keys = Object.keys(def.units);
-            toUnit.value = keys[1] || keys[0];
-        }
-        heroCategory.textContent = def.label;
-    }
-
-    function convert() {
-        const v = Number(valueIn.value) || 0, cat = category.value;
-        let res = 0;
-        if (cat === 'temp') {
-            if (fromUnit.value === 'C') res = toUnit.value === 'F' ? v * 9 / 5 + 32 : toUnit.value === 'K' ? v + 273.15 : v;
-            if (fromUnit.value === 'F') res = toUnit.value === 'C' ? (v - 32) * 5 / 9 : toUnit.value === 'K' ? (v - 32) * 5 / 9 + 273.15 : v;
-            if (fromUnit.value === 'K') res = toUnit.value === 'C' ? v - 273.15 : toUnit.value === 'F' ? (v - 273.15) * 9 / 5 + 32 : v;
-        } else {
-            const base = v * defs[cat].units[fromUnit.value];
-            res = base / defs[cat].units[toUnit.value];
-        }
-        outValue.textContent = `${formatNumber(res, 6)} ${toUnit.value}`;
-        outDesc.textContent = `${formatNumber(v, 6)} ${fromUnit.value} = ${formatNumber(res, 6)} ${toUnit.value}`;
-        heroValue.textContent = outValue.textContent;
-    }
-
-    fillCats();
-    fillUnits();
-    category.onchange = fillUnits;
-    convertBtn.onclick = convert;
-    convert();
+    copyCssBtn.onclick = () => navigator.clipboard.writeText(`--accent: ${hexInput.value};`);
+    render();
 </script>
 </body>
 </html>
