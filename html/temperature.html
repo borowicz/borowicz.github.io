@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Temperature Converter</title>
+    <style>
+        :root{
+            --bg-start:#09101d;
+            --bg-end:#0d1328;
+            --glow-1:rgba(110,168,254,.18);
+            --glow-2:rgba(126,240,194,.12);
+
+            --card:rgba(255,255,255,.06);
+            --border:rgba(255,255,255,.12);
+            --text:#eef2ff;
+            --muted:#aab4d6;
+            --accent:#6ea8fe;
+            --accent2:#7ef0c2;
+            --shadow:0 20px 50px rgba(0,0,0,.35);
+
+            --cold-bg:rgba(110,168,254,.14);
+            --cold-border:rgba(110,168,254,.35);
+            --cold-text:#dcebff;
+
+            --warm-bg:rgba(255,196,87,.14);
+            --warm-border:rgba(255,196,87,.35);
+            --warm-text:#ffe9b0;
+
+            --hot-bg:rgba(255,124,124,.14);
+            --hot-border:rgba(255,124,124,.35);
+            --hot-text:#ffd1d1;
+        }
+
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+
+        body{
+            margin:0;
+            min-height:100vh;
+            font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color:var(--text);
+            background:
+                    radial-gradient(circle at top left, var(--glow-1), transparent 28%),
+                    radial-gradient(circle at top right, var(--glow-2), transparent 28%),
+                    linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            transition:background .35s ease;
+        }
+
+        .container{
+            width:min(100% - 24px, 860px);
+            margin-inline:auto;
+            padding:28px 0 40px;
+        }
+
+        .hero-card,
+        .panel{
+            background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+            border:1px solid var(--border);
+            border-radius:24px;
+            box-shadow:var(--shadow);
+        }
+
+        .hero-card{
+            padding:24px;
+        }
+
+        .eyebrow{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 12px;
+            border-radius:999px;
+            background:rgba(126,240,194,.08);
+            border:1px solid rgba(126,240,194,.18);
+            color:var(--accent2);
+            font-size:.85rem;
+            margin-bottom:14px;
+        }
+
+        h1{
+            margin:0 0 10px;
+            font-size:clamp(1.9rem, 4vw, 3.1rem);
+            line-height:1.08;
+            letter-spacing:-.03em;
+        }
+
+        p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.6;
+        }
+
+        .grid{
+            margin-top:20px;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:16px;
+        }
+
+        .field{
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:18px;
+            padding:16px;
+        }
+
+        .field label{
+            display:block;
+            margin-bottom:10px;
+            font-size:.95rem;
+            font-weight:700;
+            color:#dbe6ff;
+        }
+
+        .field input{
+            width:100%;
+            min-height:50px;
+            border-radius:14px;
+            border:1px solid var(--border);
+            background:rgba(255,255,255,.05);
+            color:var(--text);
+            padding:0 14px;
+            font:inherit;
+            outline:none;
+        }
+
+        .field input:focus{
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px rgba(110,168,254,.15);
+        }
+
+        .toolbar{
+            margin-top:18px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+        }
+
+        .btn{
+            min-height:46px;
+            padding:0 16px;
+            border-radius:14px;
+            border:none;
+            cursor:pointer;
+            font:inherit;
+            font-weight:700;
+            color:white;
+            background:linear-gradient(135deg, var(--accent), #5a8df2);
+        }
+
+        .btn.secondary{
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12);
+            color:var(--text);
+        }
+
+        .panel{
+            margin-top:18px;
+            padding:20px;
+        }
+
+        .status-row{
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            gap:12px;
+            margin-bottom:14px;
+        }
+
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:.9rem;
+            font-weight:700;
+            border:1px solid transparent;
+        }
+
+        .badge.cold{
+            background:var(--cold-bg);
+            border-color:var(--cold-border);
+            color:var(--cold-text);
+        }
+
+        .badge.warm{
+            background:var(--warm-bg);
+            border-color:var(--warm-border);
+            color:var(--warm-text);
+        }
+
+        .badge.hot{
+            background:var(--hot-bg);
+            border-color:var(--hot-border);
+            color:var(--hot-text);
+        }
+
+        .scale{
+            width:100%;
+            height:14px;
+            border-radius:999px;
+            overflow:hidden;
+            background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .scale-bar{
+            height:100%;
+            width:0%;
+            transition:width .2s ease;
+            background:linear-gradient(90deg, #6ea8fe 0%, #ffd166 55%, #ff7c7c 100%);
+        }
+
+        .summary,
+        .formulas{
+            margin-top:14px;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:12px;
+        }
+
+        .mini{
+            padding:14px;
+            border-radius:16px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .mini strong{
+            display:block;
+            margin-bottom:6px;
+            color:#dbe6ff;
+        }
+
+        code{
+            display:inline-block;
+            padding:2px 6px;
+            border-radius:8px;
+            background:rgba(255,255,255,.07);
+            border:1px solid rgba(255,255,255,.1);
+            color:#eef2ff;
+            font-size:.92em;
+        }
+
+        .footer-note{
+            margin-top:14px;
+            font-size:.92rem;
+            color:var(--muted);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero-card">
+        <div class="eyebrow">🌡️ <a href="/" style="color: #ccc">static temperature tool</a></div>
+        <h1>Temperature Converter</h1>
+        <p>
+            Convert Celsius, Kelvin, Fahrenheit and Rankine instantly.
+            Includes formulas, a cold / warm / hot indicator and a dynamic background.
+        </p>
+
+        <div class="grid">
+            <div class="field">
+                <label for="celsius">Celsius (°C)</label>
+                <input id="celsius" type="number" step="any" placeholder="e.g. 25">
+            </div>
+
+            <div class="field">
+                <label for="kelvin">Kelvin (K)</label>
+                <input id="kelvin" type="number" step="any" placeholder="e.g. 298.15">
+            </div>
+
+            <div class="field">
+                <label for="fahrenheit">Fahrenheit (°F)</label>
+                <input id="fahrenheit" type="number" step="any" placeholder="e.g. 77">
+            </div>
+
+            <div class="field">
+                <label for="rankine">Rankine (°R)</label>
+                <input id="rankine" type="number" step="any" placeholder="e.g. 536.67">
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button type="button" class="btn" id="sampleBtn">Insert sample</button>
+            <button type="button" class="btn secondary" id="resetBtn">Reset</button>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="status-row">
+            <div id="tempState" class="badge cold">🧊 Cold</div>
+            <div id="stateText">Waiting for input.</div>
+        </div>
+
+        <div class="scale">
+            <div id="scaleBar" class="scale-bar"></div>
+        </div>
+
+        <div class="summary">
+            <div class="mini">
+                <strong>Reference</strong>
+                Water freezes at 0 °C / 32 °F / 273.15 K / 491.67 °R
+            </div>
+            <div class="mini">
+                <strong>Reference</strong>
+                Water boils at 100 °C / 212 °F / 373.15 K / 671.67 °R
+            </div>
+            <div class="mini">
+                <strong>Absolute zero</strong>
+                -273.15 °C / -459.67 °F / 0 K / 0 °R
+            </div>
+        </div>
+
+        <div class="formulas">
+            <div class="mini">
+                <strong>Formulas</strong>
+                <div><code>K = °C + 273.15</code></div>
+                <div><code>°F = (°C × 9/5) + 32</code></div>
+                <div><code>°R = (K × 9/5)</code></div>
+                <div><code>°R = °F + 459.67</code></div>
+            </div>
+            <div class="mini">
+                <strong>Reverse formulas</strong>
+                <div><code>°C = K - 273.15</code></div>
+                <div><code>°C = (°F - 32) × 5/9</code></div>
+                <div><code>K = °R × 5/9</code></div>
+                <div><code>°F = °R - 459.67</code></div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Note: Kelvin and Rankine cannot be physically lower than 0.
+        </div>
+    </section>
+
+    <div class="footer">
+        <p style="text-align: center; color: #1a2347">&copy; <a style="color: #cccc;" href="./../" title="borowicz.github.io">borowicz.github.io</a>
+    </div>
+</div>
+
+<script>
+    const body = document.body;
+    const celsiusInput = document.getElementById('celsius');
+    const kelvinInput = document.getElementById('kelvin');
+    const fahrenheitInput = document.getElementById('fahrenheit');
+    const rankineInput = document.getElementById('rankine');
+    const resetBtn = document.getElementById('resetBtn');
+    const sampleBtn = document.getElementById('sampleBtn');
+    const tempState = document.getElementById('tempState');
+    const stateText = document.getElementById('stateText');
+    const scaleBar = document.getElementById('scaleBar');
+
+    let isUpdating = false;
+
+    function round(value) {
+        return Number.parseFloat(value.toFixed(4)).toString();
+    }
+
+    function fromCelsius(c) {
+        return {
+            celsius: c,
+            kelvin: c + 273.15,
+            fahrenheit: (c * 9 / 5) + 32,
+            rankine: (c + 273.15) * 9 / 5
+        };
+    }
+
+    function fromKelvin(k) {
+        const c = k - 273.15;
+        return {
+            celsius: c,
+            kelvin: k,
+            fahrenheit: (c * 9 / 5) + 32,
+            rankine: k * 9 / 5
+        };
+    }
+
+    function fromFahrenheit(f) {
+        const c = (f - 32) * 5 / 9;
+        return {
+            celsius: c,
+            kelvin: c + 273.15,
+            fahrenheit: f,
+            rankine: f + 459.67
+        };
+    }
+
+    function fromRankine(r) {
+        const k = r * 5 / 9;
+        const c = k - 273.15;
+        return {
+            celsius: c,
+            kelvin: k,
+            fahrenheit: r - 459.67,
+            rankine: r
+        };
+    }
+
+    function setBackgroundByTemperature(celsius) {
+        if (celsius < 10) {
+            body.style.setProperty('--bg-start', '#07111f');
+            body.style.setProperty('--bg-end', '#0b1b36');
+            body.style.setProperty('--glow-1', 'rgba(110,168,254,.28)');
+            body.style.setProperty('--glow-2', 'rgba(90,170,255,.10)');
+        } else if (celsius < 30) {
+            body.style.setProperty('--bg-start', '#0d1328');
+            body.style.setProperty('--bg-end', '#1b1f36');
+            body.style.setProperty('--glow-1', 'rgba(255,196,87,.18)');
+            body.style.setProperty('--glow-2', 'rgba(126,240,194,.10)');
+        } else {
+            body.style.setProperty('--bg-start', '#1a0f16');
+            body.style.setProperty('--bg-end', '#35131a');
+            body.style.setProperty('--glow-1', 'rgba(255,124,124,.24)');
+            body.style.setProperty('--glow-2', 'rgba(255,170,90,.12)');
+        }
+    }
+
+    function setState(celsius) {
+        let label = '🧊 Cold';
+        let cls = 'cold';
+        let text = 'Cold range.';
+        if (celsius >= 20 && celsius < 35) {
+            label = '🌤️ Warm';
+            cls = 'warm';
+            text = 'Warm / comfortable range.';
+        } else if (celsius >= 35) {
+            label = '🔥 Hot';
+            cls = 'hot';
+            text = 'Hot range.';
+        }
+
+        tempState.className = `badge ${cls}`;
+        tempState.textContent = label;
+        stateText.textContent = text;
+
+        const min = -50;
+        const max = 100;
+        const normalized = Math.max(0, Math.min(100, ((celsius - min) / (max - min)) * 100));
+        scaleBar.style.width = `${normalized}%`;
+
+        setBackgroundByTemperature(celsius);
+    }
+
+    function clearAll() {
+        celsiusInput.value = '';
+        kelvinInput.value = '';
+        fahrenheitInput.value = '';
+        rankineInput.value = '';
+        tempState.className = 'badge cold';
+        tempState.textContent = '🧊 Cold';
+        stateText.textContent = 'Waiting for input.';
+        scaleBar.style.width = '0%';
+
+        body.style.setProperty('--bg-start', '#09101d');
+        body.style.setProperty('--bg-end', '#0d1328');
+        body.style.setProperty('--glow-1', 'rgba(110,168,254,.18)');
+        body.style.setProperty('--glow-2', 'rgba(126,240,194,.12)');
+    }
+
+    function applyValues(values, source) {
+        isUpdating = true;
+
+        if (source !== celsiusInput) celsiusInput.value = round(values.celsius);
+        if (source !== kelvinInput) kelvinInput.value = round(values.kelvin);
+        if (source !== fahrenheitInput) fahrenheitInput.value = round(values.fahrenheit);
+        if (source !== rankineInput) rankineInput.value = round(values.rankine);
+
+        isUpdating = false;
+        setState(values.celsius);
+    }
+
+    function validatePhysicalLimits(values, source) {
+        if (values.kelvin < 0 || values.rankine < 0) {
+            source.value = '';
+            return false;
+        }
+        return true;
+    }
+
+    celsiusInput.addEventListener('input', () => {
+        if (isUpdating) return;
+        if (celsiusInput.value === '') return clearAll();
+
+        const c = Number.parseFloat(celsiusInput.value);
+        if (Number.isNaN(c)) return;
+
+        const values = fromCelsius(c);
+        if (!validatePhysicalLimits(values, celsiusInput)) return clearAll();
+        applyValues(values, celsiusInput);
+    });
+
+    kelvinInput.addEventListener('input', () => {
+        if (isUpdating) return;
+        if (kelvinInput.value === '') return clearAll();
+
+        const k = Number.parseFloat(kelvinInput.value);
+        if (Number.isNaN(k) || k < 0) return clearAll();
+
+        const values = fromKelvin(k);
+        applyValues(values, kelvinInput);
+    });
+
+    fahrenheitInput.addEventListener('input', () => {
+        if (isUpdating) return;
+        if (fahrenheitInput.value === '') return clearAll();
+
+        const f = Number.parseFloat(fahrenheitInput.value);
+        if (Number.isNaN(f)) return;
+
+        const values = fromFahrenheit(f);
+        if (!validatePhysicalLimits(values, fahrenheitInput)) return clearAll();
+        applyValues(values, fahrenheitInput);
+    });
+
+    rankineInput.addEventListener('input', () => {
+        if (isUpdating) return;
+        if (rankineInput.value === '') return clearAll();
+
+        const r = Number.parseFloat(rankineInput.value);
+        if (Number.isNaN(r) || r < 0) return clearAll();
+
+        const values = fromRankine(r);
+        applyValues(values, rankineInput);
+    });
+
+    resetBtn.addEventListener('click', () => {
+        clearAll();
+        celsiusInput.focus();
+    });
+
+    sampleBtn.addEventListener('click', () => {
+        celsiusInput.value = '25';
+        applyValues(fromCelsius(25), celsiusInput);
+    });
+</script>
+</body>
+</html>
