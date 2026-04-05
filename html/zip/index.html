@@ -12,8 +12,8 @@
         body {
             font-family: Arial, sans-serif;
             max-width: none;
-            margin: 40px 0;
-            padding: 20px 0;
+            margin: 24px 0;
+            padding: 0;
             line-height: 1.4;
         }
 
@@ -22,7 +22,7 @@
         }
 
         .search-wrap {
-            width: 80vw;
+            width: min(1100px, calc(100vw - 32px));
             margin: 0 auto;
         }
 
@@ -90,8 +90,8 @@
         }
         .search-input-wrap {
             position: relative;
-            flex: 1;
-            min-width: 260px;
+            flex: 1 1 320px;
+            min-width: 0;
         }
 
         input, button, select {
@@ -164,7 +164,7 @@
         }
 
         table {
-            width: 80vw;
+            width: min(1100px, calc(100vw - 32px));
             border-collapse: collapse;
             margin: 8px auto 0;
             table-layout: fixed;
@@ -221,7 +221,7 @@
         }
 
         .single-map-frame {
-            width: 80vw;
+            width: min(1100px, calc(100vw - 32px));
             height: 420px;
             border: 0;
             border-radius: 8px;
@@ -234,7 +234,7 @@
             .search-wrap,
             table,
             .single-map-frame {
-                width: 94vw;
+                width: min(calc(100vw - 24px), 100%);
             }
 
             .action-row {
@@ -243,6 +243,106 @@
 
             .install-btn {
                 width: 100%;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body {
+                margin: 16px 0;
+            }
+
+            h1 {
+                margin-bottom: 16px;
+                font-size: 28px;
+                line-height: 1.15;
+            }
+
+            .search-wrap {
+                width: calc(100vw - 20px);
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .search-input-wrap,
+            select,
+            #searchBtn,
+            .action-row,
+            .install-btn {
+                width: 100%;
+            }
+
+            .search-input-wrap {
+                flex: 1 1 auto;
+            }
+
+            .action-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            input,
+            button,
+            select {
+                min-height: 44px;
+                font-size: 16px;
+            }
+
+            .status-row {
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+            }
+
+            table {
+                width: 980px;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .single-map-frame {
+                width: calc(100vw - 20px);
+                height: 280px;
+            }
+
+            .empty {
+                margin: 12px 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .search-wrap {
+                width: calc(100vw - 16px);
+            }
+
+            .single-map-frame {
+                width: calc(100vw - 16px);
+                height: 220px;
+            }
+
+            .install-help,
+            .hint,
+            .muted,
+            .status-row {
+                font-size: 12px;
             }
         }
     </style>
@@ -298,7 +398,7 @@
         </thead>
         <tbody id="resultsBody"></tbody>
     </table>
-    <p class="status" style="text-align: center; color: #1a2347">&copy; <a class="muted" href="./../../" title="borowicz.github.io">borowicz.github.io</a>
+    <p class="status" style="text-align: center; color: #1a2347">&copy; <a class="muted" href="./../../" title="borowicz.github.io">borowicz.github.io</a></p>
 </div>
 
 <div id="singleMapWrap" class="single-map-wrap">

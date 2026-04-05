@@ -8,9 +8,10 @@
         body {
             font-family: Arial, sans-serif;
             max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: 24px auto;
+            padding: 16px;
             line-height: 1.4;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -20,20 +21,21 @@
         .search-wrap {
             position: relative;
             max-width: 700px;
+            width: 100%;
         }
 
         .autocomplete-list {
             position: absolute;
-            top: 46px;
+            top: calc(100% - 12px);
             left: 0;
-            right: 86px;
+            right: 0;
             background: #fff;
             border: 1px solid #ccc;
-            border-top: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             max-height: 260px;
             overflow-y: auto;
             z-index: 1000;
+            border-radius: 0 0 10px 10px;
         }
 
         .autocomplete-item {
@@ -67,11 +69,12 @@
         input, button {
             padding: 10px 12px;
             font-size: 16px;
+            box-sizing: border-box;
         }
 
         input {
-            flex: 1;
-            min-width: 260px;
+            flex: 1 1 260px;
+            min-width: 0;
         }
 
         button {
@@ -85,6 +88,8 @@
 
         .table-wrap {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
 
         table {
@@ -113,6 +118,56 @@
             border: 1px dashed #ccc;
             color: #666;
             margin-top: 12px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                margin: 16px auto;
+                padding: 10px;
+            }
+
+            h1 {
+                margin-bottom: 16px;
+                font-size: 28px;
+                line-height: 1.15;
+            }
+
+            .search-wrap {
+                max-width: none;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            input,
+            button {
+                width: 100%;
+                min-height: 44px;
+            }
+
+            .autocomplete-list {
+                top: calc(100% - 8px);
+                right: 0;
+            }
+
+            th,
+            td {
+                padding: 8px;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+            .muted {
+                margin: 8px 0 12px;
+                font-size: 14px;
+            }
+
+            .empty {
+                padding: 14px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -147,7 +202,7 @@
         </thead>
         <tbody id="resultsBody"></tbody>
     </table>
-    <p class="status" style="text-align: center; color: #1a2347">&copy; <a class="muted" href="./../../" title="borowicz.github.io">borowicz.github.io</a>
+    <p class="status" style="text-align: center; color: #1a2347">&copy; <a class="muted" href="./../../" title="borowicz.github.io">borowicz.github.io</a></p>
 </div>
 
 <div id="emptyState" class="empty" style="display:none;">
