@@ -1,17 +1,14 @@
-
-
 <!doctype html>
 <html lang="pl" data-lang="pl">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Fullscreen Calendar</title>
+    <title>Kalendarz pełnoekranowy</title>
     <style>
         :root {
             --bg: #0b1020;
             --bg-elev: rgba(18, 24, 46, 0.92);
             --panel: rgba(255, 255, 255, 0.06);
-            --panel-strong: rgba(255, 255, 255, 0.1);
             --border: rgba(255, 255, 255, 0.12);
             --text: #edf2ff;
             --muted: #9aa6c7;
@@ -25,31 +22,21 @@
             --control-h: 44px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             min-height: 100%;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             color: var(--text);
             background:
-                radial-gradient(circle at top left, rgba(124, 156, 255, 0.22), transparent 32%),
-                radial-gradient(circle at top right, rgba(156, 124, 255, 0.18), transparent 30%),
-                linear-gradient(180deg, #0b1020 0%, #0d1328 100%);
+                    radial-gradient(circle at top left, rgba(124, 156, 255, 0.22), transparent 32%),
+                    radial-gradient(circle at top right, rgba(156, 124, 255, 0.18), transparent 30%),
+                    linear-gradient(180deg, #0b1020 0%, #0d1328 100%);
         }
 
-        body {
-            min-height: 100vh;
-        }
-
-        button,
-        select,
-        input {
-            font: inherit;
-        }
+        body { min-height: 100vh; }
+        button, select, input { font: inherit; }
 
         .app {
             min-height: 100vh;
@@ -89,9 +76,7 @@
             font-size: 1.2rem;
         }
 
-        .brand-copy {
-            min-width: 0;
-        }
+        .brand-copy { min-width: 0; }
 
         .eyebrow {
             margin: 0;
@@ -126,9 +111,7 @@
             border: 1px solid var(--border);
         }
 
-        .btn,
-        .view-btn,
-        .chip-btn {
+        .btn, .view-btn, .chip-btn {
             border: 0;
             color: var(--text);
             background: transparent;
@@ -137,19 +120,13 @@
             transition: 0.2s ease;
         }
 
-        .btn {
-            padding: 0.72rem 1rem;
-        }
+        .btn { padding: 0.72rem 1rem; }
 
-        .btn:hover,
-        .view-btn:hover,
-        .chip-btn:hover {
+        .btn:hover, .view-btn:hover, .chip-btn:hover {
             background: rgba(255, 255, 255, 0.08);
         }
 
-        .btn.primary,
-        .view-btn.active,
-        .chip-btn.active {
+        .btn.primary, .view-btn.active, .chip-btn.active {
             background: linear-gradient(135deg, rgba(124, 156, 255, 0.95), rgba(156, 124, 255, 0.95));
             color: white;
             box-shadow: 0 10px 28px rgba(124, 156, 255, 0.28);
@@ -196,9 +173,7 @@
             font-weight: 600;
         }
 
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+        .lang-btn:hover { background: rgba(255, 255, 255, 0.08); }
 
         .lang-btn.active {
             background: linear-gradient(135deg, rgba(124, 156, 255, 0.95), rgba(156, 124, 255, 0.95));
@@ -214,8 +189,7 @@
             padding: 1rem;
         }
 
-        .sidebar,
-        .content-panel {
+        .sidebar, .content-panel {
             border: 1px solid var(--border);
             background: var(--bg-elev);
             backdrop-filter: blur(16px);
@@ -224,14 +198,8 @@
             overflow: hidden;
         }
 
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-section {
-            padding: 1.1rem 1.1rem 0;
-        }
+        .sidebar { display: flex; flex-direction: column; }
+        .sidebar-section { padding: 1.1rem 1.1rem 0; }
 
         .month-card {
             margin: 1.1rem;
@@ -242,19 +210,9 @@
             border: 1px solid var(--border);
         }
 
-        .month-card h2,
-        .month-card p {
-            margin: 0;
-        }
-
-        .month-card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .month-card p {
-            color: var(--muted);
-        }
+        .month-card h2, .month-card p { margin: 0; }
+        .month-card h2 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+        .month-card p { color: var(--muted); }
 
         .mini-grid {
             display: grid;
@@ -263,8 +221,7 @@
             padding: 0 1.1rem 1.2rem;
         }
 
-        .mini-dow,
-        .mini-day {
+        .mini-dow, .mini-day {
             aspect-ratio: 1;
             border-radius: 12px;
             display: grid;
@@ -272,19 +229,14 @@
             font-size: 0.78rem;
         }
 
-        .mini-dow {
-            color: var(--muted);
-        }
+        .mini-dow { color: var(--muted); }
 
         .mini-day {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid transparent;
         }
 
-        .mini-day.muted {
-            color: rgba(255, 255, 255, 0.35);
-        }
-
+        .mini-day.muted { color: rgba(255, 255, 255, 0.35); }
         .mini-day.today {
             background: var(--today);
             border-color: rgba(124, 156, 255, 0.65);
@@ -298,23 +250,16 @@
             box-shadow: inset 0 0 0 1px rgba(255, 209, 102, 0.65);
         }
 
-        .day-cell.has-holiday .day-number {
-            background: rgba(255, 209, 102, 0.14);
-        }
+        .day-cell.has-holiday .day-number { background: rgba(255, 209, 102, 0.14); }
 
         .day-cell.today.has-holiday .day-number {
             background: linear-gradient(135deg, var(--accent), var(--accent-2));
             box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.55);
         }
 
-        .quick-jump,
-        .legend {
-            padding: 0 1.1rem 1.1rem;
-        }
+        .quick-jump, .legend { padding: 0 1.1rem 1.1rem; }
 
-        .quick-jump label,
-        .legend h3,
-        .agenda h3 {
+        .quick-jump label, .legend h3, .agenda h3 {
             display: block;
             margin: 0 0 0.6rem;
             font-size: 0.86rem;
@@ -333,14 +278,9 @@
             outline: none;
         }
 
-        .legend-list,
-        .agenda-list {
-            display: grid;
-            gap: 0.65rem;
-        }
+        .legend-list, .agenda-list { display: grid; gap: 0.65rem; }
 
-        .legend-item,
-        .agenda-item {
+        .legend-item, .agenda-item {
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.04);
             border-radius: 16px;
@@ -362,19 +302,8 @@
             flex: 0 0 auto;
         }
 
-        .agenda-item strong,
-        .legend-item strong {
-            display: block;
-        }
-
-        .agenda-item small,
-        .legend-item small,
-        .list-card small,
-        .year-card small,
-        .month-event small,
-        .week-event small {
-            color: var(--muted);
-        }
+        .agenda-item strong, .legend-item strong { display: block; }
+        .agenda-item small, .legend-item small, .list-card small, .year-card small, .week-event small { color: var(--muted); }
 
         .content-panel {
             display: flex;
@@ -391,10 +320,7 @@
             gap: 1rem;
         }
 
-        .nav-buttons {
-            display: inline-flex;
-            gap: 0.5rem;
-        }
+        .nav-buttons { display: inline-flex; gap: 0.5rem; }
 
         .icon-btn {
             width: 44px;
@@ -407,23 +333,10 @@
             transition: 0.2s ease;
         }
 
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.09);
-        }
-
-        .title-wrap h2,
-        .title-wrap p {
-            margin: 0;
-        }
-
-        .title-wrap h2 {
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
-        }
-
-        .title-wrap p {
-            color: var(--muted);
-            margin-top: 0.25rem;
-        }
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.09); }
+        .title-wrap h2, .title-wrap p { margin: 0; }
+        .title-wrap h2 { font-size: clamp(1.2rem, 2vw, 1.8rem); }
+        .title-wrap p { color: var(--muted); margin-top: 0.25rem; }
 
         .view-root {
             min-height: 0;
@@ -431,23 +344,11 @@
             overflow: auto;
         }
 
-        .calendar-grid {
-            height: 100%;
-            display: grid;
-        }
+        .calendar-grid { height: 100%; display: grid; }
+        .month-view { grid-template-rows: auto 1fr; }
+        .week-view { display: grid; grid-template-rows: auto 1fr; min-height: 100%; }
 
-        .month-view {
-            grid-template-rows: auto 1fr;
-        }
-
-        .dow-row,
-        .week-row,
-        .month-grid,
-        .week-grid,
-        .year-grid,
-        .list-grid,
-        .century-grid,
-        .decade-grid {
+        .dow-row, .week-row, .month-grid, .week-grid, .year-grid, .century-grid, .decade-grid {
             display: grid;
         }
 
@@ -470,9 +371,7 @@
             border-right: 1px solid var(--border);
         }
 
-        .dow-cell:last-child {
-            border-right: 0;
-        }
+        .dow-cell:last-child { border-right: 0; }
 
         .month-grid {
             grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -515,21 +414,10 @@
             font-weight: 700;
         }
 
-        .day-cell.today .day-number {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        }
+        .day-cell.today .day-number { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+        .event-list { display: grid; gap: 0.45rem; min-width: 0; }
 
-        .event-list {
-            display: grid;
-            gap: 0.45rem;
-            min-width: 0;
-        }
-
-        .event-pill,
-        .month-event,
-        .week-event,
-        .year-card,
-        .list-card {
+        .event-pill, .week-event, .year-card, .list-card {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             border-radius: 14px;
@@ -548,9 +436,7 @@
             text-overflow: ellipsis;
         }
 
-        .event-pill.holiday-pill,
-        .week-holiday-pill,
-        .holiday-summary-item {
+        .event-pill.holiday-pill, .week-holiday-pill, .holiday-summary-item {
             border-color: rgba(255, 209, 102, 0.35);
             background: rgba(255, 209, 102, 0.12);
         }
@@ -577,10 +463,7 @@
             color: var(--text);
         }
 
-        .holiday-summary-list {
-            display: grid;
-            gap: 0.6rem;
-        }
+        .holiday-summary-list { display: grid; gap: 0.6rem; }
 
         .holiday-summary-item {
             padding: 0.75rem 0.9rem;
@@ -588,20 +471,8 @@
             border-radius: 14px;
         }
 
-        .holiday-summary-item strong {
-            display: block;
-            margin-bottom: 0.2rem;
-        }
-
-        .holiday-summary-item small {
-            color: var(--muted);
-        }
-
-        .week-view {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            min-height: 100%;
-        }
+        .holiday-summary-item strong { display: block; margin-bottom: 0.2rem; }
+        .holiday-summary-item small { color: var(--muted); }
 
         .week-row {
             grid-template-columns: 88px repeat(7, minmax(0, 1fr));
@@ -617,17 +488,14 @@
             min-height: 72px;
         }
 
-        .week-row .dow-cell:first-child {
-            color: transparent;
-        }
+        .week-row .dow-cell:first-child { color: transparent; }
 
         .week-grid {
             grid-template-columns: 88px repeat(7, minmax(0, 1fr));
             grid-auto-rows: 88px;
         }
 
-        .time-cell,
-        .week-cell {
+        .time-cell, .week-cell {
             border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             padding: 0.65rem;
@@ -639,9 +507,7 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .week-cell.today {
-            background: rgba(124, 156, 255, 0.05);
-        }
+        .week-cell.today { background: rgba(124, 156, 255, 0.05); }
 
         .week-event {
             padding: 0.5rem 0.6rem;
@@ -649,12 +515,7 @@
             margin-bottom: 0.45rem;
         }
 
-        .year-view,
-        .list-view,
-        .century-view,
-        .decade-view {
-            padding: 1rem;
-        }
+        .year-view, .century-view, .decade-view { padding: 1rem; }
 
         .year-grid {
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -687,54 +548,13 @@
             outline: 1px solid rgba(124, 156, 255, 0.6);
         }
 
-        .list-grid,
-        .century-grid,
-        .decade-grid {
-            gap: 1rem;
-        }
-
-        .list-card {
-            padding: 1rem;
-            display: grid;
-            gap: 0.8rem;
-        }
-
-        .list-card-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .chip-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.45rem;
-        }
+        .century-grid, .decade-grid { gap: 1rem; }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 
         .chip-btn {
             padding: 0.55rem 0.8rem;
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.04);
-        }
-
-        .metric-row {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.7rem;
-        }
-
-        .metric {
-            padding: 0.85rem;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-        }
-
-        .metric strong {
-            display: block;
-            font-size: 1.15rem;
-            margin-top: 0.35rem;
         }
 
         .period-card {
@@ -754,15 +574,8 @@
             align-items: baseline;
         }
 
-        .period-title {
-            margin: 0;
-            font-size: 1.15rem;
-        }
-
-        .period-subtitle {
-            margin: 0.25rem 0 0;
-            color: var(--muted);
-        }
+        .period-title { margin: 0; font-size: 1.15rem; }
+        .period-subtitle { margin: 0.25rem 0 0; color: var(--muted); }
 
         .period-grid {
             display: grid;
@@ -770,96 +583,41 @@
             gap: 0.75rem;
         }
 
-        .empty-state {
-            padding: 2rem;
-            color: var(--muted);
+        .list-card {
+            padding: 1rem;
+            display: grid;
+            gap: 0.8rem;
         }
 
         @media (max-width: 1180px) {
-            .shell {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                order: 2;
-            }
-
-            .content-panel {
-                order: 1;
-                min-height: 70vh;
-            }
-
-            .year-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
+            .shell { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
+            .content-panel { order: 1; min-height: 70vh; }
+            .year-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
 
         @media (max-width: 900px) {
-            .topbar {
-                grid-template-columns: 1fr;
-                justify-items: stretch;
-            }
-
-            .toolbar,
-            .actions {
-                justify-content: flex-start;
-            }
-
-            .content-header {
-                grid-template-columns: 1fr;
-                align-items: start;
-            }
-
-            .month-grid {
-                grid-auto-rows: minmax(120px, 1fr);
-            }
-
-            .year-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            .topbar { grid-template-columns: 1fr; justify-items: stretch; }
+            .toolbar, .actions { justify-content: flex-start; }
+            .content-header { grid-template-columns: 1fr; align-items: start; }
+            .month-grid { grid-auto-rows: minmax(120px, 1fr); }
+            .year-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 720px) {
-            .shell {
-                padding: 0.75rem;
-            }
-
-            .toolbar {
-                justify-content: flex-start;
-            }
-
+            .shell { padding: 0.75rem; }
+            .toolbar { justify-content: flex-start; }
             .toolbar-group {
                 width: 100%;
                 justify-content: flex-start;
                 overflow-x: auto;
                 scrollbar-width: none;
             }
-
-            .toolbar-group::-webkit-scrollbar {
-                display: none;
-            }
-
-            .view-btn {
-                white-space: nowrap;
-            }
-
-            .month-grid,
-            .dow-row {
-                min-width: 760px;
-            }
-
-            .week-row,
-            .week-grid {
-                min-width: 920px;
-            }
-
-            .year-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .metric-row {
-                grid-template-columns: 1fr;
-            }
+            .toolbar-group::-webkit-scrollbar { display: none; }
+            .view-btn { white-space: nowrap; }
+            .month-grid, .dow-row { min-width: 760px; }
+            .week-row, .week-grid { min-width: 920px; }
+            .year-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -955,7 +713,7 @@
 </div>
 
 <script>
-    (() => {
+    (function() {
         const i18n = {
             pl: {
                 htmlLang: 'pl',
@@ -975,16 +733,9 @@
                 holidayToggle: 'Święta w widoku',
                 holidaySummaryTitle: 'Wszystkie święta w aktualnym widoku',
                 noHolidaysInView: 'Brak świąt w aktualnym widoku.',
-                noEvents: '',
+                noEvents: 'Brak wydarzeń',
                 noEventsInRange: 'W tym zakresie nic nie zaplanowano.',
-                noEntries: '',
-                monday: 'Poniedziałek',
-                tuesday: 'Wtorek',
-                wednesday: 'Środa',
-                thursday: 'Czwartek',
-                friday: 'Piątek',
-                saturday: 'Sobota',
-                sunday: 'Niedziela',
+                noEntries: 'Bez wpisów',
                 yearWord: 'Rok',
                 standardYear: 'Rok standardowy',
                 leapYear: 'Rok przestępny',
@@ -997,19 +748,15 @@
                 days366: '366 dni',
                 grid: 'Siatka',
                 monthChip: 'Miesiąc',
-                review: 'Przegląd',
-                list: 'Lista',
-                hours: 'Godziny',
-                plan: 'Plan',
                 fullMonthView: 'Pełnoekranowy widok miesiąca.',
                 weekHoursView: 'Widok godzinowy dla siedmiu dni.',
                 yearAllMonths: '12 miesięcy widocznych jednocześnie.',
                 decadeListDescription: 'Lista lat w ramach jednej dekady.',
                 centuryListDescription: 'Lista dekad w układzie pełnoekranowym.',
-                monthNames: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
-                monthNamesGenitive: ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'],
-                dayNames: ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nd'],
-                fullDayNames: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'],
+                monthNames: ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],
+                monthNamesGenitive: ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'],
+                dayNames: ['Pon','Wt','Śr','Czw','Pt','Sob','Nd'],
+                fullDayNames: ['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'],
                 views: [
                     { key: 'century', label: 'Stulecie' },
                     { key: 'decade', label: 'Dekada' },
@@ -1036,16 +783,9 @@
                 holidayToggle: 'Holidays in view',
                 holidaySummaryTitle: 'All holidays in the current view',
                 noHolidaysInView: 'No holidays in the current view.',
-                noEvents: '',
+                noEvents: 'No events',
                 noEventsInRange: 'Nothing is scheduled in this range.',
-                noEntries: '',
-                monday: 'Monday',
-                tuesday: 'Tuesday',
-                wednesday: 'Wednesday',
-                thursday: 'Thursday',
-                friday: 'Friday',
-                saturday: 'Saturday',
-                sunday: 'Sunday',
+                noEntries: 'No entries',
                 yearWord: 'Year',
                 standardYear: 'Standard year',
                 leapYear: 'Leap year',
@@ -1058,19 +798,15 @@
                 days366: '366 days',
                 grid: 'Grid',
                 monthChip: 'Month',
-                review: 'Overview',
-                list: 'List',
-                hours: 'Hours',
-                plan: 'Plan',
                 fullMonthView: 'Fullscreen month view.',
                 weekHoursView: 'Hourly view for seven days.',
                 yearAllMonths: 'All 12 months visible at once.',
                 decadeListDescription: 'List of years within one decade.',
                 centuryListDescription: 'List of decades in a fullscreen layout.',
-                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                monthNamesGenitive: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                dayNames: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                fullDayNames: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+                monthNamesGenitive: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+                dayNames: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                fullDayNames: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
                 views: [
                     { key: 'century', label: 'Century' },
                     { key: 'decade', label: 'Decade' },
@@ -1097,16 +833,9 @@
                 holidayToggle: 'Feiertage in Ansicht',
                 holidaySummaryTitle: 'Alle Feiertage in der aktuellen Ansicht',
                 noHolidaysInView: 'Keine Feiertage in der aktuellen Ansicht.',
-                noEvents: '',
+                noEvents: 'Keine Ereignisse',
                 noEventsInRange: 'In diesem Bereich ist nichts geplant.',
-                noEntries: '',
-                monday: 'Montag',
-                tuesday: 'Dienstag',
-                wednesday: 'Mittwoch',
-                thursday: 'Donnerstag',
-                friday: 'Freitag',
-                saturday: 'Samstag',
-                sunday: 'Sonntag',
+                noEntries: 'Keine Einträge',
                 yearWord: 'Jahr',
                 standardYear: 'Normales Jahr',
                 leapYear: 'Schaltjahr',
@@ -1119,19 +848,15 @@
                 days366: '366 Tage',
                 grid: 'Raster',
                 monthChip: 'Monat',
-                review: 'Übersicht',
-                list: 'Liste',
-                hours: 'Stunden',
-                plan: 'Plan',
                 fullMonthView: 'Vollbild-Monatsansicht.',
                 weekHoursView: 'Stundenansicht für sieben Tage.',
                 yearAllMonths: 'Alle 12 Monate gleichzeitig sichtbar.',
                 decadeListDescription: 'Liste der Jahre innerhalb eines Jahrzehnts.',
                 centuryListDescription: 'Liste der Jahrzehnte im Vollbildlayout.',
-                monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-                monthNamesGenitive: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-                dayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
-                fullDayNames: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+                monthNames: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+                monthNamesGenitive: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+                dayNames: ['Mo','Di','Mi','Do','Fr','Sa','So'],
+                fullDayNames: ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
                 views: [
                     { key: 'century', label: 'Jahrhundert' },
                     { key: 'decade', label: 'Jahrzehnt' },
@@ -1142,184 +867,72 @@
             }
         };
 
-        let currentLang = 'pl';
-
-        function t(key) {
-            return i18n[currentLang][key];
-        }
-
-        function localizeHolidayName(name) {
-            return holidayNameTranslations[name]?.[currentLang] || name;
-        }
-
-        function monthNames() {
-            return t('monthNames');
-        }
-
-        function monthNamesGenitive() {
-            return t('monthNamesGenitive');
-        }
-
-        function dayNames() {
-            return t('dayNames');
-        }
-
-        function fullDayNames() {
-            return t('fullDayNames');
-        }
-
-        function views() {
-            return t('views');
-        }
-
         const holidayCalendarData = {
             PL: [
                 { date: '20260101', name: 'Neujahrstag' },
-                { date: '20261224', name: 'Heiligabend' },
                 { date: '20260106', name: 'Heilige Drei Könige' },
-                { date: '20260801', name: 'Warschauer-Aufstand-Tag' },
                 { date: '20260405', name: 'Ostersonntag' },
-                { date: '20260121', name: 'Großmuttertag' },
                 { date: '20260406', name: 'Ostermontag' },
-                { date: '20260122', name: 'Großvatertag' },
                 { date: '20260501', name: 'Tag der Arbeit' },
                 { date: '20260503', name: 'Nationalfeiertag Polen' },
-                { date: '20260524', name: 'Pfingstsonntag' },
                 { date: '20260604', name: 'Fronleichnam' },
-                { date: '20260526', name: 'Muttertag' },
                 { date: '20260815', name: 'Mariä Himmelfahrt' },
                 { date: '20261101', name: 'Allerheiligen' },
                 { date: '20261111', name: 'Unabhängigkeitstag' },
+                { date: '20261224', name: 'Heiligabend' },
                 { date: '20261225', name: 'Weihnachten' },
                 { date: '20261226', name: '2. Weihnachtsfeiertag' },
                 { date: '20261231', name: 'Silvester' },
-                { date: '20260508', name: 'Tag des Sieges' },
                 { date: '20270101', name: 'Neujahrstag' },
-                { date: '20271224', name: 'Heiligabend' },
                 { date: '20270106', name: 'Heilige Drei Könige' },
-                { date: '20270801', name: 'Warschauer-Aufstand-Tag' },
                 { date: '20270328', name: 'Ostersonntag' },
-                { date: '20270121', name: 'Großmuttertag' },
                 { date: '20270329', name: 'Ostermontag' },
-                { date: '20270122', name: 'Großvatertag' },
                 { date: '20270501', name: 'Tag der Arbeit' },
                 { date: '20270503', name: 'Nationalfeiertag Polen' },
-                { date: '20270516', name: 'Pfingstsonntag' },
                 { date: '20270527', name: 'Fronleichnam' },
-                { date: '20270526', name: 'Muttertag' },
                 { date: '20270815', name: 'Mariä Himmelfahrt' },
                 { date: '20271101', name: 'Allerheiligen' },
                 { date: '20271111', name: 'Unabhängigkeitstag' },
+                { date: '20271224', name: 'Heiligabend' },
                 { date: '20271225', name: 'Weihnachten' },
                 { date: '20271226', name: '2. Weihnachtsfeiertag' },
-                { date: '20271231', name: 'Silvester' },
-                { date: '20270508', name: 'Tag des Sieges' }
+                { date: '20271231', name: 'Silvester' }
             ],
             DE: [
                 { date: '20260101', name: 'Neujahr' },
-                { date: '20261003', name: 'Tag der Deutschen Einheit' },
-                { date: '20261231', name: 'Silvester' },
-                { date: '20260319', name: 'Josefstag' },
                 { date: '20260106', name: 'Heilige Drei Könige' },
-                { date: '20261004', name: 'Erntedankfest' },
-                { date: '20260329', name: 'Palmsonntag' },
-                { date: '20260514', name: 'Vatertag' },
-                { date: '20260214', name: 'Valentinstag' },
-                { date: '20261031', name: 'Halloween' },
-                { date: '20260402', name: 'Gründonnerstag' },
-                { date: '20260308', name: 'Internationaler Frauentag' },
-                { date: '20260216', name: 'Rosenmontag' },
-                { date: '20261031', name: 'Reformationstag' },
-                { date: '20260404', name: 'Karsamstag' },
-                { date: '20260217', name: 'Fastnacht' },
-                { date: '20261101', name: 'Allerheiligen' },
-                { date: '20260212', name: 'Weiberfastnacht' },
-                { date: '20260601', name: 'Internationaler Kindertag' },
-                { date: '20260218', name: 'Aschermittwoch' },
-                { date: '20261115', name: 'Volkstrauertag' },
-                { date: '20261102', name: 'Allerseelen' },
                 { date: '20260403', name: 'Karfreitag' },
-                { date: '20261118', name: 'Buß- und Bettag' },
-                { date: '20260430', name: 'Walpurgisnacht' },
                 { date: '20260405', name: 'Ostersonntag' },
-                { date: '20261122', name: 'Totensonntag' },
-                { date: '20261111', name: 'Martinstag' },
                 { date: '20260406', name: 'Ostermontag' },
-                { date: '20261129', name: '1. Advent' },
-                { date: '20261204', name: 'Barbaratag' },
                 { date: '20260501', name: 'Tag der Arbeit' },
-                { date: '20261206', name: '2. Advent' },
-                { date: '20260617', name: '17. Juni 1953' },
-                { date: '20260510', name: 'Muttertag' },
-                { date: '20261206', name: 'Nikolaus' },
-                { date: '20260920', name: 'Weltkindertag' },
                 { date: '20260514', name: 'Christi Himmelfahrt' },
-                { date: '20261213', name: '3. Advent' },
-                { date: '20260214', name: 'Fastnachtssamstag' },
-                { date: '20260524', name: 'Pfingstsonntag' },
-                { date: '20261220', name: '4. Advent' },
-                { date: '20260215', name: 'Fastnachtssonntag' },
                 { date: '20260525', name: 'Pfingstmontag' },
-                { date: '20261224', name: 'Heiligabend' },
-                { date: '20260808', name: 'Augsburger Friedensfest' },
                 { date: '20260604', name: 'Fronleichnam' },
-                { date: '20261225', name: '1. Weihnachtsfeiertag' },
-                { date: '20260629', name: 'Peter und Paul' },
                 { date: '20260815', name: 'Mariä Himmelfahrt' },
+                { date: '20261003', name: 'Tag der Deutschen Einheit' },
+                { date: '20261031', name: 'Reformationstag' },
+                { date: '20261101', name: 'Allerheiligen' },
+                { date: '20261224', name: 'Heiligabend' },
+                { date: '20261225', name: '1. Weihnachtsfeiertag' },
                 { date: '20261226', name: '2. Weihnachtsfeiertag' },
-                { date: '20260624', name: 'Johannistag' },
+                { date: '20261231', name: 'Silvester' },
                 { date: '20270101', name: 'Neujahr' },
-                { date: '20271003', name: 'Tag der Deutschen Einheit' },
-                { date: '20271231', name: 'Silvester' },
-                { date: '20270319', name: 'Josefstag' },
                 { date: '20270106', name: 'Heilige Drei Könige' },
-                { date: '20271003', name: 'Erntedankfest' },
-                { date: '20270321', name: 'Palmsonntag' },
-                { date: '20270506', name: 'Vatertag' },
-                { date: '20270214', name: 'Valentinstag' },
-                { date: '20271031', name: 'Halloween' },
-                { date: '20270325', name: 'Gründonnerstag' },
-                { date: '20270308', name: 'Internationaler Frauentag' },
-                { date: '20270208', name: 'Rosenmontag' },
-                { date: '20271031', name: 'Reformationstag' },
-                { date: '20270327', name: 'Karsamstag' },
-                { date: '20270209', name: 'Fastnacht' },
-                { date: '20271101', name: 'Allerheiligen' },
-                { date: '20270204', name: 'Weiberfastnacht' },
-                { date: '20270601', name: 'Internationaler Kindertag' },
-                { date: '20270210', name: 'Aschermittwoch' },
-                { date: '20271114', name: 'Volkstrauertag' },
-                { date: '20271102', name: 'Allerseelen' },
                 { date: '20270326', name: 'Karfreitag' },
-                { date: '20271117', name: 'Buß- und Bettag' },
-                { date: '20270430', name: 'Walpurgisnacht' },
                 { date: '20270328', name: 'Ostersonntag' },
-                { date: '20271121', name: 'Totensonntag' },
-                { date: '20271111', name: 'Martinstag' },
                 { date: '20270329', name: 'Ostermontag' },
-                { date: '20271128', name: '1. Advent' },
-                { date: '20271204', name: 'Barbaratag' },
                 { date: '20270501', name: 'Tag der Arbeit' },
-                { date: '20271205', name: '2. Advent' },
-                { date: '20270617', name: '17. Juni 1953' },
-                { date: '20270509', name: 'Muttertag' },
-                { date: '20271206', name: 'Nikolaus' },
-                { date: '20270920', name: 'Weltkindertag' },
                 { date: '20270506', name: 'Christi Himmelfahrt' },
-                { date: '20271212', name: '3. Advent' },
-                { date: '20270206', name: 'Fastnachtssamstag' },
-                { date: '20270516', name: 'Pfingstsonntag' },
-                { date: '20271219', name: '4. Advent' },
-                { date: '20270207', name: 'Fastnachtssonntag' },
                 { date: '20270517', name: 'Pfingstmontag' },
-                { date: '20271224', name: 'Heiligabend' },
-                { date: '20270808', name: 'Augsburger Friedensfest' },
                 { date: '20270527', name: 'Fronleichnam' },
-                { date: '20271225', name: '1. Weihnachtsfeiertag' },
-                { date: '20270629', name: 'Peter und Paul' },
                 { date: '20270815', name: 'Mariä Himmelfahrt' },
+                { date: '20271003', name: 'Tag der Deutschen Einheit' },
+                { date: '20271031', name: 'Reformationstag' },
+                { date: '20271101', name: 'Allerheiligen' },
+                { date: '20271224', name: 'Heiligabend' },
+                { date: '20271225', name: '1. Weihnachtsfeiertag' },
                 { date: '20271226', name: '2. Weihnachtsfeiertag' },
-                { date: '20270624', name: 'Johannistag' }
+                { date: '20271231', name: 'Silvester' }
             ],
             US: [
                 { date: '20260101', name: "New Year's Day" },
@@ -1347,71 +960,64 @@
             ]
         };
 
-        const holidaySourceLabels = {
-            PL: 'PL',
-            DE: 'DE',
-            US: 'US'
-        };
+        const holidaySourceLabels = { PL: 'PL', DE: 'DE', US: 'US' };
 
         const holidayNameTranslations = {
             'Neujahrstag': { pl: 'Nowy Rok', en: "New Year's Day", de: 'Neujahrstag' },
+            'Neujahr': { pl: 'Nowy Rok', en: "New Year's Day", de: 'Neujahr' },
             'Heiligabend': { pl: 'Wigilia', en: 'Christmas Eve', de: 'Heiligabend' },
             'Heilige Drei Könige': { pl: 'Święto Trzech Króli', en: 'Epiphany', de: 'Heilige Drei Könige' },
-            'Warschauer-Aufstand-Tag': { pl: 'Dzień Powstania Warszawskiego', en: 'Warsaw Uprising Remembrance Day', de: 'Warschauer-Aufstand-Tag' },
             'Ostersonntag': { pl: 'Niedziela Wielkanocna', en: 'Easter Sunday', de: 'Ostersonntag' },
-            'Großmuttertag': { pl: 'Dzień Babci', en: "Grandmother's Day", de: 'Großmuttertag' },
             'Ostermontag': { pl: 'Poniedziałek Wielkanocny', en: 'Easter Monday', de: 'Ostermontag' },
-            'Großvatertag': { pl: 'Dzień Dziadka', en: "Grandfather's Day", de: 'Großvatertag' },
+            'Karfreitag': { pl: 'Wielki Piątek', en: 'Good Friday', de: 'Karfreitag' },
             'Tag der Arbeit': { pl: 'Święto Pracy', en: 'Labour Day', de: 'Tag der Arbeit' },
             'Nationalfeiertag Polen': { pl: 'Święto Narodowe Trzeciego Maja', en: 'Constitution Day', de: 'Nationalfeiertag Polen' },
-            'Pfingstsonntag': { pl: 'Zielone Świątki', en: 'Pentecost Sunday', de: 'Pfingstsonntag' },
+            'Christi Himmelfahrt': { pl: 'Wniebowstąpienie Pańskie', en: 'Ascension Day', de: 'Christi Himmelfahrt' },
+            'Pfingstmontag': { pl: 'Poniedziałek Zielonoświątkowy', en: 'Whit Monday', de: 'Pfingstmontag' },
             'Fronleichnam': { pl: 'Boże Ciało', en: 'Corpus Christi', de: 'Fronleichnam' },
-            'Muttertag': { pl: 'Dzień Matki', en: "Mother's Day", de: 'Muttertag' },
             'Mariä Himmelfahrt': { pl: 'Wniebowzięcie NMP', en: 'Assumption Day', de: 'Mariä Himmelfahrt' },
+            'Tag der Deutschen Einheit': { pl: 'Dzień Jedności Niemiec', en: 'German Unity Day', de: 'Tag der Deutschen Einheit' },
+            'Reformationstag': { pl: 'Dzień Reformacji', en: 'Reformation Day', de: 'Reformationstag' },
             'Allerheiligen': { pl: 'Wszystkich Świętych', en: 'All Saints’ Day', de: 'Allerheiligen' },
-            'Unabhängigkeitstag': { pl: 'Święto Niepodległości', en: 'Independence Day', de: 'Unabhängigkeitstag' },
             'Weihnachten': { pl: 'Boże Narodzenie', en: 'Christmas Day', de: 'Weihnachten' },
+            '1. Weihnachtsfeiertag': { pl: 'Pierwszy dzień Bożego Narodzenia', en: 'Christmas Day', de: '1. Weihnachtsfeiertag' },
             '2. Weihnachtsfeiertag': { pl: 'Drugi dzień Bożego Narodzenia', en: 'Second Day of Christmas', de: '2. Weihnachtsfeiertag' },
             'Silvester': { pl: 'Sylwester', en: "New Year's Eve", de: 'Silvester' },
-            'Neujahr': { pl: 'Nowy Rok', en: "New Year's Day", de: 'Neujahr' },
-            'Tag der Deutschen Einheit': { pl: 'Dzień Jedności Niemiec', en: 'German Unity Day', de: 'Tag der Deutschen Einheit' },
-            'Josefstag': { pl: 'Dzień św. Józefa', en: 'Saint Joseph’s Day', de: 'Josefstag' },
-            'Erntedankfest': { pl: 'Święto Dziękczynienia za Plony', en: 'Harvest Festival', de: 'Erntedankfest' },
-            'Palmsonntag': { pl: 'Niedziela Palmowa', en: 'Palm Sunday', de: 'Palmsonntag' },
-            'Vatertag': { pl: 'Dzień Ojca', en: "Father's Day", de: 'Vatertag' },
-            'Valentinstag': { pl: 'Walentynki', en: "Valentine's Day", de: 'Valentinstag' },
-            'Halloween': { pl: 'Halloween', en: 'Halloween', de: 'Halloween' },
-            'Gründonnerstag': { pl: 'Wielki Czwartek', en: 'Maundy Thursday', de: 'Gründonnerstag' },
-            'Internationaler Frauentag': { pl: 'Dzień Kobiet', en: 'International Women’s Day', de: 'Internationaler Frauentag' },
-            'Rosenmontag': { pl: 'Różany Poniedziałek', en: 'Rose Monday', de: 'Rosenmontag' },
-            'Reformationstag': { pl: 'Dzień Reformacji', en: 'Reformation Day', de: 'Reformationstag' },
-            'Karsamstag': { pl: 'Wielka Sobota', en: 'Holy Saturday', de: 'Karsamstag' },
-            'Fastnacht': { pl: 'Ostatki', en: 'Carnival Tuesday', de: 'Fastnacht' },
-            'Weiberfastnacht': { pl: 'Babski czwartek karnawałowy', en: 'Women’s Carnival Day', de: 'Weiberfastnacht' },
-            'Internationaler Kindertag': { pl: 'Dzień Dziecka', en: 'International Children’s Day', de: 'Internationaler Kindertag' },
-            'Aschermittwoch': { pl: 'Środa Popielcowa', en: 'Ash Wednesday', de: 'Aschermittwoch' },
-            'Volkstrauertag': { pl: 'Narodowy Dzień Żałoby', en: 'National Day of Mourning', de: 'Volkstrauertag' },
-            'Allerseelen': { pl: 'Dzień Zaduszny', en: 'All Souls’ Day', de: 'Allerseelen' },
-            'Karfreitag': { pl: 'Wielki Piątek', en: 'Good Friday', de: 'Karfreitag' },
-            'Buß- und Bettag': { pl: 'Dzień Pokuty i Modlitwy', en: 'Day of Repentance and Prayer', de: 'Buß- und Bettag' },
-            '1. Advent': { pl: 'Pierwsza Niedziela Adwentu', en: 'First Advent', de: '1. Advent' },
-            '2. Advent': { pl: 'Druga Niedziela Adwentu', en: 'Second Advent', de: '2. Advent' },
-            '3. Advent': { pl: 'Trzecia Niedziela Adwentu', en: 'Third Advent', de: '3. Advent' },
-            '4. Advent': { pl: 'Czwarta Niedziela Adwentu', en: 'Fourth Advent', de: '4. Advent' },
-    "New Year's Day": { pl: 'Nowy Rok', en: "New Year's Day", de: 'Neujahrstag' },
-        'Birthday of Martin Luther King, Jr.': { pl: 'Dzień Martina Luthera Kinga Jr.', en: 'Birthday of Martin Luther King, Jr.', de: 'Martin Luther King Day' },
-    "Washington's Birthday": { pl: 'Dzień Waszyngtona', en: "Washington's Birthday", de: 'Washingtons Geburtstag' },
-        'Memorial Day': { pl: 'Dzień Pamięci', en: 'Memorial Day', de: 'Memorial Day' },
-        'Juneteenth National Independence Day': { pl: 'Juneteenth', en: 'Juneteenth National Independence Day', de: 'Juneteenth' },
-        'Juneteenth National Independence Day (observed)': { pl: 'Juneteenth (obserwowany)', en: 'Juneteenth National Independence Day (observed)', de: 'Juneteenth (beobachtet)' },
-        'Independence Day (observed)': { pl: 'Dzień Niepodległości (obserwowany)', en: 'Independence Day (observed)', de: 'Unabhängigkeitstag (beobachtet)' },
-        'Labor Day': { pl: 'Labor Day', en: 'Labor Day', de: 'Labor Day' },
-        'Columbus Day': { pl: 'Columbus Day', en: 'Columbus Day', de: 'Columbus Day' },
-        'Veterans Day': { pl: 'Dzień Weteranów', en: 'Veterans Day', de: 'Veterans Day' },
-        'Thanksgiving Day': { pl: 'Święto Dziękczynienia', en: 'Thanksgiving Day', de: 'Thanksgiving Day' },
-        'Christmas Day': { pl: 'Boże Narodzenie', en: 'Christmas Day', de: 'Weihnachtstag' },
-        'Christmas Day (observed)': { pl: 'Boże Narodzenie (obserwowane)', en: 'Christmas Day (observed)', de: 'Weihnachtstag (beobachtet)' }
-    };
+            'Unabhängigkeitstag': { pl: 'Święto Niepodległości', en: 'Independence Day', de: 'Unabhängigkeitstag' },
+            "New Year's Day": { pl: 'Nowy Rok', en: "New Year's Day", de: 'Neujahrstag' },
+            'Birthday of Martin Luther King, Jr.': { pl: 'Dzień Martina Luthera Kinga Jr.', en: 'Birthday of Martin Luther King, Jr.', de: 'Martin Luther King Day' },
+            "Washington's Birthday": { pl: 'Dzień Waszyngtona', en: "Washington's Birthday", de: 'Washingtons Geburtstag' },
+            'Memorial Day': { pl: 'Dzień Pamięci', en: 'Memorial Day', de: 'Memorial Day' },
+            'Juneteenth National Independence Day': { pl: 'Juneteenth', en: 'Juneteenth National Independence Day', de: 'Juneteenth' },
+            'Juneteenth National Independence Day (observed)': { pl: 'Juneteenth (obserwowany)', en: 'Juneteenth National Independence Day (observed)', de: 'Juneteenth (beobachtet)' },
+            'Independence Day (observed)': { pl: 'Dzień Niepodległości (obserwowany)', en: 'Independence Day (observed)', de: 'Unabhängigkeitstag (beobachtet)' },
+            'Labor Day': { pl: 'Labor Day', en: 'Labor Day', de: 'Labor Day' },
+            'Columbus Day': { pl: 'Columbus Day', en: 'Columbus Day', de: 'Columbus Day' },
+            'Veterans Day': { pl: 'Dzień Weteranów', en: 'Veterans Day', de: 'Veterans Day' },
+            'Thanksgiving Day': { pl: 'Święto Dziękczynienia', en: 'Thanksgiving Day', de: 'Thanksgiving Day' },
+            'Christmas Day': { pl: 'Boże Narodzenie', en: 'Christmas Day', de: 'Weihnachtstag' },
+            'Christmas Day (observed)': { pl: 'Boże Narodzenie (obserwowane)', en: 'Christmas Day (observed)', de: 'Weihnachtstag (beobachtet)' }
+        };
+
+        let currentLang = 'pl';
+        function t(key) { return i18n[currentLang][key]; }
+        function localizeHolidayName(name) { return holidayNameTranslations[name]?.[currentLang] || name; }
+        function monthNames() { return t('monthNames'); }
+        function monthNamesGenitive() { return t('monthNamesGenitive'); }
+        function dayNames() { return t('dayNames'); }
+        function fullDayNames() { return t('fullDayNames'); }
+        function views() { return t('views'); }
+
+        function buildHolidayIndex(sourceData) {
+            const index = {};
+            Object.entries(sourceData).forEach(([country, events]) => {
+                events.forEach((event) => {
+                    if (!index[event.date]) index[event.date] = [];
+                    index[event.date].push({ country, label: holidaySourceLabels[country] || country, name: event.name });
+                });
+            });
+            return index;
+        }
 
         const holidayIndex = buildHolidayIndex(holidayCalendarData);
 
@@ -1496,12 +1102,10 @@
             document.title = t('appTitle');
             document.querySelector('.brand h1').textContent = t('appTitle');
             document.querySelector('.brand .eyebrow').textContent = t('eyebrow');
-            document.getElementById('todayBtn').textContent = t('todayButton');
-            document.getElementById('holidayToggleBtn').textContent = t('holidayToggle');
-
+            els.todayBtn.textContent = t('todayButton');
+            els.holidayToggleBtn.textContent = t('holidayToggle');
             document.querySelectorAll('[data-i18n]').forEach((node) => {
-                const key = node.dataset.i18n;
-                node.textContent = t(key);
+                node.textContent = t(node.dataset.i18n);
             });
         }
 
@@ -1511,26 +1115,34 @@
             });
         }
 
+        function normalizeDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        }
+
+        function getHolidayEntries(date) {
+            return holidayIndex[normalizeDateKey(date)] || [];
+        }
+
+        function getHolidayTooltip(date) {
+            const holidays = getHolidayEntries(date);
+            if (!holidays.length) return '';
+            return `${t('holidayTooltipLabel')}:\n${holidays.map((holiday) => `[${holiday.label}] ${localizeHolidayName(holiday.name)}`).join('\n')}`;
+        }
+
         function getCurrentViewRange() {
             const anchor = state.anchorDate;
-
             switch (state.currentView) {
                 case 'week': {
                     const start = startOfWeek(anchor);
                     return { start, end: addDays(start, 6) };
                 }
-                case 'month': {
-                    return {
-                        start: new Date(anchor.getFullYear(), anchor.getMonth(), 1),
-                        end: new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0)
-                    };
-                }
-                case 'year': {
-                    return {
-                        start: new Date(anchor.getFullYear(), 0, 1),
-                        end: new Date(anchor.getFullYear(), 11, 31)
-                    };
-                }
+                case 'month':
+                    return { start: new Date(anchor.getFullYear(), anchor.getMonth(), 1), end: new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0) };
+                case 'year':
+                    return { start: new Date(anchor.getFullYear(), 0, 1), end: new Date(anchor.getFullYear(), 11, 31) };
                 case 'decade': {
                     const decadeStart = Math.floor(anchor.getFullYear() / 10) * 10;
                     return { start: new Date(decadeStart, 0, 1), end: new Date(decadeStart + 9, 11, 31) };
@@ -1548,58 +1160,44 @@
             const results = [];
             const seen = new Set();
             const cursor = new Date(start);
-
             while (cursor <= end) {
                 const key = normalizeDateKey(cursor);
                 const entries = holidayIndex[key] || [];
-
                 entries.forEach((entry) => {
                     const uniqueKey = `${key}-${entry.label}-${entry.name}`;
                     if (!seen.has(uniqueKey)) {
                         seen.add(uniqueKey);
-                        results.push({
-                            date: new Date(cursor),
-                            label: entry.label,
-                            name: localizeHolidayName(entry.name)
-                        });
+                        results.push({ date: new Date(cursor), label: entry.label, name: localizeHolidayName(entry.name) });
                     }
                 });
-
                 cursor.setDate(cursor.getDate() + 1);
             }
-
             return results;
         }
 
         function renderHolidaySummaryIfNeeded() {
             els.holidayToggleBtn.classList.toggle('primary', state.showHolidayList);
-
-            if (!state.showHolidayList) {
-                return;
-            }
-
+            if (!state.showHolidayList) return;
             const { start, end } = getCurrentViewRange();
             const holidays = getHolidaysInRange(start, end);
-
             const summaryHtml = `
-        <section class="holiday-summary">
-            <h3>${t('holidaySummaryTitle')}</h3>
-            <div class="holiday-summary-list">
-                ${holidays.length ? holidays.map((holiday) => `
-                    <article class="holiday-summary-item">
-                        <strong>${escapeHtml(holiday.name)}</strong>
-                        <small>${formatDateLong(holiday.date)} · [${holiday.label}]</small>
-                    </article>
-                `).join('') : `
-                    <article class="holiday-summary-item">
-                        <strong>${t('noEvents')}</strong>
-                        <small>${t('noHolidaysInView')}</small>
-                    </article>
-                `}
-            </div>
-        </section>
-    `;
-
+            <section class="holiday-summary">
+                <h3>${t('holidaySummaryTitle')}</h3>
+                <div class="holiday-summary-list">
+                    ${holidays.length ? holidays.map((holiday) => `
+                        <article class="holiday-summary-item">
+                            <strong>${escapeHtml(holiday.name)}</strong>
+                            <small>${formatDateLong(holiday.date)} · [${holiday.label}]</small>
+                        </article>
+                    `).join('') : `
+                        <article class="holiday-summary-item">
+                            <strong>${t('noEvents')}</strong>
+                            <small>${t('noHolidaysInView')}</small>
+                        </article>
+                    `}
+                </div>
+            </section>
+        `;
             els.viewRoot.innerHTML = summaryHtml + els.viewRoot.innerHTML;
         }
 
@@ -1617,11 +1215,8 @@
 
         function renderViewButtons() {
             els.viewSwitcher.innerHTML = views().map((view) => `
-                <button type="button" class="view-btn ${view.key === state.currentView ? 'active' : ''}" data-view="${view.key}">
-                    ${view.label}
-                </button>
-            `).join('');
-
+            <button type="button" class="view-btn ${view.key === state.currentView ? 'active' : ''}" data-view="${view.key}">${view.label}</button>
+        `).join('');
             els.viewSwitcher.querySelectorAll('[data-view]').forEach((button) => {
                 button.addEventListener('click', () => {
                     state.currentView = button.dataset.view;
@@ -1634,10 +1229,9 @@
             const meta = getViewMeta();
             els.viewTitle.textContent = meta.title;
             els.viewSubtitle.textContent = meta.subtitle;
-            els.rangeChips.innerHTML = [...meta.chips, t('holidaySourcesLabel') + ': PL / DE / US'].map((chip, index) => `
-                <button type="button" class="chip-btn ${index === 0 ? 'active' : ''}">${chip}</button>
-            `).join('');
-
+            els.rangeChips.innerHTML = [...meta.chips, `${t('holidaySourcesLabel')}: PL / DE / US`].map((chip, index) => `
+            <button type="button" class="chip-btn ${index === 0 ? 'active' : ''}">${chip}</button>
+        `).join('');
             els.miniMonthLabel.textContent = `${monthNames()[state.anchorDate.getMonth()]} ${state.anchorDate.getFullYear()}`;
             els.miniMonthMeta.textContent = meta.short;
         }
@@ -1646,40 +1240,28 @@
             const monthStart = new Date(state.anchorDate.getFullYear(), state.anchorDate.getMonth(), 1);
             const gridStart = startOfWeek(monthStart);
             const days = [];
-
-            dayNames().forEach((name) => {
-                days.push(`<div class="mini-dow">${name}</div>`);
-            });
-
+            dayNames().forEach((name) => days.push(`<div class="mini-dow">${name}</div>`));
             for (let i = 0; i < 42; i += 1) {
                 const date = addDays(gridStart, i);
                 const isCurrentMonth = date.getMonth() === monthStart.getMonth();
                 const isToday = isSameDay(date, state.today);
-                const holidayEntries = getHolidayEntries(date);
-                const hasHoliday = holidayEntries.length > 0;
-                days.push(`
-                    <div class="mini-day ${!isCurrentMonth ? 'muted' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">${date.getDate()}</div>
-                `);
+                const hasHoliday = getHolidayEntries(date).length > 0;
+                days.push(`<div class="mini-day ${!isCurrentMonth ? 'muted' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">${date.getDate()}</div>`);
             }
-
             els.miniCalendar.innerHTML = days.join('');
         }
 
         function renderAgenda() {
             const start = startOfWeek(state.anchorDate);
             const end = addDays(start, 13);
-            const items = sampleEvents
-                .filter((event) => event.date >= start && event.date <= end)
-                .sort((a, b) => a.date - b.date)
-                .slice(0, 4);
-
+            const items = sampleEvents.filter((event) => event.date >= start && event.date <= end).sort((a, b) => a.date - b.date).slice(0, 4);
             els.agendaList.innerHTML = items.length
                 ? items.map((event) => `
-                    <article class="agenda-item">
-                        <strong>${escapeHtml(event.title)}</strong>
-                        <small>${formatDateLong(event.date)} · ${event.time}</small>
-                    </article>
-                `).join('')
+                <article class="agenda-item">
+                    <strong>${escapeHtml(event.title)}</strong>
+                    <small>${formatDateLong(event.date)} · ${event.time}</small>
+                </article>
+            `).join('')
                 : `<div class="agenda-item"><strong>${t('noEvents')}</strong><small>${t('noEventsInRange')}</small></div>`;
         }
 
@@ -1698,47 +1280,41 @@
             const monthStart = new Date(state.anchorDate.getFullYear(), state.anchorDate.getMonth(), 1);
             const gridStart = startOfWeek(monthStart);
             const html = [];
-
             html.push('<div class="calendar-grid month-view">');
             html.push('<div class="dow-row">');
             dayNames().forEach((day) => html.push(`<div class="dow-cell">${day}</div>`));
-            html.push('</div>');
-            html.push('<div class="month-grid">');
-
+            html.push('</div><div class="month-grid">');
             for (let i = 0; i < 42; i += 1) {
                 const date = addDays(gridStart, i);
                 const events = getEventsForDate(date);
+                const holidays = getHolidayEntries(date);
                 const isMuted = date.getMonth() !== monthStart.getMonth();
                 const isToday = isSameDay(date, state.today);
-                const holidays = getHolidayEntries(date);
                 const hasHoliday = holidays.length > 0;
-
-                html.push(`
-                    <article class="day-cell ${isMuted ? 'muted' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
-                        <div class="day-head">
-                            <span class="day-number">${date.getDate()}</span>
-                            <small>${fullDayNames()[getWeekdayIndex(date)]}</small>
-                        </div>
-                        <div class="event-list">
-                            ${[
+                const pills = [
                     ...holidays.map((holiday) => `
-        <div class="event-pill holiday-pill">
-            <strong>${escapeHtml(localizeHolidayName(holiday.name))}</strong>
-            <small>[${holiday.label}]</small>
-        </div>
-    `),
+                    <div class="event-pill holiday-pill">
+                        <strong>${escapeHtml(localizeHolidayName(holiday.name))}</strong>
+                        <small>[${holiday.label}]</small>
+                    </div>
+                `),
                     ...events.slice(0, 3).map((event) => `
-        <div class="event-pill">
-            <strong>${escapeHtml(event.title)}</strong>
-            <small>${event.time}</small>
-        </div>
-    `)
-                ].join('') || `<small>${t('noEntries')}</small>`}
-                        </div>
-                    </article>
-                `);
+                    <div class="event-pill">
+                        <strong>${escapeHtml(event.title)}</strong>
+                        <small>${event.time}</small>
+                    </div>
+                `)
+                ].join('') || `<small>${t('noEntries')}</small>`;
+                html.push(`
+                <article class="day-cell ${isMuted ? 'muted' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
+                    <div class="day-head">
+                        <span class="day-number">${date.getDate()}</span>
+                        <small>${fullDayNames()[getWeekdayIndex(date)]}</small>
+                    </div>
+                    <div class="event-list">${pills}</div>
+                </article>
+            `);
             }
-
             html.push('</div></div>');
             els.viewRoot.innerHTML = html.join('');
         }
@@ -1747,7 +1323,6 @@
             const start = startOfWeek(state.anchorDate);
             const hours = Array.from({ length: 14 }, (_, i) => i + 7);
             const html = [];
-
             html.push('<div class="week-view">');
             html.push('<div class="week-row">');
             html.push('<div class="dow-cell">.</div>');
@@ -1757,21 +1332,19 @@
                 const holidays = getHolidayEntries(date);
                 const hasHoliday = holidays.length > 0;
                 html.push(`
-                    <div class="dow-cell ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
-                        <strong>${dayNames()[getWeekdayIndex(date)]}</strong><br>
-                        <small>${date.getDate()} ${monthNamesGenitive()[date.getMonth()]}</small>
-                        ${holidays.map((holiday) => `
-    <div class="event-pill week-holiday-pill holiday-pill">
-        <strong>${escapeHtml(localizeHolidayName(holiday.name))}</strong>
-        <small>[${holiday.label}]</small>
-    </div>
-`).join('')}
-                    </div>
-                `);
+                <div class="dow-cell ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
+                    <strong>${dayNames()[getWeekdayIndex(date)]}</strong><br>
+                    <small>${date.getDate()} ${monthNamesGenitive()[date.getMonth()]}</small>
+                    ${holidays.map((holiday) => `
+                        <div class="event-pill week-holiday-pill holiday-pill">
+                            <strong>${escapeHtml(localizeHolidayName(holiday.name))}</strong>
+                            <small>[${holiday.label}]</small>
+                        </div>
+                    `).join('')}
+                </div>
+            `);
             }
-            html.push('</div>');
-            html.push('<div class="week-grid">');
-
+            html.push('</div><div class="week-grid">');
             hours.forEach((hour) => {
                 html.push(`<div class="time-cell">${String(hour).padStart(2, '0')}:00</div>`);
                 for (let i = 0; i < 7; i += 1) {
@@ -1780,18 +1353,17 @@
                     const isToday = isSameDay(date, state.today);
                     const hasHoliday = getHolidayEntries(date).length > 0;
                     html.push(`
-                        <div class="week-cell ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
-                            ${events.map((event) => `
-                                <div class="week-event">
-                                    <strong>${escapeHtml(event.title)}</strong>
-                                    <small>${event.time}</small>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `);
+                    <div class="week-cell ${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}">
+                        ${events.map((event) => `
+                            <div class="week-event">
+                                <strong>${escapeHtml(event.title)}</strong>
+                                <small>${event.time}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                `);
                 }
             });
-
             html.push('</div></div>');
             els.viewRoot.innerHTML = html.join('');
         }
@@ -1799,25 +1371,21 @@
         function renderYearView() {
             const year = state.anchorDate.getFullYear();
             const html = ['<div class="year-view"><div class="year-grid">'];
-
             for (let month = 0; month < 12; month += 1) {
                 const monthStart = new Date(year, month, 1);
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
-
                 html.push(`
-            <article class="year-card" data-month-card="${month}">
-                <div>
-                    <strong>${monthNames()[month]}</strong>
-                    <small>${daysInMonth} ${t('days')}</small>
-                </div>
-                <div class="year-mini">${buildYearMiniMonth(monthStart)}</div>
-            </article>
-        `);
+                <article class="year-card" data-month-card="${month}">
+                    <div>
+                        <strong>${monthNames()[month]}</strong>
+                        <small>${daysInMonth} ${t('days')}</small>
+                    </div>
+                    <div class="year-mini">${buildYearMiniMonth(monthStart)}</div>
+                </article>
+            `);
             }
-
             html.push('</div></div>');
             els.viewRoot.innerHTML = html.join('');
-
             els.viewRoot.querySelectorAll('[data-month-card]').forEach((card) => {
                 card.style.cursor = 'pointer';
                 card.addEventListener('click', () => {
@@ -1832,30 +1400,27 @@
         function renderDecadeView() {
             const decadeStart = Math.floor(state.anchorDate.getFullYear() / 10) * 10;
             const cards = [];
-
             for (let year = decadeStart; year < decadeStart + 10; year += 1) {
                 cards.push(`
-            <article class="period-card" data-year-card="${year}">
-                <header>
-                    <div>
-                        <h3 class="period-title">${year}</h3>
-                        <p class="period-subtitle">${isLeapYear(year) ? t('leapYear') : t('standardYear')} · ${countEventsForYear(year)} ${t('sampleEventsCount')}</p>
-                    </div>
-                </header>
-                <div class="period-grid">
-                    ${Array.from({ length: 12 }, (_, month) => `
-                        <div class="list-card">
-                            <strong>${monthNames()[month]}</strong>
-                            <small>${new Date(year, month + 1, 0).getDate()} ${t('days')}</small>
+                <article class="period-card" data-year-card="${year}">
+                    <header>
+                        <div>
+                            <h3 class="period-title">${year}</h3>
+                            <p class="period-subtitle">${isLeapYear(year) ? t('leapYear') : t('standardYear')} · ${countEventsForYear(year)} ${t('sampleEventsCount')}</p>
                         </div>
-                    `).join('')}
-                </div>
-            </article>
-        `);
+                    </header>
+                    <div class="period-grid">
+                        ${Array.from({ length: 12 }, (_, month) => `
+                            <div class="list-card">
+                                <strong>${monthNames()[month]}</strong>
+                                <small>${new Date(year, month + 1, 0).getDate()} ${t('days')}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                </article>
+            `);
             }
-
             els.viewRoot.innerHTML = `<div class="decade-view"><div class="decade-grid">${cards.join('')}</div></div>`;
-
             els.viewRoot.querySelectorAll('[data-year-card]').forEach((card) => {
                 card.style.cursor = 'pointer';
                 card.addEventListener('click', () => {
@@ -1870,30 +1435,27 @@
         function renderCenturyView() {
             const centuryStart = Math.floor(state.anchorDate.getFullYear() / 100) * 100;
             const cards = [];
-
             for (let decade = centuryStart; decade < centuryStart + 100; decade += 10) {
                 cards.push(`
-            <article class="period-card" data-decade-card="${decade}">
-                <header>
-                    <div>
-                        <h3 class="period-title">${decade}–${decade + 9}</h3>
-                        <p class="period-subtitle">${Array.from({ length: 10 }, (_, i) => decade + i).filter(isLeapYear).length} ${t('leapYearsCount')}</p>
-                    </div>
-                </header>
-                <div class="period-grid">
-                    ${Array.from({ length: 10 }, (_, i) => `
-                        <div class="list-card">
-                            <strong>${decade + i}</strong>
-                            <small>${countEventsForYear(decade + i)} ${t('demoEntries')}</small>
+                <article class="period-card" data-decade-card="${decade}">
+                    <header>
+                        <div>
+                            <h3 class="period-title">${decade}–${decade + 9}</h3>
+                            <p class="period-subtitle">${Array.from({ length: 10 }, (_, i) => decade + i).filter(isLeapYear).length} ${t('leapYearsCount')}</p>
                         </div>
-                    `).join('')}
-                </div>
-            </article>
-        `);
+                    </header>
+                    <div class="period-grid">
+                        ${Array.from({ length: 10 }, (_, i) => `
+                            <div class="list-card">
+                                <strong>${decade + i}</strong>
+                                <small>${countEventsForYear(decade + i)} ${t('demoEntries')}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                </article>
+            `);
             }
-
             els.viewRoot.innerHTML = `<div class="century-view"><div class="century-grid">${cards.join('')}</div></div>`;
-
             els.viewRoot.querySelectorAll('[data-decade-card]').forEach((card) => {
                 card.style.cursor = 'pointer';
                 card.addEventListener('click', () => {
@@ -1905,50 +1467,6 @@
             });
         }
 
-        function renderPeriodCard({ title, subtitle, months }) {
-            return `
-                <article class="period-card">
-                    <header>
-                        <div>
-                            <h3 class="period-title">${escapeHtml(title)}</h3>
-                            <p class="period-subtitle">${escapeHtml(subtitle)}</p>
-                        </div>
-                    </header>
-                    <div class="period-grid">
-                        ${months.map((item) => `
-                            <div class="list-card">
-                                <strong>${escapeHtml(item.name)}</strong>
-                                <small>${escapeHtml(item.meta)}</small>
-                            </div>
-                        `).join('')}
-                    </div>
-                </article>
-            `;
-        }
-
-        function buildYearMiniMonth(monthStart) {
-            const year = monthStart.getFullYear();
-            const month = monthStart.getMonth();
-            const first = new Date(year, month, 1);
-            const start = startOfWeek(first);
-            const cells = [];
-
-            dayNames().forEach((day) => {
-                cells.push(`<span title="${day}">${day.slice(0, 1)}</span>`);
-            });
-
-            for (let i = 0; i < 35; i += 1) {
-                const date = addDays(start, i);
-                const isToday = isSameDay(date, state.today);
-                const marker = date.getMonth() === month ? date.getDate() : '';
-                const holidayTooltip = marker ? getHolidayTooltip(date) : '';
-                const hasHoliday = holidayTooltip.length > 0;
-                cells.push(`<span class="${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}" ${holidayTooltip ? `title="${escapeHtml(holidayTooltip)}"` : ''}>${marker}</span>`);
-            }
-
-            return cells.join('');
-        }
-
         function getViewMeta() {
             const year = state.anchorDate.getFullYear();
             const month = state.anchorDate.getMonth();
@@ -1956,29 +1474,20 @@
             const centuryStart = Math.floor(year / 100) * 100;
             const weekStart = startOfWeek(state.anchorDate);
             const weekEnd = addDays(weekStart, 6);
-
             switch (state.currentView) {
                 case 'century':
                     return {
-                        title: `1900–1999`.replace('1900', String(centuryStart)).replace('1999', String(centuryStart + 99)),
+                        title: `${centuryStart}–${centuryStart + 99}`,
                         subtitle: t('centuryListDescription'),
                         short: `${centuryStart}–${centuryStart + 99}`,
-                        chips: currentLang === 'pl'
-                            ? ['10 dekad', '100 lat', 'Stulecie']
-                            : currentLang === 'en'
-                                ? ['10 decades', '100 years', 'Century']
-                                : ['10 Jahrzehnte', '100 Jahre', 'Jahrhundert']
+                        chips: currentLang === 'pl' ? ['10 dekad', '100 lat', 'Stulecie'] : currentLang === 'en' ? ['10 decades', '100 years', 'Century'] : ['10 Jahrzehnte', '100 Jahre', 'Jahrhundert']
                     };
                 case 'decade':
                     return {
                         title: `${decadeStart}–${decadeStart + 9}`,
                         subtitle: t('decadeListDescription'),
                         short: `${decadeStart}–${decadeStart + 9}`,
-                        chips: currentLang === 'pl'
-                            ? ['10 lat', 'Przegląd', 'Dekada']
-                            : currentLang === 'en'
-                                ? ['10 years', 'Overview', 'Decade']
-                                : ['10 Jahre', 'Übersicht', 'Jahrzehnt']
+                        chips: currentLang === 'pl' ? ['10 lat', 'Przegląd', 'Dekada'] : currentLang === 'en' ? ['10 years', 'Overview', 'Decade'] : ['10 Jahre', 'Übersicht', 'Jahrzehnt']
                     };
                 case 'year':
                     return {
@@ -1992,11 +1501,7 @@
                         title: `${currentLang === 'pl' ? 'Tydzień' : currentLang === 'en' ? 'Week' : 'Woche'} ${formatDateShort(weekStart)} – ${formatDateShort(weekEnd)}`,
                         subtitle: t('weekHoursView'),
                         short: `${formatDateShort(weekStart)} – ${formatDateShort(weekEnd)}`,
-                        chips: ['7 dni', t('hours'), t('plan')].map((item, index) => {
-                            if (currentLang === 'pl') return item;
-                            if (currentLang === 'en') return ['7 days', 'Hours', 'Plan'][index];
-                            return ['7 Tage', 'Stunden', 'Plan'][index];
-                        })
+                        chips: currentLang === 'pl' ? ['7 dni', 'Godziny', 'Plan'] : currentLang === 'en' ? ['7 days', 'Hours', 'Plan'] : ['7 Tage', 'Stunden', 'Plan']
                     };
                 case 'month':
                 default:
@@ -2004,11 +1509,7 @@
                         title: `${monthNames()[month]} ${year}`,
                         subtitle: t('fullMonthView'),
                         short: `${monthNames()[month]} ${year}`,
-                        chips: ['42 pola', t('grid'), t('monthChip')].map((item, index) => {
-                            if (currentLang === 'pl') return item;
-                            if (currentLang === 'en') return ['42 cells', 'Grid', 'Month'][index];
-                            return ['42 Felder', 'Raster', 'Monat'][index];
-                        })
+                        chips: currentLang === 'pl' ? ['42 pola', 'Siatka', 'Miesiąc'] : currentLang === 'en' ? ['42 cells', 'Grid', 'Month'] : ['42 Felder', 'Raster', 'Monat']
                     };
             }
         }
@@ -2031,7 +1532,6 @@
                 case 'month':
                 default:
                     state.anchorDate = new Date(state.anchorDate.getFullYear(), state.anchorDate.getMonth() + factor, 1);
-                    break;
             }
         }
 
@@ -2041,6 +1541,24 @@
 
         function countEventsForYear(year) {
             return sampleEvents.filter((event) => event.date.getFullYear() === year).length;
+        }
+
+        function buildYearMiniMonth(monthStart) {
+            const year = monthStart.getFullYear();
+            const month = monthStart.getMonth();
+            const first = new Date(year, month, 1);
+            const start = startOfWeek(first);
+            const cells = [];
+            dayNames().forEach((day) => cells.push(`<span title="${day}">${day.slice(0, 1)}</span>`));
+            for (let i = 0; i < 35; i += 1) {
+                const date = addDays(start, i);
+                const isToday = isSameDay(date, state.today);
+                const marker = date.getMonth() === month ? date.getDate() : '';
+                const holidayTooltip = marker ? getHolidayTooltip(date) : '';
+                const hasHoliday = holidayTooltip.length > 0;
+                cells.push(`<span class="${isToday ? 'today' : ''} ${hasHoliday ? 'has-holiday' : ''}" ${holidayTooltip ? `title="${escapeHtml(holidayTooltip)}"` : ''}>${marker}</span>`);
+            }
+            return cells.join('');
         }
 
         function syncJumpInput() {
@@ -2080,9 +1598,7 @@
         }
 
         function isSameDay(a, b) {
-            return a.getFullYear() === b.getFullYear()
-                && a.getMonth() === b.getMonth()
-                && a.getDate() === b.getDate();
+            return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
         }
 
         function isLeapYear(year) {
@@ -2096,45 +1612,6 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
-        }
-
-        function normalizeDateKey(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
-        }
-
-        function buildHolidayIndex(sourceData) {
-            const index = {};
-
-            Object.entries(sourceData).forEach(([country, events]) => {
-                events.forEach((event) => {
-                    if (!index[event.date]) {
-                        index[event.date] = [];
-                    }
-                    index[event.date].push({
-                        country,
-                        label: holidaySourceLabels[country] || country,
-                        name: event.name
-                    });
-                });
-            });
-
-            return index;
-        }
-
-        function getHolidayEntries(date) {
-            return holidayIndex[normalizeDateKey(date)] || [];
-        }
-
-        function getHolidayTooltip(date) {
-            const holidays = getHolidayEntries(date);
-            if (!holidays.length) {
-                return '';
-            }
-
-            return `${t('holidayTooltipLabel')}:\n${holidays.map((holiday) => `[${holiday.label}] ${localizeHolidayName(holiday.name)}`).join('\n')}`;
         }
 
         function generateSampleEvents() {
@@ -2153,26 +1630,20 @@
                 { month: 10, day: 25, title: 'Testy wydajności', time: '09:00' },
                 { month: 11, day: 6, title: 'Plan Q1', time: '17:00' }
             ];
-
             const result = [];
             for (let year = baseYear - 60; year <= baseYear + 60; year += 1) {
                 seed.forEach((item, index) => {
                     const hourShift = (index % 5) + 8;
-                    result.push({
-                        date: new Date(year, item.month, item.day),
-                        title: item.title,
-                        time: `${String(hourShift).padStart(2, '0')}:00`
-                    });
+                    result.push({ date: new Date(year, item.month, item.day), title: item.title, time: `${String(hourShift).padStart(2, '0')}:00` });
                 });
             }
-
             result.push(
                 { date: new Date(baseYear, new Date().getMonth(), new Date().getDate()), title: 'Dziś · punkt kontrolny', time: '10:00' },
                 { date: addDays(new Date(baseYear, new Date().getMonth(), new Date().getDate()), 1), title: 'Jutro · follow-up', time: '13:00' }
             );
-
             return result;
         }
     })();
 </script>
 </body>
+</html>
