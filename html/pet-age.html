@@ -1,0 +1,926 @@
+
+
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kalkulator wieku psa i kota</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: rgba(18, 24, 46, 0.92);
+            --panel-2: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.12);
+            --text: #edf2ff;
+            --muted: #97a3c6;
+            --accent: #7c9cff;
+            --accent-2: #9c7cff;
+            --good: #49c68a;
+            --warn: #ffbf5e;
+            --shadow: 0 22px 60px rgba(0,0,0,0.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(124, 156, 255, 0.22), transparent 30%),
+                radial-gradient(circle at top right, rgba(156, 124, 255, 0.18), transparent 28%),
+                linear-gradient(180deg, #0a1020 0%, #10182b 100%);
+        }
+
+        body { padding: 24px; }
+
+        .page {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+            display: grid;
+            gap: 18px;
+        }
+
+        .hero, .card {
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) + 4px);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 0.98;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 66ch;
+        }
+
+        .hero-stats {
+            display: grid;
+            gap: 12px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--panel-2);
+            padding: 16px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 26px;
+            margin-bottom: 6px;
+            letter-spacing: -0.03em;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .card-header span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .card-body { padding: 20px; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field.full { grid-column: 1 / -1; }
+
+        label {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        input, select, button { font: inherit; }
+
+        input, select {
+            width: 100%;
+            min-height: 52px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
+            padding: 0 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(124, 156, 255, 0.65);
+            box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.08);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .btn {
+            min-height: 48px;
+            padding: 0 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(124, 156, 255, 0.95), rgba(156, 124, 255, 0.95));
+            border-color: transparent;
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 8px;
+        }
+
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .lang-btn {
+            min-width: 52px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 0;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-weight: 600;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, rgba(124, 156, 255, 0.95), rgba(156, 124, 255, 0.95));
+            color: #fff;
+        }
+
+        .result-box {
+            display: grid;
+            gap: 14px;
+        }
+
+        .result-main {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .badge.good {
+            color: var(--good);
+            border-color: rgba(73,198,138,0.28);
+            background: rgba(73,198,138,0.08);
+        }
+
+        .badge.warn {
+            color: var(--warn);
+            border-color: rgba(255,191,94,0.28);
+            background: rgba(255,191,94,0.08);
+        }
+
+        .result-main strong {
+            display: block;
+            font-size: clamp(34px, 6vw, 56px);
+            line-height: 1;
+            letter-spacing: -0.05em;
+            margin-bottom: 8px;
+        }
+
+        .result-main p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .detail {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            padding: 14px;
+        }
+
+        .detail strong {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .detail span {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .note {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 14px;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 10px;
+        }
+
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 84px 1fr;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            padding: 12px;
+        }
+
+        .timeline-row strong {
+            font-size: 15px;
+        }
+
+        .timeline-row span {
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 14px;
+        }
+
+        @media (max-width: 980px) {
+            .hero, .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 14px; }
+            .hero, .card-body { padding: 16px; }
+            .form-grid, .details-grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="top-actions">
+        <div class="lang-switcher" id="langSwitcher" aria-label="Language switcher">
+            <button class="lang-btn active" type="button" data-lang="pl">PL</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+            <button class="lang-btn" type="button" data-lang="de">DE</button>
+        </div>
+    </div>
+    <section class="hero">
+        <div>
+            <div class="eyebrow" data-i18n="heroEyebrow">🐶 🐱 github.io html / css / js</div>
+            <h1 data-i18n="heroTitle">Kalkulator wieku psa i kota</h1>
+            <p data-i18n="heroDescription">
+                Prosta strona do orientacyjnego przeliczania wieku psa lub kota na wiek ludzki.
+                Dla psa możesz wybrać wielkość, a dla kota dostajesz klasyczne przybliżenie używane
+                w popularnych kalkulatorach edukacyjnych.
+            </p>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <strong id="heroHumanAge">—</strong>
+                <span data-i18n="heroStat1">Szacowany wiek w ludzkich latach.</span>
+            </div>
+            <div class="stat">
+                <strong id="heroStage">Brak danych</strong>
+                <span data-i18n="heroStat2">Etap życia zwierzaka na podstawie wieku.</span>
+            </div>
+            <div class="stat">
+                <strong id="heroPetType">Pies</strong>
+                <span data-i18n="heroStat3">Aktualnie wybrany typ zwierzęcia.</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout">
+        <article class="card">
+            <div class="card-header">
+                <h2 data-i18n="inputTitle">Dane wejściowe</h2>
+                <span data-i18n="inputSubtitle">Wybierz zwierzaka i wiek</span>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="petType" data-i18n="petTypeLabel">Typ zwierzaka</label>
+                        <select id="petType">
+                            <option value="dog" selected data-i18n="petTypeDog">Pies</option>
+                            <option value="cat" data-i18n="petTypeCat">Kot</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="petAge" data-i18n="petAgeLabel">Wiek zwierzaka</label>
+                        <input id="petAge" type="number" min="0" max="40" step="0.1" value="3" placeholder="np. 3">
+                    </div>
+                    <div class="field full" id="dogSizeField">
+                        <label for="dogSize" data-i18n="dogSizeLabel">Wielkość psa</label>
+                        <select id="dogSize">
+                            <option value="small" data-i18n="dogSizeSmall">Mały pies</option>
+                            <option value="medium" selected data-i18n="dogSizeMedium">Średni pies</option>
+                            <option value="large" data-i18n="dogSizeLarge">Duży pies</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" id="calculateBtn" type="button" data-i18n="calculateBtn">Oblicz wiek</button>
+                    <button class="btn" id="resetBtn" type="button" data-i18n="resetBtn">Reset</button>
+                </div>
+
+                <div class="note" data-i18n="inputNote">
+                    To kalkulator orientacyjny. Starzenie zwierząt zależy też od rasy, wielkości,
+                    stanu zdrowia, trybu życia i genetyki.
+                </div>
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <h2 data-i18n="resultTitle">Wynik</h2>
+                <span data-i18n="resultSubtitle">Przeliczenie i etap życia</span>
+            </div>
+            <div class="card-body">
+                <div class="result-box">
+                    <div class="result-main">
+                        <div class="badge" id="stageBadge" data-empty-label="Czekam na dane">Czekam na dane</div>
+                        <strong id="humanAgeValue">—</strong>
+                        <p id="resultDescription" data-empty-label="Podaj wiek psa lub kota, aby zobaczyć orientacyjne przeliczenie na ludzkie lata.">Podaj wiek psa lub kota, aby zobaczyć orientacyjne przeliczenie na ludzkie lata.</p>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail">
+                            <strong id="petYearsValue">—</strong>
+                            <span data-i18n="detailPetAge">Wiek zwierzaka</span>
+                        </div>
+                        <div class="detail">
+                            <strong id="petProfileValue">—</strong>
+                            <span data-i18n="detailProfile">Typ / profil</span>
+                        </div>
+                        <div class="detail">
+                            <strong id="stageValue">—</strong>
+                            <span data-i18n="detailStage">Etap życia</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="layout">
+        <article class="card">
+            <div class="card-header">
+                <h2 data-i18n="timelineTitle">Jak działa przeliczanie</h2>
+                <span data-i18n="timelineSubtitle">Proste przybliżenie</span>
+            </div>
+            <div class="card-body">
+                <div class="timeline" id="timelineBox"></div>
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <h2 data-i18n="notesTitle">Uwagi</h2>
+                <span data-i18n="notesSubtitle">Interpretacja</span>
+            </div>
+            <div class="card-body">
+                <div class="note" id="notesBox" data-empty-label="Pierwsze lata życia psa i kota nie rosną liniowo względem ludzkich lat.">
+                    Pierwsze lata życia psa i kota nie rosną liniowo względem ludzkich lat.
+                </div>
+            </div>
+        </article>
+    </section>
+</div>
+
+<script>
+    const petTypeInput = document.getElementById('petType');
+    const petAgeInput = document.getElementById('petAge');
+    const dogSizeInput = document.getElementById('dogSize');
+    const dogSizeField = document.getElementById('dogSizeField');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const heroHumanAge = document.getElementById('heroHumanAge');
+    const heroStage = document.getElementById('heroStage');
+    const heroPetType = document.getElementById('heroPetType');
+
+    const stageBadge = document.getElementById('stageBadge');
+    const humanAgeValue = document.getElementById('humanAgeValue');
+    const resultDescription = document.getElementById('resultDescription');
+    const petYearsValue = document.getElementById('petYearsValue');
+    const petProfileValue = document.getElementById('petProfileValue');
+    const stageValue = document.getElementById('stageValue');
+    const timelineBox = document.getElementById('timelineBox');
+    const notesBox = document.getElementById('notesBox');
+
+    const langSwitcher = document.getElementById('langSwitcher');
+
+    const i18n = {
+        pl: {
+            pageTitle: 'Kalkulator wieku psa i kota',
+            heroTitle: 'Kalkulator wieku psa i kota',
+            heroDescription: 'Prosta strona do orientacyjnego przeliczania wieku psa lub kota na wiek ludzki. Dla psa możesz wybrać wielkość, a dla kota dostajesz klasyczne przybliżenie używane w popularnych kalkulatorach edukacyjnych.',
+            heroStat1: 'Szacowany wiek w ludzkich latach.',
+            heroStat2: 'Etap życia zwierzaka na podstawie wieku.',
+            heroStat3: 'Aktualnie wybrany typ zwierzęcia.',
+            inputTitle: 'Dane wejściowe',
+            inputSubtitle: 'Wybierz zwierzaka i wiek',
+            petTypeLabel: 'Typ zwierzaka',
+            petTypeDog: 'Pies',
+            petTypeCat: 'Kot',
+            petAgeLabel: 'Wiek zwierzaka',
+            dogSizeLabel: 'Wielkość psa',
+            dogSizeSmall: 'Mały pies',
+            dogSizeMedium: 'Średni pies',
+            dogSizeLarge: 'Duży pies',
+            calculateBtn: 'Oblicz wiek',
+            resetBtn: 'Reset',
+            inputNote: 'To kalkulator orientacyjny. Starzenie zwierząt zależy też od rasy, wielkości, stanu zdrowia, trybu życia i genetyki.',
+            resultTitle: 'Wynik',
+            resultSubtitle: 'Przeliczenie i etap życia',
+            resultEmptyBadge: 'Czekam na dane',
+            resultEmptyDescription: 'Podaj wiek psa lub kota, aby zobaczyć orientacyjne przeliczenie na ludzkie lata.',
+            detailPetAge: 'Wiek zwierzaka',
+            detailProfile: 'Typ / profil',
+            detailStage: 'Etap życia',
+            timelineTitle: 'Jak działa przeliczanie',
+            timelineSubtitle: 'Proste przybliżenie',
+            notesTitle: 'Uwagi',
+            notesSubtitle: 'Interpretacja',
+            notesEmpty: 'Pierwsze lata życia psa i kota nie rosną liniowo względem ludzkich lat.',
+            invalidData: 'Nieprawidłowe dane',
+            noData: 'Brak danych',
+            dog: 'Pies',
+            cat: 'Kot',
+            puppy: 'Szczeniak',
+            youngDog: 'Młody pies',
+            adultDog: 'Dorosły pies',
+            seniorDog: 'Senior pies',
+            kitten: 'Kocię',
+            youngCat: 'Młody kot',
+            adultCat: 'Dorosły kot',
+            seniorCat: 'Senior kot',
+            lowRisk: 'Niski',
+            humanYears: 'lat',
+            petYearsSuffix: 'lat',
+            smallDog: 'mały pies',
+            mediumDog: 'średni pies',
+            largeDog: 'duży pies',
+            catProfile: 'kot',
+            invalidAgeDescription: 'Podaj poprawny wiek zwierzaka.',
+            resultSentenceDog: 'Szacunkowo pies w wieku {petAge} lat odpowiada około {humanAge} ludzkim latom.',
+            resultSentenceCat: 'Szacunkowo kot w wieku {petAge} lat odpowiada około {humanAge} ludzkim latom.',
+            catNote: 'U kotów pierwsze 2 lata życia starzeją się szybciej, a potem przelicznik zwalnia. To uproszczony model edukacyjny.',
+            dogNote: 'Dla psa zastosowano uproszczony model zależny od wielkości. {sizeLabelCap} zwykle starzeje się inaczej niż pies o innej wielkości.',
+            timelineYear1: '1 rok',
+            timelineYear2: '2 lata',
+            timelineNext: 'Każdy kolejny',
+            timelineCat1: 'około 15 ludzkich lat',
+            timelineCat2: 'około 24 ludzkie lata',
+            timelineCatNext: 'około +4 ludzkie lata',
+            timelineDog1: 'około 15 ludzkich lat',
+            timelineDog2: 'około 24 ludzkie lata',
+            timelineDogNext: 'około {extra} ludzkich lat ({sizeLabel})'
+        },
+        en: {
+            pageTitle: 'Dog and Cat Age Calculator',
+            heroTitle: 'Dog and Cat Age Calculator',
+            heroDescription: 'A simple page for estimating a dog’s or cat’s age in human years. For dogs you can choose size, and for cats you get a common educational approximation used in many popular calculators.',
+            heroStat1: 'Estimated age in human years.',
+            heroStat2: 'Life stage based on the pet age.',
+            heroStat3: 'Currently selected pet type.',
+            inputTitle: 'Input data',
+            inputSubtitle: 'Choose pet and age',
+            petTypeLabel: 'Pet type',
+            petTypeDog: 'Dog',
+            petTypeCat: 'Cat',
+            petAgeLabel: 'Pet age',
+            dogSizeLabel: 'Dog size',
+            dogSizeSmall: 'Small dog',
+            dogSizeMedium: 'Medium dog',
+            dogSizeLarge: 'Large dog',
+            calculateBtn: 'Calculate age',
+            resetBtn: 'Reset',
+            inputNote: 'This is an approximate calculator. Animal aging also depends on breed, size, health, lifestyle, and genetics.',
+            resultTitle: 'Result',
+            resultSubtitle: 'Conversion and life stage',
+            resultEmptyBadge: 'Waiting for data',
+            resultEmptyDescription: 'Enter the age of a dog or cat to see the estimated conversion into human years.',
+            detailPetAge: 'Pet age',
+            detailProfile: 'Type / profile',
+            detailStage: 'Life stage',
+            timelineTitle: 'How the conversion works',
+            timelineSubtitle: 'Simple approximation',
+            notesTitle: 'Notes',
+            notesSubtitle: 'Interpretation',
+            notesEmpty: 'The first years of a dog’s or cat’s life do not grow linearly relative to human years.',
+            invalidData: 'Invalid data',
+            noData: 'No data',
+            dog: 'Dog',
+            cat: 'Cat',
+            puppy: 'Puppy',
+            youngDog: 'Young dog',
+            adultDog: 'Adult dog',
+            seniorDog: 'Senior dog',
+            kitten: 'Kitten',
+            youngCat: 'Young cat',
+            adultCat: 'Adult cat',
+            seniorCat: 'Senior cat',
+            lowRisk: 'Low',
+            humanYears: 'years',
+            petYearsSuffix: 'years',
+            smallDog: 'small dog',
+            mediumDog: 'medium dog',
+            largeDog: 'large dog',
+            catProfile: 'cat',
+            invalidAgeDescription: 'Enter a valid pet age.',
+            resultSentenceDog: 'Estimated: a dog aged {petAge} years corresponds to about {humanAge} human years.',
+            resultSentenceCat: 'Estimated: a cat aged {petAge} years corresponds to about {humanAge} human years.',
+            catNote: 'In cats, the first 2 years age faster and then the conversion slows down. This is a simplified educational model.',
+            dogNote: 'For dogs, a simplified size-based model is used. A {sizeLabel} usually ages differently than a dog of another size.',
+            timelineYear1: '1 year',
+            timelineYear2: '2 years',
+            timelineNext: 'Each next year',
+            timelineCat1: 'about 15 human years',
+            timelineCat2: 'about 24 human years',
+            timelineCatNext: 'about +4 human years',
+            timelineDog1: 'about 15 human years',
+            timelineDog2: 'about 24 human years',
+            timelineDogNext: 'about {extra} human years ({sizeLabel})'
+        },
+        de: {
+            pageTitle: 'Altersrechner für Hund und Katze',
+            heroTitle: 'Altersrechner für Hund und Katze',
+            heroDescription: 'Eine einfache Seite zur ungefähren Umrechnung des Alters eines Hundes oder einer Katze in Menschenjahre. Für Hunde kannst du die Größe wählen, für Katzen gibt es eine gängige pädagogische Näherung.',
+            heroStat1: 'Geschätztes Alter in Menschenjahren.',
+            heroStat2: 'Lebensphase basierend auf dem Tieralter.',
+            heroStat3: 'Aktuell ausgewählter Tiertyp.',
+            inputTitle: 'Eingabedaten',
+            inputSubtitle: 'Tier und Alter wählen',
+            petTypeLabel: 'Tierart',
+            petTypeDog: 'Hund',
+            petTypeCat: 'Katze',
+            petAgeLabel: 'Alter des Tieres',
+            dogSizeLabel: 'Hundgröße',
+            dogSizeSmall: 'Kleiner Hund',
+            dogSizeMedium: 'Mittelgroßer Hund',
+            dogSizeLarge: 'Großer Hund',
+            calculateBtn: 'Alter berechnen',
+            resetBtn: 'Zurücksetzen',
+            inputNote: 'Dies ist ein Näherungsrechner. Das Altern von Tieren hängt auch von Rasse, Größe, Gesundheit, Lebensstil und Genetik ab.',
+            resultTitle: 'Ergebnis',
+            resultSubtitle: 'Umrechnung und Lebensphase',
+            resultEmptyBadge: 'Warte auf Daten',
+            resultEmptyDescription: 'Gib das Alter eines Hundes oder einer Katze ein, um die ungefähre Umrechnung in Menschenjahre zu sehen.',
+            detailPetAge: 'Tieralter',
+            detailProfile: 'Typ / Profil',
+            detailStage: 'Lebensphase',
+            timelineTitle: 'Wie die Umrechnung funktioniert',
+            timelineSubtitle: 'Einfache Näherung',
+            notesTitle: 'Hinweise',
+            notesSubtitle: 'Interpretation',
+            notesEmpty: 'Die ersten Lebensjahre von Hund und Katze wachsen nicht linear im Verhältnis zu Menschenjahren.',
+            invalidData: 'Ungültige Daten',
+            noData: 'Keine Daten',
+            dog: 'Hund',
+            cat: 'Katze',
+            puppy: 'Welpe',
+            youngDog: 'Junger Hund',
+            adultDog: 'Erwachsener Hund',
+            seniorDog: 'Senior-Hund',
+            kitten: 'Kätzchen',
+            youngCat: 'Junge Katze',
+            adultCat: 'Erwachsene Katze',
+            seniorCat: 'Senior-Katze',
+            lowRisk: 'Niedrig',
+            humanYears: 'Jahre',
+            petYearsSuffix: 'Jahre',
+            smallDog: 'kleiner Hund',
+            mediumDog: 'mittelgroßer Hund',
+            largeDog: 'großer Hund',
+            catProfile: 'Katze',
+            invalidAgeDescription: 'Gib ein gültiges Tieralter ein.',
+            resultSentenceDog: 'Geschätzt: Ein Hund im Alter von {petAge} Jahren entspricht etwa {humanAge} Menschenjahren.',
+            resultSentenceCat: 'Geschätzt: Eine Katze im Alter von {petAge} Jahren entspricht etwa {humanAge} Menschenjahren.',
+            catNote: 'Bei Katzen altern die ersten 2 Jahre schneller, danach verlangsamt sich die Umrechnung. Das ist ein vereinfachtes Modell.',
+            dogNote: 'Für Hunde wird ein vereinfachtes größenabhängiges Modell verwendet. Ein {sizeLabel} altert normalerweise anders als ein Hund anderer Größe.',
+            timelineYear1: '1 Jahr',
+            timelineYear2: '2 Jahre',
+            timelineNext: 'Jedes weitere Jahr',
+            timelineCat1: 'etwa 15 Menschenjahre',
+            timelineCat2: 'etwa 24 Menschenjahre',
+            timelineCatNext: 'etwa +4 Menschenjahre',
+            timelineDog1: 'etwa 15 Menschenjahre',
+            timelineDog2: 'etwa 24 Menschenjahre',
+            timelineDogNext: 'etwa {extra} Menschenjahre ({sizeLabel})'
+        }
+    };
+
+    let currentLang = 'pl';
+
+    function formatNumber(value, digits = 1) {
+        // Use locale based on language
+        const locales = { pl: 'pl-PL', en: 'en-US', de: 'de-DE' };
+        return new Intl.NumberFormat(locales[currentLang] || 'pl-PL', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: digits
+        }).format(value);
+    }
+
+    function t(key) {
+        return i18n[currentLang][key] || key;
+    }
+
+    function interpolate(template, values) {
+        return template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
+    }
+
+    function capitalize(text) {
+        return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+    }
+
+    function updateStaticTranslations() {
+        document.documentElement.lang = currentLang;
+        document.title = t('pageTitle');
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+            const key = node.dataset.i18n;
+            node.textContent = t(key);
+        });
+        langSwitcher.querySelectorAll('[data-lang]').forEach((button) => {
+            button.classList.toggle('active', button.dataset.lang === currentLang);
+        });
+    }
+
+    function getDogHumanAge(age, size) {
+        if (age <= 0) return 0;
+
+        const map = {
+            small: { secondYear: 24, additional: 4 },
+            medium: { secondYear: 24, additional: 5 },
+            large: { secondYear: 24, additional: 6 }
+        };
+
+        const profile = map[size] || map.medium;
+
+        if (age <= 1) return age * 15;
+        if (age <= 2) return 15 + (age - 1) * (profile.secondYear - 15);
+        return profile.secondYear + (age - 2) * profile.additional;
+    }
+
+    function getCatHumanAge(age) {
+        if (age <= 0) return 0;
+        if (age <= 1) return age * 15;
+        if (age <= 2) return 15 + (age - 1) * 9;
+        return 24 + (age - 2) * 4;
+    }
+
+    function getLifeStage(type, age) {
+        if (type === 'cat') {
+            if (age < 1) return { label: t('kitten'), tone: 'good' };
+            if (age < 3) return { label: t('youngCat'), tone: 'good' };
+            if (age < 10) return { label: t('adultCat'), tone: 'warn' };
+            return { label: t('seniorCat'), tone: 'warn' };
+        }
+
+        if (age < 1) return { label: t('puppy'), tone: 'good' };
+        if (age < 3) return { label: t('youngDog'), tone: 'good' };
+        if (age < 8) return { label: t('adultDog'), tone: 'warn' };
+        return { label: t('seniorDog'), tone: 'warn' };
+    }
+
+    function getDogSizeLabel(size) {
+        return size === 'small' ? t('smallDog') : size === 'large' ? t('largeDog') : t('mediumDog');
+    }
+
+    function renderTimeline(type, size) {
+        if (type === 'cat') {
+            timelineBox.innerHTML = [
+                [t('timelineYear1'), t('timelineCat1')],
+                [t('timelineYear2'), t('timelineCat2')],
+                [t('timelineNext'), t('timelineCatNext')]
+            ].map(([left, right]) => `
+                <div class="timeline-row">
+                    <strong>${left}</strong>
+                    <span>${right}</span>
+                </div>
+            `).join('');
+            return;
+        }
+
+        const extra = size === 'small' ? '+4' : size === 'large' ? '+6' : '+5';
+        timelineBox.innerHTML = [
+            [t('timelineYear1'), t('timelineDog1')],
+            [t('timelineYear2'), t('timelineDog2')],
+            [t('timelineNext'), interpolate(t('timelineDogNext'), { extra, sizeLabel: getDogSizeLabel(size) })]
+        ].map(([left, right]) => `
+            <div class="timeline-row">
+                <strong>${left}</strong>
+                <span>${right}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderNotes(type, size) {
+        if (type === 'cat') {
+            notesBox.textContent = t('catNote');
+            return;
+        }
+
+        const sizeLabel = getDogSizeLabel(size);
+        notesBox.textContent = interpolate(t('dogNote'), {
+            sizeLabel,
+            sizeLabelCap: capitalize(sizeLabel)
+        });
+    }
+
+    function renderResult() {
+        const petType = petTypeInput.value;
+        const petAge = Number(petAgeInput.value);
+        const dogSize = dogSizeInput.value;
+
+        dogSizeField.style.display = petType === 'dog' ? 'grid' : 'none';
+        heroPetType.textContent = petType === 'dog' ? t('dog') : t('cat');
+
+        if (!Number.isFinite(petAge) || petAge < 0) {
+            stageBadge.textContent = t('invalidData');
+            stageBadge.className = 'badge warn';
+            humanAgeValue.textContent = '—';
+            resultDescription.textContent = t('invalidAgeDescription');
+            petYearsValue.textContent = '—';
+            petProfileValue.textContent = '—';
+            stageValue.textContent = '—';
+            heroHumanAge.textContent = '—';
+            heroStage.textContent = t('noData');
+            renderTimeline(petType, dogSize);
+            renderNotes(petType, dogSize);
+            return;
+        }
+
+        const humanAge = petType === 'dog' ? getDogHumanAge(petAge, dogSize) : getCatHumanAge(petAge);
+        const stage = getLifeStage(petType, petAge);
+        const profileLabel = petType === 'dog' ? getDogSizeLabel(dogSize) : t('catProfile');
+
+        stageBadge.textContent = stage.label;
+        stageBadge.className = `badge ${stage.tone}`;
+        humanAgeValue.textContent = `${formatNumber(humanAge, 1)} ${t('humanYears')}`;
+        resultDescription.textContent = petType === 'dog'
+            ? interpolate(t('resultSentenceDog'), { petAge: formatNumber(petAge, 1), humanAge: formatNumber(humanAge, 1) })
+            : interpolate(t('resultSentenceCat'), { petAge: formatNumber(petAge, 1), humanAge: formatNumber(humanAge, 1) });
+        petYearsValue.textContent = `${formatNumber(petAge, 1)} ${t('petYearsSuffix')}`;
+        petProfileValue.textContent = profileLabel;
+        stageValue.textContent = stage.label;
+        heroHumanAge.textContent = `${formatNumber(humanAge, 1)} ${t('humanYears')}`;
+        heroStage.textContent = stage.label;
+
+        renderTimeline(petType, dogSize);
+        renderNotes(petType, dogSize);
+    }
+
+    langSwitcher.querySelectorAll('[data-lang]').forEach((button) => {
+        button.addEventListener('click', () => {
+            currentLang = button.dataset.lang;
+            updateStaticTranslations();
+            renderResult();
+        });
+    });
+
+    calculateBtn.addEventListener('click', renderResult);
+
+    resetBtn.addEventListener('click', () => {
+        petTypeInput.value = 'dog';
+        petAgeInput.value = '3';
+        dogSizeInput.value = 'medium';
+        renderResult();
+    });
+
+    [petTypeInput, petAgeInput, dogSizeInput].forEach((element) => {
+        element.addEventListener('input', renderResult);
+        element.addEventListener('change', renderResult);
+    });
+
+    updateStaticTranslations();
+    renderResult();
+</script>
+</body>
+</html>

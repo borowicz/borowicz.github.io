@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kalkulator kalorii</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: rgba(18, 24, 46, 0.92);
+            --panel-2: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.12);
+            --text: #edf2ff;
+            --muted: #97a3c6;
+            --accent: #7c9cff;
+            --accent-2: #9c7cff;
+            --good: #49c68a;
+            --warn: #ffbf5e;
+            --bad: #ff7d7d;
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at top left, rgba(124, 156, 255, 0.22), transparent 30%),
+                    radial-gradient(circle at top right, rgba(156, 124, 255, 0.18), transparent 28%),
+                    linear-gradient(180deg, #0a1020 0%, #10182b 100%);
+        }
+
+        body { padding: 24px; }
+
+        .page {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            display: grid;
+            gap: 18px;
+        }
+
+        .hero, .card {
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) + 4px);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 0.98;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 64ch;
+        }
+
+        .hero-stats {
+            display: grid;
+            gap: 12px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--panel-2);
+            padding: 16px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 26px;
+            margin-bottom: 6px;
+            letter-spacing: -0.03em;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 0.95fr;
+            gap: 18px;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .card-header span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        input, select, button {
+            font: inherit;
+        }
+
+        input, select {
+            width: 100%;
+            min-height: 52px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            padding: 0 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(124, 156, 255, 0.65);
+            box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.08);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .btn {
+            min-height: 48px;
+            padding: 0 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(124, 156, 255, 0.95), rgba(156, 124, 255, 0.95));
+            border-color: transparent;
+        }
+
+        .result-box {
+            display: grid;
+            gap: 14px;
+        }
+
+        .result-main {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        }
+
+        .result-main strong {
+            display: block;
+            font-size: clamp(32px, 6vw, 52px);
+            line-height: 1;
+            letter-spacing: -0.05em;
+            margin-bottom: 8px;
+        }
+
+        .result-main p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .status.good {
+            color: var(--good);
+            border-color: rgba(73, 198, 138, 0.32);
+            background: rgba(73, 198, 138, 0.08);
+        }
+
+        .status.warn {
+            color: var(--warn);
+            border-color: rgba(255, 191, 94, 0.28);
+            background: rgba(255, 191, 94, 0.08);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .detail {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            padding: 14px;
+        }
+
+        .detail strong {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .detail span {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .macro {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .macro strong {
+            display: block;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .macro span {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .note {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 14px;
+        }
+
+        @media (max-width: 920px) {
+            .hero, .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid, .macro-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 14px; }
+            .hero, .card-body { padding: 16px; }
+            .form-grid, .details-grid, .macro-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <section class="hero">
+        <div>
+            <div class="eyebrow">🔥 github.io html / css / js</div>
+            <h1>Kalkulator kalorii</h1>
+            <p>
+                Prosty kalkulator PPM, CPM i kalorii dla celu. Dodatkowo pokazuje orientacyjny
+                rozkład makroskładników na dzień. Działa jako pojedynczy statyczny plik HTML.
+            </p>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <strong id="heroTdee">—</strong>
+                <span>Szacunkowe CPM / TDEE po obliczeniu.</span>
+            </div>
+            <div class="stat">
+                <strong id="heroGoal">Brak danych</strong>
+                <span>Kalorie dla wybranego celu.</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout">
+        <article class="card">
+            <div class="card-header">
+                <h2>Dane wejściowe</h2>
+                <span>Wzrost, masa, wiek, aktywność</span>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="sex">Płeć</label>
+                        <select id="sex">
+                            <option value="female">Kobieta</option>
+                            <option value="male">Mężczyzna</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="age">Wiek</label>
+                        <input id="age" type="number" min="10" max="120" step="1" value="30" placeholder="np. 30">
+                    </div>
+
+                    <div class="field">
+                        <label for="height">Wzrost</label>
+                        <input id="height" type="number" min="50" max="250" step="0.1" value="175" placeholder="np. 175">
+                    </div>
+
+                    <div class="field">
+                        <label for="heightUnit">Jednostka wzrostu</label>
+                        <select id="heightUnit">
+                            <option value="cm" selected>cm</option>
+                            <option value="m">m</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="weight">Masa ciała</label>
+                        <input id="weight" type="number" min="10" max="400" step="0.1" value="72" placeholder="np. 72">
+                    </div>
+
+                    <div class="field">
+                        <label for="weightUnit">Jednostka masy</label>
+                        <select id="weightUnit">
+                            <option value="kg" selected>kg</option>
+                            <option value="lb">lb</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="activity">Aktywność</label>
+                        <select id="activity">
+                            <option value="1.2">Siedzący tryb życia</option>
+                            <option value="1.375">Lekka aktywność</option>
+                            <option value="1.55" selected>Umiarkowana aktywność</option>
+                            <option value="1.725">Duża aktywność</option>
+                            <option value="1.9">Bardzo duża aktywność</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="goal">Cel</label>
+                        <select id="goal">
+                            <option value="-300">Redukcja lekka</option>
+                            <option value="-500" selected>Redukcja</option>
+                            <option value="0">Utrzymanie</option>
+                            <option value="300">Masa lekka</option>
+                            <option value="500">Masa</option>
+                        </select>
+                    </div>
+
+                    <div class="field full">
+                        <label for="proteinPerKg">Białko (g / kg)</label>
+                        <input id="proteinPerKg" type="number" min="0.8" max="3.5" step="0.1" value="1.8">
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" id="calculateBtn" type="button">Oblicz kalorie</button>
+                    <button class="btn" id="resetBtn" type="button">Reset</button>
+                </div>
+
+                <div class="note">
+                    Kalkulator używa wzoru Mifflin-St Jeor do oszacowania PPM. Wyniki są orientacyjne
+                    i nie zastępują indywidualnej konsultacji dietetycznej.
+                </div>
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <h2>Wynik</h2>
+                <span>PPM / CPM / makro</span>
+            </div>
+            <div class="card-body">
+                <div class="result-box">
+                    <div class="result-main">
+                        <div class="status" id="statusBadge">Czekam na dane</div>
+                        <strong id="goalCalories">—</strong>
+                        <p id="description">Uzupełnij dane, a kalkulator wyliczy kalorie dla wybranego celu.</p>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail">
+                            <strong id="bmrValue">—</strong>
+                            <span>PPM / BMR</span>
+                        </div>
+                        <div class="detail">
+                            <strong id="tdeeValue">—</strong>
+                            <span>CPM / TDEE</span>
+                        </div>
+                        <div class="detail">
+                            <strong id="goalDeltaValue">—</strong>
+                            <span>Zmiana względem utrzymania</span>
+                        </div>
+                    </div>
+
+                    <div class="macro-grid">
+                        <div class="macro">
+                            <strong id="proteinValue">—</strong>
+                            <span>Białko / dzień</span>
+                        </div>
+                        <div class="macro">
+                            <strong id="fatValue">—</strong>
+                            <span>Tłuszcze / dzień</span>
+                        </div>
+                        <div class="macro">
+                            <strong id="carbsValue">—</strong>
+                            <span>Węglowodany / dzień</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+</div>
+
+<script>
+    const sexInput = document.getElementById('sex');
+    const ageInput = document.getElementById('age');
+    const heightInput = document.getElementById('height');
+    const heightUnitInput = document.getElementById('heightUnit');
+    const weightInput = document.getElementById('weight');
+    const weightUnitInput = document.getElementById('weightUnit');
+    const activityInput = document.getElementById('activity');
+    const goalInput = document.getElementById('goal');
+    const proteinPerKgInput = document.getElementById('proteinPerKg');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const statusBadge = document.getElementById('statusBadge');
+    const goalCalories = document.getElementById('goalCalories');
+    const description = document.getElementById('description');
+
+    const bmrValue = document.getElementById('bmrValue');
+    const tdeeValue = document.getElementById('tdeeValue');
+    const goalDeltaValue = document.getElementById('goalDeltaValue');
+
+    const proteinValue = document.getElementById('proteinValue');
+    const fatValue = document.getElementById('fatValue');
+    const carbsValue = document.getElementById('carbsValue');
+
+    const heroTdee = document.getElementById('heroTdee');
+    const heroGoal = document.getElementById('heroGoal');
+
+    function formatNumber(value, digits = 0) {
+        return new Intl.NumberFormat('pl-PL', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: digits
+        }).format(value);
+    }
+
+    function toCm(value, unit) {
+        return unit === 'm' ? value * 100 : value;
+    }
+
+    function toKg(value, unit) {
+        return unit === 'lb' ? value * 0.45359237 : value;
+    }
+
+    function renderCalories() {
+        const age = Number(ageInput.value);
+        const rawHeight = Number(heightInput.value);
+        const rawWeight = Number(weightInput.value);
+        const activity = Number(activityInput.value);
+        const goalDelta = Number(goalInput.value);
+        const proteinPerKg = Number(proteinPerKgInput.value);
+
+        if (
+            !Number.isFinite(age) || age <= 0 ||
+            !Number.isFinite(rawHeight) || rawHeight <= 0 ||
+            !Number.isFinite(rawWeight) || rawWeight <= 0 ||
+            !Number.isFinite(activity) || activity <= 0
+        ) {
+            statusBadge.textContent = 'Nieprawidłowe dane';
+            statusBadge.className = 'status warn';
+            goalCalories.textContent = '—';
+            description.textContent = 'Podaj poprawne dane wejściowe.';
+            bmrValue.textContent = '—';
+            tdeeValue.textContent = '—';
+            goalDeltaValue.textContent = '—';
+            proteinValue.textContent = '—';
+            fatValue.textContent = '—';
+            carbsValue.textContent = '—';
+            heroTdee.textContent = '—';
+            heroGoal.textContent = 'Brak danych';
+            return;
+        }
+
+        const heightCm = toCm(rawHeight, heightUnitInput.value);
+        const weightKg = toKg(rawWeight, weightUnitInput.value);
+        const sex = sexInput.value;
+
+        let bmr = 10 * weightKg + 6.25 * heightCm - 5 * age;
+        bmr += sex === 'male' ? 5 : -161;
+
+        const tdee = bmr * activity;
+        const targetCalories = tdee + goalDelta;
+
+        const protein = weightKg * proteinPerKg;
+        const fat = weightKg * 0.9;
+        const proteinKcal = protein * 4;
+        const fatKcal = fat * 9;
+        const carbs = Math.max(0, (targetCalories - proteinKcal - fatKcal) / 4);
+
+        const goalText = goalDelta < 0
+            ? `Redukcja ${formatNumber(Math.abs(goalDelta), 0)} kcal`
+            : goalDelta > 0
+                ? `Nadwyżka ${formatNumber(goalDelta, 0)} kcal`
+                : 'Utrzymanie';
+
+        statusBadge.textContent = goalText;
+        statusBadge.className = goalDelta === 0 ? 'status good' : 'status warn';
+
+        goalCalories.textContent = `${formatNumber(targetCalories, 0)} kcal`;
+        description.textContent = `PPM ${formatNumber(bmr, 0)} kcal, CPM ${formatNumber(tdee, 0)} kcal, cel ${formatNumber(targetCalories, 0)} kcal.`;
+
+        bmrValue.textContent = `${formatNumber(bmr, 0)} kcal`;
+        tdeeValue.textContent = `${formatNumber(tdee, 0)} kcal`;
+        goalDeltaValue.textContent = `${goalDelta > 0 ? '+' : ''}${formatNumber(goalDelta, 0)} kcal`;
+
+        proteinValue.textContent = `${formatNumber(protein, 0)} g`;
+        fatValue.textContent = `${formatNumber(fat, 0)} g`;
+        carbsValue.textContent = `${formatNumber(carbs, 0)} g`;
+
+        heroTdee.textContent = `${formatNumber(tdee, 0)} kcal`;
+        heroGoal.textContent = `${formatNumber(targetCalories, 0)} kcal`;
+    }
+
+    calculateBtn.addEventListener('click', renderCalories);
+
+    resetBtn.addEventListener('click', () => {
+        sexInput.value = 'female';
+        ageInput.value = '30';
+        heightInput.value = '175';
+        heightUnitInput.value = 'cm';
+        weightInput.value = '72';
+        weightUnitInput.value = 'kg';
+        activityInput.value = '1.55';
+        goalInput.value = '-500';
+        proteinPerKgInput.value = '1.8';
+        renderCalories();
+    });
+
+    [
+        sexInput,
+        ageInput,
+        heightInput,
+        heightUnitInput,
+        weightInput,
+        weightUnitInput,
+        activityInput,
+        goalInput,
+        proteinPerKgInput
+    ].forEach((element) => {
+        element.addEventListener('input', renderCalories);
+        element.addEventListener('change', renderCalories);
+    });
+
+    renderCalories();
+</script>
+</body>
+</html>
