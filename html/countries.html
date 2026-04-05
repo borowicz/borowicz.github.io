@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country / Currency / Dial Code Lookup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#0b1020;--panel:#121933;--panel-2:#1a2347;--text:#e8ecff;--muted:#aab4da;
+            --accent:#7c9cff;--accent-2:#4ee1c1;--danger:#ff6b81;--border:rgba(255,255,255,.08);
+            --shadow:0 10px 30px rgba(0,0,0,.28)
+        }
+        *{box-sizing:border-box} html,body{margin:0;padding:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0a0f1d,#0f1630 35%,#0a1020);color:var(--text);min-height:100%}
+        body{padding:20px} a{color:inherit;text-decoration:none}
+        .container{max-width:1200px;margin:0 auto}
+        .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+        .brand{display:flex;gap:12px;align-items:center}
+        .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:var(--shadow)}
+        .title h1{margin:0;font-size:1.25rem}.title p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+        .actions{display:flex;gap:10px;flex-wrap:wrap}
+        .btn,.file,button{border:1px solid var(--border);background:linear-gradient(180deg,var(--panel-2),var(--panel));color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:var(--shadow)}
+        button:hover,.btn:hover{transform:translateY(-1px)}
+        .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+        .card{grid-column:span 12;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);backdrop-filter: blur(4px)}
+        @media(min-width:860px){.span-6{grid-column:span 6}.span-4{grid-column:span 4}.span-8{grid-column:span 8}.span-12{grid-column:span 12}}
+        label{display:block;font-size:.88rem;color:var(--muted);margin:0 0 8px}
+        input,select,textarea{width:100%;background:#0b1228;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:12px 14px;outline:none}
+        textarea{min-height:180px;resize:vertical}
+        input[type="color"]{padding:4px;height:48px}
+        input:focus,select:focus,textarea:focus{border-color:rgba(124,156,255,.7);box-shadow:0 0 0 3px rgba(124,156,255,.15)}
+        .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+        .col-6,.col-4,.col-3,.col-8,.col-12{grid-column:span 12}
+        @media(min-width:860px){.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-8{grid-column:span 8}.col-12{grid-column:span 12}}
+        .muted{color:var(--muted)} .small{font-size:.88rem}
+        pre,code,.output{background:#091022;border:1px solid var(--border);border-radius:14px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+        .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+        .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(124,156,255,.12);border:1px solid rgba(124,156,255,.25);font-size:.8rem;color:#dbe4ff}
+        .table-wrap{width:100%;overflow:auto;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02)}
+        .table{width:100%;border-collapse:collapse;min-width:720px}.table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}.table th{color:var(--muted);font-weight:600;position:sticky;top:0;background:#0f1733;z-index:1}
+        .hero{margin:4px 0 16px;color:var(--muted)}
+        .footer{margin-top:18px;color:var(--muted);font-size:.86rem}
+        .preview{border:1px dashed var(--border);border-radius:16px;padding:16px;background:rgba(255,255,255,.02)}
+        .flex{display:flex;gap:12px;flex-wrap:wrap}
+        .kv{display:grid;grid-template-columns:180px 1fr;gap:10px}
+        .links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+        .links a{display:block;padding:14px;border-radius:16px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--border);box-shadow:var(--shadow)}
+        .search-grid{display:grid;grid-template-columns:1fr;gap:12px}
+        .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+        .stat{padding:14px;border-radius:16px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--border)}
+        .stat strong{display:block;font-size:1.1rem}
+        .results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+        .mobile-list{display:grid;gap:12px}
+        .country-card{padding:14px;border-radius:16px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--border);box-shadow:var(--shadow)}
+        .country-card h3{margin:0 0 10px;font-size:1rem}
+        .country-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        .country-meta div{padding:10px;border-radius:12px;background:#0b1228;border:1px solid var(--border)}
+        .country-meta span{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px}
+        .empty{padding:18px;border:1px dashed var(--border);border-radius:16px;color:var(--muted);text-align:center}
+        .mobile-only{display:block}
+        .desktop-only{display:none}
+        @media(min-width:860px){
+            .search-grid{grid-template-columns:2fr 1fr}
+            .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+            .mobile-only{display:none}
+            .desktop-only{display:block}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topbar">
+        <div class="brand">
+            <div class="logo"></div>
+            <div class="title">
+                <h1>Country / Currency / Dial Code Lookup</h1>
+                <p>Filter a small reference dataset client-side.</p>
+            </div>
+        </div>
+        <div class="actions">
+            <a class="btn" href="../index.html">← Back</a>
+        </div>
+    </div>
+
+    <div class="grid">
+        <section class="card span-12">
+            <p class="hero">Search by country name, ISO code, currency, dial code, or capital. Built for quick lookups on desktop and mobile.</p>
+            <div class="search-grid">
+                <div>
+                    <label for="q">Search</label>
+                    <input id="q" placeholder="country, ISO, currency, dial code, capital">
+                </div>
+                <div>
+                    <label for="sort">Sort</label>
+                    <select id="sort">
+                        <option value="country-asc">Country A–Z</option>
+                        <option value="country-desc">Country Z–A</option>
+                        <option value="code-asc">ISO A–Z</option>
+                        <option value="dial-asc">Dial code ↑</option>
+                    </select>
+                </div>
+            </div>
+            <div class="toolbar">
+                <button type="button" id="clearBtn">Clear</button>
+                <button type="button" id="copyBtn">Copy results</button>
+                <span class="badge" id="resultBadge">0 results</span>
+            </div>
+        </section>
+
+        <section class="card span-12">
+            <div class="stats">
+                <div class="stat"><span class="muted small">Visible results</span><strong id="visibleCount">0</strong></div>
+                <div class="stat"><span class="muted small">Total countries</span><strong id="totalCount">0</strong></div>
+                <div class="stat"><span class="muted small">Unique currencies</span><strong id="currencyCount">0</strong></div>
+                <div class="stat"><span class="muted small">Unique dial codes</span><strong id="dialCount">0</strong></div>
+            </div>
+        </section>
+
+        <section class="card span-12">
+            <div class="results-head">
+                <div>
+                    <h2 style="margin:0;font-size:1.05rem">Results</h2>
+                    <p class="muted small" style="margin:6px 0 0">Desktop gets a table, mobile gets stacked cards.</p>
+                </div>
+            </div>
+
+            <div class="desktop-only">
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                        <tr><th>Country</th><th>ISO</th><th>Currency</th><th>Dial</th><th>Capital</th></tr>
+                        </thead>
+                        <tbody id="rows"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mobile-only">
+                <div id="cards" class="mobile-list"></div>
+            </div>
+
+            <div id="emptyState" class="empty" hidden>No matches found. Try a different country, code, currency, or dial prefix.</div>
+        </section>
+    </div>
+
+    <div class="footer">Static client-side HTML tool with responsive mobile cards and searchable country metadata.</div></div>
+<script>
+    const $ = (s, root = document) => root.querySelector(s);
+    const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+    function esc(s) {
+        return String(s).replace(/[&<>"]/g, (m) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+        }[m]));
+    }
+    function copyText(text){
+        return navigator.clipboard?.writeText(text);
+    }
+    function normalizeDial(value){
+        return String(value || '').replace(/\s+/g,'').trim();
+    }
+    function dialSortValue(value){
+        const normalized = normalizeDial(value).replace(/^\+/, '');
+        const parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
+    }
+</script>
+<script>
+    const data = [
+        {"country":"Afghanistan","code":"AF","currency":"AFN","dial":"+93","capital":"—"},
+        {"country":"Åland Islands","code":"AX","currency":"EUR","dial":"+358","capital":"—"},
+        {"country":"Albania","code":"AL","currency":"ALL","dial":"+355","capital":"—"},
+        {"country":"Algeria","code":"DZ","currency":"DZD","dial":"+213","capital":"—"},
+        {"country":"American Samoa","code":"AS","currency":"USD","dial":"+1684","capital":"—"},
+        {"country":"Andorra","code":"AD","currency":"EUR","dial":"+376","capital":"—"},
+        {"country":"Angola","code":"AO","currency":"AOA","dial":"+244","capital":"—"},
+        {"country":"Anguilla","code":"AI","currency":"XCD","dial":"+1264","capital":"—"},
+        {"country":"Antarctica","code":"AQ","currency":"—","dial":"+672","capital":"—"},
+        {"country":"Antigua and Barbuda","code":"AG","currency":"XCD","dial":"+1268","capital":"—"},
+        {"country":"Argentina","code":"AR","currency":"ARS","dial":"+54","capital":"—"},
+        {"country":"Armenia","code":"AM","currency":"AMD","dial":"+374","capital":"—"},
+        {"country":"Aruba","code":"AW","currency":"AWG","dial":"+297","capital":"—"},
+        {"country":"Australia","code":"AU","currency":"AUD","dial":"+61","capital":"—"},
+        {"country":"Austria","code":"AT","currency":"EUR","dial":"+43","capital":"Vienna"},
+        {"country":"Azerbaijan","code":"AZ","currency":"AZN","dial":"+994","capital":"—"},
+        {"country":"Bahamas","code":"BS","currency":"BSD","dial":"+1242","capital":"—"},
+        {"country":"Bahrain","code":"BH","currency":"BHD","dial":"+973","capital":"—"},
+        {"country":"Bangladesh","code":"BD","currency":"BDT","dial":"+880","capital":"—"},
+        {"country":"Barbados","code":"BB","currency":"BBD","dial":"+1246","capital":"—"},
+        {"country":"Belarus","code":"BY","currency":"BYN","dial":"+375","capital":"—"},
+        {"country":"Belgium","code":"BE","currency":"EUR","dial":"+32","capital":"—"},
+        {"country":"Belize","code":"BZ","currency":"BZD","dial":"+501","capital":"—"},
+        {"country":"Benin","code":"BJ","currency":"XOF","dial":"+229","capital":"—"},
+        {"country":"Bermuda","code":"BM","currency":"BMD","dial":"+1441","capital":"—"},
+        {"country":"Bhutan","code":"BT","currency":"BTN","dial":"+975","capital":"—"},
+        {"country":"Bolivia","code":"BO","currency":"BOB","dial":"+591","capital":"—"},
+        {"country":"Bosnia and Herzegovina","code":"BA","currency":"BAM","dial":"+387","capital":"—"},
+        {"country":"Botswana","code":"BW","currency":"BWP","dial":"+267","capital":"—"},
+        {"country":"Brazil","code":"BR","currency":"BRL","dial":"+55","capital":"—"},
+        {"country":"British Indian Ocean Territory","code":"IO","currency":"USD","dial":"+246","capital":"—"},
+        {"country":"Brunei Darussalam","code":"BN","currency":"BND","dial":"+673","capital":"—"},
+        {"country":"Bulgaria","code":"BG","currency":"BGN","dial":"+359","capital":"—"},
+        {"country":"Burkina Faso","code":"BF","currency":"XOF","dial":"+226","capital":"—"},
+        {"country":"Burundi","code":"BI","currency":"BIF","dial":"+257","capital":"—"},
+        {"country":"Cambodia","code":"KH","currency":"KHR","dial":"+855","capital":"—"},
+        {"country":"Cameroon","code":"CM","currency":"XAF","dial":"+237","capital":"—"},
+        {"country":"Canada","code":"CA","currency":"CAD","dial":"+1","capital":"—"},
+        {"country":"Cabo Verde","code":"CV","currency":"CVE","dial":"+238","capital":"—"},
+        {"country":"Cayman Islands","code":"KY","currency":"KYD","dial":"+345","capital":"—"},
+        {"country":"Central African Republic","code":"CF","currency":"XAF","dial":"+236","capital":"—"},
+        {"country":"Chad","code":"TD","currency":"XAF","dial":"+235","capital":"—"},
+        {"country":"Chile","code":"CL","currency":"CLP","dial":"+56","capital":"—"},
+        {"country":"China","code":"CN","currency":"CNY","dial":"+86","capital":"—"},
+        {"country":"Christmas Island","code":"CX","currency":"AUD","dial":"+61","capital":"—"},
+        {"country":"Cocos (Keeling) Islands","code":"CC","currency":"AUD","dial":"+61","capital":"—"},
+        {"country":"Colombia","code":"CO","currency":"COP","dial":"+57","capital":"—"},
+        {"country":"Comoros","code":"KM","currency":"KMF","dial":"+269","capital":"—"},
+        {"country":"Congo","code":"CG","currency":"XAF","dial":"+242","capital":"—"},
+        {"country":"Democratic Republic of the Congo","code":"CD","currency":"CDF","dial":"+243","capital":"—"},
+        {"country":"Cook Islands","code":"CK","currency":"NZD","dial":"+682","capital":"—"},
+        {"country":"Costa Rica","code":"CR","currency":"CRC","dial":"+506","capital":"—"},
+        {"country":"Côte d'Ivoire","code":"CI","currency":"XOF","dial":"+225","capital":"—"},
+        {"country":"Croatia","code":"HR","currency":"EUR","dial":"+385","capital":"—"},
+        {"country":"Cuba","code":"CU","currency":"CUP","dial":"+53","capital":"—"},
+        {"country":"Cyprus","code":"CY","currency":"EUR","dial":"+357","capital":"—"},
+        {"country":"Czechia","code":"CZ","currency":"CZK","dial":"+420","capital":"—"},
+        {"country":"Denmark","code":"DK","currency":"DKK","dial":"+45","capital":"—"},
+        {"country":"Djibouti","code":"DJ","currency":"DJF","dial":"+253","capital":"—"},
+        {"country":"Dominica","code":"DM","currency":"XCD","dial":"+1767","capital":"—"},
+        {"country":"Dominican Republic","code":"DO","currency":"DOP","dial":"+1849","capital":"—"},
+        {"country":"Ecuador","code":"EC","currency":"USD","dial":"+593","capital":"—"},
+        {"country":"Egypt","code":"EG","currency":"EGP","dial":"+20","capital":"—"},
+        {"country":"El Salvador","code":"SV","currency":"USD","dial":"+503","capital":"—"},
+        {"country":"Equatorial Guinea","code":"GQ","currency":"XAF","dial":"+240","capital":"—"},
+        {"country":"Eritrea","code":"ER","currency":"ERN","dial":"+291","capital":"—"},
+        {"country":"Estonia","code":"EE","currency":"EUR","dial":"+372","capital":"—"},
+        {"country":"Ethiopia","code":"ET","currency":"ETB","dial":"+251","capital":"—"},
+        {"country":"Falkland Islands (Malvinas)","code":"FK","currency":"FKP","dial":"+500","capital":"—"},
+        {"country":"Faroe Islands","code":"FO","currency":"DKK","dial":"+298","capital":"—"},
+        {"country":"Fiji","code":"FJ","currency":"FJD","dial":"+679","capital":"—"},
+        {"country":"Finland","code":"FI","currency":"EUR","dial":"+358","capital":"—"},
+        {"country":"France","code":"FR","currency":"EUR","dial":"+33","capital":"Paris"},
+        {"country":"French Guiana","code":"GF","currency":"EUR","dial":"+594","capital":"—"},
+        {"country":"French Polynesia","code":"PF","currency":"XPF","dial":"+689","capital":"—"},
+        {"country":"Gabon","code":"GA","currency":"XAF","dial":"+241","capital":"—"},
+        {"country":"Gambia","code":"GM","currency":"GMD","dial":"+220","capital":"—"},
+        {"country":"Georgia","code":"GE","currency":"GEL","dial":"+995","capital":"—"},
+        {"country":"Germany","code":"DE","currency":"EUR","dial":"+49","capital":"Berlin"},
+        {"country":"Ghana","code":"GH","currency":"GHS","dial":"+233","capital":"—"},
+        {"country":"Gibraltar","code":"GI","currency":"GIP","dial":"+350","capital":"—"},
+        {"country":"Greece","code":"GR","currency":"EUR","dial":"+30","capital":"—"},
+        {"country":"Greenland","code":"GL","currency":"DKK","dial":"+299","capital":"—"},
+        {"country":"Grenada","code":"GD","currency":"XCD","dial":"+1473","capital":"—"},
+        {"country":"Guadeloupe","code":"GP","currency":"EUR","dial":"+590","capital":"—"},
+        {"country":"Guam","code":"GU","currency":"USD","dial":"+1671","capital":"—"},
+        {"country":"Guatemala","code":"GT","currency":"GTQ","dial":"+502","capital":"—"},
+        {"country":"Guernsey","code":"GG","currency":"GBP","dial":"+44","capital":"—"},
+        {"country":"Guinea","code":"GN","currency":"GNF","dial":"+224","capital":"—"},
+        {"country":"Guinea-Bissau","code":"GW","currency":"XOF","dial":"+245","capital":"—"},
+        {"country":"Guyana","code":"GY","currency":"GYD","dial":"+595","capital":"—"},
+        {"country":"Haiti","code":"HT","currency":"HTG","dial":"+509","capital":"—"},
+        {"country":"Vatican City","code":"VA","currency":"EUR","dial":"+379","capital":"—"},
+        {"country":"Honduras","code":"HN","currency":"HNL","dial":"+504","capital":"—"},
+        {"country":"Hong Kong","code":"HK","currency":"HKD","dial":"+852","capital":"—"},
+        {"country":"Hungary","code":"HU","currency":"HUF","dial":"+36","capital":"—"},
+        {"country":"Iceland","code":"IS","currency":"ISK","dial":"+354","capital":"—"},
+        {"country":"India","code":"IN","currency":"INR","dial":"+91","capital":"—"},
+        {"country":"Indonesia","code":"ID","currency":"IDR","dial":"+62","capital":"—"},
+        {"country":"Iran","code":"IR","currency":"IRR","dial":"+98","capital":"—"},
+        {"country":"Iraq","code":"IQ","currency":"IQD","dial":"+964","capital":"—"},
+        {"country":"Ireland","code":"IE","currency":"EUR","dial":"+353","capital":"—"},
+        {"country":"Isle of Man","code":"IM","currency":"GBP","dial":"+44","capital":"—"},
+        {"country":"Israel","code":"IL","currency":"ILS","dial":"+972","capital":"—"},
+        {"country":"Italy","code":"IT","currency":"EUR","dial":"+39","capital":"—"},
+        {"country":"Jamaica","code":"JM","currency":"JMD","dial":"+1876","capital":"—"},
+        {"country":"Japan","code":"JP","currency":"JPY","dial":"+81","capital":"Tokyo"},
+        {"country":"Jersey","code":"JE","currency":"GBP","dial":"+44","capital":"—"},
+        {"country":"Jordan","code":"JO","currency":"JOD","dial":"+962","capital":"—"},
+        {"country":"Kazakhstan","code":"KZ","currency":"KZT","dial":"+77","capital":"—"},
+        {"country":"Kenya","code":"KE","currency":"KES","dial":"+254","capital":"—"},
+        {"country":"Kiribati","code":"KI","currency":"AUD","dial":"+686","capital":"—"},
+        {"country":"North Korea","code":"KP","currency":"KPW","dial":"+850","capital":"—"},
+        {"country":"South Korea","code":"KR","currency":"KRW","dial":"+82","capital":"—"},
+        {"country":"Kuwait","code":"KW","currency":"KWD","dial":"+965","capital":"—"},
+        {"country":"Kyrgyzstan","code":"KG","currency":"KGS","dial":"+996","capital":"—"},
+        {"country":"Laos","code":"LA","currency":"LAK","dial":"+856","capital":"—"},
+        {"country":"Latvia","code":"LV","currency":"EUR","dial":"+371","capital":"—"},
+        {"country":"Lebanon","code":"LB","currency":"LBP","dial":"+961","capital":"—"},
+        {"country":"Lesotho","code":"LS","currency":"LSL","dial":"+266","capital":"—"},
+        {"country":"Liberia","code":"LR","currency":"LRD","dial":"+231","capital":"—"},
+        {"country":"Libya","code":"LY","currency":"LYD","dial":"+218","capital":"—"},
+        {"country":"Liechtenstein","code":"LI","currency":"CHF","dial":"+423","capital":"—"},
+        {"country":"Lithuania","code":"LT","currency":"EUR","dial":"+370","capital":"—"},
+        {"country":"Luxembourg","code":"LU","currency":"EUR","dial":"+352","capital":"—"},
+        {"country":"Macao","code":"MO","currency":"MOP","dial":"+853","capital":"—"},
+        {"country":"North Macedonia","code":"MK","currency":"MKD","dial":"+389","capital":"—"},
+        {"country":"Madagascar","code":"MG","currency":"MGA","dial":"+261","capital":"—"},
+        {"country":"Malawi","code":"MW","currency":"MWK","dial":"+265","capital":"—"},
+        {"country":"Malaysia","code":"MY","currency":"MYR","dial":"+60","capital":"—"},
+        {"country":"Maldives","code":"MV","currency":"MVR","dial":"+960","capital":"—"},
+        {"country":"Mali","code":"ML","currency":"XOF","dial":"+223","capital":"—"},
+        {"country":"Malta","code":"MT","currency":"EUR","dial":"+356","capital":"—"},
+        {"country":"Marshall Islands","code":"MH","currency":"USD","dial":"+692","capital":"—"},
+        {"country":"Martinique","code":"MQ","currency":"EUR","dial":"+596","capital":"—"},
+        {"country":"Mauritania","code":"MR","currency":"MRU","dial":"+222","capital":"—"},
+        {"country":"Mauritius","code":"MU","currency":"MUR","dial":"+230","capital":"—"},
+        {"country":"Mayotte","code":"YT","currency":"EUR","dial":"+262","capital":"—"},
+        {"country":"Mexico","code":"MX","currency":"MXN","dial":"+52","capital":"—"},
+        {"country":"Micronesia, Federated States of Micronesia","code":"FM","currency":"USD","dial":"+691","capital":"—"},
+        {"country":"Moldova","code":"MD","currency":"MDL","dial":"+373","capital":"—"},
+        {"country":"Monaco","code":"MC","currency":"EUR","dial":"+377","capital":"—"},
+        {"country":"Mongolia","code":"MN","currency":"MNT","dial":"+976","capital":"—"},
+        {"country":"Montenegro","code":"ME","currency":"EUR","dial":"+382","capital":"—"},
+        {"country":"Montserrat","code":"MS","currency":"XCD","dial":"+1664","capital":"—"},
+        {"country":"Morocco","code":"MA","currency":"MAD","dial":"+212","capital":"—"},
+        {"country":"Mozambique","code":"MZ","currency":"MZN","dial":"+258","capital":"—"},
+        {"country":"Myanmar","code":"MM","currency":"MMK","dial":"+95","capital":"—"},
+        {"country":"Namibia","code":"NA","currency":"NAD","dial":"+264","capital":"—"},
+        {"country":"Nauru","code":"NR","currency":"AUD","dial":"+674","capital":"—"},
+        {"country":"Nepal","code":"NP","currency":"NPR","dial":"+977","capital":"—"},
+        {"country":"Netherlands","code":"NL","currency":"EUR","dial":"+31","capital":"—"},
+        {"country":"Netherlands Antilles","code":"AN","currency":"ANG","dial":"+599","capital":"—"},
+        {"country":"New Caledonia","code":"NC","currency":"XPF","dial":"+687","capital":"—"},
+        {"country":"New Zealand","code":"NZ","currency":"NZD","dial":"+64","capital":"—"},
+        {"country":"Nicaragua","code":"NI","currency":"NIO","dial":"+505","capital":"—"},
+        {"country":"Niger","code":"NE","currency":"XOF","dial":"+227","capital":"—"},
+        {"country":"Nigeria","code":"NG","currency":"NGN","dial":"+234","capital":"—"},
+        {"country":"Niue","code":"NU","currency":"NZD","dial":"+683","capital":"—"},
+        {"country":"Norfolk Island","code":"NF","currency":"AUD","dial":"+672","capital":"—"},
+        {"country":"Northern Mariana Islands","code":"MP","currency":"USD","dial":"+1670","capital":"—"},
+        {"country":"Norway","code":"NO","currency":"NOK","dial":"+47","capital":"—"},
+        {"country":"Oman","code":"OM","currency":"OMR","dial":"+968","capital":"—"},
+        {"country":"Pakistan","code":"PK","currency":"PKR","dial":"+92","capital":"—"},
+        {"country":"Palau","code":"PW","currency":"USD","dial":"+680","capital":"—"},
+        {"country":"Palestinian Territory, Occupied","code":"PS","currency":"ILS","dial":"+970","capital":"—"},
+        {"country":"Panama","code":"PA","currency":"PAB","dial":"+507","capital":"—"},
+        {"country":"Papua New Guinea","code":"PG","currency":"PGK","dial":"+675","capital":"—"},
+        {"country":"Paraguay","code":"PY","currency":"PYG","dial":"+595","capital":"—"},
+        {"country":"Peru","code":"PE","currency":"PEN","dial":"+51","capital":"—"},
+        {"country":"Philippines","code":"PH","currency":"PHP","dial":"+63","capital":"—"},
+        {"country":"Pitcairn","code":"PN","currency":"NZD","dial":"+872","capital":"—"},
+        {"country":"Poland","code":"PL","currency":"PLN","dial":"+48","capital":"Warsaw"},
+        {"country":"Portugal","code":"PT","currency":"EUR","dial":"+351","capital":"—"},
+        {"country":"Puerto Rico","code":"PR","currency":"USD","dial":"+1939","capital":"—"},
+        {"country":"Qatar","code":"QA","currency":"QAR","dial":"+974","capital":"—"},
+        {"country":"Romania","code":"RO","currency":"RON","dial":"+40","capital":"—"},
+        {"country":"Russia","code":"RU","currency":"RUB","dial":"+7","capital":"—"},
+        {"country":"Rwanda","code":"RW","currency":"RWF","dial":"+250","capital":"—"},
+        {"country":"Réunion","code":"RE","currency":"EUR","dial":"+262","capital":"—"},
+        {"country":"Saint Barthélemy","code":"BL","currency":"EUR","dial":"+590","capital":"—"},
+        {"country":"Saint Helena, Ascension and Tristan da Cunha","code":"SH","currency":"SHP","dial":"+290","capital":"—"},
+        {"country":"Saint Kitts and Nevis","code":"KN","currency":"XCD","dial":"+1869","capital":"—"},
+        {"country":"Saint Lucia","code":"LC","currency":"XCD","dial":"+1758","capital":"—"},
+        {"country":"Saint Martin (French part)","code":"MF","currency":"EUR","dial":"+590","capital":"—"},
+        {"country":"Saint Pierre and Miquelon","code":"PM","currency":"EUR","dial":"+508","capital":"—"},
+        {"country":"Saint Vincent and the Grenadines","code":"VC","currency":"XCD","dial":"+1784","capital":"—"},
+        {"country":"Samoa","code":"WS","currency":"WST","dial":"+685","capital":"—"},
+        {"country":"San Marino","code":"SM","currency":"EUR","dial":"+378","capital":"—"},
+        {"country":"Sao Tome and Principe","code":"ST","currency":"STN","dial":"+239","capital":"—"},
+        {"country":"Saudi Arabia","code":"SA","currency":"SAR","dial":"+966","capital":"—"},
+        {"country":"Senegal","code":"SN","currency":"XOF","dial":"+221","capital":"—"},
+        {"country":"Serbia","code":"RS","currency":"RSD","dial":"+381","capital":"—"},
+        {"country":"Seychelles","code":"SC","currency":"SCR","dial":"+248","capital":"—"},
+        {"country":"Sierra Leone","code":"SL","currency":"SLE","dial":"+232","capital":"—"},
+        {"country":"Singapore","code":"SG","currency":"SGD","dial":"+65","capital":"—"},
+        {"country":"Slovakia","code":"SK","currency":"EUR","dial":"+421","capital":"—"},
+        {"country":"Slovenia","code":"SI","currency":"EUR","dial":"+386","capital":"—"},
+        {"country":"Solomon Islands","code":"SB","currency":"SBD","dial":"+677","capital":"—"},
+        {"country":"Somalia","code":"SO","currency":"SOS","dial":"+252","capital":"—"},
+        {"country":"South Africa","code":"ZA","currency":"ZAR","dial":"+27","capital":"—"},
+        {"country":"South Sudan","code":"SS","currency":"SSP","dial":"+211","capital":"—"},
+        {"country":"South Georgia and the South Sandwich Islands","code":"GS","currency":"GBP","dial":"+500","capital":"—"},
+        {"country":"Spain","code":"ES","currency":"EUR","dial":"+34","capital":"—"},
+        {"country":"Sri Lanka","code":"LK","currency":"LKR","dial":"+94","capital":"—"},
+        {"country":"Sudan","code":"SD","currency":"SDG","dial":"+249","capital":"—"},
+        {"country":"Suriname","code":"SR","currency":"SRD","dial":"+597","capital":"—"},
+        {"country":"Svalbard and Jan Mayen","code":"SJ","currency":"NOK","dial":"+47","capital":"—"},
+        {"country":"Eswatini","code":"SZ","currency":"SZL","dial":"+268","capital":"—"},
+        {"country":"Sweden","code":"SE","currency":"SEK","dial":"+46","capital":"—"},
+        {"country":"Switzerland","code":"CH","currency":"CHF","dial":"+41","capital":"—"},
+        {"country":"Syrian Arab Republic","code":"SY","currency":"SYP","dial":"+963","capital":"—"},
+        {"country":"Taiwan","code":"TW","currency":"TWD","dial":"+886","capital":"—"},
+        {"country":"Tajikistan","code":"TJ","currency":"TJS","dial":"+992","capital":"—"},
+        {"country":"Tanzania","code":"TZ","currency":"TZS","dial":"+255","capital":"—"},
+        {"country":"Thailand","code":"TH","currency":"THB","dial":"+66","capital":"—"},
+        {"country":"Timor-Leste","code":"TL","currency":"USD","dial":"+670","capital":"—"},
+        {"country":"Togo","code":"TG","currency":"XOF","dial":"+228","capital":"—"},
+        {"country":"Tokelau","code":"TK","currency":"NZD","dial":"+690","capital":"—"},
+        {"country":"Tonga","code":"TO","currency":"TOP","dial":"+676","capital":"—"},
+        {"country":"Trinidad and Tobago","code":"TT","currency":"TTD","dial":"+1868","capital":"—"},
+        {"country":"Tunisia","code":"TN","currency":"TND","dial":"+216","capital":"—"},
+        {"country":"Türkiye","code":"TR","currency":"TRY","dial":"+90","capital":"—"},
+        {"country":"Turkmenistan","code":"TM","currency":"TMT","dial":"+993","capital":"—"},
+        {"country":"Turks and Caicos Islands","code":"TC","currency":"USD","dial":"+1649","capital":"—"},
+        {"country":"Tuvalu","code":"TV","currency":"AUD","dial":"+688","capital":"—"},
+        {"country":"Uganda","code":"UG","currency":"UGX","dial":"+256","capital":"—"},
+        {"country":"Ukraine","code":"UA","currency":"UAH","dial":"+380","capital":"—"},
+        {"country":"United Arab Emirates","code":"AE","currency":"AED","dial":"+971","capital":"—"},
+        {"country":"United Kingdom","code":"GB","currency":"GBP","dial":"+44","capital":"London"},
+        {"country":"United States","code":"US","currency":"USD","dial":"+1","capital":"Washington"},
+        {"country":"Uruguay","code":"UY","currency":"UYU","dial":"+598","capital":"—"},
+        {"country":"Uzbekistan","code":"UZ","currency":"UZS","dial":"+998","capital":"—"},
+        {"country":"Vanuatu","code":"VU","currency":"VUV","dial":"+678","capital":"—"},
+        {"country":"Venezuela","code":"VE","currency":"VES","dial":"+58","capital":"—"},
+        {"country":"Viet Nam","code":"VN","currency":"VND","dial":"+84","capital":"—"},
+        {"country":"British Virgin Islands","code":"VG","currency":"USD","dial":"+1284","capital":"—"},
+        {"country":"U.S. Virgin Islands","code":"VI","currency":"USD","dial":"+1340","capital":"—"},
+        {"country":"Wallis and Futuna","code":"WF","currency":"XPF","dial":"+681","capital":"—"},
+        {"country":"Yemen","code":"YE","currency":"YER","dial":"+967","capital":"—"},
+        {"country":"Zambia","code":"ZM","currency":"ZMW","dial":"+260","capital":"—"},
+        {"country":"Zimbabwe","code":"ZW","currency":"ZWG","dial":"+263","capital":"—"},
+
+        {"country":"Åland Islands","code":"AX","currency":"EUR","dial":"+358","capital":"—"},
+        {"country":"Bolivia","code":"BO","currency":"BOB","dial":"+591","capital":"—"},
+        {"country":"Cabo Verde","code":"CV","currency":"CVE","dial":"+238","capital":"—"},
+        {"country":"Côte d'Ivoire","code":"CI","currency":"XOF","dial":"+225","capital":"—"},
+        {"country":"Democratic Republic of the Congo","code":"CD","currency":"CDF","dial":"+243","capital":"—"},
+        {"country":"Czechia","code":"CZ","currency":"CZK","dial":"+420","capital":"—"},
+        {"country":"Vatican City","code":"VA","currency":"EUR","dial":"+379","capital":"—"},
+        {"country":"Iran","code":"IR","currency":"IRR","dial":"+98","capital":"—"},
+        {"country":"North Korea","code":"KP","currency":"KPW","dial":"+850","capital":"—"},
+        {"country":"South Korea","code":"KR","currency":"KRW","dial":"+82","capital":"—"},
+        {"country":"Libya","code":"LY","currency":"LYD","dial":"+218","capital":"—"},
+        {"country":"North Macedonia","code":"MK","currency":"MKD","dial":"+389","capital":"—"},
+        {"country":"Réunion","code":"RE","currency":"EUR","dial":"+262","capital":"—"},
+        {"country":"Saint Barthélemy","code":"BL","currency":"EUR","dial":"+590","capital":"—"},
+        {"country":"Saint Helena, Ascension and Tristan da Cunha","code":"SH","currency":"SHP","dial":"+290","capital":"—"},
+        {"country":"Saint Martin (French part)","code":"MF","currency":"EUR","dial":"+590","capital":"—"},
+        {"country":"Eswatini","code":"SZ","currency":"SZL","dial":"+268","capital":"—"},
+        {"country":"Tanzania","code":"TZ","currency":"TZS","dial":"+255","capital":"—"},
+        {"country":"Türkiye","code":"TR","currency":"TRY","dial":"+90","capital":"—"},
+        {"country":"Venezuela","code":"VE","currency":"VES","dial":"+58","capital":"—"},
+        {"country":"Viet Nam","code":"VN","currency":"VND","dial":"+84","capital":"—"},
+        {"country":"British Virgin Islands","code":"VG","currency":"USD","dial":"+1284","capital":"—"},
+        {"country":"U.S. Virgin Islands","code":"VI","currency":"USD","dial":"+1340","capital":"—"}
+    ];
+
+    function getFilteredData(){
+        const q = $('#q').value.trim().toLowerCase();
+        const sort = $('#sort').value;
+
+        const filtered = data.filter(item => {
+            const haystack = [item.country, item.code, item.currency, item.dial, item.capital].join(' ').toLowerCase();
+            return haystack.includes(q);
+        });
+
+        filtered.sort((a,b)=>{
+            if(sort === 'country-desc') return a.country.localeCompare(b.country) * -1;
+            if(sort === 'code-asc') return a.code.localeCompare(b.code);
+            if(sort === 'dial-asc') return dialSortValue(a.dial) - dialSortValue(b.dial) || a.country.localeCompare(b.country);
+            return a.country.localeCompare(b.country);
+        });
+
+        return filtered;
+    }
+
+    function render(){
+        const filtered = getFilteredData();
+        const rowsHtml = filtered.map(item => `
+    <tr>
+      <td>${esc(item.country)}</td>
+      <td>${esc(item.code)}</td>
+      <td>${esc(item.currency)}</td>
+      <td>${esc(item.dial)}</td>
+      <td>${esc(item.capital)}</td>
+    </tr>
+  `).join('');
+
+        const cardsHtml = filtered.map(item => `
+    <article class="country-card">
+      <h3>${esc(item.country)}</h3>
+      <div class="country-meta">
+        <div><span>ISO</span><strong>${esc(item.code)}</strong></div>
+        <div><span>Currency</span><strong>${esc(item.currency)}</strong></div>
+        <div><span>Dial code</span><strong>${esc(item.dial)}</strong></div>
+        <div><span>Capital</span><strong>${esc(item.capital)}</strong></div>
+      </div>
+    </article>
+  `).join('');
+
+        $('#rows').innerHTML = rowsHtml;
+        $('#cards').innerHTML = cardsHtml;
+        $('#visibleCount').textContent = filtered.length;
+        $('#totalCount').textContent = data.length;
+        $('#currencyCount').textContent = new Set(data.map(item => item.currency)).size;
+        $('#dialCount').textContent = new Set(data.map(item => normalizeDial(item.dial))).size;
+        $('#resultBadge').textContent = `${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
+        $('#emptyState').hidden = filtered.length !== 0;
+    }
+
+    $('#q').addEventListener('input', render);
+    $('#sort').addEventListener('change', render);
+    $('#clearBtn').addEventListener('click', () => {
+        $('#q').value = '';
+        $('#sort').value = 'country-asc';
+        render();
+        $('#q').focus();
+    });
+    $('#copyBtn').addEventListener('click', async () => {
+        const filtered = getFilteredData();
+        const text = filtered.map(item => `${item.country} | ${item.code} | ${item.currency} | ${item.dial} | ${item.capital}`).join('\n');
+        await copyText(text || 'No results');
+    });
+
+    render();
+</script>
+</body>
+</html>
