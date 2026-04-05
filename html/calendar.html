@@ -975,9 +975,9 @@
                 holidayToggle: 'Święta w widoku',
                 holidaySummaryTitle: 'Wszystkie święta w aktualnym widoku',
                 noHolidaysInView: 'Brak świąt w aktualnym widoku.',
-                noEvents: 'Brak wydarzeń',
+                noEvents: '',
                 noEventsInRange: 'W tym zakresie nic nie zaplanowano.',
-                noEntries: 'Bez wpisów',
+                noEntries: '',
                 monday: 'Poniedziałek',
                 tuesday: 'Wtorek',
                 wednesday: 'Środa',
@@ -1011,8 +1011,8 @@
                 dayNames: ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nd'],
                 fullDayNames: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'],
                 views: [
-                    { key: 'century-list', label: 'Stulecie lista' },
-                    { key: 'decade-list', label: 'Dekada lista' },
+                    { key: 'century', label: 'Stulecie' },
+                    { key: 'decade', label: 'Dekada' },
                     { key: 'year', label: 'Rok' },
                     { key: 'month', label: 'Miesiąc' },
                     { key: 'week', label: 'Tydzień' }
@@ -1036,9 +1036,9 @@
                 holidayToggle: 'Holidays in view',
                 holidaySummaryTitle: 'All holidays in the current view',
                 noHolidaysInView: 'No holidays in the current view.',
-                noEvents: 'No events',
+                noEvents: '',
                 noEventsInRange: 'Nothing is scheduled in this range.',
-                noEntries: 'No entries',
+                noEntries: '',
                 monday: 'Monday',
                 tuesday: 'Tuesday',
                 wednesday: 'Wednesday',
@@ -1072,8 +1072,8 @@
                 dayNames: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 fullDayNames: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                 views: [
-                    { key: 'century-list', label: 'Century list' },
-                    { key: 'decade-list', label: 'Decade list' },
+                    { key: 'century', label: 'Century' },
+                    { key: 'decade', label: 'Decade' },
                     { key: 'year', label: 'Year' },
                     { key: 'month', label: 'Month' },
                     { key: 'week', label: 'Week' }
@@ -1097,9 +1097,9 @@
                 holidayToggle: 'Feiertage in Ansicht',
                 holidaySummaryTitle: 'Alle Feiertage in der aktuellen Ansicht',
                 noHolidaysInView: 'Keine Feiertage in der aktuellen Ansicht.',
-                noEvents: 'Keine Ereignisse',
+                noEvents: '',
                 noEventsInRange: 'In diesem Bereich ist nichts geplant.',
-                noEntries: 'Keine Einträge',
+                noEntries: '',
                 monday: 'Montag',
                 tuesday: 'Dienstag',
                 wednesday: 'Mittwoch',
@@ -1133,8 +1133,8 @@
                 dayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
                 fullDayNames: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
                 views: [
-                    { key: 'century-list', label: 'Jahrhundertliste' },
-                    { key: 'decade-list', label: 'Jahrzehntliste' },
+                    { key: 'century', label: 'Jahrhundert' },
+                    { key: 'decade', label: 'Jahrzehnt' },
                     { key: 'year', label: 'Jahr' },
                     { key: 'month', label: 'Monat' },
                     { key: 'week', label: 'Woche' }
@@ -1531,11 +1531,11 @@
                         end: new Date(anchor.getFullYear(), 11, 31)
                     };
                 }
-                case 'decade-list': {
+                case 'decade': {
                     const decadeStart = Math.floor(anchor.getFullYear() / 10) * 10;
                     return { start: new Date(decadeStart, 0, 1), end: new Date(decadeStart + 9, 11, 31) };
                 }
-                case 'century-list': {
+                case 'century': {
                     const centuryStart = Math.floor(anchor.getFullYear() / 100) * 100;
                     return { start: new Date(centuryStart, 0, 1), end: new Date(centuryStart + 99, 11, 31) };
                 }
@@ -1685,22 +1685,12 @@
 
         function renderActiveView() {
             switch (state.currentView) {
-                case 'century-list':
-                    renderCenturyListView();
-                    break;
-                case 'decade-list':
-                    renderDecadeListView();
-                    break;
-                case 'year':
-                    renderYearView();
-                    break;
-                case 'week':
-                    renderWeekView();
-                    break;
+                case 'century': renderCenturyView(); break;
+                case 'decade': renderDecadeView(); break;
+                case 'year': renderYearView(); break;
+                case 'week': renderWeekView(); break;
                 case 'month':
-                default:
-                    renderMonthView();
-                    break;
+                default: renderMonthView();
             }
         }
 
@@ -1813,57 +1803,106 @@
             for (let month = 0; month < 12; month += 1) {
                 const monthStart = new Date(year, month, 1);
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
+
                 html.push(`
-                    <article class="year-card">
-                        <div>
-                            <strong>${monthNames()[month]}</strong>
-                            <small>${daysInMonth} ${t('days')}</small>
-                        </div>
-                        <div class="year-mini">
-                            ${buildYearMiniMonth(monthStart)}
-                        </div>
-                    </article>
-                `);
+            <article class="year-card" data-month-card="${month}">
+                <div>
+                    <strong>${monthNames()[month]}</strong>
+                    <small>${daysInMonth} ${t('days')}</small>
+                </div>
+                <div class="year-mini">${buildYearMiniMonth(monthStart)}</div>
+            </article>
+        `);
             }
 
             html.push('</div></div>');
             els.viewRoot.innerHTML = html.join('');
+
+            els.viewRoot.querySelectorAll('[data-month-card]').forEach((card) => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    const month = Number(card.dataset.monthCard);
+                    state.anchorDate = new Date(year, month, 1);
+                    state.currentView = 'month';
+                    render();
+                });
+            });
         }
 
-        function renderDecadeListView() {
+        function renderDecadeView() {
             const decadeStart = Math.floor(state.anchorDate.getFullYear() / 10) * 10;
             const cards = [];
 
             for (let year = decadeStart; year < decadeStart + 10; year += 1) {
-                cards.push(renderPeriodCard({
-                    title: `${year}`,
-                    subtitle: `${isLeapYear(year) ? t('leapYear') : t('standardYear')} · ${countEventsForYear(year)} ${t('sampleEventsCount')}`,
-                    months: Array.from({ length: 12 }, (_, month) => ({
-                        name: monthNames()[month],
-                        meta: `${new Date(year, month + 1, 0).getDate()} ${t('days')}`
-                    }))
-                }));
+                cards.push(`
+            <article class="period-card" data-year-card="${year}">
+                <header>
+                    <div>
+                        <h3 class="period-title">${year}</h3>
+                        <p class="period-subtitle">${isLeapYear(year) ? t('leapYear') : t('standardYear')} · ${countEventsForYear(year)} ${t('sampleEventsCount')}</p>
+                    </div>
+                </header>
+                <div class="period-grid">
+                    ${Array.from({ length: 12 }, (_, month) => `
+                        <div class="list-card">
+                            <strong>${monthNames()[month]}</strong>
+                            <small>${new Date(year, month + 1, 0).getDate()} ${t('days')}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </article>
+        `);
             }
 
             els.viewRoot.innerHTML = `<div class="decade-view"><div class="decade-grid">${cards.join('')}</div></div>`;
+
+            els.viewRoot.querySelectorAll('[data-year-card]').forEach((card) => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    const year = Number(card.dataset.yearCard);
+                    state.anchorDate = new Date(year, 0, 1);
+                    state.currentView = 'year';
+                    render();
+                });
+            });
         }
 
-        function renderCenturyListView() {
+        function renderCenturyView() {
             const centuryStart = Math.floor(state.anchorDate.getFullYear() / 100) * 100;
             const cards = [];
 
             for (let decade = centuryStart; decade < centuryStart + 100; decade += 10) {
-                cards.push(renderPeriodCard({
-                    title: `${decade}–${decade + 9}`,
-                    subtitle: `${Array.from({ length: 10 }, (_, i) => decade + i).filter(isLeapYear).length} ${t('leapYearsCount')}`,
-                    months: Array.from({ length: 10 }, (_, i) => ({
-                        name: `${decade + i}`,
-                        meta: `${countEventsForYear(decade + i)} ${t('demoEntries')}`
-                    }))
-                }));
+                cards.push(`
+            <article class="period-card" data-decade-card="${decade}">
+                <header>
+                    <div>
+                        <h3 class="period-title">${decade}–${decade + 9}</h3>
+                        <p class="period-subtitle">${Array.from({ length: 10 }, (_, i) => decade + i).filter(isLeapYear).length} ${t('leapYearsCount')}</p>
+                    </div>
+                </header>
+                <div class="period-grid">
+                    ${Array.from({ length: 10 }, (_, i) => `
+                        <div class="list-card">
+                            <strong>${decade + i}</strong>
+                            <small>${countEventsForYear(decade + i)} ${t('demoEntries')}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </article>
+        `);
             }
 
             els.viewRoot.innerHTML = `<div class="century-view"><div class="century-grid">${cards.join('')}</div></div>`;
+
+            els.viewRoot.querySelectorAll('[data-decade-card]').forEach((card) => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    const decade = Number(card.dataset.decadeCard);
+                    state.anchorDate = new Date(decade, 0, 1);
+                    state.currentView = 'decade';
+                    render();
+                });
+            });
         }
 
         function renderPeriodCard({ title, subtitle, months }) {
@@ -1919,27 +1958,27 @@
             const weekEnd = addDays(weekStart, 6);
 
             switch (state.currentView) {
-                case 'century-list':
+                case 'century':
                     return {
                         title: `1900–1999`.replace('1900', String(centuryStart)).replace('1999', String(centuryStart + 99)),
                         subtitle: t('centuryListDescription'),
                         short: `${centuryStart}–${centuryStart + 99}`,
-                        chips: ['10 dekad', '100 lat', 'Lista'].map((item, index) => {
-                            if (currentLang === 'pl') return item;
-                            if (currentLang === 'en') return ['10 decades', '100 years', 'List'][index];
-                            return ['10 Jahrzehnte', '100 Jahre', 'Liste'][index];
-                        })
+                        chips: currentLang === 'pl'
+                            ? ['10 dekad', '100 lat', 'Stulecie']
+                            : currentLang === 'en'
+                                ? ['10 decades', '100 years', 'Century']
+                                : ['10 Jahrzehnte', '100 Jahre', 'Jahrhundert']
                     };
-                case 'decade-list':
+                case 'decade':
                     return {
                         title: `${decadeStart}–${decadeStart + 9}`,
                         subtitle: t('decadeListDescription'),
                         short: `${decadeStart}–${decadeStart + 9}`,
-                        chips: ['10 lat', t('review'), t('list')].map((item, index) => {
-                            if (currentLang === 'pl') return item;
-                            if (currentLang === 'en') return ['10 years', 'Overview', 'List'][index];
-                            return ['10 Jahre', 'Übersicht', 'Liste'][index];
-                        })
+                        chips: currentLang === 'pl'
+                            ? ['10 lat', 'Przegląd', 'Dekada']
+                            : currentLang === 'en'
+                                ? ['10 years', 'Overview', 'Decade']
+                                : ['10 Jahre', 'Übersicht', 'Jahrzehnt']
                     };
                 case 'year':
                     return {
@@ -1977,10 +2016,10 @@
         function shiftRange(direction) {
             const factor = direction < 0 ? -1 : 1;
             switch (state.currentView) {
-                case 'century-list':
+                case 'century':
                     state.anchorDate = new Date(state.anchorDate.getFullYear() + (100 * factor), state.anchorDate.getMonth(), 1);
                     break;
-                case 'decade-list':
+                case 'decade':
                     state.anchorDate = new Date(state.anchorDate.getFullYear() + (10 * factor), state.anchorDate.getMonth(), 1);
                     break;
                 case 'year':

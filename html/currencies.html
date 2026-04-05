@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator walut + historia</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --bg-2: #11182e;
+            --panel: rgba(17, 24, 46, 0.9);
+            --panel-2: rgba(10, 15, 28, 0.92);
+            --text: #edf2ff;
+            --muted: #9aa8cb;
+            --line: rgba(255,255,255,0.08);
+            --accent: #79c7ff;
+            --accent-2: #9e8cff;
+            --good: #5ad3a3;
+            --warn: #ffd479;
+            --danger: #ff7d7d;
+            --shadow: 0 20px 60px rgba(0,0,0,0.35);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(121,199,255,0.18), transparent 24%),
+                radial-gradient(circle at top right, rgba(158,140,255,0.16), transparent 30%),
+                linear-gradient(180deg, #09101d 0%, #0d1426 100%);
+            min-height: 100vh;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+
+        .container {
+            width: min(1320px, calc(100% - 28px));
+            margin: 0 auto;
+        }
+
+        .hero {
+            padding: 28px 0 16px;
+        }
+
+        .hero-card {
+            background: linear-gradient(180deg, rgba(22,31,58,0.96), rgba(12,18,37,0.96));
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(121,199,255,0.1), transparent 36%, rgba(158,140,255,0.09));
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.03em;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(34px, 6vw, 58px);
+            line-height: 0.96;
+            letter-spacing: -0.045em;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 16px;
+            max-width: 70ch;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            min-height: 46px;
+            padding: 0 16px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.14);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(121,199,255,0.22), rgba(158,140,255,0.24));
+            border-color: rgba(121,199,255,0.26);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 12px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 27px;
+            margin-bottom: 6px;
+            letter-spacing: -0.03em;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 12px;
+            padding: 18px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(16px);
+        }
+
+        .field, .select, .toggle-group {
+            min-height: 54px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .field input, .select select {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            padding: 0 16px;
+        }
+
+        .toggle-group {
+            padding: 6px;
+            gap: 6px;
+        }
+
+        .toggle {
+            border: 0;
+            min-height: 40px;
+            padding: 0 14px;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .toggle.active {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 380px minmax(0, 1fr) 320px;
+            gap: 16px;
+            padding: 16px 0 36px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .panel-header span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .converter-body,
+        .history-body,
+        .sidebar-body {
+            padding: 18px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 10px;
+        }
+
+        .stack label {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .input,
+        .select-native {
+            min-height: 52px;
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--panel-2);
+            color: var(--text);
+            padding: 0 14px;
+            outline: none;
+        }
+
+        .input:focus,
+        .select-native:focus {
+            border-color: rgba(121,199,255,0.35);
+            box-shadow: 0 0 0 4px rgba(121,199,255,0.08);
+        }
+
+        .swap-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .swap-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.06);
+            color: var(--text);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .swap-btn:hover {
+            transform: rotate(180deg);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .result {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            line-height: 1.7;
+        }
+
+        .result strong {
+            display: block;
+            font-size: 28px;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .loading { color: var(--warn); }
+        .error { color: var(--danger); }
+        .success { color: var(--good); }
+
+        .range-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .range-btn {
+            flex: 1 1 0;
+            min-height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .range-btn.active {
+            background: rgba(121,199,255,0.12);
+            border-color: rgba(121,199,255,0.24);
+            color: var(--text);
+        }
+
+        .chart-wrap {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        #chart {
+            display: block;
+            width: 100%;
+            height: 360px;
+        }
+
+        .history-info {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quick-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            padding: 14px;
+        }
+
+        .quick-card strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .quick-card span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            padding: 0 0 40px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 1180px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero-inner,
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container { width: min(100% - 18px, 1320px); }
+            .hero-inner { padding: 20px; }
+            .stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero" id="top">
+        <div class="hero-card">
+            <div class="hero-inner">
+                <div>
+                    <div class="eyebrow">💱 github.io · static html/css/js · frankfurter api</div>
+                    <h1>Kalkulator walut + historia</h1>
+                    <p>
+                        Prosty i czytelny kalkulator walut dla GitHub Pages. Przelicza kwotę między walutami,
+                        pokazuje bieżący kurs oraz rysuje historię z ostatnich 7 lub 30 dni.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn primary" href="#calculator">Otwórz kalkulator</a>
+                        <button class="btn" type="button" id="refreshBtn">Odśwież dane</button>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <strong id="statPair">PLN → EUR</strong>
+                        <span>Aktualnie wybrana para walut.</span>
+                    </div>
+                    <div class="stat">
+                        <strong id="statRange">30 dni</strong>
+                        <span>Zakres danych historycznych na wykresie.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="toolbar">
+        <div class="field">
+            <input id="searchInput" type="text" placeholder="Szukaj waluty, np. PLN, EUR, USD...">
+        </div>
+        <div class="toggle-group">
+            <button class="toggle active" type="button" data-days="7">7 dni</button>
+            <button class="toggle" type="button" data-days="30">30 dni</button>
+        </div>
+        <button class="btn" type="button" id="invertBtn">Odwróć parę</button>
+    </section>
+
+    <section class="layout" id="calculator">
+        <div class="panel converter-panel">
+            <div class="panel-header">
+                <h2>Przelicznik</h2>
+                <span>Live rate</span>
+            </div>
+            <div class="converter-body">
+                <div class="stack">
+                    <label for="amount">Kwota</label>
+                    <input class="input" type="number" id="amount" value="100" step="0.01" min="0">
+                </div>
+
+                <div class="stack">
+                    <label for="from">Z waluty</label>
+                    <select class="select-native" id="from"></select>
+                </div>
+
+                <div class="swap-row">
+                    <button class="swap-btn" type="button" id="swapBtn" aria-label="Zamień waluty">↔</button>
+                </div>
+
+                <div class="stack">
+                    <label for="to">Na walutę</label>
+                    <select class="select-native" id="to"></select>
+                </div>
+
+                <button class="btn primary" type="button" id="convertBtn">Przelicz teraz</button>
+
+                <div class="result" id="result">
+                    <span class="muted">Wynik pojawi się tutaj...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel history-panel">
+            <div class="panel-header">
+                <h2>Historia kursów</h2>
+                <span id="historyRangeLabel">ostatnie 7 dni</span>
+            </div>
+            <div class="history-body">
+                <div class="range-buttons">
+                    <button class="range-btn active" type="button" data-range="7">7 dni</button>
+                    <button class="range-btn" type="button" data-range="30">30 dni</button>
+                </div>
+
+                <div class="chart-wrap">
+                    <canvas id="chart" width="900" height="360"></canvas>
+                </div>
+
+                <div class="history-info" id="historyInfo">Wczytywanie historii kursów...</div>
+            </div>
+        </div>
+
+        <div class="panel sidebar-panel">
+            <div class="panel-header">
+                <h2>Podsumowanie</h2>
+                <span>Fast facts</span>
+            </div>
+            <div class="sidebar-body">
+                <div class="quick-stats">
+                    <div class="quick-card">
+                        <strong id="summaryPair">PLN → EUR</strong>
+                        <span>Wybrana para do przeliczenia.</span>
+                    </div>
+                    <div class="quick-card">
+                        <strong id="summaryRate">—</strong>
+                        <span>Bieżący kurs jednostkowy.</span>
+                    </div>
+                    <div class="quick-card">
+                        <strong id="summaryMin">—</strong>
+                        <span>Minimum z aktualnego zakresu historii.</span>
+                    </div>
+                    <div class="quick-card">
+                        <strong id="summaryMax">—</strong>
+                        <span>Maksimum z aktualnego zakresu historii.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer">
+        Dane walut i historia kursów pochodzą z API Frankfurter. Strona działa jako statyczny plik HTML na GitHub Pages.
+    </section>
+</div>
+
+<script>
+    const amountInput = document.getElementById('amount');
+    const fromSelect = document.getElementById('from');
+    const toSelect = document.getElementById('to');
+    const resultDiv = document.getElementById('result');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const searchInput = document.getElementById('searchInput');
+    const historyInfo = document.getElementById('historyInfo');
+    const historyRangeLabel = document.getElementById('historyRangeLabel');
+    const statPair = document.getElementById('statPair');
+    const statRange = document.getElementById('statRange');
+    const summaryPair = document.getElementById('summaryPair');
+    const summaryRate = document.getElementById('summaryRate');
+    const summaryMin = document.getElementById('summaryMin');
+    const summaryMax = document.getElementById('summaryMax');
+
+    let currencies = {};
+    let filteredCurrencyEntries = [];
+    let currentDays = 7;
+    let lastHistoryRates = [];
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatNumber(value, digits = 4) {
+        return new Intl.NumberFormat('pl-PL', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: digits
+        }).format(value);
+    }
+
+    function formatAxisDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return new Intl.DateTimeFormat('pl-PL', {
+            day: '2-digit',
+            month: '2-digit'
+        }).format(date);
+    }
+
+    function updatePairLabels() {
+        const label = `${fromSelect.value} → ${toSelect.value}`;
+        statPair.textContent = label;
+        summaryPair.textContent = label;
+        statRange.textContent = `${currentDays} dni`;
+        historyRangeLabel.textContent = `ostatnie ${currentDays} dni`;
+    }
+
+    function populateSelects(entries) {
+        const currentFrom = fromSelect.value || 'PLN';
+        const currentTo = toSelect.value || 'EUR';
+
+        fromSelect.innerHTML = '';
+        toSelect.innerHTML = '';
+
+        entries.forEach(([code, name]) => {
+            const text = `${code} - ${name}`;
+            fromSelect.add(new Option(text, code));
+            toSelect.add(new Option(text, code));
+        });
+
+        if (entries.some(([code]) => code === currentFrom)) {
+            fromSelect.value = currentFrom;
+        }
+        if (entries.some(([code]) => code === currentTo)) {
+            toSelect.value = currentTo;
+        }
+
+        if (!fromSelect.value && entries.length) fromSelect.value = entries[0][0];
+        if (!toSelect.value && entries.length > 1) toSelect.value = entries[1][0];
+        if (fromSelect.value === toSelect.value && entries.length > 1) {
+            toSelect.value = entries.find(([code]) => code !== fromSelect.value)?.[0] || toSelect.value;
+        }
+    }
+
+    async function loadCurrencies() {
+        resultDiv.innerHTML = '<span class="loading">Ładowanie listy walut...</span>';
+        try {
+            const res = await fetch('https://api.frankfurter.dev/v2/currencies');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            currencies = Array.isArray(data)
+                ? Object.fromEntries(data.map((item) => [item.iso_code, item.name]))
+                : data;
+            filteredCurrencyEntries = Object.entries(currencies).sort(([a], [b]) => a.localeCompare(b));
+            populateSelects(filteredCurrencyEntries);
+            updatePairLabels();
+            resultDiv.innerHTML = '<span class="success">Lista walut załadowana.</span>';
+        } catch (error) {
+            resultDiv.innerHTML = `<span class="error">Błąd ładowania walut: ${escapeHtml(error.message)}</span>`;
+        }
+    }
+
+    async function convertCurrency() {
+        const amount = Number(amountInput.value);
+        const from = fromSelect.value;
+        const to = toSelect.value;
+
+        updatePairLabels();
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            resultDiv.innerHTML = '<span class="error">Podaj kwotę większą od 0.</span>';
+            summaryRate.textContent = '—';
+            return;
+        }
+
+        if (!from || !to) {
+            resultDiv.innerHTML = '<span class="error">Wybierz obie waluty.</span>';
+            return;
+        }
+
+        if (from === to) {
+            resultDiv.innerHTML = `<strong>${formatNumber(amount, 2)} ${escapeHtml(from)}</strong><span class="muted">Ta sama waluta po obu stronach.</span>`;
+            summaryRate.textContent = `1 ${from} = 1 ${to}`;
+            return;
+        }
+
+        resultDiv.innerHTML = '<span class="loading">Przeliczanie...</span>';
+
+        try {
+            const res = await fetch(`https://api.frankfurter.dev/v2/rates?base=${encodeURIComponent(from)}&quotes=${encodeURIComponent(to)}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            const unitRate = Array.isArray(data) && data.length ? Number(data[0].rate) : NaN;
+            if (!Number.isFinite(unitRate)) {
+                throw new Error('Brak kursu dla wybranej pary walut');
+            }
+            const converted = amount * unitRate;
+
+            resultDiv.innerHTML = `
+                <strong>${formatNumber(converted, 4)} ${escapeHtml(to)}</strong>
+                <div class="muted">${formatNumber(amount, 2)} ${escapeHtml(from)} = ${formatNumber(converted, 4)} ${escapeHtml(to)}</div>
+                <div class="muted">1 ${escapeHtml(from)} = ${formatNumber(unitRate, 6)} ${escapeHtml(to)}</div>
+            `;
+            summaryRate.textContent = `1 ${from} = ${formatNumber(unitRate, 6)} ${to}`;
+        } catch (error) {
+            resultDiv.innerHTML = `<span class="error">Błąd połączenia: ${escapeHtml(error.message)}</span>`;
+            summaryRate.textContent = '—';
+        }
+    }
+
+    async function loadHistory(days = currentDays) {
+        currentDays = days;
+        updatePairLabels();
+
+        document.querySelectorAll('[data-range]').forEach((button) => {
+            button.classList.toggle('active', Number(button.dataset.range) === days);
+        });
+        document.querySelectorAll('[data-days]').forEach((button) => {
+            button.classList.toggle('active', Number(button.dataset.days) === days);
+        });
+
+        const from = fromSelect.value;
+        const to = toSelect.value;
+
+        if (!from || !to) {
+            historyInfo.innerHTML = '<span class="error">Najpierw wybierz waluty.</span>';
+            clearChart();
+            return;
+        }
+
+        if (from === to) {
+            historyInfo.innerHTML = '<span class="error">Wybierz różne waluty.</span>';
+            clearChart();
+            summaryMin.textContent = '—';
+            summaryMax.textContent = '—';
+            return;
+        }
+
+        historyInfo.innerHTML = `<span class="loading">Ładowanie historii ${days} dni...</span>`;
+
+        const end = new Date();
+        const start = new Date();
+        start.setDate(end.getDate() - days);
+        const endDate = end.toISOString().split('T')[0];
+        const startDate = start.toISOString().split('T')[0];
+
+        try {
+            const res = await fetch(`https://api.frankfurter.dev/v2/rates?from=${encodeURIComponent(startDate)}&to=${encodeURIComponent(endDate)}&base=${encodeURIComponent(from)}&quotes=${encodeURIComponent(to)}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
+            const rows = Array.isArray(data) ? data : [];
+            const dates = rows.map((row) => row.date);
+            const rates = rows.map((row) => Number(row.rate)).filter((value) => Number.isFinite(value));
+            lastHistoryRates = rates.slice();
+
+            drawChart(dates, rates, from, to);
+            historyInfo.textContent = `Kurs ${from} → ${to} · ostatnie ${days} dni · ${dates.length} punktów`;
+
+            if (rates.length) {
+                summaryMin.textContent = formatNumber(Math.min(...rates), 6);
+                summaryMax.textContent = formatNumber(Math.max(...rates), 6);
+            } else {
+                summaryMin.textContent = '—';
+                summaryMax.textContent = '—';
+            }
+        } catch (error) {
+            historyInfo.innerHTML = `<span class="error">Błąd ładowania historii: ${escapeHtml(error.message)}</span>`;
+            clearChart();
+            summaryMin.textContent = '—';
+            summaryMax.textContent = '—';
+        }
+    }
+
+    function drawChart(dates, rates, from, to) {
+        const dpr = window.devicePixelRatio || 1;
+        const displayWidth = canvas.clientWidth || 900;
+        const displayHeight = 360;
+        canvas.width = Math.floor(displayWidth * dpr);
+        canvas.height = Math.floor(displayHeight * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, displayWidth, displayHeight);
+
+        if (!dates.length || !rates.length) {
+            historyInfo.innerHTML = '<span class="error">Brak danych historycznych dla tej pary.</span>';
+            return;
+        }
+
+        const padding = { top: 28, right: 18, bottom: 40, left: 56 };
+        const w = displayWidth - padding.left - padding.right;
+        const h = displayHeight - padding.top - padding.bottom;
+        const minRate = Math.min(...rates);
+        const maxRate = Math.max(...rates);
+        const range = maxRate - minRate || 1;
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i += 1) {
+            const y = padding.top + (h / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, y);
+            ctx.lineTo(displayWidth - padding.right, y);
+            ctx.stroke();
+        }
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+        ctx.beginPath();
+        ctx.moveTo(padding.left, padding.top);
+        ctx.lineTo(padding.left, displayHeight - padding.bottom);
+        ctx.lineTo(displayWidth - padding.right, displayHeight - padding.bottom);
+        ctx.stroke();
+
+        const points = rates.map((rate, i) => {
+            const x = padding.left + (i / Math.max(1, rates.length - 1)) * w;
+            const y = padding.top + h - ((rate - minRate) / range) * h;
+            return { x, y, rate, date: dates[i] };
+        });
+
+        ctx.beginPath();
+        points.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#79c7ff';
+        ctx.stroke();
+
+        ctx.beginPath();
+        points.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, displayHeight - padding.bottom);
+            ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineTo(points[points.length - 1].x, displayHeight - padding.bottom);
+        ctx.closePath();
+        const gradient = ctx.createLinearGradient(0, padding.top, 0, displayHeight - padding.bottom);
+        gradient.addColorStop(0, 'rgba(121,199,255,0.22)');
+        gradient.addColorStop(1, 'rgba(121,199,255,0.02)');
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        ctx.fillStyle = '#79c7ff';
+        points.forEach((point) => {
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        ctx.fillStyle = '#9aa8cb';
+        ctx.font = '12px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 4; i += 1) {
+            const value = maxRate - (range / 4) * i;
+            const y = padding.top + (h / 4) * i + 4;
+            ctx.fillText(formatNumber(value, 6), padding.left - 8, y);
+        }
+
+        ctx.textAlign = 'center';
+        const labelIndexes = Array.from(new Set([0, Math.floor(points.length / 2), points.length - 1])).filter((i) => i >= 0);
+        labelIndexes.forEach((index) => {
+            const point = points[index];
+            ctx.fillText(formatAxisDate(point.date), point.x, displayHeight - 14);
+        });
+
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#edf2ff';
+        ctx.font = 'bold 13px Inter, system-ui, sans-serif';
+        ctx.fillText(`${from} → ${to}`, padding.left, 16);
+    }
+
+    function clearChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function swapCurrencies() {
+        const temp = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = temp;
+        convertCurrency();
+        loadHistory(currentDays);
+    }
+
+    function filterCurrencies() {
+        const query = searchInput.value.trim().toLowerCase();
+        const entries = Object.entries(currencies)
+            .filter(([code, name]) => {
+                if (!query) return true;
+                return code.toLowerCase().includes(query) || String(name).toLowerCase().includes(query);
+            })
+            .sort(([a], [b]) => a.localeCompare(b));
+
+        if (!entries.length) return;
+        populateSelects(entries);
+        updatePairLabels();
+    }
+
+    async function refreshAll() {
+        await loadCurrencies();
+        await convertCurrency();
+        await loadHistory(currentDays);
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', convertCurrency);
+    document.getElementById('swapBtn').addEventListener('click', swapCurrencies);
+    document.getElementById('invertBtn').addEventListener('click', swapCurrencies);
+    document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+    searchInput.addEventListener('input', filterCurrencies);
+
+    document.querySelectorAll('[data-range]').forEach((button) => {
+        button.addEventListener('click', () => loadHistory(Number(button.dataset.range)));
+    });
+
+    document.querySelectorAll('[data-days]').forEach((button) => {
+        button.addEventListener('click', () => loadHistory(Number(button.dataset.days)));
+    });
+
+    fromSelect.addEventListener('change', async () => {
+        await convertCurrency();
+        await loadHistory(currentDays);
+    });
+
+    toSelect.addEventListener('change', async () => {
+        await convertCurrency();
+        await loadHistory(currentDays);
+    });
+
+    amountInput.addEventListener('input', () => {
+        convertCurrency();
+    });
+
+    window.addEventListener('resize', () => {
+        if (lastHistoryRates.length) {
+            loadHistory(currentDays);
+        }
+    });
+
+    window.addEventListener('load', async () => {
+        await loadCurrencies();
+        await convertCurrency();
+        await loadHistory(currentDays);
+    });
+</script>
+</body>
+</html>
