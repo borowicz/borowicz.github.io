@@ -325,14 +325,14 @@
         }
 
         .table-wrap {
-            overflow: auto;
+            overflow: visible;
             border-radius: 18px;
             border: 1px solid rgba(255,255,255,.02);
         }
         #typesTable {
             width: 100%;
             border-collapse: collapse;
-            min-width: 860px;
+            table-layout: fixed;
         }
         #typesTable th,
         #typesTable td {
@@ -405,6 +405,179 @@
             margin: 0;
             color: var(--muted);
         }
+        .platform-table-wrap {
+            overflow: visible;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,.02);
+        }
+        .platform-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .platform-table th,
+        .platform-table td {
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+        .platform-table th {
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            background: rgba(255,255,255,.03);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 -1px 0 var(--line);
+        }
+        .platform-table tbody tr:hover {
+            background: rgba(255,255,255,.03);
+        }
+        .platform-name {
+            white-space: nowrap;
+            font-weight: 800;
+        }
+        .impact-table-wrap {
+            overflow: visible;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,.02);
+            margin-top: 18px;
+        }
+        .impact-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .impact-table th,
+        .impact-table td {
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+        .impact-table th {
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            background: rgba(255,255,255,.03);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 -1px 0 var(--line);
+        }
+        .impact-table tbody tr:hover {
+            background: rgba(255,255,255,.03);
+        }
+        .impact-area {
+            white-space: nowrap;
+            font-weight: 800;
+        }
+
+        #typesTable td,
+        .platform-table td,
+        .impact-table td {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        @media (max-width: 1100px) {
+            #typesTable,
+            .platform-table,
+            .impact-table,
+            #typesTable thead,
+            .platform-table thead,
+            .impact-table thead,
+            #typesTable tbody,
+            .platform-table tbody,
+            .impact-table tbody,
+            #typesTable tr,
+            .platform-table tr,
+            .impact-table tr,
+            #typesTable td,
+            .platform-table td,
+            .impact-table td {
+                display: block;
+                width: 100%;
+            }
+
+            #typesTable thead,
+            .platform-table thead,
+            .impact-table thead {
+                display: none;
+            }
+
+            #typesTable tr,
+            .platform-table tr,
+            .impact-table tr {
+                border-bottom: 1px solid var(--line);
+                padding: 10px 0;
+            }
+
+            #typesTable td,
+            .platform-table td,
+            .impact-table td {
+                border-bottom: 0;
+                padding: 10px 14px 10px 150px;
+                position: relative;
+                min-height: 44px;
+            }
+
+            #typesTable td::before,
+            .platform-table td::before,
+            .impact-table td::before {
+                position: absolute;
+                left: 14px;
+                top: 10px;
+                width: 120px;
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                white-space: normal;
+                content: '';
+            }
+
+            #typesTable td:nth-child(1)::before { content: 'Type'; }
+            #typesTable td:nth-child(2)::before { content: 'Traits'; }
+            #typesTable td:nth-child(3)::before { content: 'Favorite tactic'; }
+            #typesTable td:nth-child(4)::before { content: 'Effect'; }
+
+            .impact-table td:nth-child(1)::before { content: 'Area'; }
+            .impact-table td:nth-child(2)::before { content: 'Changed'; }
+            .impact-table td:nth-child(3)::before { content: 'Intensified'; }
+            .impact-table td:nth-child(4)::before { content: 'Effects'; }
+
+            .platform-table td:nth-child(1)::before { content: 'Platform'; }
+            .platform-table td:nth-child(2)::before { content: 'Dominant content'; }
+            .platform-table td:nth-child(3)::before { content: 'Comments'; }
+            .platform-table td:nth-child(4)::before { content: 'Moderation'; }
+            .platform-table td:nth-child(5)::before { content: 'Algorithm'; }
+            .platform-table td:nth-child(6)::before { content: 'Psychological impact'; }
+        }
+
+        @media (max-width: 640px) {
+            #typesTable td,
+            .platform-table td,
+            .impact-table td {
+                padding: 34px 12px 10px;
+            }
+
+            #typesTable td::before,
+            .platform-table td::before,
+            .impact-table td::before {
+                position: static;
+                display: block;
+                width: auto;
+                margin-bottom: 6px;
+            }
+        }
 
         .small { font-size: 14px; color: var(--muted); }
         .muted { color: var(--muted); }
@@ -457,6 +630,7 @@
             <a href="#legend">Why they exist</a>
             <a href="#about">About</a>
             <a href="#top">Top</a>
+            <a href="#platforms">Platforms</a>
         </nav>
     </div>
 </header>
@@ -857,6 +1031,202 @@
                 <h3>Algorithms love conflict</h3>
                 <p>A peaceful thread is socially healthy but commercially underperforming. So naturally, it dies quietly.</p>
             </article>
+        </div>
+    </section>
+
+    <section class="section wrap" id="platforms">
+        <div class="section-head">
+            <div>
+                <h2>How the internet changed behavior</h2>
+                <p>A broader comparison of what algorithmic platforms changed, what they intensified, and what that does to attention, emotions, relationships, media, and public life.</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-pad">
+                <div class="impact-table-wrap">
+                    <table class="impact-table">
+                        <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>What the internet / algorithms changed</th>
+                            <th>What it intensified</th>
+                            <th>Effects</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="impact-area">Attention</td>
+                            <td>Instead of choosing content independently, people increasingly consume a recommended feed.</td>
+                            <td>Scrolling, impulsiveness, and the habit of checking constantly.</td>
+                            <td>Shorter attention span and more difficulty with longer reflection.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Emotions</td>
+                            <td>Content is selected for reaction rather than calm understanding.</td>
+                            <td>Outrage, fear, envy, and FOMO.</td>
+                            <td>Overstimulation and higher psychological tension.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Self-esteem</td>
+                            <td>Life became publicly measurable through reactions, visibility, and social performance.</td>
+                            <td>Comparison, appearance pressure, and status anxiety.</td>
+                            <td>Lower satisfaction with one’s own life.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Relationships</td>
+                            <td>Contact became easier, but also more platform-shaped and reaction-dependent.</td>
+                            <td>Superficiality, validation through likes, and dependence on feedback.</td>
+                            <td>Shallower bonds and more social tension.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Media</td>
+                            <td>Editorial institutions lost their monopoly on distribution.</td>
+                            <td>Clickbait, sensation, and simplification.</td>
+                            <td>Lower quality of public debate.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">TikTok / short video</td>
+                            <td>Content was compressed into a very fast, high-turnover format.</td>
+                            <td>Jumping between stimuli and lower patience.</td>
+                            <td>Worse tolerance for longer content.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Instagram</td>
+                            <td>Image became more important than reality.</td>
+                            <td>Life idealization and aesthetic pressure.</td>
+                            <td>Frustration, insecurities, and performative living.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">YouTube</td>
+                            <td>Monetization became tightly coupled with recommendation systems.</td>
+                            <td>Content optimized for retention, dramatization, and seriality.</td>
+                            <td>Creators increasingly produce for the algorithm, not just for value.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">X</td>
+                            <td>Reach became strongly dependent on reaction dynamics.</td>
+                            <td>Conflict, provocation, and extremity.</td>
+                            <td>More informational chaos and tribalism.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Facebook</td>
+                            <td>Moderation became mass-scale and semi-automated.</td>
+                            <td>Errors, arbitrariness, and distrust.</td>
+                            <td>Constant disputes about censorship, bias, and ineffectiveness.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Politics</td>
+                            <td>Micro-distribution of messaging became easy and cheap.</td>
+                            <td>Propaganda and emotional manipulation.</td>
+                            <td>Easier steering of debate and polarization.</td>
+                        </tr>
+                        <tr>
+                            <td class="impact-area">Truth / knowledge</td>
+                            <td>Facts now compete directly with narratives optimized for engagement.</td>
+                            <td>Disinformation and half-truths.</td>
+                            <td>It becomes harder to distinguish information from manipulation.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="platform-table-wrap">
+                    <table class="platform-table">
+                        <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Dominant content</th>
+                            <th>Comments / discussion</th>
+                            <th>Moderation / control</th>
+                            <th>Algorithm / techniques used</th>
+                            <th>Psychological impact</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="platform-name">Instagram</td>
+                            <td>Images, Reels, beauty, lifestyle, status.</td>
+                            <td>Usually smoother and more polished in public.</td>
+                            <td>High control over comments, filters, and content exposure.</td>
+                            <td>Feed, Stories, and Reels ranking based on predicted interest; strong personalization; short scrolling loops; aesthetic exposure; variable reward mechanics fit here well as a metaphor.</td>
+                            <td>Social comparison, appearance pressure, FOMO, addiction to validation, and the feeling that “other people live better”; at the same time, it easily pulls users in through uncertain reward loops.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">X</td>
+                            <td>Text, news, politics, opinions, conflict.</td>
+                            <td>Sharp clashes, irony, hostility, polarization.</td>
+                            <td>Formally there are rules, but the culture is much more confrontational.</td>
+                            <td>The “For You” feed mixes followed-network content with content from outside it; ML/transformer-based ranking; strong amplification of engaging, controversial, and reaction-driven posts.</td>
+                            <td>Greater exposure to anger, conflict, doomscrolling, tribalism, and opinion radicalization; high stimulation through dispute and immediate reaction.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Facebook</td>
+                            <td>A mix of friends, groups, links, local content, and video.</td>
+                            <td>Very uneven — from family-friendly to toxic.</td>
+                            <td>Heavy system moderation plus group moderators.</td>
+                            <td>AI ranking for feed and video; strong interest profiling; groups intensify both the bubble effect and the sense of community.</td>
+                            <td>Attachment to one’s own bubble, reinforcement of prior beliefs, a strong sense of “social norm,” and group conflict.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">TikTok</td>
+                            <td>Short video, trends, emotion, rapid stimulus.</td>
+                            <td>Fast, meme-like, impulsive.</td>
+                            <td>Strong control over visibility and content safety.</td>
+                            <td>The For You feed predicts interest from interactions, user similarity, and behavioral signals; easy refresh loops; “Not interested” and word/hashtag filters.</td>
+                            <td>Very strong scrolling effect, shortened attention span, constant stimulus chasing, and rapid dependence on novelty and emotion.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">YouTube</td>
+                            <td>Long-form and short-form video, education, entertainment.</td>
+                            <td>Depends on the channel — from thoughtful to chaotic.</td>
+                            <td>Platform moderation plus creator-level moderation.</td>
+                            <td>Recommendations on Home and Up Next rely on watch history, searches, subscriptions, and predicted viewer satisfaction.</td>
+                            <td>Binge-watching, falling into thematic tunnels, longer attention retention; it can educate, but it can also lock people into one type of content.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Reddit</td>
+                            <td>Topical forums, questions, analysis, memes.</td>
+                            <td>Often more substantive, but can also become brutally herd-like.</td>
+                            <td>A very large role for subreddit moderators.</td>
+                            <td>Ranking through votes, community activity, and subreddit-specific norms; strong local group culture.</td>
+                            <td>“Tribe” effect, pressure to conform to group norms, and rewarding content that matches the tone of the community.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">LinkedIn</td>
+                            <td>Career, success, business, personal brand.</td>
+                            <td>Polite or artificially professional.</td>
+                            <td>A safer, image-conscious environment.</td>
+                            <td>Ranking of professional and network-based content; rewarding activity that supports networking.</td>
+                            <td>Pressure to perform success, self-promote, and compare professional status.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Threads</td>
+                            <td>Short text, lifestyle, lighter commentary.</td>
+                            <td>Milder than X, more “Meta-style.”</td>
+                            <td>A comparatively more controlled environment.</td>
+                            <td>Strong integration with the Meta ecosystem; recommendations based on interests and the social graph.</td>
+                            <td>Less brutal than X, but still reinforces the need to be seen and stay “current.”</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Discord</td>
+                            <td>Closed chats, servers, communities.</td>
+                            <td>Depends on the server.</td>
+                            <td>A strong role for admins and moderators.</td>
+                            <td>Less a public feed and more a community structure built around notifications and continuous presence.</td>
+                            <td>A strong sense of belonging, but also pressure to stay online and keep participating.</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Pinterest</td>
+                            <td>Inspiration, interiors, fashion, aesthetics.</td>
+                            <td>Little central debate.</td>
+                            <td>Comments are relatively unimportant.</td>
+                            <td>Recommendations based on visual interests and similar boards.</td>
+                            <td>Aspirational thinking, lifestyle idealization, and aesthetic comparison rather than open conflict.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
