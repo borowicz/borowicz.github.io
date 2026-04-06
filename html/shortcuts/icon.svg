@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#0d1328"/>
+<rect x="58" y="58" width="396" height="396" rx="96" fill="#131c38" stroke="#5d90f2" stroke-opacity=".45" stroke-width="8"/>
+<rect x="112" y="112" width="132" height="132" rx="30" fill="#5a8df2"/><rect x="268" y="112" width="132" height="132" rx="30" fill="#263760"/>
+<rect x="112" y="268" width="132" height="132" rx="30" fill="#263760"/><rect x="268" y="268" width="132" height="132" rx="30" fill="#263760"/>
+<text x="178" y="198" text-anchor="middle" font-family="DejaVu Sans, Arial" font-size="72" font-weight="700" fill="#fff">S</text>
+<text x="334" y="198" text-anchor="middle" font-family="DejaVu Sans, Arial" font-size="64" font-weight="700" fill="#eef2ff">⌘</text>
+<text x="178" y="354" text-anchor="middle" font-family="DejaVu Sans, Arial" font-size="58" font-weight="700" fill="#eef2ff">⌫</text>
+<text x="334" y="354" text-anchor="middle" font-family="DejaVu Sans, Arial" font-size="66" font-weight="700" fill="#eef2ff">/</text>
+</svg>
