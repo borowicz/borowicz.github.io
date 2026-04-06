@@ -504,12 +504,13 @@
 <div class="container">
     <section class="hero">
         <div class="hero-card">
-            <div class="eyebrow">⌨️ static shortcut finder</div>
-            <h1>Shortcuts Quick Search</h1>
+            <div>
+                <div style="float:right;" class="eyebrow">⌨️ <a href="/">borowicz.github.io</a></div>
+                <h1>Shortcuts Quick Search</h1>
+
+            </div>
             <p>
                 Search keyboard shortcuts by action, category, platform or key combination.
-                Includes Finder, Spotlight, Quick Look, text editing, delete / trash shortcuts and other everyday system
-                actions.
                 Works as a simple static HTML page for GitHub Pages and can be installed like a lightweight PWA.
             </p>
 
@@ -535,7 +536,7 @@
                 <button class="filter-chip" type="button" data-query="search">🔎 Search</button>
                 <button class="filter-chip" type="button" data-query="settings">⚙️ Settings</button>
                 <button class="filter-chip" type="button" data-query="notification">🔔 Notifications</button>
-                <button class="filter-chip" type="button" data-query="menu">📋 Menu</button>
+                <button class="filter-chip" type="button" data-query="context menu">📋 Context Menu</button>
                 <button class="filter-chip" type="button" data-query="folder">📁 Folder</button>
                 <button class="filter-chip" type="button" data-query="previous folder">⬅️ Back</button>
                 <button class="filter-chip" type="button" data-query="next folder">➡️ Forward</button>
@@ -638,9 +639,9 @@
         {category: "Basic Operations", action: "💾 Save", windows: "Ctrl + S", mac: "⌘ + S", ubuntu: "Ctrl + S"},
         {
             category: "Basic Operations",
-            action: "📜 Context menu",
+            action: "📜 Context menu / right-click menu",
             windows: "Shift + F10 / Menu key",
-            mac: "Control + Return",
+            mac: "Control + Enter / Control + Return",
             ubuntu: "Shift + F10 / Menu key"
         },
         {
@@ -1159,27 +1160,6 @@
         },
         {
             category: "File Explorer",
-            action: "🏡 Open user home location quickly",
-            windows: "Win + E then Home / %USERPROFILE%",
-            mac: "⌘ + Shift + H",
-            ubuntu: "Alt + Home"
-        },
-        {
-            category: "File Explorer",
-            action: "📍 Jump to location / path entry",
-            windows: "Alt + D / Ctrl + L",
-            mac: "⌘ + Shift + G / ⌘ + Option + L",
-            ubuntu: "Ctrl + L"
-        },
-        {
-            category: "File Explorer",
-            action: "🏠 Open home folder",
-            windows: "Win + R → %USERPROFILE%",
-            mac: "⌘ + Shift + H",
-            ubuntu: "Alt + Home"
-        },
-        {
-            category: "File Explorer",
             action: "↩️ Enter directory / open selected item",
             windows: "Enter",
             mac: "⌘ + O / ⌘ + ↓",
@@ -1212,27 +1192,6 @@
             windows: "Alt + ↑ / item-dependent",
             mac: "⌘ + ↑",
             ubuntu: "Alt + ↑ / item-dependent"
-        },
-        {
-            category: "File Explorer",
-            action: "🏡 Open user home location quickly",
-            windows: "Win + E then Home / %USERPROFILE%",
-            mac: "⌘ + Shift + H",
-            ubuntu: "Alt + Home"
-        },
-        {
-            category: "File Explorer",
-            action: "📍 Jump to location / path entry",
-            windows: "Alt + D / Ctrl + L",
-            mac: "⌘ + Shift + G / ⌘ + Option + L",
-            ubuntu: "Ctrl + L"
-        },
-        {
-            category: "File Explorer",
-            action: "🏠 Open home folder",
-            windows: "Win + R → %USERPROFILE%",
-            mac: "⌘ + Shift + H",
-            ubuntu: "Alt + Home"
         },
         {
             category: "File Explorer",
@@ -1358,9 +1317,9 @@
         },
         {
             category: "File Explorer",
-            action: "📜 Open context menu",
+            action: "📜 Open context menu / right-click menu",
             windows: "Shift + F10 / Menu key",
-            mac: "Control + Click",
+            mac: "Control + Enter / Control + Click",
             ubuntu: "Shift + F10 / Menu key"
         },
         {category: "File Explorer", action: "📂 Open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T"},
