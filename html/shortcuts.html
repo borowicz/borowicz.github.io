@@ -1,364 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Shortcuts Quick Search</title>
     <style>
-        :root{
-            --bg:#0b1020;
-            --bg2:#121933;
-            --card:rgba(255,255,255,.06);
-            --border:rgba(255,255,255,.12);
-            --text:#eef2ff;
-            --muted:#aab4d6;
-            --accent:#6ea8fe;
-            --accent2:#7ef0c2;
-            --danger:#ff8a8a;
-            --radius:18px;
-            --shadow:0 20px 50px rgba(0,0,0,.35);
+        :root {
+            --bg: #0b1020;
+            --bg2: #121933;
+            --card: rgba(255, 255, 255, .06);
+            --border: rgba(255, 255, 255, .12);
+            --text: #eef2ff;
+            --muted: #aab4d6;
+            --accent: #6ea8fe;
+            --accent2: #7ef0c2;
+            --danger: #ff8a8a;
+            --radius: 18px;
+            --shadow: 0 20px 50px rgba(0, 0, 0, .35);
         }
 
-        *{box-sizing:border-box}
-        html{scroll-behavior:smooth}
-        body{
-            margin:0;
-            font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color:var(--text);
-            background:
-                    radial-gradient(circle at top left, rgba(110,168,254,.18), transparent 28%),
-                    radial-gradient(circle at top right, rgba(126,240,194,.12), transparent 28%),
-                    linear-gradient(180deg, #09101d 0%, #0d1328 100%);
+        * {
+            box-sizing: border-box
         }
 
-        a{color:inherit;text-decoration:none}
-        .container{
-            width:min(100% - 24px, 1380px);
-            margin-inline:auto;
+        html {
+            scroll-behavior: smooth
         }
 
-        .hero{
-            padding:28px 0 16px;
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(110, 168, 254, .18), transparent 28%),
+            radial-gradient(circle at top right, rgba(126, 240, 194, .12), transparent 28%),
+            linear-gradient(180deg, #09101d 0%, #0d1328 100%);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .container {
+            width: min(100% - 24px, 1380px);
+            margin-inline: auto;
+        }
+
+        .hero {
+            padding: 28px 0 16px;
         }
 
         .hero-card,
-        .panel{
-            background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-            border:1px solid var(--border);
-            border-radius:24px;
-            box-shadow:var(--shadow);
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
         }
 
-        .hero-card{
-            padding:24px;
+        .hero-card {
+            padding: 24px;
         }
 
-        .eyebrow{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:8px 12px;
-            border-radius:999px;
-            background:rgba(126,240,194,.08);
-            border:1px solid rgba(126,240,194,.18);
-            color:var(--accent2);
-            font-size:.85rem;
-            margin-bottom:14px;
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(126, 240, 194, .08);
+            border: 1px solid rgba(126, 240, 194, .18);
+            color: var(--accent2);
+            font-size: .85rem;
+            margin-bottom: 14px;
         }
 
-        h1{
-            margin:0 0 10px;
-            font-size:clamp(1.9rem, 4vw, 3.3rem);
-            line-height:1.08;
-            letter-spacing:-.03em;
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(1.9rem, 4vw, 3.3rem);
+            line-height: 1.08;
+            letter-spacing: -.03em;
         }
 
-        p{
-            margin:0;
-            color:var(--muted);
-            line-height:1.6;
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
         }
 
-        .toolbar{
-            margin-top:18px;
-            display:grid;
+        .toolbar {
+            margin-top: 18px;
+            display: grid;
             grid-template-columns:1.4fr .8fr .8fr auto;
-            gap:12px;
+            gap: 12px;
         }
 
-        .quick-filters{
-            margin-top:14px;
-            display:flex;
-            flex-wrap:wrap;
-            gap:10px;
+        .quick-filters {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .filter-chip{
-            min-height:40px;
-            padding:0 14px;
-            border-radius:999px;
-            border:1px solid rgba(255,255,255,.12);
-            background:rgba(255,255,255,.05);
-            color:var(--text);
-            font:inherit;
-            cursor:pointer;
-            transition:.18s ease;
+        .filter-chip {
+            min-height: 40px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .05);
+            color: var(--text);
+            font: inherit;
+            cursor: pointer;
+            transition: .18s ease;
         }
 
         .filter-chip:hover,
-        .filter-chip.active{
-            background:rgba(110,168,254,.16);
-            border-color:rgba(110,168,254,.45);
+        .filter-chip.active {
+            background: rgba(110, 168, 254, .16);
+            border-color: rgba(110, 168, 254, .45);
         }
 
         .field,
         .select,
-        .btn{
-            min-height:48px;
-            border-radius:14px;
-            border:1px solid var(--border);
-            background:rgba(255,255,255,.05);
-            color:var(--text);
-            padding:0 14px;
-            font:inherit;
-            outline:none;
+        .btn {
+            min-height: 48px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .05);
+            color: var(--text);
+            padding: 0 14px;
+            font: inherit;
+            outline: none;
         }
 
         .field:focus,
-        .select:focus{
-            border-color:var(--accent);
-            box-shadow:0 0 0 3px rgba(110,168,254,.15);
+        .select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(110, 168, 254, .15);
         }
 
-        .btn{
-            cursor:pointer;
-            font-weight:700;
-            background:linear-gradient(135deg, var(--accent), #5a8df2);
-            border:none;
+        .btn {
+            cursor: pointer;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #5a8df2);
+            border: none;
         }
 
-        .stats{
-            margin-top:18px;
-            display:flex;
-            flex-wrap:wrap;
-            gap:10px;
+        .stats {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .chip{
-            padding:8px 12px;
-            border-radius:999px;
-            background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.08);
-            color:var(--muted);
-            font-size:.92rem;
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted);
+            font-size: .92rem;
         }
 
-        .main{
-            padding:18px 0 40px;
+        .main {
+            padding: 18px 0 40px;
         }
 
-        .panel{
-            overflow:hidden;
+        .panel {
+            overflow: hidden;
         }
 
-        .table-wrap{
-            overflow:auto;
+        .table-wrap {
+            overflow: auto;
         }
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            min-width:1100px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
         }
 
-        thead th{
-            position:sticky;
-            top:0;
-            z-index:2;
-            background:#111933;
-            color:var(--text);
-            text-align:left;
-            font-size:.94rem;
-            letter-spacing:.01em;
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #111933;
+            color: var(--text);
+            text-align: left;
+            font-size: .94rem;
+            letter-spacing: .01em;
         }
 
-        th, td{
-            padding:14px 16px;
-            border-bottom:1px solid rgba(255,255,255,.08);
-            vertical-align:top;
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            vertical-align: top;
         }
 
-        tbody tr:hover{
-            background:rgba(255,255,255,.04);
+        tbody tr:hover {
+            background: rgba(255, 255, 255, .04);
         }
 
-        .cat{
-            white-space:nowrap;
-            font-weight:700;
-            color:#dbe6ff;
+        .cat {
+            white-space: nowrap;
+            font-weight: 700;
+            color: #dbe6ff;
         }
 
-        .action{
-            font-weight:600;
+        .action {
+            font-weight: 600;
         }
 
-        .kbd{
-            display:inline-block;
-            padding:5px 9px;
-            margin:2px 4px 2px 0;
-            border-radius:10px;
-            border:1px solid rgba(255,255,255,.14);
-            background:rgba(255,255,255,.06);
-            color:var(--text);
-            font-size:.92rem;
-            line-height:1.2;
-            white-space:nowrap;
+        .kbd {
+            display: inline-block;
+            padding: 5px 9px;
+            margin: 2px 4px 2px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            font-size: .92rem;
+            line-height: 1.2;
+            white-space: nowrap;
         }
 
-        .kbd.muted{
-            color:var(--muted);
+        .kbd.muted {
+            color: var(--muted);
         }
 
-        .badge{
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-            padding:6px 10px;
-            border-radius:999px;
-            font-size:.82rem;
-            font-weight:700;
-            line-height:1;
-            white-space:nowrap;
-            border:1px solid transparent;
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: .82rem;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+            border: 1px solid transparent;
         }
 
-        .badge-group{
-            display:flex;
-            flex-wrap:wrap;
-            gap:8px;
-            margin-bottom:10px;
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
-        .badge.windows{
-            background:rgba(110,168,254,.16);
-            border-color:rgba(110,168,254,.34);
-            color:#dcebff;
+        .badge.windows {
+            background: rgba(110, 168, 254, .16);
+            border-color: rgba(110, 168, 254, .34);
+            color: #dcebff;
         }
 
-        .badge.mac{
-            background:rgba(168,120,255,.16);
-            border-color:rgba(168,120,255,.34);
-            color:#efe2ff;
+        .badge.mac {
+            background: rgba(168, 120, 255, .16);
+            border-color: rgba(168, 120, 255, .34);
+            color: #efe2ff;
         }
 
-        .badge.ubuntu{
-            background:rgba(255,145,77,.16);
-            border-color:rgba(255,145,77,.34);
-            color:#ffe6d5;
+        .badge.ubuntu {
+            background: rgba(255, 145, 77, .16);
+            border-color: rgba(255, 145, 77, .34);
+            color: #ffe6d5;
         }
 
-        .cards{
-            display:none;
-            padding:14px;
-            gap:12px;
+        .cards {
+            display: none;
+            padding: 14px;
+            gap: 12px;
         }
 
-        .shortcut-card{
-            padding:16px;
-            border-radius:18px;
-            border:1px solid rgba(255,255,255,.08);
-            background:rgba(255,255,255,.04);
+        .shortcut-card {
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
         }
 
-        .shortcut-card h3{
-            margin:0 0 6px;
-            font-size:1rem;
-            line-height:1.35;
+        .shortcut-card h3 {
+            margin: 0 0 6px;
+            font-size: 1rem;
+            line-height: 1.35;
         }
 
-        .shortcut-card p{
-            margin:0 0 12px;
-            color:var(--muted);
-            font-size:.95rem;
+        .shortcut-card p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: .95rem;
         }
 
-        .shortcut-platform{
-            display:grid;
-            gap:8px;
+        .shortcut-platform {
+            display: grid;
+            gap: 8px;
         }
 
-        .shortcut-platform-row{
-            display:grid;
-            gap:8px;
+        .shortcut-platform-row {
+            display: grid;
+            gap: 8px;
         }
 
-        .shortcut-platform-row .kbd{
-            margin-right:6px;
+        .shortcut-platform-row .kbd {
+            margin-right: 6px;
         }
 
-        .empty{
-            padding:28px;
-            text-align:center;
-            color:var(--muted);
-            display:none;
+        .empty {
+            padding: 28px;
+            text-align: center;
+            color: var(--muted);
+            display: none;
         }
 
-        .legend{
-            display:grid;
+        .legend {
+            display: grid;
             grid-template-columns:repeat(3, 1fr);
-            gap:14px;
-            margin-top:18px;
+            gap: 14px;
+            margin-top: 18px;
         }
 
-        .legend .card{
-            padding:16px 18px;
-            border-radius:18px;
-            background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.08);
+        .legend .card {
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
         }
 
-        .legend strong{
-            display:block;
-            margin-bottom:6px;
+        .legend strong {
+            display: block;
+            margin-bottom: 6px;
         }
 
-        .footer-note{
-            margin-top:18px;
-            font-size:.92rem;
-            color:var(--muted);
+        .footer-note {
+            margin-top: 18px;
+            font-size: .92rem;
+            color: var(--muted);
         }
 
-        mark{
-            background:rgba(126,240,194,.22);
-            color:#fff;
-            padding:0 2px;
-            border-radius:4px;
+        mark {
+            background: rgba(126, 240, 194, .22);
+            color: #fff;
+            padding: 0 2px;
+            border-radius: 4px;
         }
 
-        @media (max-width: 980px){
-            .toolbar{
+        @media (max-width: 980px) {
+            .toolbar {
                 grid-template-columns:1fr 1fr;
             }
-            .legend{
+
+            .legend {
                 grid-template-columns:1fr;
             }
         }
 
-        @media (max-width: 640px){
-            .toolbar{
+        @media (max-width: 640px) {
+            .toolbar {
                 grid-template-columns:1fr;
             }
-            .hero-card{
-                padding:18px;
+
+            .hero-card {
+                padding: 18px;
             }
-            .table-wrap{
-                display:none;
+
+            .table-wrap {
+                display: none;
             }
-            .cards{
-                display:grid;
+
+            .cards {
+                display: grid;
             }
-            .panel{
-                overflow:visible;
+
+            .panel {
+                overflow: visible;
             }
         }
     </style>
@@ -371,12 +385,14 @@
             <h1>Shortcuts Quick Search</h1>
             <p>
                 Search keyboard shortcuts by action, category, platform or key combination.
-                Includes Finder, text editing, delete / trash shortcuts and other everyday system actions.
+                Includes Finder, Spotlight, Quick Look, text editing, delete / trash shortcuts and other everyday system
+                actions.
                 Works as a simple static HTML page for GitHub Pages.
             </p>
 
             <div class="toolbar">
-                <input id="searchInput" class="field" type="text" placeholder="Search: copy, screenshot, Ctrl, Spotlight, desktop..." />
+                <input id="searchInput" class="field" type="text"
+                       placeholder="Search: copy, screenshot, Ctrl, Spotlight, desktop..."/>
                 <select id="platformFilter" class="select">
                     <option value="all">All platforms</option>
                     <option value="windows">Windows 🪟</option>
@@ -397,6 +413,9 @@
                 <button class="filter-chip" type="button" data-query="notification">🔔 Notifications</button>
                 <button class="filter-chip" type="button" data-query="menu">📋 Menu</button>
                 <button class="filter-chip" type="button" data-query="folder">📁 Folder</button>
+                <button class="filter-chip" type="button" data-query="finder">🍎 Finder</button>
+                <button class="filter-chip" type="button" data-query="spotlight">🔦 Spotlight</button>
+                <button class="filter-chip" type="button" data-query="quick look">👁️ Quick Look</button>
                 <button class="filter-chip" type="button" data-query="browser">🌐 Browser</button>
                 <button class="filter-chip" type="button" data-query="terminal">🖥️ Terminal</button>
                 <button class="filter-chip" type="button" data-query="snap">🧲 Snap</button>
@@ -407,6 +426,14 @@
                 <button class="filter-chip" type="button" data-query="delete">⌫ Delete</button>
                 <button class="filter-chip" type="button" data-query="trash">🗑️ Trash</button>
                 <button class="filter-chip" type="button" data-query="zoom">🔍 Zoom</button>
+
+                <div>macos only:
+                    <button class="filter-chip" type="button" data-query="mission">🧭 Mission</button>
+                    <button class="filter-chip" type="button" data-query="dock">🚀 Dock</button>
+                    <button class="filter-chip" type="button" data-query="volume">🔊 Volume</button>
+                    <button class="filter-chip" type="button" data-query="brightness">💡 Brightness</button>
+                    <button class="filter-chip" type="button" data-query="display">🖥️ Display</button>
+                </div>
             </div>
 
             <div class="stats">
@@ -438,173 +465,1156 @@
         </div>
 
         <p class="footer-note">
-            Note: some shortcuts vary by desktop environment, keyboard layout, app version or context. Some macOS delete shortcuts differ between Finder, text fields and specific apps. Ubuntu values here are general desktop defaults, mostly GNOME-oriented.
+            Note: some shortcuts vary by desktop environment, keyboard layout, app version or context. Many added macOS
+            entries come from Apple’s official shortcut list for Finder, system actions and text editing, but some
+            Windows and Ubuntu equivalents remain approximate because they depend on the file manager, shell or desktop
+            environment. Ubuntu values here are general desktop defaults, mostly GNOME-oriented.
         </p>
     </section>
 
     <div class="footer">
-        <p style="text-align: center; color: #1a2347">&copy; <a style="color: #cccc;" href="./../" title="borowicz.github.io">borowicz.github.io</a>
+        <p style="text-align: center; color: #1a2347">&copy; <a style="color: #cccc;" href="./../"
+                                                                title="borowicz.github.io">borowicz.github.io</a>
     </div>
     <br>
 </div>
 
 <script>
     const shortcuts = [
-        { category: "Basic Operations", action: "📋 Copy selected item", windows: "Ctrl + C", mac: "⌘ + C", ubuntu: "Ctrl + C" },
-        { category: "Basic Operations", action: "✂️ Cut selected item", windows: "Ctrl + X", mac: "⌘ + X", ubuntu: "Ctrl + X" },
-        { category: "Basic Operations", action: "📥 Paste", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V" },
-        { category: "Basic Operations", action: "↩️ Undo", windows: "Ctrl + Z", mac: "⌘ + Z", ubuntu: "Ctrl + Z" },
-        { category: "Basic Operations", action: "⏩ Redo", windows: "Ctrl + Y", mac: "⌘ + Shift + Z", ubuntu: "Ctrl + Shift + Z / Ctrl + Y" },
-        { category: "Basic Operations", action: "✅ Select all", windows: "Ctrl + A", mac: "⌘ + A", ubuntu: "Ctrl + A" },
-        { category: "Basic Operations", action: "🖨️ Print", windows: "Ctrl + P", mac: "⌘ + P", ubuntu: "Ctrl + P" },
-        { category: "Basic Operations", action: "💾 Save", windows: "Ctrl + S", mac: "⌘ + S", ubuntu: "Ctrl + S" },
-        { category: "Basic Operations", action: "📜 Context menu", windows: "Shift + F10 / Menu key", mac: "Control + Return", ubuntu: "Shift + F10 / Menu key" },
-        { category: "Basic Operations", action: "🔒 Lock PC", windows: "Win + L", mac: "Ctrl + ⌘ + Q", ubuntu: "Super + L" },
-        { category: "Basic Operations", action: "😀 Emoji picker", windows: "Win + .", mac: "Control + ⌘ + Space", ubuntu: "Ctrl + ;" },
-        { category: "Basic Operations", action: "⏻ Turn off", windows: "Ctrl + Alt + Del → Alt + U → U", mac: "⌘ + Option + Control + Power", ubuntu: "Ctrl + Alt + Del → Enter" },
+        {
+            category: "Basic Operations",
+            action: "📋 Copy selected item",
+            windows: "Ctrl + C",
+            mac: "⌘ + C",
+            ubuntu: "Ctrl + C"
+        },
+        {
+            category: "Basic Operations",
+            action: "✂️ Cut selected item",
+            windows: "Ctrl + X",
+            mac: "⌘ + X",
+            ubuntu: "Ctrl + X"
+        },
+        {category: "Basic Operations", action: "📥 Paste", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V"},
+        {category: "Basic Operations", action: "↩️ Undo", windows: "Ctrl + Z", mac: "⌘ + Z", ubuntu: "Ctrl + Z"},
+        {
+            category: "Basic Operations",
+            action: "⏩ Redo",
+            windows: "Ctrl + Y",
+            mac: "⌘ + Shift + Z",
+            ubuntu: "Ctrl + Shift + Z / Ctrl + Y"
+        },
+        {category: "Basic Operations", action: "✅ Select all", windows: "Ctrl + A", mac: "⌘ + A", ubuntu: "Ctrl + A"},
+        {category: "Basic Operations", action: "🖨️ Print", windows: "Ctrl + P", mac: "⌘ + P", ubuntu: "Ctrl + P"},
+        {category: "Basic Operations", action: "💾 Save", windows: "Ctrl + S", mac: "⌘ + S", ubuntu: "Ctrl + S"},
+        {
+            category: "Basic Operations",
+            action: "📜 Context menu",
+            windows: "Shift + F10 / Menu key",
+            mac: "Control + Return",
+            ubuntu: "Shift + F10 / Menu key"
+        },
+        {
+            category: "Basic Operations",
+            action: "🔒 Lock PC",
+            windows: "Win + L",
+            mac: "Ctrl + ⌘ + Q",
+            ubuntu: "Super + L"
+        },
+        {category: "Basic Operations", action: "🙈 Hide current app", windows: "–", mac: "⌘ + H", ubuntu: "–"},
+        {category: "Basic Operations", action: "🫥 Hide other apps", windows: "–", mac: "⌥ + ⌘ + H", ubuntu: "–"},
+        {
+            category: "Basic Operations",
+            action: "🪟 Switch windows in current app",
+            windows: "Alt + Esc / app-dependent",
+            mac: "⌘ + `",
+            ubuntu: "– / app-dependent"
+        },
+        {
+            category: "Basic Operations",
+            action: "🔦 Spotlight search",
+            windows: "Win + S",
+            mac: "⌘ + Space",
+            ubuntu: "Super"
+        },
+        {
+            category: "Basic Operations",
+            action: "🔠 Character Viewer / emoji & symbols",
+            windows: "Win + .",
+            mac: "Control + ⌘ + Space / Fn + E",
+            ubuntu: "Ctrl + ;"
+        },
+        {
+            category: "Basic Operations",
+            action: "🖥️ Toggle full screen for current app",
+            windows: "F11 / app-dependent",
+            mac: "Control + ⌘ + F",
+            ubuntu: "F11 / app-dependent"
+        },
+        {category: "Basic Operations", action: "📝 Quick Note", windows: "–", mac: "Fn + Q", ubuntu: "–"},
+        {
+            category: "Basic Operations",
+            action: "😀 Emoji picker",
+            windows: "Win + .",
+            mac: "Control + ⌘ + Space",
+            ubuntu: "Ctrl + ;"
+        },
+        {
+            category: "Basic Operations",
+            action: "⏻ Turn off",
+            windows: "Ctrl + Alt + Del → Alt + U → U",
+            mac: "⌘ + Option + Control + Power",
+            ubuntu: "Ctrl + Alt + Del → Enter"
+        },
 
-        { category: "Window Management", action: "🔄 Switch between open apps", windows: "Alt + Tab", mac: "⌘ + Tab", ubuntu: "Alt + Tab" },
-        { category: "Window Management", action: "❌ Close current app", windows: "Alt + F4", mac: "⌘ + Q", ubuntu: "Alt + F4" },
-        { category: "Window Management", action: "🖥️ Show / Hide desktop", windows: "Win + D", mac: "⌘ + H", ubuntu: "Super + D" },
-        { category: "Window Management", action: "📉 Minimize all windows", windows: "Win + M", mac: "⌘ + M", ubuntu: "Ctrl + Super + ↓" },
-        { category: "Window Management", action: "📈 Restore minimized windows", windows: "Win + Shift + M", mac: "–", ubuntu: "–" },
-        { category: "Window Management", action: "🪟 Minimize / Restore window", windows: "Win + ↓ / Win + ↑", mac: "–", ubuntu: "Ctrl + Super + ↓ / Ctrl + Super + ↑" },
-        { category: "Window Management", action: "🧭 Mission Control / all windows", windows: "Win + Tab", mac: "Control + ↑", ubuntu: "Super + W / Activities" },
-        { category: "Window Management", action: "🗂️ App Exposé / current app windows", windows: "–", mac: "Control + ↓", ubuntu: "Super + A / App overview" },
-        { category: "Window Management", action: "↔️ Switch desktops / spaces", windows: "–", mac: "Control + → / ←", ubuntu: "–" },
+        {
+            category: "Window Management",
+            action: "🔄 Switch between open apps",
+            windows: "Alt + Tab",
+            mac: "⌘ + Tab",
+            ubuntu: "Alt + Tab"
+        },
+        {
+            category: "Window Management",
+            action: "❌ Close current app",
+            windows: "Alt + F4",
+            mac: "⌘ + Q",
+            ubuntu: "Alt + F4"
+        },
+        {
+            category: "Window Management",
+            action: "🖥️ Show / Hide desktop",
+            windows: "Win + D",
+            mac: "⌘ + H",
+            ubuntu: "Super + D"
+        },
+        {
+            category: "Window Management",
+            action: "📉 Minimize all windows",
+            windows: "Win + M",
+            mac: "⌘ + M",
+            ubuntu: "Ctrl + Super + ↓"
+        },
+        {
+            category: "Window Management",
+            action: "📈 Restore minimized windows",
+            windows: "Win + Shift + M",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Window Management",
+            action: "🪟 Minimize / Restore window",
+            windows: "Win + ↓ / Win + ↑",
+            mac: "–",
+            ubuntu: "Ctrl + Super + ↓ / Ctrl + Super + ↑"
+        },
+        {
+            category: "Window Management",
+            action: "🧭 Mission Control / all windows",
+            windows: "Win + Tab",
+            mac: "Control + ↑",
+            ubuntu: "Super + W / Activities"
+        },
+        {
+            category: "Window Management",
+            action: "🗂️ App Exposé / current app windows",
+            windows: "–",
+            mac: "Control + ↓",
+            ubuntu: "Super + A / App overview"
+        },
+        {
+            category: "Window Management",
+            action: "↔️ Switch desktops / spaces",
+            windows: "–",
+            mac: "Control + → / ←",
+            ubuntu: "–"
+        },
 
-        { category: "Taskbar & Start", action: "🚀 Open / Close Start menu", windows: "Win", mac: "–", ubuntu: "Super" },
-        { category: "Taskbar & Start", action: "🔢 Open taskbar app in position", windows: "Win + Number (1–9)", mac: "Dock click", ubuntu: "–" },
-        { category: "Taskbar & Start", action: "🔔 Focus system tray", windows: "Win + B", mac: "–", ubuntu: "–" },
-        { category: "Taskbar & Start", action: "🧰 Task manager", windows: "Ctrl + Shift + Esc", mac: "–", ubuntu: "–" },
+        {category: "Taskbar & Start", action: "🚀 Open / Close Start menu", windows: "Win", mac: "–", ubuntu: "Super"},
+        {
+            category: "Taskbar & Start",
+            action: "🔢 Open taskbar app in position",
+            windows: "Win + Number (1–9)",
+            mac: "Dock click",
+            ubuntu: "–"
+        },
+        {category: "Taskbar & Start", action: "🔔 Focus system tray", windows: "Win + B", mac: "–", ubuntu: "–"},
+        {category: "Taskbar & Start", action: "🧰 Task manager", windows: "Ctrl + Shift + Esc", mac: "–", ubuntu: "–"},
 
-        { category: "System & Notifications", action: "⚙️ Open system settings", windows: "Win + I", mac: "⌘ + , / System Settings", ubuntu: "Super + S / Settings" },
-        { category: "System & Notifications", action: "🔔 Open notifications / notification center", windows: "Win + N", mac: "Click date/time / Notification Center gesture", ubuntu: "Super + V / desktop-dependent" },
-        { category: "System & Notifications", action: "📅 Open calendar / date panel", windows: "Win + Alt + D", mac: "Click date/time in menu bar", ubuntu: "Click top bar clock / desktop-dependent" },
-        { category: "System & Notifications", action: "📶 Open quick settings / action center", windows: "Win + A", mac: "Click Control Center / menu bar icons", ubuntu: "Click system menu / quick settings" },
-        { category: "System & Notifications", action: "🔊 Volume up", windows: "Volume Up key", mac: "F12 / media key", ubuntu: "Volume Up key" },
-        { category: "System & Notifications", action: "🔉 Volume down", windows: "Volume Down key", mac: "F11 / media key", ubuntu: "Volume Down key" },
-        { category: "System & Notifications", action: "🔇 Mute / unmute sound", windows: "Mute key", mac: "F10 / media key", ubuntu: "Mute key" },
-        { category: "System & Notifications", action: "💡 Brightness up", windows: "Brightness Up key", mac: "F2 / brightness key", ubuntu: "Brightness Up key" },
-        { category: "System & Notifications", action: "🌘 Brightness down", windows: "Brightness Down key", mac: "F1 / brightness key", ubuntu: "Brightness Down key" },
-        { category: "System & Notifications", action: "🎛️ Open app menu / menu bar", windows: "Alt", mac: "Control + F2 / Fn + Control + F2", ubuntu: "F10 / Alt" },
-        { category: "System & Notifications", action: "📋 Open app context / system menu", windows: "Alt + Space", mac: "– / app-dependent", ubuntu: "Alt + Space / desktop-dependent" },
-        { category: "System & Notifications", action: "🛌 Sleep", windows: "Win + X then U then S / sleep key", mac: "Option + ⌘ + Power", ubuntu: "system menu / sleep option" },
-        { category: "System & Notifications", action: "🚪 Sign out / log out", windows: "Ctrl + Alt + Del → Sign out", mac: "Shift + ⌘ + Q", ubuntu: "system menu / log out" },
-        { category: "System & Notifications", action: "👤 Switch user", windows: "Win + L then switch user", mac: "system menu / login window", ubuntu: "system menu / switch user" },
+        {
+            category: "System & Notifications",
+            action: "⚙️ Open system settings",
+            windows: "Win + I",
+            mac: "⌘ + , / System Settings",
+            ubuntu: "Super + S / Settings"
+        },
+        {
+            category: "System & Notifications",
+            action: "🔔 Open notifications / notification center",
+            windows: "Win + N",
+            mac: "Click date/time / Notification Center gesture",
+            ubuntu: "Super + V / desktop-dependent"
+        },
+        {
+            category: "System & Notifications",
+            action: "📅 Open calendar / date panel",
+            windows: "Win + Alt + D",
+            mac: "Click date/time in menu bar",
+            ubuntu: "Click top bar clock / desktop-dependent"
+        },
+        {
+            category: "System & Notifications",
+            action: "📶 Open quick settings / action center",
+            windows: "Win + A",
+            mac: "Click Control Center / menu bar icons",
+            ubuntu: "Click system menu / quick settings"
+        },
+        {
+            category: "System & Notifications",
+            action: "🔊 Volume up",
+            windows: "Volume Up key",
+            mac: "F12 / media key",
+            ubuntu: "Volume Up key"
+        },
+        {
+            category: "System & Notifications",
+            action: "🔉 Volume down",
+            windows: "Volume Down key",
+            mac: "F11 / media key",
+            ubuntu: "Volume Down key"
+        },
+        {
+            category: "System & Notifications",
+            action: "🔇 Mute / unmute sound",
+            windows: "Mute key",
+            mac: "F10 / media key",
+            ubuntu: "Mute key"
+        },
+        {
+            category: "System & Notifications",
+            action: "💡 Brightness up",
+            windows: "Brightness Up key",
+            mac: "F2 / brightness key",
+            ubuntu: "Brightness Up key"
+        },
+        {
+            category: "System & Notifications",
+            action: "🌘 Brightness down",
+            windows: "Brightness Down key",
+            mac: "F1 / brightness key",
+            ubuntu: "Brightness Down key"
+        },
+        {
+            category: "System & Notifications",
+            action: "🎛️ Open app menu / menu bar",
+            windows: "Alt",
+            mac: "Control + F2 / Fn + Control + F2",
+            ubuntu: "F10 / Alt"
+        },
+        {
+            category: "System & Notifications",
+            action: "📋 Open app context / system menu",
+            windows: "Alt + Space",
+            mac: "– / app-dependent",
+            ubuntu: "Alt + Space / desktop-dependent"
+        },
+        {
+            category: "System & Notifications",
+            action: "🛌 Sleep",
+            windows: "Win + X then U then S / sleep key",
+            mac: "Option + ⌘ + Power",
+            ubuntu: "system menu / sleep option"
+        },
+        {
+            category: "System & Notifications",
+            action: "🚪 Sign out / log out",
+            windows: "Ctrl + Alt + Del → Sign out",
+            mac: "Shift + ⌘ + Q",
+            ubuntu: "system menu / log out"
+        },
+        {
+            category: "System & Notifications",
+            action: "👤 Switch user",
+            windows: "Win + L then switch user",
+            mac: "system menu / login window",
+            ubuntu: "system menu / switch user"
+        },
 
-        { category: "Browser", action: "🌐 New tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T" },
-        { category: "Browser", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W" },
-        { category: "Browser", action: "↩️ Reopen closed tab", windows: "Ctrl + Shift + T", mac: "⌘ + Shift + T", ubuntu: "Ctrl + Shift + T" },
-        { category: "Browser", action: "🪟 New browser window", windows: "Ctrl + N", mac: "⌘ + N", ubuntu: "Ctrl + N" },
-        { category: "Browser", action: "🕵️ New private / incognito window", windows: "Ctrl + Shift + N", mac: "⌘ + Shift + N", ubuntu: "Ctrl + Shift + N" },
-        { category: "Browser", action: "🔁 Refresh page", windows: "Ctrl + R / F5", mac: "⌘ + R", ubuntu: "Ctrl + R / F5" },
-        { category: "Browser", action: "🧹 Hard refresh", windows: "Ctrl + F5 / Ctrl + Shift + R", mac: "⌘ + Shift + R", ubuntu: "Ctrl + Shift + R / Ctrl + F5" },
-        { category: "Browser", action: "🔎 Find on page", windows: "Ctrl + F", mac: "⌘ + F", ubuntu: "Ctrl + F" },
-        { category: "Browser", action: "📍 Focus address bar", windows: "Ctrl + L / Alt + D", mac: "⌘ + L", ubuntu: "Ctrl + L / Alt + D" },
-        { category: "Browser", action: "📥 Open downloads", windows: "Ctrl + J", mac: "⌘ + Option + L", ubuntu: "Ctrl + J" },
-        { category: "Browser", action: "📜 Open history", windows: "Ctrl + H", mac: "⌘ + Y", ubuntu: "Ctrl + H" },
-        { category: "Browser", action: "⭐ Open bookmarks manager", windows: "Ctrl + Shift + O", mac: "⌘ + Option + B", ubuntu: "Ctrl + Shift + O" },
-        { category: "Browser", action: "➕ Zoom in page", windows: "Ctrl + +", mac: "⌘ + +", ubuntu: "Ctrl + +" },
-        { category: "Browser", action: "➖ Zoom out page", windows: "Ctrl + -", mac: "⌘ + -", ubuntu: "Ctrl + -" },
-        { category: "Browser", action: "1️⃣ Reset page zoom", windows: "Ctrl + 0", mac: "⌘ + 0", ubuntu: "Ctrl + 0" },
+        {category: "Browser", action: "🌐 New tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T"},
+        {category: "Browser", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W"},
+        {
+            category: "Browser",
+            action: "↩️ Reopen closed tab",
+            windows: "Ctrl + Shift + T",
+            mac: "⌘ + Shift + T",
+            ubuntu: "Ctrl + Shift + T"
+        },
+        {category: "Browser", action: "🪟 New browser window", windows: "Ctrl + N", mac: "⌘ + N", ubuntu: "Ctrl + N"},
+        {
+            category: "Browser",
+            action: "🕵️ New private / incognito window",
+            windows: "Ctrl + Shift + N",
+            mac: "⌘ + Shift + N",
+            ubuntu: "Ctrl + Shift + N"
+        },
+        {
+            category: "Browser",
+            action: "🔁 Refresh page",
+            windows: "Ctrl + R / F5",
+            mac: "⌘ + R",
+            ubuntu: "Ctrl + R / F5"
+        },
+        {
+            category: "Browser",
+            action: "🧹 Hard refresh",
+            windows: "Ctrl + F5 / Ctrl + Shift + R",
+            mac: "⌘ + Shift + R",
+            ubuntu: "Ctrl + Shift + R / Ctrl + F5"
+        },
+        {category: "Browser", action: "🔎 Find on page", windows: "Ctrl + F", mac: "⌘ + F", ubuntu: "Ctrl + F"},
+        {
+            category: "Browser",
+            action: "📍 Focus address bar",
+            windows: "Ctrl + L / Alt + D",
+            mac: "⌘ + L",
+            ubuntu: "Ctrl + L / Alt + D"
+        },
+        {
+            category: "Browser",
+            action: "📥 Open downloads",
+            windows: "Ctrl + J",
+            mac: "⌘ + Option + L",
+            ubuntu: "Ctrl + J"
+        },
+        {category: "Browser", action: "📜 Open history", windows: "Ctrl + H", mac: "⌘ + Y", ubuntu: "Ctrl + H"},
+        {
+            category: "Browser",
+            action: "⭐ Open bookmarks manager",
+            windows: "Ctrl + Shift + O",
+            mac: "⌘ + Option + B",
+            ubuntu: "Ctrl + Shift + O"
+        },
+        {category: "Browser", action: "➕ Zoom in page", windows: "Ctrl + +", mac: "⌘ + +", ubuntu: "Ctrl + +"},
+        {category: "Browser", action: "➖ Zoom out page", windows: "Ctrl + -", mac: "⌘ + -", ubuntu: "Ctrl + -"},
+        {category: "Browser", action: "1️⃣ Reset page zoom", windows: "Ctrl + 0", mac: "⌘ + 0", ubuntu: "Ctrl + 0"},
 
-        { category: "Terminal", action: "🖥️ Open terminal", windows: "Win + X then I / Windows Terminal shortcut", mac: "⌘ + Space → Terminal", ubuntu: "Ctrl + Alt + T" },
-        { category: "Terminal", action: "📋 Copy in terminal", windows: "Ctrl + Shift + C", mac: "⌘ + C", ubuntu: "Ctrl + Shift + C" },
-        { category: "Terminal", action: "📥 Paste in terminal", windows: "Ctrl + Shift + V", mac: "⌘ + V", ubuntu: "Ctrl + Shift + V" },
-        { category: "Terminal", action: "⛔ Stop current process", windows: "Ctrl + C", mac: "Control + C", ubuntu: "Ctrl + C" },
-        { category: "Terminal", action: "🧹 Clear terminal", windows: "cls / Ctrl + L in many shells", mac: "⌘ + K / Ctrl + L", ubuntu: "Ctrl + L / clear" },
-        { category: "Terminal", action: "↩️ Previous command", windows: "↑", mac: "↑", ubuntu: "↑" },
-        { category: "Terminal", action: "↪️ Next command", windows: "↓", mac: "↓", ubuntu: "↓" },
-        { category: "Terminal", action: "⏮️ Move to line start", windows: "Home / Ctrl + A in some shells", mac: "Ctrl + A", ubuntu: "Ctrl + A" },
-        { category: "Terminal", action: "⏭️ Move to line end", windows: "End / Ctrl + E in some shells", mac: "Ctrl + E", ubuntu: "Ctrl + E" },
-        { category: "Terminal", action: "🪓 Delete previous word", windows: "Ctrl + Backspace", mac: "Option + Backspace / Ctrl + W", ubuntu: "Ctrl + W" },
-        { category: "Terminal", action: "🧨 Delete to line end", windows: "Ctrl + End / Ctrl + K in some shells", mac: "Ctrl + K", ubuntu: "Ctrl + K" },
-        { category: "Terminal", action: "📚 Search command history", windows: "F7 / Ctrl + R in modern shells", mac: "Ctrl + R", ubuntu: "Ctrl + R" },
-        { category: "Terminal", action: "🪟 New terminal tab", windows: "Ctrl + Shift + T", mac: "⌘ + T", ubuntu: "Ctrl + Shift + T" },
-        { category: "Terminal", action: "❎ Close terminal tab", windows: "Ctrl + Shift + W", mac: "⌘ + W", ubuntu: "Ctrl + Shift + W" },
+        {
+            category: "Terminal",
+            action: "🖥️ Open terminal",
+            windows: "Win + X then I / Windows Terminal shortcut",
+            mac: "⌘ + Space → Terminal",
+            ubuntu: "Ctrl + Alt + T"
+        },
+        {
+            category: "Terminal",
+            action: "📋 Copy in terminal",
+            windows: "Ctrl + Shift + C",
+            mac: "⌘ + C",
+            ubuntu: "Ctrl + Shift + C"
+        },
+        {
+            category: "Terminal",
+            action: "📥 Paste in terminal",
+            windows: "Ctrl + Shift + V",
+            mac: "⌘ + V",
+            ubuntu: "Ctrl + Shift + V"
+        },
+        {
+            category: "Terminal",
+            action: "⛔ Stop current process",
+            windows: "Ctrl + C",
+            mac: "Control + C",
+            ubuntu: "Ctrl + C"
+        },
+        {
+            category: "Terminal",
+            action: "🧹 Clear terminal",
+            windows: "cls / Ctrl + L in many shells",
+            mac: "⌘ + K / Ctrl + L",
+            ubuntu: "Ctrl + L / clear"
+        },
+        {category: "Terminal", action: "↩️ Previous command", windows: "↑", mac: "↑", ubuntu: "↑"},
+        {category: "Terminal", action: "↪️ Next command", windows: "↓", mac: "↓", ubuntu: "↓"},
+        {
+            category: "Terminal",
+            action: "⏮️ Move to line start",
+            windows: "Home / Ctrl + A in some shells",
+            mac: "Ctrl + A",
+            ubuntu: "Ctrl + A"
+        },
+        {
+            category: "Terminal",
+            action: "⏭️ Move to line end",
+            windows: "End / Ctrl + E in some shells",
+            mac: "Ctrl + E",
+            ubuntu: "Ctrl + E"
+        },
+        {
+            category: "Terminal",
+            action: "🪓 Delete previous word",
+            windows: "Ctrl + Backspace",
+            mac: "Option + Backspace / Ctrl + W",
+            ubuntu: "Ctrl + W"
+        },
+        {
+            category: "Terminal",
+            action: "🧨 Delete to line end",
+            windows: "Ctrl + End / Ctrl + K in some shells",
+            mac: "Ctrl + K",
+            ubuntu: "Ctrl + K"
+        },
+        {
+            category: "Terminal",
+            action: "📚 Search command history",
+            windows: "F7 / Ctrl + R in modern shells",
+            mac: "Ctrl + R",
+            ubuntu: "Ctrl + R"
+        },
+        {
+            category: "Terminal",
+            action: "🪟 New terminal tab",
+            windows: "Ctrl + Shift + T",
+            mac: "⌘ + T",
+            ubuntu: "Ctrl + Shift + T"
+        },
+        {
+            category: "Terminal",
+            action: "❎ Close terminal tab",
+            windows: "Ctrl + Shift + W",
+            mac: "⌘ + W",
+            ubuntu: "Ctrl + Shift + W"
+        },
 
-        { category: "File Explorer Extras", action: "🪄 Duplicate selected item", windows: "Ctrl + C then Ctrl + V", mac: "⌘ + D", ubuntu: "Ctrl + C then Ctrl + V" },
-        { category: "File Explorer Extras", action: "📦 Compress selected item", windows: "Shift + F10 → Send to → Compressed folder", mac: "Control + Click → Compress", ubuntu: "Right click → Compress" },
-        { category: "File Explorer Extras", action: "🪟 Open in new window", windows: "Ctrl + N", mac: "⌘ + N", ubuntu: "Ctrl + N" },
-        { category: "File Explorer Extras", action: "🔄 Refresh current folder", windows: "F5", mac: "⌘ + R", ubuntu: "F5 / Ctrl + R" },
-        { category: "File Explorer Extras", action: "📄 New file", windows: "Context menu → New", mac: "File menu / app-dependent", ubuntu: "Context menu / app-dependent" },
-        { category: "File Explorer Extras", action: "🧱 Switch view mode", windows: "Ctrl + Shift + 1..8 / View menu", mac: "⌘ + 1 / 2 / 3 / 4", ubuntu: "View menu / Ctrl + 1 / 2 in some managers" },
-        { category: "File Explorer Extras", action: "📏 Sort items", windows: "View / Sort by menu", mac: "⌘ + J / View options", ubuntu: "Sort menu / view controls" },
-        { category: "File Explorer Extras", action: "🏷️ Tags / labels", windows: "Properties / Details pane", mac: "⌘ + I", ubuntu: "Properties / emblems if supported" },
-        { category: "File Explorer Extras", action: "📌 Add to favorites / sidebar", windows: "Drag to Quick Access / context menu", mac: "Drag to sidebar", ubuntu: "Star / add bookmark if supported" },
-        { category: "File Explorer Extras", action: "🕘 Open recent files / recents", windows: "Quick Access / Home", mac: "Finder Recents", ubuntu: "Recent / Recents" },
+        {
+            category: "File Explorer Extras",
+            action: "🪄 Duplicate selected item",
+            windows: "Ctrl + C then Ctrl + V",
+            mac: "⌘ + D",
+            ubuntu: "Ctrl + C then Ctrl + V"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "📦 Compress selected item",
+            windows: "Shift + F10 → Send to → Compressed folder",
+            mac: "Control + Click → Compress",
+            ubuntu: "Right click → Compress"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "🪟 Open in new window",
+            windows: "Ctrl + N",
+            mac: "⌘ + N",
+            ubuntu: "Ctrl + N"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "🔄 Refresh current folder",
+            windows: "F5",
+            mac: "⌘ + R",
+            ubuntu: "F5 / Ctrl + R"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "📄 New file",
+            windows: "Context menu → New",
+            mac: "File menu / app-dependent",
+            ubuntu: "Context menu / app-dependent"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "🧱 Switch view mode",
+            windows: "Ctrl + Shift + 1..8 / View menu",
+            mac: "⌘ + 1 / 2 / 3 / 4",
+            ubuntu: "View menu / Ctrl + 1 / 2 in some managers"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "📏 Sort items",
+            windows: "View / Sort by menu",
+            mac: "⌘ + J / View options",
+            ubuntu: "Sort menu / view controls"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "🏷️ Tags / labels",
+            windows: "Properties / Details pane",
+            mac: "⌘ + I",
+            ubuntu: "Properties / emblems if supported"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "📌 Add to favorites / sidebar",
+            windows: "Drag to Quick Access / context menu",
+            mac: "Drag to sidebar",
+            ubuntu: "Star / add bookmark if supported"
+        },
+        {
+            category: "File Explorer Extras",
+            action: "🕘 Open recent files / recents",
+            windows: "Quick Access / Home",
+            mac: "Finder Recents",
+            ubuntu: "Recent / Recents"
+        },
 
-        { category: "Window Snapping", action: "⬅️ Snap window left", windows: "Win + ←", mac: "Green button hover / app-dependent", ubuntu: "Super + ←" },
-        { category: "Window Snapping", action: "➡️ Snap window right", windows: "Win + →", mac: "Green button hover / app-dependent", ubuntu: "Super + →" },
-        { category: "Window Snapping", action: "⬆️ Maximize window", windows: "Win + ↑", mac: "Control + ⌘ + F / green button", ubuntu: "Super + ↑" },
-        { category: "Window Snapping", action: "⬇️ Restore / unmaximize window", windows: "Win + ↓", mac: "Control + ⌘ + F / green button", ubuntu: "Super + ↓" },
-        { category: "Window Snapping", action: "🧲 Snap to top half / maximize", windows: "Win + ↑", mac: "app-dependent", ubuntu: "Super + ↑" },
-        { category: "Window Snapping", action: "🪟 Move window to next monitor", windows: "Win + Shift + ← / →", mac: "– / app-dependent", ubuntu: "Shift + Super + ← / →" },
-        { category: "Window Snapping", action: "📌 Tile window left workspace edge", windows: "Win + ←", mac: "app-dependent", ubuntu: "Super + ←" },
-        { category: "Window Snapping", action: "📌 Tile window right workspace edge", windows: "Win + →", mac: "app-dependent", ubuntu: "Super + →" },
+        {
+            category: "Window Snapping",
+            action: "⬅️ Snap window left",
+            windows: "Win + ←",
+            mac: "Green button hover / app-dependent",
+            ubuntu: "Super + ←"
+        },
+        {
+            category: "Window Snapping",
+            action: "➡️ Snap window right",
+            windows: "Win + →",
+            mac: "Green button hover / app-dependent",
+            ubuntu: "Super + →"
+        },
+        {
+            category: "Window Snapping",
+            action: "⬆️ Maximize window",
+            windows: "Win + ↑",
+            mac: "Control + ⌘ + F / green button",
+            ubuntu: "Super + ↑"
+        },
+        {
+            category: "Window Snapping",
+            action: "⬇️ Restore / unmaximize window",
+            windows: "Win + ↓",
+            mac: "Control + ⌘ + F / green button",
+            ubuntu: "Super + ↓"
+        },
+        {
+            category: "Window Snapping",
+            action: "🧲 Snap to top half / maximize",
+            windows: "Win + ↑",
+            mac: "app-dependent",
+            ubuntu: "Super + ↑"
+        },
+        {
+            category: "Window Snapping",
+            action: "🪟 Move window to next monitor",
+            windows: "Win + Shift + ← / →",
+            mac: "– / app-dependent",
+            ubuntu: "Shift + Super + ← / →"
+        },
+        {
+            category: "Window Snapping",
+            action: "📌 Tile window left workspace edge",
+            windows: "Win + ←",
+            mac: "app-dependent",
+            ubuntu: "Super + ←"
+        },
+        {
+            category: "Window Snapping",
+            action: "📌 Tile window right workspace edge",
+            windows: "Win + →",
+            mac: "app-dependent",
+            ubuntu: "Super + →"
+        },
 
-        { category: "File Explorer", action: "📂 Open File Explorer / Finder / Nautilus", windows: "Win + E", mac: "⌘ + Option + D / ⌘ + Shift + H", ubuntu: "Super + E" },
-        { category: "File Explorer", action: "📁 Go to folder / path", windows: "Win + R → shell:AppsFolder", mac: "⌘ + Shift + G", ubuntu: "Ctrl + L" },
-        { category: "File Explorer", action: "↩️ Enter directory / open selected item", windows: "Enter", mac: "⌘ + O / ⌘ + ↓", ubuntu: "Enter" },
-        { category: "File Explorer", action: "⬅️ Go back", windows: "Alt + ←", mac: "⌘ + [", ubuntu: "Alt + ←" },
-        { category: "File Explorer", action: "➡️ Go forward", windows: "Alt + →", mac: "⌘ + ]", ubuntu: "Alt + →" },
-        { category: "File Explorer", action: "⬆️ Go to parent folder", windows: "Alt + ↑", mac: "⌘ + ↑", ubuntu: "Alt + ↑" },
-        { category: "File Explorer", action: "🏠 Open home folder", windows: "Win + R → %USERPROFILE%", mac: "⌘ + Shift + H", ubuntu: "Alt + Home" },
-        { category: "File Explorer", action: "🖥️ Show desktop folder / desktop location", windows: "Win + D", mac: "⌘ + Shift + D", ubuntu: "Super + D" },
-        { category: "File Explorer", action: "🆕 New folder", windows: "Ctrl + Shift + N", mac: "⌘ + Shift + N", ubuntu: "Ctrl + Shift + N" },
-        { category: "File Explorer", action: "✏️ Rename selected item", windows: "F2", mac: "Enter", ubuntu: "F2" },
-        { category: "File Explorer", action: "🗑️ Move selected item to Trash", windows: "Delete", mac: "⌘ + Delete", ubuntu: "Delete" },
-        { category: "File Explorer", action: "❌ Delete immediately / bypass Trash", windows: "Shift + Delete", mac: "⌘ + Option + Delete / app-dependent", ubuntu: "Shift + Delete" },
-        { category: "File Explorer", action: "🗑️ Empty Trash / Recycle Bin", windows: "Recycle Bin menu / desktop app", mac: "Shift + ⌘ + Delete", ubuntu: "Trash menu / desktop-dependent" },
-        { category: "File Explorer", action: "💥 Empty Trash without confirmation", windows: "–", mac: "Option + Shift + ⌘ + Delete", ubuntu: "–" },
-        { category: "File Explorer", action: "👁️ Toggle preview pane / quick look", windows: "Alt + P", mac: "Space", ubuntu: "Space / preview if available" },
-        { category: "File Explorer", action: "📋 Copy selected file", windows: "Ctrl + C", mac: "⌘ + C", ubuntu: "Ctrl + C" },
-        { category: "File Explorer", action: "✂️ Cut selected file", windows: "Ctrl + X", mac: "⌘ + Option + V after copy", ubuntu: "Ctrl + X" },
-        { category: "File Explorer", action: "📥 Paste file", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V" },
-        { category: "File Explorer", action: "🔍 Search in current folder", windows: "Ctrl + E / F3", mac: "⌘ + F", ubuntu: "Ctrl + F" },
-        { category: "File Explorer", action: "📑 Open properties / get info", windows: "Alt + Enter", mac: "⌘ + I", ubuntu: "Alt + Enter" },
-        { category: "File Explorer", action: "📜 Open context menu", windows: "Shift + F10 / Menu key", mac: "Control + Click", ubuntu: "Shift + F10 / Menu key" },
-        { category: "File Explorer", action: "📂 Open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T" },
-        { category: "File Explorer", action: "❎ Close current tab", windows: "Ctrl + W", mac: "⌘ + W", ubuntu: "Ctrl + W" },
-        { category: "File Explorer", action: "🧭 Focus location bar", windows: "Alt + D / Ctrl + L", mac: "⌘ + Option + L", ubuntu: "Ctrl + L" },
-        { category: "File Explorer", action: "📚 Toggle sidebar", windows: "Alt + Shift + P", mac: "⌘ + Option + S", ubuntu: "F9" },
-        { category: "File Explorer", action: "📂 Show hidden files", windows: "Ctrl + H (in some file managers) / View menu", mac: "⌘ + Shift + .", ubuntu: "Ctrl + H" },
+        {
+            category: "File Explorer",
+            action: "📂 Open File Explorer / Finder / Nautilus",
+            windows: "Win + E",
+            mac: "⌘ + Option + D / ⌘ + Shift + H",
+            ubuntu: "Super + E"
+        },
+        {
+            category: "File Explorer",
+            action: "📁 Go to folder / path",
+            windows: "Win + R → shell:AppsFolder",
+            mac: "⌘ + Shift + G",
+            ubuntu: "Ctrl + L"
+        },
+        {
+            category: "File Explorer",
+            action: "↩️ Enter directory / open selected item",
+            windows: "Enter",
+            mac: "⌘ + O / ⌘ + ↓",
+            ubuntu: "Enter"
+        },
+        {category: "File Explorer", action: "⬅️ Go back", windows: "Alt + ←", mac: "⌘ + [", ubuntu: "Alt + ←"},
+        {category: "File Explorer", action: "➡️ Go forward", windows: "Alt + →", mac: "⌘ + ]", ubuntu: "Alt + →"},
+        {
+            category: "File Explorer",
+            action: "⬆️ Go to parent folder",
+            windows: "Alt + ↑",
+            mac: "⌘ + ↑",
+            ubuntu: "Alt + ↑"
+        },
+        {
+            category: "File Explorer",
+            action: "🏠 Open home folder",
+            windows: "Win + R → %USERPROFILE%",
+            mac: "⌘ + Shift + H",
+            ubuntu: "Alt + Home"
+        },
+        {
+            category: "File Explorer",
+            action: "🖥️ Open Computer / This Mac",
+            windows: "Win + E → This PC",
+            mac: "⌘ + Shift + C",
+            ubuntu: "– / file manager-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "🕘 Open Recents",
+            windows: "Quick Access / Home",
+            mac: "⌘ + Shift + F",
+            ubuntu: "Recent / file manager-dependent"
+        },
+        {category: "File Explorer", action: "☁️ Open iCloud Drive", windows: "–", mac: "⌘ + Shift + I", ubuntu: "–"},
+        {
+            category: "File Explorer",
+            action: "🌐 Open Network",
+            windows: "Network",
+            mac: "⌘ + Shift + K",
+            ubuntu: "Network / file manager-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "📥 Open Downloads folder",
+            windows: "%USERPROFILE%\\Downloads",
+            mac: "⌥ + ⌘ + L",
+            ubuntu: "Downloads"
+        },
+        {
+            category: "File Explorer",
+            action: "📄 Open Documents folder",
+            windows: "%USERPROFILE%\\Documents",
+            mac: "⌘ + Shift + O",
+            ubuntu: "Documents"
+        },
+        {
+            category: "File Explorer",
+            action: "🧰 Open Utilities folder",
+            windows: "Administrative Tools / tools folder",
+            mac: "⌘ + Shift + U",
+            ubuntu: "Utilities / tools menu"
+        },
+        {
+            category: "File Explorer",
+            action: "🖥️ Show desktop folder / desktop location",
+            windows: "Win + D",
+            mac: "⌘ + Shift + D",
+            ubuntu: "Super + D"
+        },
+        {
+            category: "File Explorer",
+            action: "🆕 New folder",
+            windows: "Ctrl + Shift + N",
+            mac: "⌘ + Shift + N",
+            ubuntu: "Ctrl + Shift + N"
+        },
+        {category: "File Explorer", action: "✏️ Rename selected item", windows: "F2", mac: "Enter", ubuntu: "F2"},
+        {
+            category: "File Explorer",
+            action: "🗑️ Move selected item to Trash",
+            windows: "Delete",
+            mac: "⌘ + Delete",
+            ubuntu: "Delete"
+        },
+        {
+            category: "File Explorer",
+            action: "❌ Delete immediately / bypass Trash",
+            windows: "Shift + Delete",
+            mac: "⌘ + Option + Delete / app-dependent",
+            ubuntu: "Shift + Delete"
+        },
+        {
+            category: "File Explorer",
+            action: "🗑️ Empty Trash / Recycle Bin",
+            windows: "Recycle Bin menu / desktop app",
+            mac: "Shift + ⌘ + Delete",
+            ubuntu: "Trash menu / desktop-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "💥 Empty Trash without confirmation",
+            windows: "–",
+            mac: "Option + Shift + ⌘ + Delete",
+            ubuntu: "–"
+        },
+        {
+            category: "File Explorer",
+            action: "👁️ Toggle preview pane / quick look",
+            windows: "Alt + P",
+            mac: "Space",
+            ubuntu: "Space / preview if available"
+        },
+        {
+            category: "File Explorer",
+            action: "📋 Copy selected file",
+            windows: "Ctrl + C",
+            mac: "⌘ + C",
+            ubuntu: "Ctrl + C"
+        },
+        {
+            category: "File Explorer",
+            action: "✂️ Cut selected file",
+            windows: "Ctrl + X",
+            mac: "⌘ + Option + V after copy",
+            ubuntu: "Ctrl + X"
+        },
+        {category: "File Explorer", action: "📥 Paste file", windows: "Ctrl + V", mac: "⌘ + V", ubuntu: "Ctrl + V"},
+        {
+            category: "File Explorer",
+            action: "🔍 Search in current folder",
+            windows: "Ctrl + E / F3",
+            mac: "⌘ + F",
+            ubuntu: "Ctrl + F"
+        },
+        {
+            category: "File Explorer",
+            action: "📑 Open properties / get info",
+            windows: "Alt + Enter",
+            mac: "⌘ + I",
+            ubuntu: "Alt + Enter"
+        },
+        {
+            category: "File Explorer",
+            action: "📜 Open context menu",
+            windows: "Shift + F10 / Menu key",
+            mac: "Control + Click",
+            ubuntu: "Shift + F10 / Menu key"
+        },
+        {category: "File Explorer", action: "📂 Open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T"},
+        {
+            category: "File Explorer",
+            action: "❎ Close current tab",
+            windows: "Ctrl + W",
+            mac: "⌘ + W",
+            ubuntu: "Ctrl + W"
+        },
+        {
+            category: "File Explorer",
+            action: "🧭 Focus location bar",
+            windows: "Alt + D / Ctrl + L",
+            mac: "⌘ + Option + L",
+            ubuntu: "Ctrl + L"
+        },
+        {
+            category: "File Explorer",
+            action: "📚 Toggle sidebar",
+            windows: "Alt + Shift + P",
+            mac: "⌘ + Option + S",
+            ubuntu: "F9"
+        },
+        {
+            category: "File Explorer",
+            action: "🧭 Toggle path bar",
+            windows: "–",
+            mac: "⌥ + ⌘ + P",
+            ubuntu: "– / file manager-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "📊 Toggle status bar",
+            windows: "View menu",
+            mac: "⌘ + /",
+            ubuntu: "View menu"
+        },
+        {
+            category: "File Explorer",
+            action: "🛠️ Toggle toolbar",
+            windows: "View menu",
+            mac: "⌥ + ⌘ + T",
+            ubuntu: "View menu"
+        },
+        {
+            category: "File Explorer",
+            action: "📑 Toggle tab bar",
+            windows: "–",
+            mac: "⌘ + Shift + T",
+            ubuntu: "– / file manager-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "🗄️ View as icons",
+            windows: "View menu",
+            mac: "⌘ + 1",
+            ubuntu: "View menu"
+        },
+        {category: "File Explorer", action: "📋 View as list", windows: "View menu", mac: "⌘ + 2", ubuntu: "View menu"},
+        {
+            category: "File Explorer",
+            action: "🧱 View as columns",
+            windows: "View menu",
+            mac: "⌘ + 3",
+            ubuntu: "View menu"
+        },
+        {
+            category: "File Explorer",
+            action: "🖼️ View as gallery",
+            windows: "View menu",
+            mac: "⌘ + 4",
+            ubuntu: "View menu"
+        },
+        {
+            category: "File Explorer",
+            action: "🧠 New smart folder",
+            windows: "Saved search / app-dependent",
+            mac: "⌥ + ⌘ + N",
+            ubuntu: "Saved search / app-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "🔗 Make alias / shortcut",
+            windows: "Alt + drag / Create shortcut",
+            mac: "Control + ⌘ + A",
+            ubuntu: "Make link / app-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "🧲 Add item to sidebar",
+            windows: "Pin to Quick Access",
+            mac: "Control + ⌘ + T",
+            ubuntu: "Bookmark / add to sidebar"
+        },
+        {
+            category: "File Explorer",
+            action: "🚀 Add item to Dock / launcher",
+            windows: "Pin to taskbar / Start",
+            mac: "Control + Shift + ⌘ + T",
+            ubuntu: "Pin to dash / favorites"
+        },
+        {
+            category: "File Explorer",
+            action: "🌐 Connect to server",
+            windows: "Map network drive",
+            mac: "⌘ + K",
+            ubuntu: "Connect to server / file manager"
+        },
+        {
+            category: "File Explorer",
+            action: "↪️ Move copied file here",
+            windows: "Ctrl + X then Ctrl + V",
+            mac: "⌥ + ⌘ + V",
+            ubuntu: "Ctrl + X then Ctrl + V"
+        },
+        {category: "File Explorer", action: "🎞️ Quick Look slideshow", windows: "–", mac: "⌥ + ⌘ + Y", ubuntu: "–"},
+        {
+            category: "File Explorer",
+            action: "📂 Show hidden files",
+            windows: "Ctrl + H (in some file managers) / View menu",
+            mac: "⌘ + Shift + .",
+            ubuntu: "Ctrl + H"
+        },
 
-        { category: "Search & Tools", action: "🔎 Open Search", windows: "Win + S", mac: "⌘ + Space", ubuntu: "Super" },
-        { category: "Search & Tools", action: "⚙️ Open Settings", windows: "Win + I", mac: "⌘ + ,", ubuntu: "Super + S" },
-        { category: "Search & Tools", action: "🔒 Lock PC / Screen", windows: "Win + L", mac: "⌘ + Control + Q / ⌘ + Option + L", ubuntu: "Ctrl + Alt + L" },
-        { category: "Search & Tools", action: "💥 Force quit app", windows: "Ctrl + Shift + Esc / Task Manager", mac: "⌘ + Option + Esc", ubuntu: "Alt + F2 → xkill" },
+        {category: "Search & Tools", action: "🔎 Open Search", windows: "Win + S", mac: "⌘ + Space", ubuntu: "Super"},
+        {category: "Search & Tools", action: "⚙️ Open Settings", windows: "Win + I", mac: "⌘ + ,", ubuntu: "Super + S"},
+        {
+            category: "Search & Tools",
+            action: "🔒 Lock PC / Screen",
+            windows: "Win + L",
+            mac: "⌘ + Control + Q / ⌘ + Option + L",
+            ubuntu: "Ctrl + Alt + L"
+        },
+        {
+            category: "Search & Tools",
+            action: "💥 Force quit app",
+            windows: "Ctrl + Shift + Esc / Task Manager",
+            mac: "⌘ + Option + Esc",
+            ubuntu: "Alt + F2 → xkill"
+        },
 
-        { category: "Virtual Desktops", action: "🗂️ Task View", windows: "Win + Tab", mac: "Control + ↑", ubuntu: "Super + S / Ctrl + Alt + ↑" },
-        { category: "Virtual Desktops", action: "↔️ Switch desktops", windows: "Win + Ctrl + ← / →", mac: "Control + ← / →", ubuntu: "Ctrl + Alt + ← / →" },
-        { category: "Virtual Desktops", action: "❎ Close desktop", windows: "Win + Ctrl + F4", mac: "–", ubuntu: "– / workspace manager" },
+        {
+            category: "Virtual Desktops",
+            action: "🗂️ Task View",
+            windows: "Win + Tab",
+            mac: "Control + ↑",
+            ubuntu: "Super + S / Ctrl + Alt + ↑"
+        },
+        {
+            category: "Virtual Desktops",
+            action: "↔️ Switch desktops",
+            windows: "Win + Ctrl + ← / →",
+            mac: "Control + ← / →",
+            ubuntu: "Ctrl + Alt + ← / →"
+        },
+        {
+            category: "Virtual Desktops",
+            action: "❎ Close desktop",
+            windows: "Win + Ctrl + F4",
+            mac: "–",
+            ubuntu: "– / workspace manager"
+        },
 
-        { category: "Accessibility", action: "♿ Ease of Access / Accessibility", windows: "Win + U", mac: "System Settings > Accessibility", ubuntu: "Settings > Accessibility" },
-        { category: "Accessibility", action: "🔍 Zoom in (Magnifier)", windows: "Win + +", mac: "Control + Option + ⌘ + +", ubuntu: "Super + Alt + 8 / Super + +" },
-        { category: "Accessibility", action: "🔎 Zoom out (Magnifier)", windows: "Win + –", mac: "Control + Option + ⌘ + –", ubuntu: "Super + Alt + – / Super + –" },
-        { category: "Accessibility", action: "🚪 Exit Magnifier", windows: "Win + Esc", mac: "Control + Option + ⌘ + 8", ubuntu: "Super + Alt + 8" },
-        { category: "Accessibility", action: "🔁 Toggle Zoom", windows: "–", mac: "Control + Option + ⌘ + 8", ubuntu: "Super + Alt + 8" },
+        {
+            category: "Accessibility",
+            action: "♿ Ease of Access / Accessibility",
+            windows: "Win + U",
+            mac: "System Settings > Accessibility",
+            ubuntu: "Settings > Accessibility"
+        },
+        {
+            category: "Accessibility",
+            action: "🔍 Zoom in (Magnifier)",
+            windows: "Win + +",
+            mac: "Control + Option + ⌘ + +",
+            ubuntu: "Super + Alt + 8 / Super + +"
+        },
+        {
+            category: "Accessibility",
+            action: "🔎 Zoom out (Magnifier)",
+            windows: "Win + –",
+            mac: "Control + Option + ⌘ + –",
+            ubuntu: "Super + Alt + – / Super + –"
+        },
+        {
+            category: "Accessibility",
+            action: "🚪 Exit Magnifier",
+            windows: "Win + Esc",
+            mac: "Control + Option + ⌘ + 8",
+            ubuntu: "Super + Alt + 8"
+        },
+        {
+            category: "Accessibility",
+            action: "🔁 Toggle Zoom",
+            windows: "–",
+            mac: "Control + Option + ⌘ + 8",
+            ubuntu: "Super + Alt + 8"
+        },
 
-        { category: "Screenshots", action: "📋 Copy screen to clipboard", windows: "PrtScn", mac: "⌘ + Shift + 3", ubuntu: "PrtScn" },
-        { category: "Screenshots", action: "🪟 Copy active window to clipboard", windows: "Alt + PrtScn", mac: "⌘ + Shift + 4 + Space", ubuntu: "Alt + PrtScn" },
-        { category: "Screenshots", action: "💾 Save screenshot automatically", windows: "Win + PrtScn", mac: "⌘ + Shift + 3 / 4 / 5 / 6", ubuntu: "PrtScn → ~/Pictures" },
-        { category: "Screenshots", action: "✂️ Select area to file", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "Shift + PrtScn" },
-        { category: "Screenshots", action: "🎯 Capture specific window", windows: "–", mac: "⌘ + Shift + 4 + Space", ubuntu: "–" },
-        { category: "Screenshots", action: "🎥 Screenshot / Screen recording options", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "–" },
-        { category: "Screenshots", action: "📺 Screenshot Touch Bar", windows: "–", mac: "⌘ + Shift + 6", ubuntu: "–" },
-        { category: "Text Editing", action: "⌫ Delete character backward", windows: "Backspace", mac: "Delete", ubuntu: "Backspace" },
-        { category: "Text Editing", action: "➡️⌫ Delete character forward", windows: "Delete", mac: "Fn + Delete / Control + D", ubuntu: "Delete" },
-        { category: "Text Editing", action: "🪓 Delete previous word", windows: "Ctrl + Backspace", mac: "Option + Delete", ubuntu: "Ctrl + Backspace / Ctrl + W" },
-        { category: "Text Editing", action: "🧹 Delete to beginning of line", windows: "Shift + Home then Delete / app-dependent", mac: "⌘ + Delete", ubuntu: "Ctrl + U in many terminals / app-dependent" },
-        { category: "Text Editing", action: "📝 Move cursor to line start", windows: "Home", mac: "⌘ + ←", ubuntu: "Home" },
-        { category: "Text Editing", action: "📝 Move cursor to line end", windows: "End", mac: "⌘ + →", ubuntu: "End" },
-        { category: "Text Editing", action: "↔️ Move cursor by word left", windows: "Ctrl + ←", mac: "Option + ←", ubuntu: "Ctrl + ←" },
-        { category: "Text Editing", action: "↔️ Move cursor by word right", windows: "Ctrl + →", mac: "Option + →", ubuntu: "Ctrl + →" },
-        { category: "Text Editing", action: "🖍️ Select to line start", windows: "Shift + Home", mac: "Shift + ⌘ + ←", ubuntu: "Shift + Home" },
-        { category: "Text Editing", action: "🖍️ Select to line end", windows: "Shift + End", mac: "Shift + ⌘ + →", ubuntu: "Shift + End" },
-        { category: "Text Editing", action: "🖍️ Select previous word", windows: "Ctrl + Shift + ←", mac: "Option + Shift + ←", ubuntu: "Ctrl + Shift + ←" },
-        { category: "Text Editing", action: "🖍️ Select next word", windows: "Ctrl + Shift + →", mac: "Option + Shift + →", ubuntu: "Ctrl + Shift + →" }
+        {
+            category: "Screenshots",
+            action: "📋 Copy screen to clipboard",
+            windows: "PrtScn",
+            mac: "⌘ + Shift + 3",
+            ubuntu: "PrtScn"
+        },
+        {
+            category: "Screenshots",
+            action: "🪟 Copy active window to clipboard",
+            windows: "Alt + PrtScn",
+            mac: "⌘ + Shift + 4 + Space",
+            ubuntu: "Alt + PrtScn"
+        },
+        {
+            category: "Screenshots",
+            action: "💾 Save screenshot automatically",
+            windows: "Win + PrtScn",
+            mac: "⌘ + Shift + 3 / 4 / 5 / 6",
+            ubuntu: "PrtScn → ~/Pictures"
+        },
+        {
+            category: "Screenshots",
+            action: "✂️ Select area to file",
+            windows: "–",
+            mac: "⌘ + Shift + 5",
+            ubuntu: "Shift + PrtScn"
+        },
+        {
+            category: "Screenshots",
+            action: "🎯 Capture specific window",
+            windows: "–",
+            mac: "⌘ + Shift + 4 + Space",
+            ubuntu: "–"
+        },
+        {
+            category: "Screenshots",
+            action: "🎥 Screenshot / Screen recording options",
+            windows: "–",
+            mac: "⌘ + Shift + 5",
+            ubuntu: "–"
+        },
+        {category: "Screenshots", action: "📺 Screenshot Touch Bar", windows: "–", mac: "⌘ + Shift + 6", ubuntu: "–"},
+        {
+            category: "Text Editing",
+            action: "⌫ Delete character backward",
+            windows: "Backspace",
+            mac: "Delete",
+            ubuntu: "Backspace"
+        },
+        {
+            category: "Text Editing",
+            action: "➡️⌫ Delete character forward",
+            windows: "Delete",
+            mac: "Fn + Delete / Control + D",
+            ubuntu: "Delete"
+        },
+        {
+            category: "Text Editing",
+            action: "🪓 Delete previous word",
+            windows: "Ctrl + Backspace",
+            mac: "Option + Delete",
+            ubuntu: "Ctrl + Backspace / Ctrl + W"
+        },
+        {
+            category: "Text Editing",
+            action: "🧹 Delete to beginning of line",
+            windows: "Shift + Home then Delete / app-dependent",
+            mac: "⌘ + Delete",
+            ubuntu: "Ctrl + U in many terminals / app-dependent"
+        },
+        {
+            category: "Text Editing",
+            action: "🧨 Delete to end of line",
+            windows: "Shift + End then Delete / app-dependent",
+            mac: "Fn + Delete / Control + K in many terminals",
+            ubuntu: "Ctrl + K in many terminals / app-dependent"
+        },
+        {
+            category: "Text Editing",
+            action: "↩️ Find next match",
+            windows: "F3 / Ctrl + G",
+            mac: "⌘ + G",
+            ubuntu: "F3 / Ctrl + G"
+        },
+        {
+            category: "Text Editing",
+            action: "↪️ Find previous match",
+            windows: "Shift + F3 / Ctrl + Shift + G",
+            mac: "Shift + ⌘ + G",
+            ubuntu: "Shift + F3 / Ctrl + Shift + G"
+        },
+        {
+            category: "Text Editing",
+            action: "📝 Move cursor to line start",
+            windows: "Home",
+            mac: "⌘ + ←",
+            ubuntu: "Home"
+        },
+        {category: "Text Editing", action: "📝 Move cursor to line end", windows: "End", mac: "⌘ + →", ubuntu: "End"},
+        {
+            category: "Text Editing",
+            action: "↔️ Move cursor by word left",
+            windows: "Ctrl + ←",
+            mac: "Option + ←",
+            ubuntu: "Ctrl + ←"
+        },
+        {
+            category: "Text Editing",
+            action: "↔️ Move cursor by word right",
+            windows: "Ctrl + →",
+            mac: "Option + →",
+            ubuntu: "Ctrl + →"
+        },
+        {
+            category: "Text Editing",
+            action: "🖍️ Select to line start",
+            windows: "Shift + Home",
+            mac: "Shift + ⌘ + ←",
+            ubuntu: "Shift + Home"
+        },
+        {
+            category: "Text Editing",
+            action: "🖍️ Select to line end",
+            windows: "Shift + End",
+            mac: "Shift + ⌘ + →",
+            ubuntu: "Shift + End"
+        },
+        {
+            category: "Text Editing",
+            action: "🖍️ Select previous word",
+            windows: "Ctrl + Shift + ←",
+            mac: "Option + Shift + ←",
+            ubuntu: "Ctrl + Shift + ←"
+        },
+        {
+            category: "Text Editing",
+            action: "🖍️ Select next word",
+            windows: "Ctrl + Shift + →",
+            mac: "Option + Shift + →",
+            ubuntu: "Ctrl + Shift + →"
+        },
+
+        // apple only
+        {
+            category: "Apple Only",
+            action: "🍎 Open Apple menu",
+            windows: "–",
+            mac: "Control + F2 / Fn + Control + F2",
+            ubuntu: "–"
+        },
+        {
+            category: "Apple Only",
+            action: "📋 Focus menu bar",
+            windows: "–",
+            mac: "Control + F2 / Fn + Control + F2",
+            ubuntu: "–"
+        },
+        {category: "Apple Only", action: "🧭 Move to next menu", windows: "–", mac: "→", ubuntu: "–"},
+        {category: "Apple Only", action: "↩️ Move to previous menu", windows: "–", mac: "←", ubuntu: "–"},
+        {category: "Apple Only", action: "📂 Open selected menu", windows: "–", mac: "↓ / Space", ubuntu: "–"},
+
+        {
+            category: "Apple Only",
+            action: "🚀 Focus Dock",
+            windows: "–",
+            mac: "Control + F3 / Fn + Control + F3",
+            ubuntu: "–"
+        },
+        {category: "Apple Only", action: "↔️ Move in Dock", windows: "–", mac: "← / →", ubuntu: "–"},
+        {category: "Apple Only", action: "📂 Open Dock item", windows: "–", mac: "Return", ubuntu: "–"},
+        {category: "Apple Only", action: "🫥 Hide / show Dock", windows: "–", mac: "⌥ + ⌘ + D", ubuntu: "–"},
+
+        {category: "Apple Only", action: "🧭 Mission Control", windows: "–", mac: "Control + ↑", ubuntu: "–"},
+        {category: "Apple Only", action: "🗂️ App Exposé", windows: "–", mac: "Control + ↓", ubuntu: "–"},
+        {
+            category: "Apple Only",
+            action: "🖥️ Show desktop",
+            windows: "–",
+            mac: "Fn + F11 / Mission Control setting",
+            ubuntu: "–"
+        },
+        {category: "Apple Only", action: "↔️ Switch Spaces left", windows: "–", mac: "Control + ←", ubuntu: "–"},
+        {category: "Apple Only", action: "↔️ Switch Spaces right", windows: "–", mac: "Control + →", ubuntu: "–"},
+
+        {category: "Apple Only", action: "💡 Brightness down", windows: "–", mac: "F1", ubuntu: "–"},
+        {category: "Apple Only", action: "💡 Brightness up", windows: "–", mac: "F2", ubuntu: "–"},
+        {
+            category: "Apple Only",
+            action: "🎹 Keyboard brightness down",
+            windows: "–",
+            mac: "F5 / globe-dependent",
+            ubuntu: "–"
+        },
+        {
+            category: "Apple Only",
+            action: "🎹 Keyboard brightness up",
+            windows: "–",
+            mac: "F6 / globe-dependent",
+            ubuntu: "–"
+        },
+
+        {category: "Apple Only", action: "⏮️ Previous track", windows: "–", mac: "F7", ubuntu: "–"},
+        {category: "Apple Only", action: "⏯️ Play / pause", windows: "–", mac: "F8", ubuntu: "–"},
+        {category: "Apple Only", action: "⏭️ Next track", windows: "–", mac: "F9", ubuntu: "–"},
+        {category: "Apple Only", action: "🔇 Mute", windows: "–", mac: "F10", ubuntu: "–"},
+        {category: "Apple Only", action: "🔉 Volume down", windows: "–", mac: "F11", ubuntu: "–"},
+        {category: "Apple Only", action: "🔊 Volume up", windows: "–", mac: "F12", ubuntu: "–"},
+
+        {
+            category: "Apple Only",
+            action: "🖥️ Mirror display / display settings key",
+            windows: "–",
+            mac: "globe + F1 / hardware-dependent",
+            ubuntu: "–"
+        },
+        {
+            category: "Apple Only",
+            action: "🌙 Do Not Disturb / Focus",
+            windows: "–",
+            mac: "Option + click date/time / newer macOS may differ",
+            ubuntu: "–"
+        },
+        {
+            category: "Apple Only",
+            action: "🔔 Open Notification Center",
+            windows: "–",
+            mac: "Click date/time in menu bar / gesture",
+            ubuntu: "–"
+        },
+        {
+            category: "Apple Only",
+            action: "🎛️ Open Control Center",
+            windows: "–",
+            mac: "Click Control Center in menu bar",
+            ubuntu: "–"
+        }
     ];
 
     const tableBody = document.getElementById("tableBody");
