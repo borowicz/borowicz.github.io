@@ -537,6 +537,15 @@
                 <button class="filter-chip" type="button" data-query="notification">🔔 Notifications</button>
                 <button class="filter-chip" type="button" data-query="menu">📋 Menu</button>
                 <button class="filter-chip" type="button" data-query="folder">📁 Folder</button>
+                <button class="filter-chip" type="button" data-query="previous folder">⬅️ Back</button>
+                <button class="filter-chip" type="button" data-query="next folder">➡️ Forward</button>
+                <button class="filter-chip" type="button" data-query="parent folder">⬆️ Up</button>
+                <button class="filter-chip" type="button" data-query="home folder">🏠 Home</button>
+                <button class="filter-chip" type="button" data-query="downloads">📥 Downloads</button>
+                <button class="filter-chip" type="button" data-query="path bar">📍 Path Bar</button>
+                <button class="filter-chip" type="button" data-query="new tab">📂 New Tab</button>
+                <button class="filter-chip" type="button" data-query="close current tab">❎ Close Tab</button>
+                <button class="filter-chip" type="button" data-query="hidden files">👁️ Hidden Files</button>
                 <button class="filter-chip" type="button" data-query="finder">🍎 Finder</button>
                 <button class="filter-chip" type="button" data-query="spotlight">🔦 Spotlight</button>
                 <button class="filter-chip" type="button" data-query="quick look">👁️ Quick Look</button>
@@ -1136,7 +1145,7 @@
 
         {
             category: "File Explorer",
-            action: "📂 Open File Explorer / Finder / Nautilus",
+            action: "📂 Open File",
             windows: "Win + E",
             mac: "⌘ + Option + D / ⌘ + Shift + H",
             ubuntu: "Super + E"
@@ -1150,19 +1159,73 @@
         },
         {
             category: "File Explorer",
+            action: "🏡 Open user home location quickly",
+            windows: "Win + E then Home / %USERPROFILE%",
+            mac: "⌘ + Shift + H",
+            ubuntu: "Alt + Home"
+        },
+        {
+            category: "File Explorer",
+            action: "📍 Jump to location / path entry",
+            windows: "Alt + D / Ctrl + L",
+            mac: "⌘ + Shift + G / ⌘ + Option + L",
+            ubuntu: "Ctrl + L"
+        },
+        {
+            category: "File Explorer",
+            action: "🏠 Open home folder",
+            windows: "Win + R → %USERPROFILE%",
+            mac: "⌘ + Shift + H",
+            ubuntu: "Alt + Home"
+        },
+        {
+            category: "File Explorer",
             action: "↩️ Enter directory / open selected item",
             windows: "Enter",
             mac: "⌘ + O / ⌘ + ↓",
             ubuntu: "Enter"
         },
-        {category: "File Explorer", action: "⬅️ Go back", windows: "Alt + ←", mac: "⌘ + [", ubuntu: "Alt + ←"},
-        {category: "File Explorer", action: "➡️ Go forward", windows: "Alt + →", mac: "⌘ + ]", ubuntu: "Alt + →"},
         {
             category: "File Explorer",
-            action: "⬆️ Go to parent folder",
+            action: "⬅️ Previous folder / go back",
+            windows: "Alt + ←",
+            mac: "⌘ + [",
+            ubuntu: "Alt + ←"
+        },
+        {
+            category: "File Explorer",
+            action: "➡️ Next folder / go forward",
+            windows: "Alt + →",
+            mac: "⌘ + ]",
+            ubuntu: "Alt + →"
+        },
+        {
+            category: "File Explorer",
+            action: "⬆️ Parent folder / one directory up",
             windows: "Alt + ↑",
             mac: "⌘ + ↑",
             ubuntu: "Alt + ↑"
+        },
+        {
+            category: "File Explorer",
+            action: "🔼 Go to enclosing folder of selected item",
+            windows: "Alt + ↑ / item-dependent",
+            mac: "⌘ + ↑",
+            ubuntu: "Alt + ↑ / item-dependent"
+        },
+        {
+            category: "File Explorer",
+            action: "🏡 Open user home location quickly",
+            windows: "Win + E then Home / %USERPROFILE%",
+            mac: "⌘ + Shift + H",
+            ubuntu: "Alt + Home"
+        },
+        {
+            category: "File Explorer",
+            action: "📍 Jump to location / path entry",
+            windows: "Alt + D / Ctrl + L",
+            mac: "⌘ + Shift + G / ⌘ + Option + L",
+            ubuntu: "Ctrl + L"
         },
         {
             category: "File Explorer",
