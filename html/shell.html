@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shell One-Liners</title>
+    <meta name="description" content="Practical Bash and shell one-liners for files, logs, networking, system diagnostics, Git, and terminal tricks." />
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: rgba(15, 23, 42, 0.86);
+            --panel-strong: rgba(15, 23, 42, 0.96);
+            --border: rgba(148, 163, 184, 0.22);
+            --text: #e5eefc;
+            --muted: #9fb0d0;
+            --accent: #7dd3fc;
+            --accent-2: #a78bfa;
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+            --quote-bg: rgba(2, 6, 23, 0.72);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(125, 211, 252, 0.16), transparent 34%),
+                radial-gradient(circle at top right, rgba(167, 139, 250, 0.16), transparent 30%),
+                linear-gradient(180deg, #020617 0%, #0b1020 42%, #111827 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .hero {
+            padding: 40px 0 20px;
+        }
+
+        .hero-card,
+        .toolbar,
+        .section-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .hero-card {
+            padding: 28px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--accent);
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 1.05;
+        }
+
+        .hero p {
+            margin: 16px 0 0;
+            color: var(--muted);
+            font-size: 1.04rem;
+            max-width: 72ch;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            background: rgba(15, 23, 42, 0.7);
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(125, 211, 252, 0.45);
+            background: rgba(30, 41, 59, 0.88);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(125, 211, 252, 0.22), rgba(167, 139, 250, 0.22));
+            border-color: rgba(125, 211, 252, 0.42);
+        }
+
+        .toolbar {
+            margin: 18px auto 26px;
+            padding: 18px;
+            position: sticky;
+            top: 14px;
+            z-index: 10;
+        }
+
+        .toolbar-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 14px;
+        }
+
+        .search-wrap,
+        .quick-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            min-height: 48px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.72);
+            color: var(--text);
+            padding: 0 16px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: rgba(125, 211, 252, 0.55);
+            box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.12);
+        }
+
+        .filter-chip {
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.78);
+            color: var(--text);
+            border-radius: 999px;
+            min-height: 40px;
+            padding: 0 14px;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active {
+            transform: translateY(-1px);
+            border-color: rgba(125, 211, 252, 0.5);
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        main {
+            padding-bottom: 56px;
+        }
+
+        .section-card {
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .section-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            font-size: clamp(1.35rem, 2vw, 1.9rem);
+        }
+
+        .section-note {
+            color: var(--muted);
+            max-width: 68ch;
+            line-height: 1.65;
+        }
+
+        .snippet-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .snippet-card {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(2, 6, 23, 0.5);
+        }
+
+        .snippet-body {
+            padding: 18px;
+        }
+
+        .snippet-body h3 {
+            margin: 0 0 10px;
+            font-size: 1.02rem;
+            line-height: 1.45;
+        }
+
+        blockquote {
+            margin: 0;
+            padding: 14px 16px;
+            border-left: 4px solid var(--accent);
+            background: var(--quote-bg);
+            color: #dbeafe;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+            font-size: 0.96rem;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(125, 211, 252, 0.22);
+            color: var(--muted);
+            font-size: 0.84rem;
+            background: rgba(15, 23, 42, 0.62);
+        }
+
+        .empty-state {
+            display: none;
+            margin-top: 12px;
+            padding: 18px;
+            border: 1px dashed var(--border);
+            border-radius: 18px;
+            color: var(--muted);
+            background: rgba(2, 6, 23, 0.38);
+        }
+
+        .floating-nav {
+            position: fixed;
+            right: 14px;
+            bottom: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            z-index: 20;
+        }
+
+        .floating-nav a {
+            text-decoration: none;
+            min-height: 42px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.92);
+            box-shadow: var(--shadow);
+        }
+
+        mark {
+            background: rgba(250, 204, 21, 0.28);
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 860px) {
+            .toolbar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                width: min(100% - 20px, 1100px);
+            }
+
+            .hero {
+                padding-top: 20px;
+            }
+
+            .hero-card,
+            .toolbar,
+            .section-card {
+                border-radius: 20px;
+            }
+
+            .section-card,
+            .toolbar,
+            .hero-card {
+                padding: 18px;
+            }
+
+            .floating-nav {
+                left: 10px;
+                right: 10px;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="hero" id="top">
+        <div class="hero-card">
+            <div>
+                <div style="float:right;" class="eyebrow">⌨️ <a href="/">borowicz.github.io</a></div>
+                <h1>Shell One-Liners with Quick Search</h1>
+            </div>
+            <p>
+                A practical collection of Bash, Zsh, Linux, Unix, Git, log, and networking snippets.
+            </p>
+            <div class="hero-actions">
+                <a class="btn primary" href="#snippets">Open snippets</a>
+                <a class="btn" href="#general">General shell</a>
+                <a class="btn" href="#network">Network tools</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="toolbar" aria-label="Quick search toolbar">
+            <div class="search-wrap">
+                <input
+                    id="quickSearch"
+                    class="search-input"
+                    type="search"
+                    placeholder="Quick search: git, logs, port, backup, dns, hidden, tcpdump..."
+                    autocomplete="off"
+                />
+            </div>
+
+            <div class="quick-filters" id="quickFilters">
+                <button class="filter-chip" type="button" data-query="git">🌿 Git</button>
+                <button class="filter-chip" type="button" data-query="logs">🪵 Logs</button>
+                <button class="filter-chip" type="button" data-query="network">🌐 Network</button>
+                <button class="filter-chip" type="button" data-query="port">🚪 Port</button>
+                <button class="filter-chip" type="button" data-query="dns">🧭 DNS</button>
+                <button class="filter-chip" type="button" data-query="http">📡 HTTP</button>
+                <button class="filter-chip" type="button" data-query="files">📁 Files</button>
+                <button class="filter-chip" type="button" data-query="backup">💾 Backup</button>
+            </div>
+        
+        <div class="meta-row">
+            <div><strong id="resultCount">0</strong> snippets visible</div>
+        </div>
+        <div class="empty-state" id="emptyState">No matching snippets. Try a broader keyword like <strong>git</strong>, <strong>dns</strong>, <strong>log</strong>, or <strong>file</strong>.</div>
+    </section>
+
+    <main id="snippets">
+        <section class="section-card snippet-section" id="general" data-section="general shell files logs git system terminal bash zsh">
+            <div class="section-head">
+                <div>
+                    <div class="eyebrow">🛠️ General shell</div>
+                    <h2>Files, text, logs, system, Git, and terminal tricks</h2>
+                </div>
+                <div class="section-note">
+                    Twenty practical one-liners for daily terminal work. Useful for cleanup, searching, text processing,
+                    diagnostics, Git housekeeping, and quick shell shortcuts.
+                </div>
+            </div>
+
+            <div class="snippet-list">
+                <article class="snippet-card snippet-item" data-search="find and delete empty directories files cleanup delete folder empty">
+                    <div class="snippet-body">
+                        <h3>🧹 Find and delete all empty directories</h3>
+                        <blockquote>find . -type d -empty -delete</blockquote>
+                        <div class="tag-row"><span class="tag">files</span><span class="tag">cleanup</span><span class="tag">find</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="largest files top 10 disk usage du sort head">
+                    <div class="snippet-body">
+                        <h3>📦 Find the 10 largest files in the current folder</h3>
+                        <blockquote>du -ah . | sort -rh | head -n 10</blockquote>
+                        <div class="tag-row"><span class="tag">files</span><span class="tag">disk usage</span><span class="tag">sorting</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="bulk rename extension txt md rename mass change extensions">
+                    <div class="snippet-body">
+                        <h3>📝 Batch rename file extensions, for example from .txt to .md</h3>
+                        <blockquote>rename 's/\.txt$/\.md/' *.txt</blockquote>
+                        <div class="tag-row"><span class="tag">rename</span><span class="tag">files</span><span class="tag">batch</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="backup quick backup copy file bak cp">
+                    <div class="snippet-body">
+                        <h3>💾 Create a quick backup of a file</h3>
+                        <blockquote>cp file.txt{,.bak}</blockquote>
+                        <div class="tag-row"><span class="tag">backup</span><span class="tag">copy</span><span class="tag">files</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="unique lines count occurrences sort uniq file text">
+                    <div class="snippet-body">
+                        <h3>🔢 Extract unique lines from a file and count occurrences</h3>
+                        <blockquote>sort file.txt | uniq -c | sort -nr</blockquote>
+                        <div class="tag-row"><span class="tag">text</span><span class="tag">uniq</span><span class="tag">sorting</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="tail logs realtime highlight error grep color access log">
+                    <div class="snippet-body">
+                        <h3>🪵 Follow logs in real time and highlight the word Error</h3>
+                        <blockquote>tail -f access.log | grep --color=always "Error"</blockquote>
+                        <div class="tag-row"><span class="tag">logs</span><span class="tag">tail</span><span class="tag">grep</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="remove duplicate lines keep order awk visited text file">
+                    <div class="snippet-body">
+                        <h3>🧽 Remove duplicate lines without sorting and preserve order</h3>
+                        <blockquote>awk '!visited[$0]++' file.txt</blockquote>
+                        <div class="tag-row"><span class="tag">awk</span><span class="tag">text</span><span class="tag">dedupe</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="replace phrase in many files sed search replace txt">
+                    <div class="snippet-body">
+                        <h3>🔁 Replace all occurrences of one phrase with another in many files</h3>
+                        <blockquote>sed -i 's/old/new/g' *.txt</blockquote>
+                        <div class="tag-row"><span class="tag">sed</span><span class="tag">replace</span><span class="tag">text</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="which process uses port lsof 8080 system port process">
+                    <div class="snippet-body">
+                        <h3>🚪 Check which process is using a given port, for example 8080</h3>
+                        <blockquote>lsof -i :8080</blockquote>
+                        <div class="tag-row"><span class="tag">port</span><span class="tag">process</span><span class="tag">system</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="most used commands history awk sort uniq terminal">
+                    <div class="snippet-body">
+                        <h3>📊 Show the most frequently used commands from shell history</h3>
+                        <blockquote>history | awk '{print $2}' | sort | uniq -c | sort -rn | head -10</blockquote>
+                        <div class="tag-row"><span class="tag">history</span><span class="tag">analytics</span><span class="tag">terminal</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="quick http server python 8000 current folder files">
+                    <div class="snippet-body">
+                        <h3>🌍 Start a quick HTTP server in the current folder using Python 3</h3>
+                        <blockquote>python3 -m http.server 8000</blockquote>
+                        <div class="tag-row"><span class="tag">http</span><span class="tag">python</span><span class="tag">server</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="external ip curl ifconfig me public ip network">
+                    <div class="snippet-body">
+                        <h3>🌐 Check your external IP address</h3>
+                        <blockquote>curl ifconfig.me</blockquote>
+                        <div class="tag-row"><span class="tag">network</span><span class="tag">ip</span><span class="tag">curl</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="delete local git branches except main cleanup git branch xargs">
+                    <div class="snippet-body">
+                        <h3>🌿 Delete all local Git branches except main</h3>
+                        <blockquote>git branch | grep -v "main" | xargs git branch -D</blockquote>
+                        <div class="tag-row"><span class="tag">git</span><span class="tag">cleanup</span><span class="tag">branches</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="find text in all project files line numbers grep recursive">
+                    <div class="snippet-body">
+                        <h3>🔎 Find text in all project files with line numbers</h3>
+                        <blockquote>grep -rnE "search_phrase" .</blockquote>
+                        <div class="tag-row"><span class="tag">grep</span><span class="tag">search</span><span class="tag">project</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="clear npm cache force node modules fix npm">
+                    <div class="snippet-body">
+                        <h3>📦 Clear the npm cache when node modules start acting suspicious</h3>
+                        <blockquote>npm cache clean --force</blockquote>
+                        <div class="tag-row"><span class="tag">npm</span><span class="tag">cache</span><span class="tag">node</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="rerun last command with sudo sudo bang bang terminal">
+                    <div class="snippet-body">
+                        <h3>🧠 Re-run the last command with sudo</h3>
+                        <blockquote>sudo !!</blockquote>
+                        <div class="tag-row"><span class="tag">sudo</span><span class="tag">terminal</span><span class="tag">shortcut</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="tee save output to file and display screen command output">
+                    <div class="snippet-body">
+                        <h3>📄 Save command output to a file and still display it on screen</h3>
+                        <blockquote>ls -la | tee list.txt</blockquote>
+                        <div class="tag-row"><span class="tag">tee</span><span class="tag">output</span><span class="tag">files</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="mkdir project structure src bin doc tests folder tree">
+                    <div class="snippet-body">
+                        <h3>🏗️ Create a whole project folder structure in one shot</h3>
+                        <blockquote>mkdir -p project/{src,bin,doc,tests}</blockquote>
+                        <div class="tag-row"><span class="tag">mkdir</span><span class="tag">scaffold</span><span class="tag">project</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="kill process by name pkill instead of pid process">
+                    <div class="snippet-body">
+                        <h3>💥 Kill a process by name instead of hunting for the PID</h3>
+                        <blockquote>pkill -f process_name</blockquote>
+                        <div class="tag-row"><span class="tag">process</span><span class="tag">pkill</span><span class="tag">system</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="numeric file permissions stat chmod 755">
+                    <div class="snippet-body">
+                        <h3>🔐 Show file permissions in numeric form, for example 755</h3>
+                        <blockquote>stat -c "%a %n" *</blockquote>
+                        <div class="tag-row"><span class="tag">permissions</span><span class="tag">stat</span><span class="tag">files</span></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section-card snippet-section" id="network" data-section="network diagnostics dns ip ports tcpdump http api interfaces routing security monitoring">
+            <div class="section-head">
+                <div>
+                    <div class="eyebrow">🌐 Network</div>
+                    <h2>Network diagnostics, monitoring, HTTP, DNS, and traffic tools</h2>
+                </div>
+                <div class="section-note">
+                    Twenty focused one-liners for Linux and Unix networking. Handy for checking ports, routes, interfaces,
+                    DNS, sniffing traffic, HTTP responses, and remote reachability.
+                </div>
+            </div>
+
+            <div class="snippet-list">
+                <article class="snippet-card snippet-item" data-search="list listening ports tcp udp processes ss tulpn">
+                    <div class="snippet-body">
+                        <h3>🧷 Check which TCP and UDP ports are listening, including processes</h3>
+                        <blockquote>sudo ss -tulpn</blockquote>
+                        <div class="tag-row"><span class="tag">network</span><span class="tag">ports</span><span class="tag">ss</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="external public ip ifconfig me curl network">
+                    <div class="snippet-body">
+                        <h3>🌍 Quickly check your external IP address</h3>
+                        <blockquote>curl -s https://ifconfig.me</blockquote>
+                        <div class="tag-row"><span class="tag">ip</span><span class="tag">curl</span><span class="tag">network</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="trace route packets mtr google modern traceroute">
+                    <div class="snippet-body">
+                        <h3>🛰️ Trace a packet route the modern way with mtr</h3>
+                        <blockquote>mtr google.com</blockquote>
+                        <div class="tag-row"><span class="tag">routing</span><span class="tag">mtr</span><span class="tag">diagnostics</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="network interfaces brief ip address show">
+                    <div class="snippet-body">
+                        <h3>🧩 Display all network interfaces in a readable short format</h3>
+                        <blockquote>ip -brief address show</blockquote>
+                        <div class="tag-row"><span class="tag">interfaces</span><span class="tag">ip</span><span class="tag">system</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="test remote port nc netcat 80 host server">
+                    <div class="snippet-body">
+                        <h3>🚪 Test a specific port on a remote server</h3>
+                        <blockquote>nc -zv 192.168.1.1 80</blockquote>
+                        <div class="tag-row"><span class="tag">port</span><span class="tag">netcat</span><span class="tag">remote</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="scan local network active devices nmap subnet">
+                    <div class="snippet-body">
+                        <h3>📡 Scan your local network for active devices</h3>
+                        <blockquote>nmap -sn 192.168.1.0/24</blockquote>
+                        <div class="tag-row"><span class="tag">nmap</span><span class="tag">scan</span><span class="tag">lan</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="active ips without nmap arp a local network">
+                    <div class="snippet-body">
+                        <h3>🧾 Find active IP addresses on the network without using nmap</h3>
+                        <blockquote>arp -a</blockquote>
+                        <div class="tag-row"><span class="tag">arp</span><span class="tag">lan</span><span class="tag">discovery</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="dns records dig a mx txt domain answer">
+                    <div class="snippet-body">
+                        <h3>🧭 Check DNS records such as A, MX, and TXT for a domain</h3>
+                        <blockquote>dig google.com ANY +noall +answer</blockquote>
+                        <div class="tag-row"><span class="tag">dns</span><span class="tag">dig</span><span class="tag">domain</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="routing table ip route show packets gateway">
+                    <div class="snippet-body">
+                        <h3>🛣️ Display the routing table</h3>
+                        <blockquote>ip route show</blockquote>
+                        <div class="tag-row"><span class="tag">route</span><span class="tag">gateway</span><span class="tag">network</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="sniff http headers traffic realtime tcpdump port 80">
+                    <div class="snippet-body">
+                        <h3>👀 Sniff live HTTP headers going through the network</h3>
+                        <blockquote>sudo tcpdump -A -s 0 'tcp port 80'</blockquote>
+                        <div class="tag-row"><span class="tag">tcpdump</span><span class="tag">traffic</span><span class="tag">http</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="monitor live network traffic interface nload iftop">
+                    <div class="snippet-body">
+                        <h3>📈 Monitor live traffic on a specific network interface</h3>
+                        <blockquote>nload eth0
+# or
+iftop</blockquote>
+                        <div class="tag-row"><span class="tag">monitoring</span><span class="tag">nload</span><span class="tag">iftop</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="process network bandwidth nethogs per process">
+                    <div class="snippet-body">
+                        <h3>🐷 See how much network traffic each process is using</h3>
+                        <blockquote>sudo nethogs</blockquote>
+                        <div class="tag-row"><span class="tag">processes</span><span class="tag">bandwidth</span><span class="tag">nethogs</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="http headers only curl i response head request">
+                    <div class="snippet-body">
+                        <h3>📡 Check HTTP response headers without downloading the body</h3>
+                        <blockquote>curl -I https://google.com</blockquote>
+                        <div class="tag-row"><span class="tag">curl</span><span class="tag">http</span><span class="tag">headers</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="quick file server python 8000 folder network http">
+                    <div class="snippet-body">
+                        <h3>📂 Start a quick file server in the current folder on port 8000</h3>
+                        <blockquote>python3 -m http.server 8000</blockquote>
+                        <div class="tag-row"><span class="tag">http</span><span class="tag">python</span><span class="tag">server</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="download file original name curl O url">
+                    <div class="snippet-body">
+                        <h3>⬇️ Download a file and save it using the original filename</h3>
+                        <blockquote>curl -O https://example.com/file.zip</blockquote>
+                        <div class="tag-row"><span class="tag">download</span><span class="tag">curl</span><span class="tag">files</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="restart network interface ip link down up eth0">
+                    <div class="snippet-body">
+                        <h3>🔄 Restart a network interface such as eth0</h3>
+                        <blockquote>sudo ip link set eth0 down && sudo ip link set eth0 up</blockquote>
+                        <div class="tag-row"><span class="tag">interface</span><span class="tag">restart</span><span class="tag">network</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="flush dns cache systemd resolved resolvectl">
+                    <div class="snippet-body">
+                        <h3>🧼 Flush the DNS cache when using systemd-resolved</h3>
+                        <blockquote>sudo resolvectl flush-caches</blockquote>
+                        <div class="tag-row"><span class="tag">dns</span><span class="tag">cache</span><span class="tag">systemd</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="default gateway grep ip route">
+                    <div class="snippet-body">
+                        <h3>🚦 Find your default gateway</h3>
+                        <blockquote>ip route | grep default</blockquote>
+                        <div class="tag-row"><span class="tag">gateway</span><span class="tag">route</span><span class="tag">network</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="interface error stats netstat i">
+                    <div class="snippet-body">
+                        <h3>📉 Display error statistics on network interfaces</h3>
+                        <blockquote>netstat -i</blockquote>
+                        <div class="tag-row"><span class="tag">interfaces</span><span class="tag">errors</span><span class="tag">netstat</span></div>
+                    </div>
+                </article>
+
+                <article class="snippet-card snippet-item" data-search="whois ip domain owner registration info">
+                    <div class="snippet-body">
+                        <h3>🕵️ Check who owns an IP address or domain</h3>
+                        <blockquote>whois 8.8.8.8</blockquote>
+                        <div class="tag-row"><span class="tag">whois</span><span class="tag">ownership</span><span class="tag">security</span></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="floating-nav">
+    <a href="#top">⬆️ Top</a>
+    <a href="#general">🛠️ General</a>
+    <a href="#network">🌐 Network</a>
+</div>
+
+<script>
+    const searchInput = document.getElementById('quickSearch');
+    const resultCount = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+    const chips = Array.from(document.querySelectorAll('.filter-chip'));
+    const items = Array.from(document.querySelectorAll('.snippet-item'));
+    const sections = Array.from(document.querySelectorAll('.snippet-section'));
+
+    function escapeRegExp(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function clearMarks(node) {
+        node.querySelectorAll('mark').forEach((mark) => {
+            const parent = mark.parentNode;
+            parent.replaceChild(document.createTextNode(mark.textContent), mark);
+            parent.normalize();
+        });
+    }
+
+    function markMatches(node, term) {
+        clearMarks(node);
+        if (!term) return;
+
+        const regex = new RegExp('(' + escapeRegExp(term) + ')', 'gi');
+        const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, {
+            acceptNode(textNode) {
+                if (!textNode.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                if (textNode.parentElement && textNode.parentElement.tagName === 'MARK') return NodeFilter.FILTER_REJECT;
+                return regex.test(textNode.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+            }
+        });
+
+        const matches = [];
+        while (walker.nextNode()) {
+            matches.push(walker.currentNode);
+        }
+
+        matches.forEach((textNode) => {
+            const frag = document.createDocumentFragment();
+            const parts = textNode.nodeValue.split(regex);
+            parts.forEach((part) => {
+                if (!part) return;
+                if (part.toLowerCase() === term.toLowerCase()) {
+                    const mark = document.createElement('mark');
+                    mark.textContent = part;
+                    frag.appendChild(mark);
+                } else {
+                    frag.appendChild(document.createTextNode(part));
+                }
+            });
+            textNode.parentNode.replaceChild(frag, textNode);
+        });
+    }
+
+    function applyFilter(query) {
+        const value = query.trim().toLowerCase();
+        let visible = 0;
+
+        items.forEach((item) => {
+            clearMarks(item);
+            const haystack = [
+                item.dataset.search || '',
+                item.textContent || '',
+                item.closest('.snippet-section')?.dataset.section || ''
+            ].join(' ').toLowerCase();
+
+            const isVisible = !value || haystack.includes(value);
+            item.style.display = isVisible ? '' : 'none';
+
+            if (isVisible) {
+                visible += 1;
+                if (value) {
+                    markMatches(item, query.trim());
+                }
+            }
+        });
+
+        sections.forEach((section) => {
+            const hasVisibleItems = Array.from(section.querySelectorAll('.snippet-item')).some((item) => item.style.display !== 'none');
+            section.style.display = hasVisibleItems ? '' : 'none';
+        });
+
+        resultCount.textContent = String(visible);
+        emptyState.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', (event) => {
+        chips.forEach((chip) => chip.classList.remove('active'));
+        applyFilter(event.target.value);
+    });
+
+    chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+            const alreadyActive = chip.classList.contains('active');
+            chips.forEach((node) => node.classList.remove('active'));
+
+            if (alreadyActive) {
+                searchInput.value = '';
+                applyFilter('');
+                return;
+            }
+
+            chip.classList.add('active');
+            searchInput.value = chip.dataset.query || '';
+            applyFilter(searchInput.value);
+            searchInput.focus();
+        });
+    });
+
+    applyFilter('');
+</script>
+</body>
+</html>
