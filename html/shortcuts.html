@@ -371,6 +371,7 @@
             <h1>Shortcuts Quick Search</h1>
             <p>
                 Search keyboard shortcuts by action, category, platform or key combination.
+                Includes Finder, text editing, delete / trash shortcuts and other everyday system actions.
                 Works as a simple static HTML page for GitHub Pages.
             </p>
 
@@ -403,6 +404,8 @@
                 <button class="filter-chip" type="button" data-query="tab">📂 Tab</button>
                 <button class="filter-chip" type="button" data-query="volume">🔊 Volume</button>
                 <button class="filter-chip" type="button" data-query="lock">🔒 Lock</button>
+                <button class="filter-chip" type="button" data-query="delete">⌫ Delete</button>
+                <button class="filter-chip" type="button" data-query="trash">🗑️ Trash</button>
                 <button class="filter-chip" type="button" data-query="zoom">🔍 Zoom</button>
             </div>
 
@@ -435,7 +438,7 @@
         </div>
 
         <p class="footer-note">
-            Note: some shortcuts vary by desktop environment, keyboard layout or app version. Ubuntu values here are general desktop defaults, mostly GNOME-oriented.
+            Note: some shortcuts vary by desktop environment, keyboard layout, app version or context. Some macOS delete shortcuts differ between Finder, text fields and specific apps. Ubuntu values here are general desktop defaults, mostly GNOME-oriented.
         </p>
     </section>
 
@@ -552,7 +555,9 @@
         { category: "File Explorer", action: "🆕 New folder", windows: "Ctrl + Shift + N", mac: "⌘ + Shift + N", ubuntu: "Ctrl + Shift + N" },
         { category: "File Explorer", action: "✏️ Rename selected item", windows: "F2", mac: "Enter", ubuntu: "F2" },
         { category: "File Explorer", action: "🗑️ Move selected item to Trash", windows: "Delete", mac: "⌘ + Delete", ubuntu: "Delete" },
-        { category: "File Explorer", action: "❌ Delete immediately", windows: "Shift + Delete", mac: "⌘ + Option + Delete", ubuntu: "Shift + Delete" },
+        { category: "File Explorer", action: "❌ Delete immediately / bypass Trash", windows: "Shift + Delete", mac: "⌘ + Option + Delete / app-dependent", ubuntu: "Shift + Delete" },
+        { category: "File Explorer", action: "🗑️ Empty Trash / Recycle Bin", windows: "Recycle Bin menu / desktop app", mac: "Shift + ⌘ + Delete", ubuntu: "Trash menu / desktop-dependent" },
+        { category: "File Explorer", action: "💥 Empty Trash without confirmation", windows: "–", mac: "Option + Shift + ⌘ + Delete", ubuntu: "–" },
         { category: "File Explorer", action: "👁️ Toggle preview pane / quick look", windows: "Alt + P", mac: "Space", ubuntu: "Space / preview if available" },
         { category: "File Explorer", action: "📋 Copy selected file", windows: "Ctrl + C", mac: "⌘ + C", ubuntu: "Ctrl + C" },
         { category: "File Explorer", action: "✂️ Cut selected file", windows: "Ctrl + X", mac: "⌘ + Option + V after copy", ubuntu: "Ctrl + X" },
@@ -587,7 +592,19 @@
         { category: "Screenshots", action: "✂️ Select area to file", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "Shift + PrtScn" },
         { category: "Screenshots", action: "🎯 Capture specific window", windows: "–", mac: "⌘ + Shift + 4 + Space", ubuntu: "–" },
         { category: "Screenshots", action: "🎥 Screenshot / Screen recording options", windows: "–", mac: "⌘ + Shift + 5", ubuntu: "–" },
-        { category: "Screenshots", action: "📺 Screenshot Touch Bar", windows: "–", mac: "⌘ + Shift + 6", ubuntu: "–" }
+        { category: "Screenshots", action: "📺 Screenshot Touch Bar", windows: "–", mac: "⌘ + Shift + 6", ubuntu: "–" },
+        { category: "Text Editing", action: "⌫ Delete character backward", windows: "Backspace", mac: "Delete", ubuntu: "Backspace" },
+        { category: "Text Editing", action: "➡️⌫ Delete character forward", windows: "Delete", mac: "Fn + Delete / Control + D", ubuntu: "Delete" },
+        { category: "Text Editing", action: "🪓 Delete previous word", windows: "Ctrl + Backspace", mac: "Option + Delete", ubuntu: "Ctrl + Backspace / Ctrl + W" },
+        { category: "Text Editing", action: "🧹 Delete to beginning of line", windows: "Shift + Home then Delete / app-dependent", mac: "⌘ + Delete", ubuntu: "Ctrl + U in many terminals / app-dependent" },
+        { category: "Text Editing", action: "📝 Move cursor to line start", windows: "Home", mac: "⌘ + ←", ubuntu: "Home" },
+        { category: "Text Editing", action: "📝 Move cursor to line end", windows: "End", mac: "⌘ + →", ubuntu: "End" },
+        { category: "Text Editing", action: "↔️ Move cursor by word left", windows: "Ctrl + ←", mac: "Option + ←", ubuntu: "Ctrl + ←" },
+        { category: "Text Editing", action: "↔️ Move cursor by word right", windows: "Ctrl + →", mac: "Option + →", ubuntu: "Ctrl + →" },
+        { category: "Text Editing", action: "🖍️ Select to line start", windows: "Shift + Home", mac: "Shift + ⌘ + ←", ubuntu: "Shift + Home" },
+        { category: "Text Editing", action: "🖍️ Select to line end", windows: "Shift + End", mac: "Shift + ⌘ + →", ubuntu: "Shift + End" },
+        { category: "Text Editing", action: "🖍️ Select previous word", windows: "Ctrl + Shift + ←", mac: "Option + Shift + ←", ubuntu: "Ctrl + Shift + ←" },
+        { category: "Text Editing", action: "🖍️ Select next word", windows: "Ctrl + Shift + →", mac: "Option + Shift + →", ubuntu: "Ctrl + Shift + →" }
     ];
 
     const tableBody = document.getElementById("tableBody");
