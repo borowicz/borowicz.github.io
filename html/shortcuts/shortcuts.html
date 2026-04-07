@@ -564,6 +564,12 @@
                 <button class="filter-chip" type="button" data-query="dock">🚀 Dock</button>
                 <button class="filter-chip" type="button" data-query="brightness">💡 Brightness</button>
                 <button class="filter-chip" type="button" data-query="display">🖥️ Display</button>
+                <button class="filter-chip" type="button" data-query="weird shortcuts">🧩 Weird Shortcuts</button>
+                <button class="filter-chip" type="button" data-query="option">⌥ Option</button>
+                <button class="filter-chip" type="button" data-query="office key">🧷 Office Key</button>
+                <button class="filter-chip" type="button" data-query="sysrq">🆘 SysRq</button>
+                <button class="filter-chip" type="button" data-query="tty">🖲️ TTY</button>
+                <button class="filter-chip" type="button" data-query="quick look">👀 Quick Look</button>
             </div>
 
             <div class="stats">
@@ -595,6 +601,29 @@
             <div id="emptyState" class="empty">No shortcuts found.</div>
         </div>
 
+        <section class="legend" aria-label="Weird shortcuts notes">
+            <div class="card">
+                <strong>🧩 Weird shortcuts</strong>
+                <p>
+                    This section groups uncommon, hidden, rescue, and "how does anyone even discover this" shortcuts
+                    across macOS, Windows, and Ubuntu.
+                </p>
+            </div>
+            <div class="card">
+                <strong>✅ Verified</strong>
+                <p>
+                    Verified against Apple Support and Microsoft Support where possible. Ubuntu and GNOME shortcuts can
+                    vary by version, session type, desktop environment, and installed packages.
+                </p>
+            </div>
+            <div class="card">
+                <strong>⚠️ Notes</strong>
+                <p>
+                    Some shortcuts only work in specific contexts, such as Finder aliases, active Magnifier, GNOME X11,
+                    enabled accessibility options, or keyboards with media / function keys.
+                </p>
+            </div>
+        </section>
         <p class="footer-note">
             Note: some shortcuts vary by desktop environment, keyboard layout, app version or context. Many added macOS
             entries come from Apple’s official shortcut list for Finder, system actions and text editing, but some
@@ -1322,7 +1351,7 @@
             mac: "Control + Enter / Control + Click",
             ubuntu: "Shift + F10 / Menu key"
         },
-        {category: "File Explorer", action: "📂 Open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T"},
+        {category: "File Explorer", action: "📂 New tab / open in new tab", windows: "Ctrl + T", mac: "⌘ + T", ubuntu: "Ctrl + T"},
         {
             category: "File Explorer",
             action: "❎ Close current tab",
@@ -1439,7 +1468,7 @@
         {category: "File Explorer", action: "🎞️ Quick Look slideshow", windows: "–", mac: "⌥ + ⌘ + Y", ubuntu: "–"},
         {
             category: "File Explorer",
-            action: "📂 Show hidden files",
+            action: "👁️ Toggle hidden files",
             windows: "Ctrl + H (in some file managers) / View menu",
             mac: "⌘ + Shift + .",
             ubuntu: "Ctrl + H"
@@ -1756,6 +1785,385 @@
             windows: "–",
             mac: "Click Control Center in menu bar",
             ubuntu: "–"
+        },
+
+        {
+            category: "Weird Shortcuts",
+            action: "⌥ Precise volume adjustment (quarter step)",
+            windows: "–",
+            mac: "Shift + Option + Volume Up / Down",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "💡 Precise brightness adjustment (quarter step)",
+            windows: "–",
+            mac: "Shift + Option + Brightness Up / Down",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📶 Option-click menu bar status icons for extra details",
+            windows: "–",
+            mac: "Option + click Wi‑Fi / Bluetooth / Sound / Battery",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📚 Show definition / lookup for selected or pointed word",
+            windows: "–",
+            mac: "Control + Command + D",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "😀 Character Viewer / emoji and symbols",
+            windows: "Win + . / Win + ;",
+            mac: "Control + Command + Space / Fn + E",
+            ubuntu: "Compose key / Ctrl + ; (desktop-dependent)"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "↪️ Move copied file here instead of copying",
+            windows: "Ctrl + X then Ctrl + V",
+            mac: "Command + Option + V",
+            ubuntu: "Ctrl + X then Ctrl + V"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "👀 Quick Look without opening a file",
+            windows: "Preview pane / app-dependent",
+            mac: "Space",
+            ubuntu: "Space (with preview support, e.g. GNOME Sushi)"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧭 Reveal original file from selected alias / shortcut",
+            windows: "Alt + Enter / Open file location / app-dependent",
+            mac: "Command + R",
+            ubuntu: "Properties / Show target / app-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🪟 Close all windows of current app without quitting it",
+            windows: "Alt + F4 repeatedly / app-dependent",
+            mac: "Command + Option + W",
+            ubuntu: "app-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🙈 Hide all other apps except the current one",
+            windows: "Win + Home (similar idea)",
+            mac: "Command + Option + H",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "⌫ Delete forward",
+            windows: "Delete",
+            mac: "Fn + Delete / Control + D",
+            ubuntu: "Delete"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🪓 Delete previous word",
+            windows: "Ctrl + Backspace",
+            mac: "Option + Delete",
+            ubuntu: "Ctrl + W / Ctrl + Backspace"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧹 Delete to beginning of line",
+            windows: "Shift + Home then Delete / app-dependent",
+            mac: "Command + Delete",
+            ubuntu: "Ctrl + U in terminal / app-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🚪 Fast sign out",
+            windows: "–",
+            mac: "Command + Shift + Q / Command + Shift + Option + Q",
+            ubuntu: "system menu / desktop-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🔁 Force restart if the system is frozen",
+            windows: "Ctrl + Alt + Del / hardware reset fallback",
+            mac: "Control + Command + Power",
+            ubuntu: "Alt + PrintScreen, then R E I S U B"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🪟 Switch between windows of the same app only",
+            windows: "Ctrl + F6 / app-dependent",
+            mac: "Command + `",
+            ubuntu: "Super + `"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🎨 Toggle inverted colors",
+            windows: "Ctrl + Alt + I (Magnifier only)",
+            mac: "Control + Option + Command + 8",
+            ubuntu: "Accessibility setting / desktop-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📋 Send screenshot to clipboard instead of file",
+            windows: "PrtScn / Alt + PrtScn",
+            mac: "Control + Command + Shift + 3 / 4 / 5",
+            ubuntu: "Ctrl + PrtScn / Ctrl + Shift + PrtScn"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🐢 Slow-motion minimize animation",
+            windows: "–",
+            mac: "Shift + click yellow minimize button / Shift + Command + M",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🪄 Hide current app by Option-clicking another Dock app",
+            windows: "–",
+            mac: "Option + click another app in Dock",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧷 Office key shortcut for Microsoft Word",
+            windows: "Win + Ctrl + Alt + Shift + W",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📊 Office key shortcut for Microsoft Excel",
+            windows: "Win + Ctrl + Alt + Shift + X",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📽️ Office key shortcut for PowerPoint",
+            windows: "Win + Ctrl + Alt + Shift + P",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "👥 Office key shortcut for Teams",
+            windows: "Win + Ctrl + Alt + Shift + T",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📧 Office key shortcut for Outlook",
+            windows: "Win + Ctrl + Alt + Shift + O",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🗒️ Office key shortcut for OneNote",
+            windows: "Win + Ctrl + Alt + Shift + N",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🔗 Office key shortcut for LinkedIn",
+            windows: "Win + Ctrl + Alt + Shift + L",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "💬 Office key shortcut for Yammer / Viva Engage",
+            windows: "Win + Ctrl + Alt + Shift + Y",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🫥 Peek at desktop while holding the shortcut",
+            windows: "Win + ,",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📏 Stretch window vertically only",
+            windows: "Win + Shift + ↑",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🗂️ Create a new virtual desktop",
+            windows: "Win + Ctrl + D",
+            mac: "Mission Control / UI",
+            ubuntu: "workspace UI / desktop-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📋 Open clipboard history",
+            windows: "Win + V",
+            mac: "–",
+            ubuntu: "– / clipboard manager-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🎙️ Start voice typing",
+            windows: "Win + H",
+            mac: "Fn twice / dictation setting-dependent",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🖧 Find computers on a domain / local network dialog",
+            windows: "Win + Ctrl + F",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🔍 Magnifier zoom in / out",
+            windows: "Win + + / Win + -",
+            mac: "Control + Option + Command + + / -",
+            ubuntu: "Super + Alt + 8 then zoom controls / desktop-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🆘 Restart graphics driver",
+            windows: "Win + Ctrl + Shift + B",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "ℹ️ Open system information quickly",
+            windows: "Win + Pause / Break",
+            mac: "Option + click Apple menu / About This Mac",
+            ubuntu: "Settings / system details"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📌 Open jump list / context menu for pinned taskbar app",
+            windows: "Win + Alt + 1..9",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🏠 Minimize everything except the active window",
+            windows: "Win + Home",
+            mac: "Command + Option + H (hide others, similar effect)",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📡 Open wireless display / audio cast panel",
+            windows: "Win + K",
+            mac: "Control Center / AirPlay UI",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🌈 Toggle HDR",
+            windows: "Win + Alt + B",
+            mac: "–",
+            ubuntu: "–"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🗣️ Turn Narrator on or off",
+            windows: "Win + Ctrl + Enter",
+            mac: "Command + F5 / Touch ID triple-press setting-dependent",
+            ubuntu: "Super + Alt + S / screen reader setting-dependent"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧠 Magic SysRq safe reboot sequence",
+            windows: "–",
+            mac: "–",
+            ubuntu: "Alt + PrintScreen, then R E I S U B"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🖲️ Switch to rescue TTY",
+            windows: "–",
+            mac: "–",
+            ubuntu: "Ctrl + Alt + F3...F6"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🖥️ Return to graphical session from TTY",
+            windows: "–",
+            mac: "–",
+            ubuntu: "Ctrl + Alt + F2 / F1 (session-dependent)"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧩 Show workspace overview / mosaic",
+            windows: "Task View / Win + Tab",
+            mac: "Mission Control / Control + ↑",
+            ubuntu: "Super + S"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📚 Open app grid / all applications",
+            windows: "Start / app list",
+            mac: "Launchpad / app-dependent",
+            ubuntu: "Super + A"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "⌨️ Terminal copy / paste variant",
+            windows: "Ctrl + Shift + C / V",
+            mac: "Command + C / V",
+            ubuntu: "Ctrl + Shift + C / V"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🔠 Capitalize current word in terminal",
+            windows: "–",
+            mac: "–",
+            ubuntu: "Alt + C"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "↩️ Jump backward / forward by word in terminal",
+            windows: "Ctrl + ← / →",
+            mac: "Option + ← / →",
+            ubuntu: "Alt + B / Alt + F"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🧷 Drag window from anywhere with keyboard modifier",
+            windows: "Alt + Space then M / keyboard move",
+            mac: "–",
+            ubuntu: "Alt + left mouse drag"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🎥 Built-in screen recording",
+            windows: "Win + Alt + R / app-dependent",
+            mac: "Command + Shift + 5",
+            ubuntu: "Ctrl + Alt + Shift + R"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "📌 Toggle always on top from window menu",
+            windows: "app-dependent",
+            mac: "app-dependent",
+            ubuntu: "Alt + Space, then T"
+        },
+        {
+            category: "Weird Shortcuts",
+            action: "🔄 Restart GNOME Shell quickly (X11 only)",
+            windows: "–",
+            mac: "–",
+            ubuntu: "Alt + F2, then r, then Enter"
         }
     ];
 
