@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MŚ 2026 — terminarz TVP</title>
+  <meta name="description" content="Terminarz meczów Mundialu 2026 z godzinami w Polsce i kanałami TVP." />
+  <style>
+    :root{--bg:#0b1020;--card:#121a33;--muted:#99a3ba;--text:#eef3ff;--line:#273354;--accent:#8fb7ff;--pill:#1f2b4d;--good:#b8f7d4}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#101933 60%,#0b1020);color:var(--text)}
+    header{padding:32px 18px 18px;max-width:1180px;margin:auto} h1{margin:0 0 10px;font-size:clamp(28px,4vw,48px);letter-spacing:-.03em} p{color:var(--muted);line-height:1.5}.toolbar{position:sticky;top:0;z-index:5;background:rgba(11,16,32,.94);backdrop-filter:blur(12px);border-block:1px solid var(--line)}
+    .toolbar-inner{max-width:1180px;margin:auto;padding:14px 18px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px} input,select,button{border:1px solid var(--line);background:#0d1429;color:var(--text);border-radius:12px;padding:11px 12px;font:inherit} button{cursor:pointer;background:var(--accent);color:#061126;border:0;font-weight:700}.wrap{max-width:1180px;margin:auto;padding:18px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.stat,.pill{background:var(--pill);border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted)}
+    .day{margin:24px 0 12px;font-size:22px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.card{background:rgba(18,26,51,.88);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.18)}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.time{font-size:22px;font-weight:800;color:var(--good)}.title{font-size:18px;font-weight:800;margin:8px 0}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.small{font-size:13px;color:var(--muted)}.channel{color:var(--text);font-weight:700}.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.links a{color:#061126;background:var(--accent);padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:800}.links a.secondary{background:#1f2b4d;color:var(--text);border:1px solid var(--line)}mark{background:#ffe08a;color:#000;border-radius:4px;padding:0 2px}.empty{padding:30px;border:1px dashed var(--line);border-radius:18px;text-align:center;color:var(--muted)}
+    @media(max-width:760px){.toolbar-inner{grid-template-columns:1fr}.top{display:block}.time{margin-bottom:6px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mistrzostwa Świata 2026 — terminarz TVP</h1>
+    <p>Wszystkie mecze mundialu 2026, godziny w Polsce oraz kanały transmisji. Dane są wczytane statycznie z pliku ICS, więc strona działa na GitHub Pages bez backendu.</p>
+    <div class="links">
+      <a href="ms2026-wszystkie-mecze-tvp.ics" download>Dodaj do kalendarza .ics</a>
+      <a class="secondary" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026" target="_blank" rel="noopener">FIFA</a>
+      <a class="secondary" href="https://sport.tvp.pl/" target="_blank" rel="noopener">TVP Sport</a>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <div class="toolbar-inner">
+      <input id="q" placeholder="Szukaj: Polska, Argentyna, finał, stadion…" />
+      <select id="phase"><option value="">Wszystkie fazy</option></select>
+      <select id="channel"><option value="">Wszystkie kanały</option></select>
+      <input id="date" type="date" />
+      <button id="reset">Reset</button>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <div class="stats"><span class="stat" id="count"></span><span class="stat">Czas: Europe/Warsaw</span><span class="stat">Źródło transmisji: TVP / TVP Sport</span></div>
+    <div id="list"></div>
+  </main>
+
+  <script src="matches.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+    const fmtDay = new Intl.DateTimeFormat('pl-PL',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    const fmtTime = new Intl.DateTimeFormat('pl-PL',{hour:'2-digit',minute:'2-digit'});
+    const phases = [...new Set(MATCHES.map(m=>m.phase))];
+    const channels = [...new Set(MATCHES.flatMap(m=>m.broadcast.split(',').map(x=>x.trim()).filter(Boolean)))];
+    phases.forEach(v=>$('phase').insertAdjacentHTML('beforeend',`<option>${v}</option>`));
+    channels.forEach(v=>$('channel').insertAdjacentHTML('beforeend',`<option>${v}</option>`));
+    function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+    function render(){
+      const q=$('q').value.trim().toLowerCase(), phase=$('phase').value, channel=$('channel').value, date=$('date').value;
+      let rows=MATCHES.filter(m=>{
+        const hay=[m.summary,m.description,m.location,m.phase,m.group,m.broadcast].join(' ').toLowerCase();
+        return (!q||hay.includes(q)) && (!phase||m.phase===phase) && (!channel||m.broadcast.includes(channel)) && (!date||m.dateTime.slice(0,10)===date);
+      });
+      $('count').textContent=`Mecze: ${rows.length} / ${MATCHES.length}`;
+      if(!rows.length){$('list').innerHTML='<div class="empty">Brak meczów dla wybranych filtrów.</div>';return;}
+      const groups={}; rows.forEach(m=>{(groups[m.dateTime.slice(0,10)] ||= []).push(m)});
+      $('list').innerHTML=Object.entries(groups).map(([day,ms])=>{
+        const d=new Date(ms[0].dateTime);
+        return `<h2 class="day">${fmtDay.format(d)}</h2><div class="grid">`+ms.map(m=>{
+          const dd=new Date(m.dateTime);
+          return `<article class="card"><div class="top"><div class="time">${fmtTime.format(dd)}</div><span class="pill">${esc(m.phase)}</span></div><div class="title">${esc(m.summary)}</div><div class="meta">${m.group?`<span class="pill">${esc(m.group)}</span>`:''}<span class="pill channel">${esc(m.broadcast)}</span></div><div class="small">📍 ${esc(m.location)}</div></article>`
+        }).join('')+'</div>'
+      }).join('');
+    }
+    ['q','phase','channel','date'].forEach(id=>$(id).addEventListener('input',render));
+    $('reset').addEventListener('click',()=>{['q','phase','channel','date'].forEach(id=>$(id).value='');render();});
+    render();
+  </script>
+</body>
+</html>

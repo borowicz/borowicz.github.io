@@ -1,0 +1,1274 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ChatGPT//Terminarz MS 2026 TVP//PL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Mistrzostwa Świata 2026 - wszystkie mecze TVP
+X-WR-TIMEZONE:Europe/Warsaw
+BEGIN:VTIMEZONE
+TZID:Europe/Warsaw
+X-LIC-LOCATION:Europe/Warsaw
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:ms2026-001@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260611T210000
+DTEND;TZID=Europe/Warsaw:20260611T230000
+SUMMARY:MŚ 2026: Meksyk – RPA
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Mexico City\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Mexico City\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-002@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260612T040000
+DTEND;TZID=Europe/Warsaw:20260612T060000
+SUMMARY:MŚ 2026: Korea Południowa – Czechy
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Guadalajara\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Guadalajara\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-003@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260612T210000
+DTEND;TZID=Europe/Warsaw:20260612T230000
+SUMMARY:MŚ 2026: Kanada – Bośnia i Hercegowina
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Toronto\, Kanada. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Toronto\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-004@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260613T030000
+DTEND;TZID=Europe/Warsaw:20260613T050000
+SUMMARY:MŚ 2026: USA – Paragwaj
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-005@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260613T210000
+DTEND;TZID=Europe/Warsaw:20260613T230000
+SUMMARY:MŚ 2026: Katar – Szwajcaria
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-006@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260614T000000
+DTEND;TZID=Europe/Warsaw:20260614T020000
+SUMMARY:MŚ 2026: Brazylia – Maroko
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-007@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260614T030000
+DTEND;TZID=Europe/Warsaw:20260614T050000
+SUMMARY:MŚ 2026: Haiti – Szkocja
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-008@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260614T060000
+DTEND;TZID=Europe/Warsaw:20260614T080000
+SUMMARY:MŚ 2026: Australia – Turcja
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-009@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260614T190000
+DTEND;TZID=Europe/Warsaw:20260614T210000
+SUMMARY:MŚ 2026: Niemcy – Curaçao
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-010@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260614T220000
+DTEND;TZID=Europe/Warsaw:20260615T000000
+SUMMARY:MŚ 2026: Holandia – Japonia
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-011@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260615T010000
+DTEND;TZID=Europe/Warsaw:20260615T030000
+SUMMARY:MŚ 2026: WKS – Ekwador
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-012@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260615T040000
+DTEND;TZID=Europe/Warsaw:20260615T060000
+SUMMARY:MŚ 2026: Szwecja – Tunezja
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Monterrey\, Meksyk. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Monterrey\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-013@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260615T180000
+DTEND;TZID=Europe/Warsaw:20260615T200000
+SUMMARY:MŚ 2026: Hiszpania – Republika Zielonego Przylądka
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-014@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260615T210000
+DTEND;TZID=Europe/Warsaw:20260615T230000
+SUMMARY:MŚ 2026: Belgia – Egipt
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-015@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260616T000000
+DTEND;TZID=Europe/Warsaw:20260616T020000
+SUMMARY:MŚ 2026: Arabia Saudyjska – Urugwaj
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; plan
+  transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (E
+ urope/Warsaw).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-016@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260616T030000
+DTEND;TZID=Europe/Warsaw:20260616T050000
+SUMMARY:MŚ 2026: Iran – Nowa Zelandia
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-017@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260616T210000
+DTEND;TZID=Europe/Warsaw:20260616T230000
+SUMMARY:MŚ 2026: Francja – Senegal
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-018@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260617T000000
+DTEND;TZID=Europe/Warsaw:20260617T020000
+SUMMARY:MŚ 2026: Irak – Norwegia
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-019@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260617T030000
+DTEND;TZID=Europe/Warsaw:20260617T050000
+SUMMARY:MŚ 2026: Argentyna – Algieria
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-020@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260617T060000
+DTEND;TZID=Europe/Warsaw:20260617T080000
+SUMMARY:MŚ 2026: Austria – Jordania
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-021@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260617T190000
+DTEND;TZID=Europe/Warsaw:20260617T210000
+SUMMARY:MŚ 2026: Portugalia – DR Konga
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-022@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260617T220000
+DTEND;TZID=Europe/Warsaw:20260618T000000
+SUMMARY:MŚ 2026: Anglia – Chorwacja
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-023@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260618T010000
+DTEND;TZID=Europe/Warsaw:20260618T030000
+SUMMARY:MŚ 2026: Ghana – Panama
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-024@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260618T040000
+DTEND;TZID=Europe/Warsaw:20260618T060000
+SUMMARY:MŚ 2026: Uzbekistan – Kolumbia
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Mexico City\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Mexico City\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-025@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260618T180000
+DTEND;TZID=Europe/Warsaw:20260618T200000
+SUMMARY:MŚ 2026: Czechy – RPA
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-026@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260618T210000
+DTEND;TZID=Europe/Warsaw:20260618T230000
+SUMMARY:MŚ 2026: Szwajcaria – Bośnia i Hercegowina
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-027@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260619T000000
+DTEND;TZID=Europe/Warsaw:20260619T020000
+SUMMARY:MŚ 2026: Kanada – Katar
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-028@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260619T030000
+DTEND;TZID=Europe/Warsaw:20260619T050000
+SUMMARY:MŚ 2026: Meksyk – Korea Południowa
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Guadalajara\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Guadalajara\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-029@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260619T210000
+DTEND;TZID=Europe/Warsaw:20260619T230000
+SUMMARY:MŚ 2026: USA – Australia
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-030@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260620T000000
+DTEND;TZID=Europe/Warsaw:20260620T020000
+SUMMARY:MŚ 2026: Szkocja – Maroko
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-031@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260620T023000
+DTEND;TZID=Europe/Warsaw:20260620T043000
+SUMMARY:MŚ 2026: Brazylia – Haiti
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-032@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260620T050000
+DTEND;TZID=Europe/Warsaw:20260620T070000
+SUMMARY:MŚ 2026: Turcja – Paragwaj
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-033@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260620T190000
+DTEND;TZID=Europe/Warsaw:20260620T210000
+SUMMARY:MŚ 2026: Holandia – Szwecja
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-034@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260620T220000
+DTEND;TZID=Europe/Warsaw:20260621T000000
+SUMMARY:MŚ 2026: Niemcy – WKS
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Toronto\, Kanada. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Toronto\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-035@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260621T020000
+DTEND;TZID=Europe/Warsaw:20260621T040000
+SUMMARY:MŚ 2026: Ekwador – Curaçao
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-036@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260621T060000
+DTEND;TZID=Europe/Warsaw:20260621T080000
+SUMMARY:MŚ 2026: Tunezja – Japonia
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Monterrey\, Meksyk. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Monterrey\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-037@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260621T180000
+DTEND;TZID=Europe/Warsaw:20260621T200000
+SUMMARY:MŚ 2026: Hiszpania – Arabia Saudyjska
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-038@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260621T210000
+DTEND;TZID=Europe/Warsaw:20260621T230000
+SUMMARY:MŚ 2026: Belgia – Iran
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-039@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260622T000000
+DTEND;TZID=Europe/Warsaw:20260622T020000
+SUMMARY:MŚ 2026: Urugwaj – Republika Zielonego Przylądka
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; plan
+  transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (E
+ urope/Warsaw).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-040@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260622T030000
+DTEND;TZID=Europe/Warsaw:20260622T050000
+SUMMARY:MŚ 2026: Nowa Zelandia – Egipt
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-041@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260622T190000
+DTEND;TZID=Europe/Warsaw:20260622T210000
+SUMMARY:MŚ 2026: Argentyna – Austria
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-042@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260622T230000
+DTEND;TZID=Europe/Warsaw:20260623T010000
+SUMMARY:MŚ 2026: Francja – Irak
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-043@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260623T020000
+DTEND;TZID=Europe/Warsaw:20260623T040000
+SUMMARY:MŚ 2026: Norwegia – Senegal
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-044@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260623T050000
+DTEND;TZID=Europe/Warsaw:20260623T070000
+SUMMARY:MŚ 2026: Jordania – Algieria
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-045@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260623T190000
+DTEND;TZID=Europe/Warsaw:20260623T210000
+SUMMARY:MŚ 2026: Portugalia – Uzbekistan
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-046@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260623T220000
+DTEND;TZID=Europe/Warsaw:20260624T000000
+SUMMARY:MŚ 2026: Anglia – Ghana
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-047@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260624T010000
+DTEND;TZID=Europe/Warsaw:20260624T030000
+SUMMARY:MŚ 2026: Panama – Chorwacja
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Toronto\, Kanada. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Toronto\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-048@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260624T040000
+DTEND;TZID=Europe/Warsaw:20260624T060000
+SUMMARY:MŚ 2026: Kolumbia – DR Konga
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Guadalajara\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Guadalajara\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-049@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260624T210000
+DTEND;TZID=Europe/Warsaw:20260624T230000
+SUMMARY:MŚ 2026: Szwajcaria – Kanada
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-050@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260624T210000
+DTEND;TZID=Europe/Warsaw:20260624T230000
+SUMMARY:MŚ 2026: Bośnia i Hercegowina – Katar
+DESCRIPTION:Faza grupowa - Grupa B. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-051@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T000000
+DTEND;TZID=Europe/Warsaw:20260625T020000
+SUMMARY:MŚ 2026: Maroko – Haiti
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-052@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T000000
+DTEND;TZID=Europe/Warsaw:20260625T020000
+SUMMARY:MŚ 2026: Szkocja – Brazylia
+DESCRIPTION:Faza grupowa - Grupa C. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; plan transmisji 
+ TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe/Warsaw
+ ).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-053@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T030000
+DTEND;TZID=Europe/Warsaw:20260625T050000
+SUMMARY:MŚ 2026: RPA – Korea Południowa
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Monterrey\, Meksyk. Źródła: terminarz FIFA/Sky Sports\; plan
+  transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (E
+ urope/Warsaw).
+LOCATION:Monterrey\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-054@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T030000
+DTEND;TZID=Europe/Warsaw:20260625T050000
+SUMMARY:MŚ 2026: Czechy – Meksyk
+DESCRIPTION:Faza grupowa - Grupa A. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Mexico City\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Mexico City\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-055@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T220000
+DTEND;TZID=Europe/Warsaw:20260626T000000
+SUMMARY:MŚ 2026: Curaçao – WKS
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\; plan t
+ ransmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eur
+ ope/Warsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-056@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260625T220000
+DTEND;TZID=Europe/Warsaw:20260626T000000
+SUMMARY:MŚ 2026: Ekwador – Niemcy
+DESCRIPTION:Faza grupowa - Grupa E. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\; plan transm
+ isji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe/W
+ arsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-057@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T010000
+DTEND;TZID=Europe/Warsaw:20260626T030000
+SUMMARY:MŚ 2026: Japonia – Szwecja
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-058@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T010000
+DTEND;TZID=Europe/Warsaw:20260626T030000
+SUMMARY:MŚ 2026: Tunezja – Holandia
+DESCRIPTION:Faza grupowa - Grupa F. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Sports\; plan 
+ transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eu
+ rope/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-059@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T040000
+DTEND;TZID=Europe/Warsaw:20260626T060000
+SUMMARY:MŚ 2026: Paragwaj – Australia
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\; plan 
+ transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eu
+ rope/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-060@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T040000
+DTEND;TZID=Europe/Warsaw:20260626T060000
+SUMMARY:MŚ 2026: Turcja – USA
+DESCRIPTION:Faza grupowa - Grupa D. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\; plan trans
+ misji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe/
+ Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-061@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T210000
+DTEND;TZID=Europe/Warsaw:20260626T230000
+SUMMARY:MŚ 2026: Norwegia – Francja
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-062@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260626T210000
+DTEND;TZID=Europe/Warsaw:20260626T230000
+SUMMARY:MŚ 2026: Senegal – Irak
+DESCRIPTION:Faza grupowa - Grupa I. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Toronto\, Kanada. Źródła: terminarz FIFA/Sky Sports\; plan t
+ ransmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eur
+ ope/Warsaw).
+LOCATION:Toronto\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-063@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T020000
+DTEND;TZID=Europe/Warsaw:20260627T040000
+SUMMARY:MŚ 2026: Republika Zielonego Przylądka – Arabia Saudyjska
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-064@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T020000
+DTEND;TZID=Europe/Warsaw:20260627T040000
+SUMMARY:MŚ 2026: Urugwaj – Hiszpania
+DESCRIPTION:Faza grupowa - Grupa H. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Guadalajara\, Meksyk. Źródła: terminarz FIFA/Sky Sports\; plan tr
+ ansmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Euro
+ pe/Warsaw).
+LOCATION:Guadalajara\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-065@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T050000
+DTEND;TZID=Europe/Warsaw:20260627T070000
+SUMMARY:MŚ 2026: Egipt – Iran
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-066@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T050000
+DTEND;TZID=Europe/Warsaw:20260627T070000
+SUMMARY:MŚ 2026: Nowa Zelandia – Belgia
+DESCRIPTION:Faza grupowa - Grupa G. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-067@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T230000
+DTEND;TZID=Europe/Warsaw:20260628T010000
+SUMMARY:MŚ 2026: Chorwacja – Ghana
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\; plan transm
+ isji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe/W
+ arsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-068@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260627T230000
+DTEND;TZID=Europe/Warsaw:20260628T010000
+SUMMARY:MŚ 2026: Panama – Anglia
+DESCRIPTION:Faza grupowa - Grupa L. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\; plan t
+ ransmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eur
+ ope/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-069@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260628T013000
+DTEND;TZID=Europe/Warsaw:20260628T033000
+SUMMARY:MŚ 2026: DR Konga – Uzbekistan
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; plan tran
+ smisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe
+ /Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-070@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260628T013000
+DTEND;TZID=Europe/Warsaw:20260628T033000
+SUMMARY:MŚ 2026: Kolumbia – Portugalia
+DESCRIPTION:Faza grupowa - Grupa K. Transmisja: TVP1\, TVPSPORT.PL. Miejs
+ ce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; plan transmisji 
+ TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Europe/Warsaw
+ ).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-071@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260628T040000
+DTEND;TZID=Europe/Warsaw:20260628T060000
+SUMMARY:MŚ 2026: Algieria – Austria
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP SPORT\, TVPSPORT.PL. 
+ Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Sports\; plan 
+ transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (Eu
+ rope/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-072@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260628T040000
+DTEND;TZID=Europe/Warsaw:20260628T060000
+SUMMARY:MŚ 2026: Jordania – Argentyna
+DESCRIPTION:Faza grupowa - Grupa J. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-073@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260628T210000
+DTEND;TZID=Europe/Warsaw:20260629T000000
+SUMMARY:MŚ 2026: 2A – 2B
+DESCRIPTION:1/16 finału - Mecz 73. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-074@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260629T190000
+DTEND;TZID=Europe/Warsaw:20260629T220000
+SUMMARY:MŚ 2026: 1C – 2F
+DESCRIPTION:1/16 finału - Mecz 76. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-075@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260629T223000
+DTEND;TZID=Europe/Warsaw:20260630T013000
+SUMMARY:MŚ 2026: 1E – 3ABCDF
+DESCRIPTION:1/16 finału - Mecz 74. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-076@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260630T030000
+DTEND;TZID=Europe/Warsaw:20260630T060000
+SUMMARY:MŚ 2026: 1F – 2C
+DESCRIPTION:1/16 finału - Mecz 75. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Monterrey\, Meksyk. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Monterrey\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-077@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260630T190000
+DTEND;TZID=Europe/Warsaw:20260630T220000
+SUMMARY:MŚ 2026: 2E – 2I
+DESCRIPTION:1/16 finału - Mecz 78. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-078@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260630T230000
+DTEND;TZID=Europe/Warsaw:20260701T020000
+SUMMARY:MŚ 2026: 1I – 3CDFGH
+DESCRIPTION:1/16 finału - Mecz 77. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-079@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260701T030000
+DTEND;TZID=Europe/Warsaw:20260701T060000
+SUMMARY:MŚ 2026: 1A – 3CEFHI
+DESCRIPTION:1/16 finału - Mecz 79. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Mexico City\, Meksyk. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Mexico City\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-080@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260701T180000
+DTEND;TZID=Europe/Warsaw:20260701T210000
+SUMMARY:MŚ 2026: 1L – 3EHIJK
+DESCRIPTION:1/16 finału - Mecz 80. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-081@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260701T220000
+DTEND;TZID=Europe/Warsaw:20260702T010000
+SUMMARY:MŚ 2026: 1G – 3AEHIJ
+DESCRIPTION:1/16 finału - Mecz 82. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-082@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260702T020000
+DTEND;TZID=Europe/Warsaw:20260702T050000
+SUMMARY:MŚ 2026: 1D – 3BEFIJ
+DESCRIPTION:1/16 finału - Mecz 81. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Santa Clara\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Santa Clara\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-083@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260702T210000
+DTEND;TZID=Europe/Warsaw:20260703T000000
+SUMMARY:MŚ 2026: 1H – 2J
+DESCRIPTION:1/16 finału - Mecz 84. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-084@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260703T010000
+DTEND;TZID=Europe/Warsaw:20260703T040000
+SUMMARY:MŚ 2026: 2K – 2L
+DESCRIPTION:1/16 finału - Mecz 83. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Toronto\, Kanada. Źródła: terminarz FIFA/Sky Sports\;
+  plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pols
+ ki (Europe/Warsaw).
+LOCATION:Toronto\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-085@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260703T050000
+DTEND;TZID=Europe/Warsaw:20260703T080000
+SUMMARY:MŚ 2026: 1B – 3EFGIJ
+DESCRIPTION:1/16 finału - Mecz 85. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports
+ \; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Po
+ lski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-086@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260703T200000
+DTEND;TZID=Europe/Warsaw:20260703T230000
+SUMMARY:MŚ 2026: 2D – 2G
+DESCRIPTION:1/16 finału - Mecz 88. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-087@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260704T000000
+DTEND;TZID=Europe/Warsaw:20260704T030000
+SUMMARY:MŚ 2026: 1J – 2H
+DESCRIPTION:1/16 finału - Mecz 86. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; plan
+  transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (E
+ urope/Warsaw).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-088@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260704T033000
+DTEND;TZID=Europe/Warsaw:20260704T063000
+SUMMARY:MŚ 2026: 1K – 3DEIJL
+DESCRIPTION:1/16 finału - Mecz 87. Transmisja: TVP2\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-089@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260704T190000
+DTEND;TZID=Europe/Warsaw:20260704T220000
+SUMMARY:MŚ 2026: 2A/2B – 1F/2C
+DESCRIPTION:1/8 finału - Mecz 90. Transmisja: TVP1\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Houston\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Houston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-090@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260704T230000
+DTEND;TZID=Europe/Warsaw:20260705T020000
+SUMMARY:MŚ 2026: 1E/3ABCDF – 1I/3CDFGH
+DESCRIPTION:1/8 finału - Mecz 89. Transmisja: TVP1\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Filadelfia\, USA. Źródła: terminarz FIFA/Sky Sports\; 
+ plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polsk
+ i (Europe/Warsaw).
+LOCATION:Filadelfia\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-091@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260705T220000
+DTEND;TZID=Europe/Warsaw:20260706T010000
+SUMMARY:MŚ 2026: 1C/2F – 2E/2I
+DESCRIPTION:1/8 finału - Mecz 91. Transmisja: TVP1\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: East Rutherford / New Jersey\, USA. Źródła: terminarz 
+ FIFA/Sky Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godz
+ iny w czasie Polski (Europe/Warsaw).
+LOCATION:East Rutherford / New Jersey\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-092@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260706T020000
+DTEND;TZID=Europe/Warsaw:20260706T050000
+SUMMARY:MŚ 2026: 1A/3CEFHI – 1L/3EHIJK
+DESCRIPTION:1/8 finału - Mecz 92. Transmisja: TVP2\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Mexico City\, Meksyk. Źródła: terminarz FIFA/Sky Sport
+ s\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie P
+ olski (Europe/Warsaw).
+LOCATION:Mexico City\, Meksyk
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-093@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260706T210000
+DTEND;TZID=Europe/Warsaw:20260707T000000
+SUMMARY:MŚ 2026: 2K/2L – 1H/2J
+DESCRIPTION:1/8 finału - Mecz 93. Transmisja: TVP1\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky S
+ ports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czas
+ ie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-094@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260707T020000
+DTEND;TZID=Europe/Warsaw:20260707T050000
+SUMMARY:MŚ 2026: 1D/3BEFIJ – 1G/3AEHIJ
+DESCRIPTION:1/8 finału - Mecz 94. Transmisja: TVP2\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Seattle\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Seattle\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-095@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260707T180000
+DTEND;TZID=Europe/Warsaw:20260707T210000
+SUMMARY:MŚ 2026: 1J/2H – 2D/2G
+DESCRIPTION:1/8 finału - Mecz 95. Transmisja: TVP2\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pla
+ n transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (
+ Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-096@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260707T220000
+DTEND;TZID=Europe/Warsaw:20260708T010000
+SUMMARY:MŚ 2026: 1B/3EFGIJ – 1K/3DEIJL
+DESCRIPTION:1/8 finału - Mecz 96. Transmisja: TVP1\, TVP SPORT\, TVPSPOR
+ T.PL. Miejsce: Vancouver\, Kanada. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Vancouver\, Kanada
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-097@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260709T220000
+DTEND;TZID=Europe/Warsaw:20260710T010000
+SUMMARY:MŚ 2026: #1 – #2
+DESCRIPTION:Ćwierćfinał - Mecz 97. Transmisja: TVP1\, TVP SPORT\, TVPS
+ PORT.PL. Miejsce: Boston\, USA. Źródła: terminarz FIFA/Sky Sports\; p
+ lan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski
+  (Europe/Warsaw).
+LOCATION:Boston\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-098@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260710T210000
+DTEND;TZID=Europe/Warsaw:20260711T000000
+SUMMARY:MŚ 2026: #5 – #6
+DESCRIPTION:Ćwierćfinał - Mecz 98. Transmisja: TVP1\, TVP SPORT\, TVPS
+ PORT.PL. Miejsce: Los Angeles\, USA. Źródła: terminarz FIFA/Sky Sport
+ s\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie P
+ olski (Europe/Warsaw).
+LOCATION:Los Angeles\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-099@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260711T230000
+DTEND;TZID=Europe/Warsaw:20260712T020000
+SUMMARY:MŚ 2026: #3 – #4
+DESCRIPTION:Ćwierćfinał - Mecz 99. Transmisja: TVP1\, TVP SPORT\, TVPS
+ PORT.PL. Miejsce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-100@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260712T030000
+DTEND;TZID=Europe/Warsaw:20260712T060000
+SUMMARY:MŚ 2026: #7 – #8
+DESCRIPTION:Ćwierćfinał - Mecz 100. Transmisja: TVP1\, TVP SPORT\, TVP
+ SPORT.PL. Miejsce: Kansas City\, USA. Źródła: terminarz FIFA/Sky Spor
+ ts\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie 
+ Polski (Europe/Warsaw).
+LOCATION:Kansas City\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-101@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260714T210000
+DTEND;TZID=Europe/Warsaw:20260715T000000
+SUMMARY:MŚ 2026: #1 – #2
+DESCRIPTION:Półfinał - Mecz 101. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Dallas / Arlington\, USA. Źródła: terminarz FIFA/Sky 
+ Sports\; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w cza
+ sie Polski (Europe/Warsaw).
+LOCATION:Dallas / Arlington\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-102@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260715T210000
+DTEND;TZID=Europe/Warsaw:20260716T000000
+SUMMARY:MŚ 2026: #3 – #4
+DESCRIPTION:Półfinał - Mecz 102. Transmisja: TVP1\, TVP SPORT\, TVPSPO
+ RT.PL. Miejsce: Atlanta\, USA. Źródła: terminarz FIFA/Sky Sports\; pl
+ an transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski 
+ (Europe/Warsaw).
+LOCATION:Atlanta\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-103@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260718T230000
+DTEND;TZID=Europe/Warsaw:20260719T020000
+SUMMARY:MŚ 2026: Mecz o 3. miejsce
+DESCRIPTION:Mecz o 3. miejsce - Mecz 103. Transmisja: TVP1\, TVP SPORT\, 
+ TVPSPORT.PL. Miejsce: Miami\, USA. Źródła: terminarz FIFA/Sky Sports\
+ ; plan transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Pol
+ ski (Europe/Warsaw).
+LOCATION:Miami\, USA
+END:VEVENT
+BEGIN:VEVENT
+UID:ms2026-104@chatgpt.local
+DTSTAMP:20260611T160000Z
+DTSTART;TZID=Europe/Warsaw:20260719T210000
+DTEND;TZID=Europe/Warsaw:20260720T000000
+SUMMARY:MŚ 2026: Finał mistrzostw świata
+DESCRIPTION:Finał - Mecz 104. Transmisja: TVP1\, TVP SPORT\, TVPSPORT.PL
+ . Miejsce: New Jersey\, USA. Źródła: terminarz FIFA/Sky Sports\; plan
+  transmisji TVP za Wirtualne Media/TVP Sport. Godziny w czasie Polski (E
+ urope/Warsaw).
+LOCATION:New Jersey\, USA
+END:VEVENT
+END:VCALENDAR
