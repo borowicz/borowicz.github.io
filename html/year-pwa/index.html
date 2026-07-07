@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Year Progress</title>
+
+    <meta name="theme-color" content="#090909" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Year Progress" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <style>
+        :root {
+            --bg: #070707;
+            --panel: #111;
+            --panel-border: #242424;
+            --text: #ededed;
+            --muted: #8f8f8f;
+            --dot-past: #d8d8d8;
+            --dot-future: #202020;
+            --dot-border: #343434;
+            --today: #ffffff;
+            --holiday: #f2b35e;
+            --progress: #e9e9e9;
+            --progress-bg: #222;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 34%),
+                    radial-gradient(circle at 20% 75%, rgba(255,255,255,0.04), transparent 28%),
+                    var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 34px 22px 44px;
+        }
+
+        .app {
+            width: min(1080px, 100%);
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 26px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 26px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        select,
+        button {
+            background: #111;
+            color: var(--text);
+            border: 1px solid #2d2d2d;
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:hover,
+        select:hover {
+            border-color: #555;
+        }
+
+        .year {
+            letter-spacing: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: clamp(42px, 7vw, 72px);
+            font-weight: 850;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .meta {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .progress-box {
+            width: min(620px, 100%);
+            margin: 24px auto 0;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            height: 8px;
+            background: var(--progress-bg);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--progress);
+            border-radius: inherit;
+            box-shadow: 0 0 18px rgba(255,255,255,0.42);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .month {
+            background: rgba(17,17,17,0.74);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 18px;
+            min-height: 208px;
+            box-shadow:
+                    0 18px 42px rgba(0,0,0,0.32),
+                    inset 0 0 18px rgba(255,255,255,0.015);
+        }
+
+        .month.current {
+            border-color: rgba(255,255,255,0.36);
+            box-shadow:
+                    0 0 26px rgba(255,255,255,0.08),
+                    0 18px 42px rgba(0,0,0,0.42);
+        }
+
+        .month-name {
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 13px;
+            font-weight: 850;
+            margin-bottom: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .month.current .month-name {
+            color: var(--text);
+        }
+
+        .weekdays,
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 7px;
+        }
+
+        .weekdays {
+            margin-bottom: 8px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-size: 9px;
+            color: #5f5f5f;
+            font-weight: 800;
+        }
+
+        .empty,
+        .day {
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+        }
+
+        .day {
+            background: var(--dot-future);
+            border: 1px solid var(--dot-border);
+            color: transparent;
+            cursor: default;
+            position: relative;
+        }
+
+        .day.past {
+            background: var(--dot-past);
+            border-color: transparent;
+            box-shadow: inset 0 0 8px rgba(255,255,255,0.24);
+        }
+
+        .day.today {
+            background: var(--today);
+            border-color: #fff;
+            box-shadow:
+                    0 0 16px rgba(255,255,255,0.9),
+                    0 0 38px rgba(255,255,255,0.28);
+            z-index: 2;
+        }
+
+        .day.holiday {
+            border: 2px solid var(--holiday);
+        }
+
+        .day.weekend:not(.past):not(.today) {
+            background: #262626;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 26px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--dot-future);
+            border: 1px solid var(--dot-border);
+        }
+
+        .sample.past {
+            background: var(--dot-past);
+            border: none;
+        }
+
+        .sample.today {
+            background: var(--today);
+            box-shadow: 0 0 12px rgba(255,255,255,0.75);
+        }
+
+        .sample.holiday {
+            border: 2px solid var(--holiday);
+        }
+
+        @media (max-width: 920px) {
+            .calendar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 24px 12px 34px;
+            }
+
+            .calendar {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .month {
+                min-height: auto;
+            }
+
+            .year {
+                letter-spacing: 8px;
+            }
+
+            .topbar {
+                justify-content: stretch;
+            }
+
+            select,
+            button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="app">
+    <header>
+        <div class="topbar">
+            <select id="localeSelect" title="Language / region">
+                <option value="pl-PL">Polski — Polska</option>
+                <option value="en-US">English — United States</option>
+                <option value="de-DE">Deutsch — Deutschland</option>
+                <option value="fr-FR">Français — France</option>
+                <option value="es-ES">Español — España</option>
+            </select>
+
+            <select id="yearSelect" title="Year"></select>
+
+            <button id="installBtn" hidden>Install</button>
+        </div>
+
+        <div class="year" id="yearLabel"></div>
+        <div class="date" id="dateLabel"></div>
+        <div class="meta" id="metaLabel"></div>
+
+        <div class="progress-box">
+            <div class="progress-labels">
+                <span id="progressStart"></span>
+                <span id="progressPercent"></span>
+                <span id="progressEnd"></span>
+            </div>
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="calendar" id="calendar"></section>
+
+    <section class="legend" id="legend"></section>
+</main>
+
+<script>
+    const app = {
+        today: new Date(),
+        locale: localStorage.getItem("year.locale") || navigator.language || "pl-PL",
+        year: Number(localStorage.getItem("year.year")) || new Date().getFullYear(),
+        deferredPrompt: null
+    };
+
+    const supportedLocales = ["pl-PL", "en-US", "de-DE", "fr-FR", "es-ES"];
+
+    if (!supportedLocales.includes(app.locale)) {
+        const base = app.locale.slice(0, 2);
+        app.locale =
+            base === "pl" ? "pl-PL" :
+                base === "de" ? "de-DE" :
+                    base === "fr" ? "fr-FR" :
+                        base === "es" ? "es-ES" :
+                            "en-US";
+    }
+
+    const config = {
+        "pl-PL": {
+            weekStartsOn: 1,
+            labels: {
+                day: "dzień",
+                of: "z",
+                yearProgress: "postęp roku",
+                past: "minione dni",
+                today: "dzisiaj",
+                future: "przyszłe dni",
+                holiday: "święto",
+                weekend: "weekend"
+            },
+            weekdays: ["PN", "WT", "ŚR", "CZ", "PT", "SO", "ND"]
+        },
+        "en-US": {
+            weekStartsOn: 0,
+            labels: {
+                day: "day",
+                of: "of",
+                yearProgress: "year progress",
+                past: "past days",
+                today: "today",
+                future: "future days",
+                holiday: "holiday",
+                weekend: "weekend"
+            },
+            weekdays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+        },
+        "de-DE": {
+            weekStartsOn: 1,
+            labels: {
+                day: "Tag",
+                of: "von",
+                yearProgress: "Jahresfortschritt",
+                past: "vergangene Tage",
+                today: "heute",
+                future: "zukünftige Tage",
+                holiday: "Feiertag",
+                weekend: "Wochenende"
+            },
+            weekdays: ["MO", "DI", "MI", "DO", "FR", "SA", "SO"]
+        },
+        "fr-FR": {
+            weekStartsOn: 1,
+            labels: {
+                day: "jour",
+                of: "sur",
+                yearProgress: "progression de l’année",
+                past: "jours passés",
+                today: "aujourd’hui",
+                future: "jours futurs",
+                holiday: "jour férié",
+                weekend: "week-end"
+            },
+            weekdays: ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"]
+        },
+        "es-ES": {
+            weekStartsOn: 1,
+            labels: {
+                day: "día",
+                of: "de",
+                yearProgress: "progreso del año",
+                past: "días pasados",
+                today: "hoy",
+                future: "días futuros",
+                holiday: "festivo",
+                weekend: "fin de semana"
+            },
+            weekdays: ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"]
+        }
+    };
+
+    const els = {
+        calendar: document.getElementById("calendar"),
+        localeSelect: document.getElementById("localeSelect"),
+        yearSelect: document.getElementById("yearSelect"),
+        installBtn: document.getElementById("installBtn"),
+        yearLabel: document.getElementById("yearLabel"),
+        dateLabel: document.getElementById("dateLabel"),
+        metaLabel: document.getElementById("metaLabel"),
+        progressStart: document.getElementById("progressStart"),
+        progressPercent: document.getElementById("progressPercent"),
+        progressEnd: document.getElementById("progressEnd"),
+        progressFill: document.getElementById("progressFill"),
+        legend: document.getElementById("legend")
+    };
+
+    init();
+
+    function init() {
+        setupControls();
+        setupPwaInstall();
+        render();
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./sw.js");
+        }
+    }
+
+    function setupControls() {
+        els.localeSelect.value = app.locale;
+
+        const currentYear = app.today.getFullYear();
+
+        for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+            const option = document.createElement("option");
+            option.value = y;
+            option.textContent = y;
+            els.yearSelect.appendChild(option);
+        }
+
+        els.yearSelect.value = app.year;
+
+        els.localeSelect.addEventListener("change", () => {
+            app.locale = els.localeSelect.value;
+            localStorage.setItem("year.locale", app.locale);
+            render();
+        });
+
+        els.yearSelect.addEventListener("change", () => {
+            app.year = Number(els.yearSelect.value);
+            localStorage.setItem("year.year", app.year);
+            render();
+        });
+    }
+
+    function setupPwaInstall() {
+        window.addEventListener("beforeinstallprompt", event => {
+            event.preventDefault();
+            app.deferredPrompt = event;
+            els.installBtn.hidden = false;
+        });
+
+        els.installBtn.addEventListener("click", async () => {
+            if (!app.deferredPrompt) return;
+            app.deferredPrompt.prompt();
+            await app.deferredPrompt.userChoice;
+            app.deferredPrompt = null;
+            els.installBtn.hidden = true;
+        });
+    }
+
+    function render() {
+        const c = config[app.locale];
+        const labels = c.labels;
+        const isCurrentYear = app.today.getFullYear() === app.year;
+        const currentMonth = isCurrentYear ? app.today.getMonth() : -1;
+        const currentDay = isCurrentYear ? app.today.getDate() : -1;
+        const totalDays = daysInYear(app.year);
+        const currentDayOfYear = isCurrentYear
+            ? dayOfYear(app.today)
+            : app.year < app.today.getFullYear()
+                ? totalDays
+                : 0;
+
+        const progress = Math.round((currentDayOfYear / totalDays) * 100);
+
+        els.yearLabel.textContent = String(app.year).split("").join(" ");
+
+        if (isCurrentYear) {
+            els.dateLabel.textContent = formatDate(app.today, {
+                month: "long",
+                day: "numeric"
+            });
+        } else {
+            els.dateLabel.textContent = app.year;
+        }
+
+        els.metaLabel.textContent =
+            `${labels.day} ${currentDayOfYear} ${labels.of} ${totalDays}`;
+
+        els.progressStart.textContent = "0%";
+        els.progressPercent.textContent = `${labels.yearProgress}: ${progress}%`;
+        els.progressEnd.textContent = "100%";
+        els.progressFill.style.width = `${progress}%`;
+
+        document.documentElement.lang = app.locale.slice(0, 2);
+
+        const holidays = getHolidays(app.year, app.locale);
+
+        els.calendar.innerHTML = "";
+
+        for (let month = 0; month < 12; month++) {
+            els.calendar.appendChild(
+                createMonth({
+                    year: app.year,
+                    month,
+                    currentMonth,
+                    currentDay,
+                    isCurrentYear,
+                    config: c,
+                    holidays
+                })
+            );
+        }
+
+        els.legend.innerHTML = `
+        <span><i class="sample past"></i>${labels.past}</span>
+        <span><i class="sample today"></i>${labels.today}</span>
+        <span><i class="sample"></i>${labels.future}</span>
+        <span><i class="sample holiday"></i>${labels.holiday}</span>
+      `;
+    }
+
+    function createMonth({
+                             year,
+                             month,
+                             currentMonth,
+                             currentDay,
+                             isCurrentYear,
+                             config,
+                             holidays
+                         }) {
+        const article = document.createElement("article");
+        article.className = "month";
+
+        if (month === currentMonth) {
+            article.classList.add("current");
+        }
+
+        const title = document.createElement("div");
+        title.className = "month-name";
+        title.textContent = formatDate(new Date(year, month, 1), {
+            month: "long"
+        });
+
+        const weekdays = document.createElement("div");
+        weekdays.className = "weekdays";
+
+        config.weekdays.forEach(name => {
+            const item = document.createElement("div");
+            item.className = "weekday";
+            item.textContent = name;
+            weekdays.appendChild(item);
+        });
+
+        const days = document.createElement("div");
+        days.className = "days";
+
+        const offset = firstDayOffset(year, month, config.weekStartsOn);
+        const total = daysInMonth(year, month);
+
+        for (let i = 0; i < offset; i++) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            days.appendChild(empty);
+        }
+
+        for (let day = 1; day <= total; day++) {
+            const date = new Date(year, month, day);
+            const key = dateKey(year, month, day);
+            const item = document.createElement("div");
+
+            item.className = "day";
+
+            const holidayName = holidays.get(key);
+            const weekend = isWeekend(date);
+
+            if (weekend) {
+                item.classList.add("weekend");
+            }
+
+            if (
+                isCurrentYear &&
+                (
+                    month < currentMonth ||
+                    (month === currentMonth && day < currentDay)
+                )
+            ) {
+                item.classList.add("past");
+            }
+
+            if (
+                isCurrentYear &&
+                month === currentMonth &&
+                day === currentDay
+            ) {
+                item.classList.add("today");
+            }
+
+            if (holidayName) {
+                item.classList.add("holiday");
+            }
+
+            item.title = buildTitle(date, holidayName, weekend, config.labels);
+            days.appendChild(item);
+        }
+
+        article.appendChild(title);
+        article.appendChild(weekdays);
+        article.appendChild(days);
+
+        return article;
+    }
+
+    function buildTitle(date, holidayName, weekend, labels) {
+        const parts = [
+            formatDate(date, {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            })
+        ];
+
+        parts.push(`${labels.day} ${dayOfYear(date)} ${labels.of} ${daysInYear(date.getFullYear())}`);
+
+        if (weekend) {
+            parts.push(labels.weekend);
+        }
+
+        if (holidayName) {
+            parts.push(`${labels.holiday}: ${holidayName}`);
+        }
+
+        return parts.join(" | ");
+    }
+
+    function formatDate(date, options) {
+        return new Intl.DateTimeFormat(app.locale, options).format(date);
+    }
+
+    function daysInMonth(year, month) {
+        return new Date(year, month + 1, 0).getDate();
+    }
+
+    function daysInYear(year) {
+        return isLeapYear(year) ? 366 : 365;
+    }
+
+    function isLeapYear(year) {
+        return new Date(year, 1, 29).getDate() === 29;
+    }
+
+    function dayOfYear(date) {
+        const start = new Date(date.getFullYear(), 0, 0);
+        const diff = date - start;
+        return Math.floor(diff / 86400000);
+    }
+
+    function firstDayOffset(year, month, weekStartsOn) {
+        const first = new Date(year, month, 1).getDay();
+        return (first - weekStartsOn + 7) % 7;
+    }
+
+    function dateKey(year, month, day) {
+        return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    }
+
+    function isWeekend(date) {
+        const d = date.getDay();
+        return d === 0 || d === 6;
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    function easterDate(year) {
+        const a = year % 19;
+        const b = Math.floor(year / 100);
+        const c = year % 100;
+        const d = Math.floor(b / 4);
+        const e = b % 4;
+        const f = Math.floor((b + 8) / 25);
+        const g = Math.floor((b - f + 1) / 3);
+        const h = (19 * a + b - d - g + 15) % 30;
+        const i = Math.floor(c / 4);
+        const k = c % 4;
+        const l = (32 + 2 * e + 2 * i - h - k) % 7;
+        const m = Math.floor((a + 11 * h + 22 * l) / 451);
+        const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+        const day = ((h + l - 7 * m + 114) % 31) + 1;
+
+        return new Date(year, month, day);
+    }
+
+    function nthWeekdayOfMonth(year, month, weekday, nth) {
+        const date = new Date(year, month, 1);
+        const offset = (weekday - date.getDay() + 7) % 7;
+        return new Date(year, month, 1 + offset + (nth - 1) * 7);
+    }
+
+    function lastWeekdayOfMonth(year, month, weekday) {
+        const date = new Date(year, month + 1, 0);
+        const offset = (date.getDay() - weekday + 7) % 7;
+        return new Date(year, month, date.getDate() - offset);
+    }
+
+    function observedFixedHoliday(year, month, day) {
+        const date = new Date(year, month, day);
+        const weekday = date.getDay();
+
+        if (weekday === 6) return addDays(date, -1);
+        if (weekday === 0) return addDays(date, 1);
+
+        return date;
+    }
+
+    function setHoliday(map, date, name) {
+        map.set(dateKey(date.getFullYear(), date.getMonth(), date.getDate()), name);
+    }
+
+    function getHolidays(year, locale) {
+        const map = new Map();
+        const easter = easterDate(year);
+
+        const add = (month, day, name) => {
+            map.set(dateKey(year, month - 1, day), name);
+        };
+
+        const addDate = (date, name) => {
+            setHoliday(map, date, name);
+        };
+
+        if (locale === "pl-PL") {
+            add(1, 1, "Nowy Rok");
+            add(1, 6, "Trzech Króli");
+            add(5, 1, "Święto Pracy");
+            add(5, 3, "Święto Konstytucji 3 Maja");
+            add(8, 15, "Wniebowzięcie NMP");
+            add(11, 1, "Wszystkich Świętych");
+            add(11, 11, "Święto Niepodległości");
+            add(12, 25, "Boże Narodzenie");
+            add(12, 26, "Drugi dzień świąt");
+
+            addDate(easter, "Wielkanoc");
+            addDate(addDays(easter, 1), "Poniedziałek Wielkanocny");
+            addDate(addDays(easter, 49), "Zielone Świątki");
+            addDate(addDays(easter, 60), "Boże Ciało");
+        }
+
+        if (locale === "en-US") {
+            addDate(observedFixedHoliday(year, 0, 1), "New Year's Day");
+            addDate(nthWeekdayOfMonth(year, 0, 1, 3), "Martin Luther King Jr. Day");
+            addDate(nthWeekdayOfMonth(year, 1, 1, 3), "Presidents' Day");
+            addDate(lastWeekdayOfMonth(year, 4, 1), "Memorial Day");
+            addDate(observedFixedHoliday(year, 5, 19), "Juneteenth");
+            addDate(observedFixedHoliday(year, 6, 4), "Independence Day");
+            addDate(nthWeekdayOfMonth(year, 8, 1, 1), "Labor Day");
+            addDate(nthWeekdayOfMonth(year, 9, 1, 2), "Columbus Day / Indigenous Peoples' Day");
+            addDate(observedFixedHoliday(year, 10, 11), "Veterans Day");
+            addDate(nthWeekdayOfMonth(year, 10, 4, 4), "Thanksgiving Day");
+            addDate(observedFixedHoliday(year, 11, 25), "Christmas Day");
+        }
+
+        if (locale === "de-DE") {
+            add(1, 1, "Neujahr");
+            add(5, 1, "Tag der Arbeit");
+            add(10, 3, "Tag der Deutschen Einheit");
+            add(12, 25, "Erster Weihnachtstag");
+            add(12, 26, "Zweiter Weihnachtstag");
+
+            addDate(addDays(easter, -2), "Karfreitag");
+            addDate(easter, "Ostersonntag");
+            addDate(addDays(easter, 1), "Ostermontag");
+            addDate(addDays(easter, 39), "Christi Himmelfahrt");
+            addDate(addDays(easter, 49), "Pfingstsonntag");
+            addDate(addDays(easter, 50), "Pfingstmontag");
+        }
+
+        if (locale === "fr-FR") {
+            add(1, 1, "Jour de l’an");
+            add(5, 1, "Fête du Travail");
+            add(5, 8, "Victoire 1945");
+            add(7, 14, "Fête nationale");
+            add(8, 15, "Assomption");
+            add(11, 1, "Toussaint");
+            add(11, 11, "Armistice 1918");
+            add(12, 25, "Noël");
+
+            addDate(addDays(easter, 1), "Lundi de Pâques");
+            addDate(addDays(easter, 39), "Ascension");
+            addDate(addDays(easter, 50), "Lundi de Pentecôte");
+        }
+
+        if (locale === "es-ES") {
+            add(1, 1, "Año Nuevo");
+            add(1, 6, "Epifanía del Señor");
+            add(5, 1, "Fiesta del Trabajo");
+            add(8, 15, "Asunción de la Virgen");
+            add(10, 12, "Fiesta Nacional de España");
+            add(11, 1, "Todos los Santos");
+            add(12, 6, "Día de la Constitución");
+            add(12, 8, "Inmaculada Concepción");
+            add(12, 25, "Navidad");
+
+            addDate(addDays(easter, -2), "Viernes Santo");
+        }
+
+        return map;
+    }
+</script>
+</body>
+</html>
