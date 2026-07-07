@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Year Progress</title>
 
-  <meta name="theme-color" content="#080808" />
+  <meta name="theme-color" content="#07130e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Year Progress" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -14,18 +14,19 @@
 
   <style>
     :root {
-      --bg: #080808;
-      --panel: #111;
-      --border: #242424;
-      --text: #e8e8e8;
-      --muted: #7d7d7d;
-      --past: #d9d9d9;
-      --future: #202020;
-      --future-border: #343434;
-      --today: #ffffff;
-      --holiday: #f0b35a;
-      --progress: #e8e8e8;
-      --progress-bg: #242424;
+      --bg: #07130e;
+      --panel: rgba(16, 39, 28, 0.78);
+      --border: rgba(152, 214, 171, 0.18);
+      --text: #effff4;
+      --muted: #7fa389;
+      --month-muted: #496653;
+      --past: #b7efc5;
+      --future: #183326;
+      --future-border: rgba(183, 239, 197, 0.22);
+      --today: #fbfff5;
+      --holiday: #f3d39b;
+      --progress: linear-gradient(90deg, #b7efc5, #d8f3dc, #fff1c9, #cdeac0);
+      --progress-bg: rgba(24, 51, 38, 0.78);
       --gap: 8px;
       --header-h: 64px;
       --legend-h: 26px;
@@ -46,9 +47,18 @@
 
     body {
       overflow: auto;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(183, 239, 197, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(255, 241, 201, 0.16), transparent 26%),
+        radial-gradient(circle at 50% 95%, rgba(205, 234, 192, 0.12), transparent 34%),
+        linear-gradient(160deg, #06100c, #07130e 48%, #10271c);
     }
 
     body.fit-year {
+      overflow: auto;
+    }
+
+    body.full-scale {
       overflow: hidden;
     }
 
@@ -63,6 +73,12 @@
     }
 
     body.fit-year .app {
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
+    }
+
+    body.full-scale .app {
       height: 100svh;
       overflow: hidden;
     }
@@ -74,7 +90,7 @@
       align-items: center;
       gap: 14px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #1e1e1e;
+      border-bottom: 1px solid rgba(152, 214, 171, 0.14);
     }
 
     .title {
@@ -143,9 +159,9 @@
     select,
     button {
       height: 30px;
-      background: #111;
+      background: rgba(16, 39, 28, 0.72);
       color: var(--text);
-      border: 1px solid #2d2d2d;
+      border: 1px solid rgba(152, 214, 171, 0.2);
       border-radius: 999px;
       padding: 6px 10px;
       font-size: 11px;
@@ -157,9 +173,9 @@
     }
 
     button.active {
-      background: #e8e8e8;
-      color: #080808;
-      border-color: #e8e8e8;
+      background: #b7efc5;
+      color: #07130e;
+      border-color: #b7efc5;
     }
 
     .year-space {
@@ -183,19 +199,21 @@
     }
 
     body.fit-year .calendar {
-      height: 100%;
-      grid-template-rows: repeat(4, minmax(0, 1fr));
+      height: auto;
+      grid-template-rows: none;
     }
 
     body.full-scale .calendar {
-      height: auto;
-      grid-template-rows: none;
+      height: 100%;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
     }
 
     .month {
       min-width: 0;
       min-height: 0;
-      background: var(--panel);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)),
+        var(--panel);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 7px;
@@ -205,19 +223,25 @@
       overflow: hidden;
     }
 
-    body.full-scale .month {
-      min-height: 190px;
-      padding: 9px;
+    body.fit-year .month {
+      min-height: 210px;
+      padding: 10px;
       gap: 6px;
     }
 
+    body.full-scale .month {
+      min-height: 0;
+      padding: 7px;
+      gap: 5px;
+    }
+
     .month.current {
-      border-color: rgba(255,255,255,0.52);
-      box-shadow: 0 0 18px rgba(255,255,255,0.08);
+      border-color: rgba(183, 239, 197, 0.72);
+      box-shadow: 0 0 22px rgba(183, 239, 197, 0.18);
     }
 
     .month-name {
-      color: var(--muted);
+      color: var(--month-muted);
       text-transform: uppercase;
       letter-spacing: 1.5px;
       font-size: 10px;
@@ -232,6 +256,16 @@
       color: var(--text);
     }
 
+    .month.past-month .month-name,
+    .month.future-month .month-name {
+      color: var(--month-muted);
+      opacity: 0.72;
+    }
+
+    .month:not(.current) .weekdays {
+      display: none;
+    }
+
     .weekdays,
     .days {
       display: grid;
@@ -241,10 +275,16 @@
       margin-inline: auto;
     }
 
+    body.fit-year .weekdays,
+    body.fit-year .days {
+      gap: 4px;
+      width: min(100%, 188px);
+    }
+
     body.full-scale .weekdays,
     body.full-scale .days {
-      gap: 4px;
-      width: min(100%, 182px);
+      gap: 3px;
+      width: min(100%, 156px);
     }
 
     .weekday {
@@ -283,10 +323,10 @@
 
     .day.today {
       background: var(--today);
-      border-color: #fff;
+      border-color: #fbfff5;
       box-shadow:
-        0 0 10px rgba(255,255,255,0.95),
-        0 0 24px rgba(255,255,255,0.32);
+        0 0 10px rgba(183,239,197,0.95),
+        0 0 24px rgba(183,239,197,0.34);
       z-index: 2;
     }
 
@@ -295,7 +335,7 @@
     }
 
     .day.weekend:not(.past):not(.today) {
-      background: #262626;
+      background: #1d3a2b;
     }
 
     .legend {
@@ -307,7 +347,7 @@
       align-items: center;
       color: var(--muted);
       font-size: 10px;
-      border-top: 1px solid #1e1e1e;
+      border-top: 1px solid rgba(152, 214, 171, 0.14);
       padding-top: 8px;
     }
 
@@ -335,7 +375,7 @@
 
     .sample.today {
       background: var(--today);
-      box-shadow: 0 0 8px rgba(255,255,255,0.8);
+      box-shadow: 0 0 8px rgba(183,239,197,0.8);
     }
 
     .sample.holiday {
@@ -343,11 +383,11 @@
     }
 
     @media (max-width: 900px) {
-      body.fit-year {
+      body.full-scale {
         overflow: auto;
       }
 
-      body.fit-year .app {
+      body.full-scale .app {
         height: auto;
         overflow: visible;
       }
@@ -368,7 +408,10 @@
         height: auto;
       }
 
-      body.fit-year .month,
+      body.fit-year .month {
+        min-height: 210px;
+      }
+
       body.full-scale .month {
         min-height: 185px;
       }
@@ -396,7 +439,10 @@
         grid-template-columns: 1fr;
       }
 
-      body.fit-year .month,
+      body.fit-year .month {
+        min-height: 210px;
+      }
+
       body.full-scale .month {
         min-height: 180px;
       }
@@ -479,7 +525,7 @@
           holiday: "święto",
           weekend: "weekend",
           fit: "Fit year",
-          full: "Full scale"
+          full: "Visible year"
         }
       },
       "en-US": {
@@ -494,7 +540,7 @@
           holiday: "holiday",
           weekend: "weekend",
           fit: "Fit year",
-          full: "Full scale"
+          full: "Visible year"
         }
       },
       "de-DE": {
@@ -508,8 +554,8 @@
           future: "zukünftig",
           holiday: "Feiertag",
           weekend: "Wochenende",
-          fit: "Jahr sichtbar",
-          full: "Großansicht"
+          fit: "Großansicht",
+          full: "Jahr sichtbar"
         }
       },
       "fr-FR": {
@@ -523,8 +569,8 @@
           future: "futurs",
           holiday: "férié",
           weekend: "week-end",
-          fit: "Année visible",
-          full: "Grande vue"
+          fit: "Grande vue",
+          full: "Année visible"
         }
       },
       "es-ES": {
@@ -538,8 +584,8 @@
           future: "futuros",
           holiday: "festivo",
           weekend: "fin de semana",
-          fit: "Año visible",
-          full: "Vista grande"
+          fit: "Vista grande",
+          full: "Año visible"
         }
       }
     };
@@ -666,6 +712,14 @@
 
       if (month === currentMonth) {
         article.classList.add("current");
+      } else if (isCurrentYear && month < currentMonth) {
+        article.classList.add("past-month");
+      } else if (isCurrentYear && month > currentMonth) {
+        article.classList.add("future-month");
+      }
+
+      if (month !== currentMonth) {
+        article.title = `${formatDate(new Date(year, month, 1), { month: "long", year: "numeric" })} | ${c.weekdays.join(" ")}`;
       }
 
       const title = document.createElement("div");
