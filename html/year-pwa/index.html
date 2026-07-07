@@ -1,566 +1,654 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Year Progress</title>
 
-    <title>Year Progress</title>
+  <meta name="theme-color" content="#080808" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Year Progress" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <meta name="theme-color" content="#090909" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Year Progress" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="./manifest.webmanifest" />
 
-    <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #111;
+      --border: #242424;
+      --text: #e8e8e8;
+      --muted: #7d7d7d;
+      --past: #d9d9d9;
+      --future: #202020;
+      --future-border: #343434;
+      --today: #ffffff;
+      --holiday: #f0b35a;
+      --progress: #e8e8e8;
+      --progress-bg: #242424;
+      --gap: 8px;
+      --header-h: 64px;
+      --legend-h: 26px;
+    }
 
-    <style>
-        :root {
-            --bg: #070707;
-            --panel: #111;
-            --panel-border: #242424;
-            --text: #ededed;
-            --muted: #8f8f8f;
-            --dot-past: #d8d8d8;
-            --dot-future: #202020;
-            --dot-border: #343434;
-            --today: #ffffff;
-            --holiday: #f2b35e;
-            --progress: #e9e9e9;
-            --progress-bg: #222;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background:
-                    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 34%),
-                    radial-gradient(circle at 20% 75%, rgba(255,255,255,0.04), transparent 28%),
-                    var(--bg);
-            color: var(--text);
-            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            display: flex;
-            justify-content: center;
-            padding: 34px 22px 44px;
-        }
+    body {
+      overflow: auto;
+    }
 
-        .app {
-            width: min(1080px, 100%);
-        }
+    body.fit-year {
+      overflow: hidden;
+    }
 
-        header {
-            text-align: center;
-            padding-bottom: 26px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            margin-bottom: 26px;
-        }
+    .app {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      padding: 10px;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
 
-        .topbar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
-        }
+    body.fit-year .app {
+      height: 100svh;
+      overflow: hidden;
+    }
 
-        select,
-        button {
-            background: #111;
-            color: var(--text);
-            border: 1px solid #2d2d2d;
-            border-radius: 999px;
-            padding: 9px 14px;
-            font-size: 13px;
-            outline: none;
-        }
+    .top {
+      min-height: var(--header-h);
+      display: grid;
+      grid-template-columns: 120px minmax(180px, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1e1e1e;
+    }
 
-        button {
-            cursor: pointer;
-        }
+    .title {
+      min-width: 0;
+    }
 
-        button:hover,
-        select:hover {
-            border-color: #555;
-        }
+    .year {
+      font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 850;
+      line-height: 0.95;
+      letter-spacing: 1px;
+    }
 
-        .year {
-            letter-spacing: 12px;
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--muted);
-            margin-bottom: 10px;
-        }
+    .today-text {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        .date {
-            font-size: clamp(42px, 7vw, 72px);
-            font-weight: 850;
-            line-height: 1;
-            letter-spacing: -1px;
-        }
+    .progress-line {
+      min-width: 0;
+      align-self: center;
+    }
 
-        .meta {
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 14px;
-        }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
 
-        .progress-box {
-            width: min(620px, 100%);
-            margin: 24px auto 0;
-        }
+    .progress-meta span {
+      white-space: nowrap;
+    }
 
-        .progress-labels {
-            display: flex;
-            justify-content: space-between;
-            color: var(--muted);
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
+    .progress {
+      height: 6px;
+      background: var(--progress-bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
 
-        .progress {
-            height: 8px;
-            background: var(--progress-bg);
-            border-radius: 999px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--progress);
+      border-radius: inherit;
+      box-shadow: 0 0 12px rgba(255,255,255,0.45);
+      transition: width 0.25s ease;
+    }
 
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--progress);
-            border-radius: inherit;
-            box-shadow: 0 0 18px rgba(255,255,255,0.42);
-        }
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      white-space: nowrap;
+    }
 
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
+    select,
+    button {
+      height: 30px;
+      background: #111;
+      color: var(--text);
+      border: 1px solid #2d2d2d;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      outline: none;
+    }
 
-        .month {
-            background: rgba(17,17,17,0.74);
-            border: 1px solid var(--panel-border);
-            border-radius: 14px;
-            padding: 18px;
-            min-height: 208px;
-            box-shadow:
-                    0 18px 42px rgba(0,0,0,0.32),
-                    inset 0 0 18px rgba(255,255,255,0.015);
-        }
+    button {
+      cursor: pointer;
+    }
 
-        .month.current {
-            border-color: rgba(255,255,255,0.36);
-            box-shadow:
-                    0 0 26px rgba(255,255,255,0.08),
-                    0 18px 42px rgba(0,0,0,0.42);
-        }
+    button.active {
+      background: #e8e8e8;
+      color: #080808;
+      border-color: #e8e8e8;
+    }
 
-        .month-name {
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 13px;
-            font-weight: 850;
-            margin-bottom: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .year-space {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
 
-        .month.current .month-name {
-            color: var(--text);
-        }
+    .calendar-wrap {
+      flex: 1;
+      min-height: 0;
+    }
 
-        .weekdays,
-        .days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 7px;
-        }
+    .calendar {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--gap);
+    }
 
-        .weekdays {
-            margin-bottom: 8px;
-        }
+    body.fit-year .calendar {
+      height: 100%;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+    }
 
-        .weekday {
-            text-align: center;
-            font-size: 9px;
-            color: #5f5f5f;
-            font-weight: 800;
-        }
+    body.full-scale .calendar {
+      height: auto;
+      grid-template-rows: none;
+    }
 
-        .empty,
-        .day {
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-        }
+    .month {
+      min-width: 0;
+      min-height: 0;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 5px;
+      overflow: hidden;
+    }
 
-        .day {
-            background: var(--dot-future);
-            border: 1px solid var(--dot-border);
-            color: transparent;
-            cursor: default;
-            position: relative;
-        }
+    body.full-scale .month {
+      min-height: 190px;
+      padding: 9px;
+      gap: 6px;
+    }
 
-        .day.past {
-            background: var(--dot-past);
-            border-color: transparent;
-            box-shadow: inset 0 0 8px rgba(255,255,255,0.24);
-        }
+    .month.current {
+      border-color: rgba(255,255,255,0.52);
+      box-shadow: 0 0 18px rgba(255,255,255,0.08);
+    }
 
-        .day.today {
-            background: var(--today);
-            border-color: #fff;
-            box-shadow:
-                    0 0 16px rgba(255,255,255,0.9),
-                    0 0 38px rgba(255,255,255,0.28);
-            z-index: 2;
-        }
+    .month-name {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 10px;
+      font-weight: 850;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        .day.holiday {
-            border: 2px solid var(--holiday);
-        }
+    .month.current .month-name {
+      color: var(--text);
+    }
 
-        .day.weekend:not(.past):not(.today) {
-            background: #262626;
-        }
+    .weekdays,
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 3px;
+      width: min(100%, 156px);
+      margin-inline: auto;
+    }
 
-        .legend {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-top: 26px;
-            color: var(--muted);
-            font-size: 13px;
-        }
+    body.full-scale .weekdays,
+    body.full-scale .days {
+      gap: 4px;
+      width: min(100%, 182px);
+    }
 
-        .legend span {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .weekday {
+      color: #555;
+      text-align: center;
+      font-size: 8px;
+      font-weight: 800;
+      line-height: 1;
+    }
 
-        .sample {
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            background: var(--dot-future);
-            border: 1px solid var(--dot-border);
-        }
+    .days {
+      align-content: start;
+      min-height: 0;
+    }
 
-        .sample.past {
-            background: var(--dot-past);
-            border: none;
-        }
+    .day,
+    .empty {
+      aspect-ratio: 1 / 1;
+      border-radius: 2px;
+      min-width: 0;
+      max-width: 100%;
+    }
 
-        .sample.today {
-            background: var(--today);
-            box-shadow: 0 0 12px rgba(255,255,255,0.75);
-        }
+    .day {
+      background: var(--future);
+      border: 1px solid var(--future-border);
+      color: transparent;
+      position: relative;
+      cursor: default;
+    }
 
-        .sample.holiday {
-            border: 2px solid var(--holiday);
-        }
+    .day.past {
+      background: var(--past);
+      border-color: transparent;
+    }
 
-        @media (max-width: 920px) {
-            .calendar {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+    .day.today {
+      background: var(--today);
+      border-color: #fff;
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.95),
+        0 0 24px rgba(255,255,255,0.32);
+      z-index: 2;
+    }
 
-        @media (max-width: 560px) {
-            body {
-                padding: 24px 12px 34px;
-            }
+    .day.holiday {
+      border: 2px solid var(--holiday);
+    }
 
-            .calendar {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
+    .day.weekend:not(.past):not(.today) {
+      background: #262626;
+    }
 
-            .month {
-                min-height: auto;
-            }
+    .legend {
+      min-height: var(--legend-h);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 10px;
+      border-top: 1px solid #1e1e1e;
+      padding-top: 8px;
+    }
 
-            .year {
-                letter-spacing: 8px;
-            }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
 
-            .topbar {
-                justify-content: stretch;
-            }
+    .sample {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: var(--future);
+      border: 1px solid var(--future-border);
+      display: inline-block;
+      flex: 0 0 auto;
+    }
 
-            select,
-            button {
-                flex: 1;
-            }
-        }
-    </style>
+    .sample.past {
+      background: var(--past);
+      border: none;
+    }
+
+    .sample.today {
+      background: var(--today);
+      box-shadow: 0 0 8px rgba(255,255,255,0.8);
+    }
+
+    .sample.holiday {
+      border: 2px solid var(--holiday);
+    }
+
+    @media (max-width: 900px) {
+      body.fit-year {
+        overflow: auto;
+      }
+
+      body.fit-year .app {
+        height: auto;
+        overflow: visible;
+      }
+
+      .top {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .controls {
+        justify-content: flex-start;
+      }
+
+      body.fit-year .calendar,
+      body.full-scale .calendar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: none;
+        height: auto;
+      }
+
+      body.fit-year .month,
+      body.full-scale .month {
+        min-height: 185px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .app {
+        padding: 10px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 0.8fr 0.8fr 1.4fr;
+        width: 100%;
+      }
+
+      select,
+      button {
+        width: 100%;
+        padding-inline: 8px;
+      }
+
+      body.fit-year .calendar,
+      body.full-scale .calendar {
+        grid-template-columns: 1fr;
+      }
+
+      body.fit-year .month,
+      body.full-scale .month {
+        min-height: 180px;
+      }
+    }
+  </style>
 </head>
 
-<body>
-<main class="app">
-    <header>
-        <div class="topbar">
-            <select id="localeSelect" title="Language / region">
-                <option value="pl-PL">Polski — Polska</option>
-                <option value="en-US">English — United States</option>
-                <option value="de-DE">Deutsch — Deutschland</option>
-                <option value="fr-FR">Français — France</option>
-                <option value="es-ES">Español — España</option>
-            </select>
-
-            <select id="yearSelect" title="Year"></select>
-
-            <button id="installBtn" hidden>Install</button>
-        </div>
-
+<body class="fit-year">
+  <main class="app">
+    <header class="top">
+      <section class="title">
         <div class="year" id="yearLabel"></div>
-        <div class="date" id="dateLabel"></div>
-        <div class="meta" id="metaLabel"></div>
+        <div class="today-text" id="todayLabel"></div>
+      </section>
 
-        <div class="progress-box">
-            <div class="progress-labels">
-                <span id="progressStart"></span>
-                <span id="progressPercent"></span>
-                <span id="progressEnd"></span>
-            </div>
-            <div class="progress">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
+      <section class="progress-line">
+        <div class="progress-meta">
+          <span id="dayLabel"></span>
+          <span id="progressLabel"></span>
         </div>
+        <div class="progress">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </section>
+
+      <section class="controls">
+        <select id="localeSelect" title="Language / region">
+          <option value="pl-PL">PL</option>
+          <option value="en-US">US</option>
+          <option value="de-DE">DE</option>
+          <option value="fr-FR">FR</option>
+          <option value="es-ES">ES</option>
+        </select>
+
+        <select id="yearSelect" title="Year"></select>
+
+        <button id="scaleBtn" type="button" title="Toggle scale">Fit year</button>
+      </section>
     </header>
 
-    <section class="calendar" id="calendar"></section>
+    <section class="year-space">
+      <section class="calendar-wrap">
+        <section class="calendar" id="calendar"></section>
+      </section>
 
-    <section class="legend" id="legend"></section>
-</main>
+      <section class="legend" id="legend"></section>
+    </section>
+  </main>
 
-<script>
+  <script>
     const app = {
-        today: new Date(),
-        locale: localStorage.getItem("year.locale") || navigator.language || "pl-PL",
-        year: Number(localStorage.getItem("year.year")) || new Date().getFullYear(),
-        deferredPrompt: null
+      today: new Date(),
+      locale: localStorage.getItem("year.locale") || navigator.language || "pl-PL",
+      year: Number(localStorage.getItem("year.year")) || new Date().getFullYear(),
+      fullScale: localStorage.getItem("year.scale") === "full"
     };
 
     const supportedLocales = ["pl-PL", "en-US", "de-DE", "fr-FR", "es-ES"];
 
     if (!supportedLocales.includes(app.locale)) {
-        const base = app.locale.slice(0, 2);
-        app.locale =
-            base === "pl" ? "pl-PL" :
-                base === "de" ? "de-DE" :
-                    base === "fr" ? "fr-FR" :
-                        base === "es" ? "es-ES" :
-                            "en-US";
+      const base = app.locale.slice(0, 2);
+      app.locale =
+        base === "pl" ? "pl-PL" :
+        base === "de" ? "de-DE" :
+        base === "fr" ? "fr-FR" :
+        base === "es" ? "es-ES" :
+        "en-US";
     }
 
     const config = {
-        "pl-PL": {
-            weekStartsOn: 1,
-            labels: {
-                day: "dzień",
-                of: "z",
-                yearProgress: "postęp roku",
-                past: "minione dni",
-                today: "dzisiaj",
-                future: "przyszłe dni",
-                holiday: "święto",
-                weekend: "weekend"
-            },
-            weekdays: ["PN", "WT", "ŚR", "CZ", "PT", "SO", "ND"]
-        },
-        "en-US": {
-            weekStartsOn: 0,
-            labels: {
-                day: "day",
-                of: "of",
-                yearProgress: "year progress",
-                past: "past days",
-                today: "today",
-                future: "future days",
-                holiday: "holiday",
-                weekend: "weekend"
-            },
-            weekdays: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-        },
-        "de-DE": {
-            weekStartsOn: 1,
-            labels: {
-                day: "Tag",
-                of: "von",
-                yearProgress: "Jahresfortschritt",
-                past: "vergangene Tage",
-                today: "heute",
-                future: "zukünftige Tage",
-                holiday: "Feiertag",
-                weekend: "Wochenende"
-            },
-            weekdays: ["MO", "DI", "MI", "DO", "FR", "SA", "SO"]
-        },
-        "fr-FR": {
-            weekStartsOn: 1,
-            labels: {
-                day: "jour",
-                of: "sur",
-                yearProgress: "progression de l’année",
-                past: "jours passés",
-                today: "aujourd’hui",
-                future: "jours futurs",
-                holiday: "jour férié",
-                weekend: "week-end"
-            },
-            weekdays: ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"]
-        },
-        "es-ES": {
-            weekStartsOn: 1,
-            labels: {
-                day: "día",
-                of: "de",
-                yearProgress: "progreso del año",
-                past: "días pasados",
-                today: "hoy",
-                future: "días futuros",
-                holiday: "festivo",
-                weekend: "fin de semana"
-            },
-            weekdays: ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"]
+      "pl-PL": {
+        weekStartsOn: 1,
+        weekdays: ["PN", "WT", "ŚR", "CZ", "PT", "SO", "ND"],
+        labels: {
+          day: "dzień",
+          of: "z",
+          past: "minione",
+          today: "dziś",
+          future: "przyszłe",
+          holiday: "święto",
+          weekend: "weekend",
+          fit: "Fit year",
+          full: "Full scale"
         }
+      },
+      "en-US": {
+        weekStartsOn: 0,
+        weekdays: ["SU", "MO", "TU", "WE", "TH", "FR", "SA"],
+        labels: {
+          day: "day",
+          of: "of",
+          past: "past",
+          today: "today",
+          future: "future",
+          holiday: "holiday",
+          weekend: "weekend",
+          fit: "Fit year",
+          full: "Full scale"
+        }
+      },
+      "de-DE": {
+        weekStartsOn: 1,
+        weekdays: ["MO", "DI", "MI", "DO", "FR", "SA", "SO"],
+        labels: {
+          day: "Tag",
+          of: "von",
+          past: "vergangen",
+          today: "heute",
+          future: "zukünftig",
+          holiday: "Feiertag",
+          weekend: "Wochenende",
+          fit: "Jahr sichtbar",
+          full: "Großansicht"
+        }
+      },
+      "fr-FR": {
+        weekStartsOn: 1,
+        weekdays: ["LU", "MA", "ME", "JE", "VE", "SA", "DI"],
+        labels: {
+          day: "jour",
+          of: "sur",
+          past: "passés",
+          today: "aujourd’hui",
+          future: "futurs",
+          holiday: "férié",
+          weekend: "week-end",
+          fit: "Année visible",
+          full: "Grande vue"
+        }
+      },
+      "es-ES": {
+        weekStartsOn: 1,
+        weekdays: ["LU", "MA", "MI", "JU", "VI", "SA", "DO"],
+        labels: {
+          day: "día",
+          of: "de",
+          past: "pasados",
+          today: "hoy",
+          future: "futuros",
+          holiday: "festivo",
+          weekend: "fin de semana",
+          fit: "Año visible",
+          full: "Vista grande"
+        }
+      }
     };
 
     const els = {
-        calendar: document.getElementById("calendar"),
-        localeSelect: document.getElementById("localeSelect"),
-        yearSelect: document.getElementById("yearSelect"),
-        installBtn: document.getElementById("installBtn"),
-        yearLabel: document.getElementById("yearLabel"),
-        dateLabel: document.getElementById("dateLabel"),
-        metaLabel: document.getElementById("metaLabel"),
-        progressStart: document.getElementById("progressStart"),
-        progressPercent: document.getElementById("progressPercent"),
-        progressEnd: document.getElementById("progressEnd"),
-        progressFill: document.getElementById("progressFill"),
-        legend: document.getElementById("legend")
+      calendar: document.getElementById("calendar"),
+      localeSelect: document.getElementById("localeSelect"),
+      yearSelect: document.getElementById("yearSelect"),
+      scaleBtn: document.getElementById("scaleBtn"),
+      yearLabel: document.getElementById("yearLabel"),
+      todayLabel: document.getElementById("todayLabel"),
+      dayLabel: document.getElementById("dayLabel"),
+      progressLabel: document.getElementById("progressLabel"),
+      progressFill: document.getElementById("progressFill"),
+      legend: document.getElementById("legend")
     };
 
     init();
 
     function init() {
-        setupControls();
-        setupPwaInstall();
-        render();
+      setupControls();
+      applyScaleClass();
+      render();
 
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js");
-        }
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(console.error);
+        });
+      }
     }
 
     function setupControls() {
-        els.localeSelect.value = app.locale;
+      els.localeSelect.value = app.locale;
 
-        const currentYear = app.today.getFullYear();
+      const currentYear = app.today.getFullYear();
 
-        for (let y = currentYear - 5; y <= currentYear + 5; y++) {
-            const option = document.createElement("option");
-            option.value = y;
-            option.textContent = y;
-            els.yearSelect.appendChild(option);
-        }
+      for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+        const option = document.createElement("option");
+        option.value = y;
+        option.textContent = y;
+        els.yearSelect.appendChild(option);
+      }
 
-        els.yearSelect.value = app.year;
+      els.yearSelect.value = app.year;
 
-        els.localeSelect.addEventListener("change", () => {
-            app.locale = els.localeSelect.value;
-            localStorage.setItem("year.locale", app.locale);
-            render();
-        });
+      els.localeSelect.addEventListener("change", () => {
+        app.locale = els.localeSelect.value;
+        localStorage.setItem("year.locale", app.locale);
+        render();
+      });
 
-        els.yearSelect.addEventListener("change", () => {
-            app.year = Number(els.yearSelect.value);
-            localStorage.setItem("year.year", app.year);
-            render();
-        });
+      els.yearSelect.addEventListener("change", () => {
+        app.year = Number(els.yearSelect.value);
+        localStorage.setItem("year.year", app.year);
+        render();
+      });
+
+      els.scaleBtn.addEventListener("click", () => {
+        app.fullScale = !app.fullScale;
+        localStorage.setItem("year.scale", app.fullScale ? "full" : "fit");
+        applyScaleClass();
+        render();
+      });
     }
 
-    function setupPwaInstall() {
-        window.addEventListener("beforeinstallprompt", event => {
-            event.preventDefault();
-            app.deferredPrompt = event;
-            els.installBtn.hidden = false;
-        });
-
-        els.installBtn.addEventListener("click", async () => {
-            if (!app.deferredPrompt) return;
-            app.deferredPrompt.prompt();
-            await app.deferredPrompt.userChoice;
-            app.deferredPrompt = null;
-            els.installBtn.hidden = true;
-        });
+    function applyScaleClass() {
+      document.body.classList.toggle("full-scale", app.fullScale);
+      document.body.classList.toggle("fit-year", !app.fullScale);
     }
 
     function render() {
-        const c = config[app.locale];
-        const labels = c.labels;
-        const isCurrentYear = app.today.getFullYear() === app.year;
-        const currentMonth = isCurrentYear ? app.today.getMonth() : -1;
-        const currentDay = isCurrentYear ? app.today.getDate() : -1;
-        const totalDays = daysInYear(app.year);
-        const currentDayOfYear = isCurrentYear
-            ? dayOfYear(app.today)
-            : app.year < app.today.getFullYear()
-                ? totalDays
-                : 0;
+      const c = config[app.locale];
+      const labels = c.labels;
 
-        const progress = Math.round((currentDayOfYear / totalDays) * 100);
+      applyScaleClass();
 
-        els.yearLabel.textContent = String(app.year).split("").join(" ");
+      els.scaleBtn.textContent = app.fullScale ? labels.full : labels.fit;
+      els.scaleBtn.classList.toggle("active", app.fullScale);
 
-        if (isCurrentYear) {
-            els.dateLabel.textContent = formatDate(app.today, {
-                month: "long",
-                day: "numeric"
-            });
-        } else {
-            els.dateLabel.textContent = app.year;
-        }
+      const isCurrentYear = app.today.getFullYear() === app.year;
+      const totalDays = daysInYear(app.year);
+      const currentDayOfYear = isCurrentYear
+        ? dayOfYear(app.today)
+        : app.year < app.today.getFullYear()
+          ? totalDays
+          : 0;
 
-        els.metaLabel.textContent =
-            `${labels.day} ${currentDayOfYear} ${labels.of} ${totalDays}`;
+      const progress = Math.round((currentDayOfYear / totalDays) * 100);
 
-        els.progressStart.textContent = "0%";
-        els.progressPercent.textContent = `${labels.yearProgress}: ${progress}%`;
-        els.progressEnd.textContent = "100%";
-        els.progressFill.style.width = `${progress}%`;
+      els.yearLabel.textContent = String(app.year);
+      els.todayLabel.textContent = isCurrentYear
+        ? formatDate(app.today, { weekday: "long", month: "long", day: "numeric" })
+        : formatDate(new Date(app.year, 0, 1), { year: "numeric" });
 
-        document.documentElement.lang = app.locale.slice(0, 2);
+      els.dayLabel.textContent = `${labels.day} ${currentDayOfYear} ${labels.of} ${totalDays}`;
+      els.progressLabel.textContent = `${progress}%`;
+      els.progressFill.style.width = `${progress}%`;
 
-        const holidays = getHolidays(app.year, app.locale);
+      document.documentElement.lang = app.locale.slice(0, 2);
 
-        els.calendar.innerHTML = "";
+      const holidays = getHolidays(app.year, app.locale);
 
-        for (let month = 0; month < 12; month++) {
-            els.calendar.appendChild(
-                createMonth({
-                    year: app.year,
-                    month,
-                    currentMonth,
-                    currentDay,
-                    isCurrentYear,
-                    config: c,
-                    holidays
-                })
-            );
-        }
+      els.calendar.innerHTML = "";
 
-        els.legend.innerHTML = `
+      for (let month = 0; month < 12; month++) {
+        els.calendar.appendChild(createMonth(app.year, month, c, holidays));
+      }
+
+      els.legend.innerHTML = `
         <span><i class="sample past"></i>${labels.past}</span>
         <span><i class="sample today"></i>${labels.today}</span>
         <span><i class="sample"></i>${labels.future}</span>
@@ -568,296 +656,287 @@
       `;
     }
 
-    function createMonth({
-                             year,
-                             month,
-                             currentMonth,
-                             currentDay,
-                             isCurrentYear,
-                             config,
-                             holidays
-                         }) {
-        const article = document.createElement("article");
-        article.className = "month";
+    function createMonth(year, month, c, holidays) {
+      const article = document.createElement("article");
+      article.className = "month";
 
-        if (month === currentMonth) {
-            article.classList.add("current");
-        }
+      const isCurrentYear = app.today.getFullYear() === year;
+      const currentMonth = isCurrentYear ? app.today.getMonth() : -1;
+      const currentDay = isCurrentYear ? app.today.getDate() : -1;
 
-        const title = document.createElement("div");
-        title.className = "month-name";
-        title.textContent = formatDate(new Date(year, month, 1), {
-            month: "long"
-        });
+      if (month === currentMonth) {
+        article.classList.add("current");
+      }
 
-        const weekdays = document.createElement("div");
-        weekdays.className = "weekdays";
+      const title = document.createElement("div");
+      title.className = "month-name";
+      title.textContent = formatDate(new Date(year, month, 1), { month: "long" });
 
-        config.weekdays.forEach(name => {
-            const item = document.createElement("div");
-            item.className = "weekday";
-            item.textContent = name;
-            weekdays.appendChild(item);
-        });
+      const weekdays = document.createElement("div");
+      weekdays.className = "weekdays";
 
-        const days = document.createElement("div");
-        days.className = "days";
+      c.weekdays.forEach(name => {
+        const item = document.createElement("div");
+        item.className = "weekday";
+        item.textContent = name;
+        weekdays.appendChild(item);
+      });
 
-        const offset = firstDayOffset(year, month, config.weekStartsOn);
-        const total = daysInMonth(year, month);
+      const days = document.createElement("div");
+      days.className = "days";
 
-        for (let i = 0; i < offset; i++) {
-            const empty = document.createElement("div");
-            empty.className = "empty";
-            days.appendChild(empty);
-        }
+      const offset = firstDayOffset(year, month, c.weekStartsOn);
+      const total = daysInMonth(year, month);
 
-        for (let day = 1; day <= total; day++) {
-            const date = new Date(year, month, day);
-            const key = dateKey(year, month, day);
-            const item = document.createElement("div");
+      for (let i = 0; i < offset; i++) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        days.appendChild(empty);
+      }
 
-            item.className = "day";
+      for (let day = 1; day <= total; day++) {
+        const date = new Date(year, month, day);
+        const key = dateKey(year, month, day);
+        const item = document.createElement("div");
+        const holiday = holidays.get(key);
+        const weekend = isWeekend(date);
 
-            const holidayName = holidays.get(key);
-            const weekend = isWeekend(date);
-
-            if (weekend) {
-                item.classList.add("weekend");
-            }
-
-            if (
-                isCurrentYear &&
-                (
-                    month < currentMonth ||
-                    (month === currentMonth && day < currentDay)
-                )
-            ) {
-                item.classList.add("past");
-            }
-
-            if (
-                isCurrentYear &&
-                month === currentMonth &&
-                day === currentDay
-            ) {
-                item.classList.add("today");
-            }
-
-            if (holidayName) {
-                item.classList.add("holiday");
-            }
-
-            item.title = buildTitle(date, holidayName, weekend, config.labels);
-            days.appendChild(item);
-        }
-
-        article.appendChild(title);
-        article.appendChild(weekdays);
-        article.appendChild(days);
-
-        return article;
-    }
-
-    function buildTitle(date, holidayName, weekend, labels) {
-        const parts = [
-            formatDate(date, {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            })
-        ];
-
-        parts.push(`${labels.day} ${dayOfYear(date)} ${labels.of} ${daysInYear(date.getFullYear())}`);
+        item.className = "day";
 
         if (weekend) {
-            parts.push(labels.weekend);
+          item.classList.add("weekend");
         }
 
-        if (holidayName) {
-            parts.push(`${labels.holiday}: ${holidayName}`);
+        if (
+          isCurrentYear &&
+          (
+            month < currentMonth ||
+            (month === currentMonth && day < currentDay)
+          )
+        ) {
+          item.classList.add("past");
         }
 
-        return parts.join(" | ");
+        if (
+          isCurrentYear &&
+          month === currentMonth &&
+          day === currentDay
+        ) {
+          item.classList.add("today");
+        }
+
+        if (holiday) {
+          item.classList.add("holiday");
+        }
+
+        item.title = buildTitle(date, holiday, weekend, c.labels);
+        days.appendChild(item);
+      }
+
+      article.appendChild(title);
+      article.appendChild(weekdays);
+      article.appendChild(days);
+
+      return article;
+    }
+
+    function buildTitle(date, holiday, weekend, labels) {
+      const parts = [
+        formatDate(date, {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }),
+        `${labels.day} ${dayOfYear(date)} ${labels.of} ${daysInYear(date.getFullYear())}`
+      ];
+
+      if (weekend) {
+        parts.push(labels.weekend);
+      }
+
+      if (holiday) {
+        parts.push(`${labels.holiday}: ${holiday}`);
+      }
+
+      return parts.join(" | ");
     }
 
     function formatDate(date, options) {
-        return new Intl.DateTimeFormat(app.locale, options).format(date);
+      return new Intl.DateTimeFormat(app.locale, options).format(date);
     }
 
     function daysInMonth(year, month) {
-        return new Date(year, month + 1, 0).getDate();
+      return new Date(year, month + 1, 0).getDate();
     }
 
     function daysInYear(year) {
-        return isLeapYear(year) ? 366 : 365;
+      return isLeapYear(year) ? 366 : 365;
     }
 
     function isLeapYear(year) {
-        return new Date(year, 1, 29).getDate() === 29;
+      return new Date(year, 1, 29).getDate() === 29;
     }
 
     function dayOfYear(date) {
-        const start = new Date(date.getFullYear(), 0, 0);
-        const diff = date - start;
-        return Math.floor(diff / 86400000);
+      const start = new Date(date.getFullYear(), 0, 0);
+      return Math.floor((date - start) / 86400000);
     }
 
     function firstDayOffset(year, month, weekStartsOn) {
-        const first = new Date(year, month, 1).getDay();
-        return (first - weekStartsOn + 7) % 7;
+      const first = new Date(year, month, 1).getDay();
+      return (first - weekStartsOn + 7) % 7;
     }
 
     function dateKey(year, month, day) {
-        return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     }
 
     function isWeekend(date) {
-        const d = date.getDay();
-        return d === 0 || d === 6;
+      const d = date.getDay();
+      return d === 0 || d === 6;
     }
 
     function addDays(date, days) {
-        const result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result;
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
     }
 
     function easterDate(year) {
-        const a = year % 19;
-        const b = Math.floor(year / 100);
-        const c = year % 100;
-        const d = Math.floor(b / 4);
-        const e = b % 4;
-        const f = Math.floor((b + 8) / 25);
-        const g = Math.floor((b - f + 1) / 3);
-        const h = (19 * a + b - d - g + 15) % 30;
-        const i = Math.floor(c / 4);
-        const k = c % 4;
-        const l = (32 + 2 * e + 2 * i - h - k) % 7;
-        const m = Math.floor((a + 11 * h + 22 * l) / 451);
-        const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
-        const day = ((h + l - 7 * m + 114) % 31) + 1;
+      const a = year % 19;
+      const b = Math.floor(year / 100);
+      const c = year % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+      const day = ((h + l - 7 * m + 114) % 31) + 1;
 
-        return new Date(year, month, day);
+      return new Date(year, month, day);
     }
 
     function nthWeekdayOfMonth(year, month, weekday, nth) {
-        const date = new Date(year, month, 1);
-        const offset = (weekday - date.getDay() + 7) % 7;
-        return new Date(year, month, 1 + offset + (nth - 1) * 7);
+      const first = new Date(year, month, 1);
+      const offset = (weekday - first.getDay() + 7) % 7;
+      return new Date(year, month, 1 + offset + (nth - 1) * 7);
     }
 
     function lastWeekdayOfMonth(year, month, weekday) {
-        const date = new Date(year, month + 1, 0);
-        const offset = (date.getDay() - weekday + 7) % 7;
-        return new Date(year, month, date.getDate() - offset);
+      const last = new Date(year, month + 1, 0);
+      const offset = (last.getDay() - weekday + 7) % 7;
+      return new Date(year, month, last.getDate() - offset);
     }
 
     function observedFixedHoliday(year, month, day) {
-        const date = new Date(year, month, day);
-        const weekday = date.getDay();
+      const date = new Date(year, month, day);
+      const weekday = date.getDay();
 
-        if (weekday === 6) return addDays(date, -1);
-        if (weekday === 0) return addDays(date, 1);
+      if (weekday === 6) return addDays(date, -1);
+      if (weekday === 0) return addDays(date, 1);
 
-        return date;
+      return date;
     }
 
     function setHoliday(map, date, name) {
-        map.set(dateKey(date.getFullYear(), date.getMonth(), date.getDate()), name);
+      map.set(dateKey(date.getFullYear(), date.getMonth(), date.getDate()), name);
     }
 
     function getHolidays(year, locale) {
-        const map = new Map();
-        const easter = easterDate(year);
+      const map = new Map();
+      const easter = easterDate(year);
 
-        const add = (month, day, name) => {
-            map.set(dateKey(year, month - 1, day), name);
-        };
+      const add = (month, day, name) => {
+        map.set(dateKey(year, month - 1, day), name);
+      };
 
-        const addDate = (date, name) => {
-            setHoliday(map, date, name);
-        };
+      const addDate = (date, name) => {
+        setHoliday(map, date, name);
+      };
 
-        if (locale === "pl-PL") {
-            add(1, 1, "Nowy Rok");
-            add(1, 6, "Trzech Króli");
-            add(5, 1, "Święto Pracy");
-            add(5, 3, "Święto Konstytucji 3 Maja");
-            add(8, 15, "Wniebowzięcie NMP");
-            add(11, 1, "Wszystkich Świętych");
-            add(11, 11, "Święto Niepodległości");
-            add(12, 25, "Boże Narodzenie");
-            add(12, 26, "Drugi dzień świąt");
+      if (locale === "pl-PL") {
+        add(1, 1, "Nowy Rok");
+        add(1, 6, "Trzech Króli");
+        add(5, 1, "Święto Pracy");
+        add(5, 3, "Święto Konstytucji 3 Maja");
+        add(8, 15, "Wniebowzięcie NMP");
+        add(11, 1, "Wszystkich Świętych");
+        add(11, 11, "Święto Niepodległości");
+        add(12, 25, "Boże Narodzenie");
+        add(12, 26, "Drugi dzień świąt");
 
-            addDate(easter, "Wielkanoc");
-            addDate(addDays(easter, 1), "Poniedziałek Wielkanocny");
-            addDate(addDays(easter, 49), "Zielone Świątki");
-            addDate(addDays(easter, 60), "Boże Ciało");
-        }
+        addDate(easter, "Wielkanoc");
+        addDate(addDays(easter, 1), "Poniedziałek Wielkanocny");
+        addDate(addDays(easter, 49), "Zielone Świątki");
+        addDate(addDays(easter, 60), "Boże Ciało");
+      }
 
-        if (locale === "en-US") {
-            addDate(observedFixedHoliday(year, 0, 1), "New Year's Day");
-            addDate(nthWeekdayOfMonth(year, 0, 1, 3), "Martin Luther King Jr. Day");
-            addDate(nthWeekdayOfMonth(year, 1, 1, 3), "Presidents' Day");
-            addDate(lastWeekdayOfMonth(year, 4, 1), "Memorial Day");
-            addDate(observedFixedHoliday(year, 5, 19), "Juneteenth");
-            addDate(observedFixedHoliday(year, 6, 4), "Independence Day");
-            addDate(nthWeekdayOfMonth(year, 8, 1, 1), "Labor Day");
-            addDate(nthWeekdayOfMonth(year, 9, 1, 2), "Columbus Day / Indigenous Peoples' Day");
-            addDate(observedFixedHoliday(year, 10, 11), "Veterans Day");
-            addDate(nthWeekdayOfMonth(year, 10, 4, 4), "Thanksgiving Day");
-            addDate(observedFixedHoliday(year, 11, 25), "Christmas Day");
-        }
+      if (locale === "en-US") {
+        addDate(observedFixedHoliday(year, 0, 1), "New Year's Day");
+        addDate(nthWeekdayOfMonth(year, 0, 1, 3), "Martin Luther King Jr. Day");
+        addDate(nthWeekdayOfMonth(year, 1, 1, 3), "Presidents' Day");
+        addDate(lastWeekdayOfMonth(year, 4, 1), "Memorial Day");
+        addDate(observedFixedHoliday(year, 5, 19), "Juneteenth");
+        addDate(observedFixedHoliday(year, 6, 4), "Independence Day");
+        addDate(nthWeekdayOfMonth(year, 8, 1, 1), "Labor Day");
+        addDate(nthWeekdayOfMonth(year, 9, 1, 2), "Columbus Day");
+        addDate(observedFixedHoliday(year, 10, 11), "Veterans Day");
+        addDate(nthWeekdayOfMonth(year, 10, 4, 4), "Thanksgiving Day");
+        addDate(observedFixedHoliday(year, 11, 25), "Christmas Day");
+      }
 
-        if (locale === "de-DE") {
-            add(1, 1, "Neujahr");
-            add(5, 1, "Tag der Arbeit");
-            add(10, 3, "Tag der Deutschen Einheit");
-            add(12, 25, "Erster Weihnachtstag");
-            add(12, 26, "Zweiter Weihnachtstag");
+      if (locale === "de-DE") {
+        add(1, 1, "Neujahr");
+        add(5, 1, "Tag der Arbeit");
+        add(10, 3, "Tag der Deutschen Einheit");
+        add(12, 25, "Erster Weihnachtstag");
+        add(12, 26, "Zweiter Weihnachtstag");
 
-            addDate(addDays(easter, -2), "Karfreitag");
-            addDate(easter, "Ostersonntag");
-            addDate(addDays(easter, 1), "Ostermontag");
-            addDate(addDays(easter, 39), "Christi Himmelfahrt");
-            addDate(addDays(easter, 49), "Pfingstsonntag");
-            addDate(addDays(easter, 50), "Pfingstmontag");
-        }
+        addDate(addDays(easter, -2), "Karfreitag");
+        addDate(easter, "Ostersonntag");
+        addDate(addDays(easter, 1), "Ostermontag");
+        addDate(addDays(easter, 39), "Christi Himmelfahrt");
+        addDate(addDays(easter, 49), "Pfingstsonntag");
+        addDate(addDays(easter, 50), "Pfingstmontag");
+      }
 
-        if (locale === "fr-FR") {
-            add(1, 1, "Jour de l’an");
-            add(5, 1, "Fête du Travail");
-            add(5, 8, "Victoire 1945");
-            add(7, 14, "Fête nationale");
-            add(8, 15, "Assomption");
-            add(11, 1, "Toussaint");
-            add(11, 11, "Armistice 1918");
-            add(12, 25, "Noël");
+      if (locale === "fr-FR") {
+        add(1, 1, "Jour de l’an");
+        add(5, 1, "Fête du Travail");
+        add(5, 8, "Victoire 1945");
+        add(7, 14, "Fête nationale");
+        add(8, 15, "Assomption");
+        add(11, 1, "Toussaint");
+        add(11, 11, "Armistice 1918");
+        add(12, 25, "Noël");
 
-            addDate(addDays(easter, 1), "Lundi de Pâques");
-            addDate(addDays(easter, 39), "Ascension");
-            addDate(addDays(easter, 50), "Lundi de Pentecôte");
-        }
+        addDate(addDays(easter, 1), "Lundi de Pâques");
+        addDate(addDays(easter, 39), "Ascension");
+        addDate(addDays(easter, 50), "Lundi de Pentecôte");
+      }
 
-        if (locale === "es-ES") {
-            add(1, 1, "Año Nuevo");
-            add(1, 6, "Epifanía del Señor");
-            add(5, 1, "Fiesta del Trabajo");
-            add(8, 15, "Asunción de la Virgen");
-            add(10, 12, "Fiesta Nacional de España");
-            add(11, 1, "Todos los Santos");
-            add(12, 6, "Día de la Constitución");
-            add(12, 8, "Inmaculada Concepción");
-            add(12, 25, "Navidad");
+      if (locale === "es-ES") {
+        add(1, 1, "Año Nuevo");
+        add(1, 6, "Epifanía");
+        add(5, 1, "Fiesta del Trabajo");
+        add(8, 15, "Asunción");
+        add(10, 12, "Fiesta Nacional de España");
+        add(11, 1, "Todos los Santos");
+        add(12, 6, "Día de la Constitución");
+        add(12, 8, "Inmaculada Concepción");
+        add(12, 25, "Navidad");
 
-            addDate(addDays(easter, -2), "Viernes Santo");
-        }
+        addDate(addDays(easter, -2), "Viernes Santo");
+      }
 
-        return map;
+      return map;
     }
-</script>
+  </script>
 </body>
 </html>
