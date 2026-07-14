@@ -1,0 +1,122 @@
+name: Update HTML index links
+
+on:
+  push:
+    branches:
+      - agent/update-html-index-links
+
+permissions:
+  contents: write
+
+jobs:
+  update-indexes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/update-html-index-links
+          fetch-depth: 0
+
+      - name: Add missing tool links
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root_path = Path('index.html')
+          toolbox_path = Path('html/index.html')
+
+          root = root_path.read_text(encoding='utf-8')
+          toolbox = toolbox_path.read_text(encoding='utf-8')
+
+          root_links = [
+              ('./html/password.html', '🔐 Password Generator', "Creates passwords locally, because 'password123' has had a long enough career."),
+              ('./html/political-spectrum.html', '🧭 Political Spectrum', 'Drag political labels around until everyone is offended equally.'),
+              ('./html/shell.html', '🐚 Shell One-Liners', 'Terminal shortcuts for solving problems and creating more interesting ones.'),
+              ('./html/shortcuts/', '⌨️ Shortcuts PWA', 'An installable shortcut finder for avoiding the mouse professionally.'),
+              ('./html/uuid.html', '🆔 UUID Generator', 'Generate identifiers for things that were doing fine without identities.'),
+              ('./html/vat.html', '🧾 VAT Calculator', 'Turns net into gross and optimism into tax.'),
+              ('./html/xml.html', '🗂️ XML Tools', 'Format and validate angle-bracket archaeology.'),
+              ('./html/yaml.html', '📋 YAML Tools', 'Convert indentation-based confidence into JSON.'),
+              ('./html/year-pwa/', '📅 Year Progress PWA', 'Watch the year disappear in installable full-screen mode.'),
+          ]
+
+          toolbox_links = [
+              ('./password.html', '🔐 Password Generator', "Creates passwords locally, because 'password123' has had a long enough career."),
+              ('./political-spectrum.html', '🧭 Political Spectrum', 'Drag political labels around until everyone is offended equally.'),
+              ('./shell.html', '🐚 Shell One-Liners', 'Terminal shortcuts for solving problems and creating more interesting ones.'),
+              ('./shortcuts/', '⌨️ Shortcuts PWA', 'An installable shortcut finder for avoiding the mouse professionally.'),
+              ('./uuid.html', '🆔 UUID Generator', 'Generate identifiers for things that were doing fine without identities.'),
+              ('./vat.html', '🧾 VAT Calculator', 'Turns net into gross and optimism into tax.'),
+              ('./xml.html', '🗂️ XML Tools', 'Format and validate angle-bracket archaeology.'),
+              ('./yaml.html', '📋 YAML Tools', 'Convert indentation-based confidence into JSON.'),
+              ('./year-pwa/', '📅 Year Progress PWA', 'Watch the year disappear in installable full-screen mode.'),
+          ]
+
+          root_anchor = '                        <a href="./html/workdays.html"><strong>️⏳ Work days</strong> - <span class="muted">Free time.</span></a><br>'
+          toolbox_anchor = '            <a href="./workdays.html"><strong>️⏳ Work days</strong> - <span class="muted">Free time.</span></a>'
+
+          if root_anchor not in root:
+              raise SystemExit('Root index insertion anchor not found')
+          if toolbox_anchor not in toolbox:
+              raise SystemExit('Toolbox index insertion anchor not found')
+
+          root_additions = []
+          for href, title, description in root_links:
+              if f'href="{href}"' not in root:
+                  root_additions.append(
+                      f'                        <a href="{href}"><strong>{title}</strong> - '
+                      f'<span class="muted">{description}</span></a><br>'
+                  )
+
+          toolbox_additions = []
+          for href, title, description in toolbox_links:
+              if f'href="{href}"' not in toolbox:
+                  toolbox_additions.append(
+                      f'            <a href="{href}"><strong>{title}</strong> - '
+                      f'<span class="muted">{description}</span></a>'
+                  )
+
+          if root_additions:
+              root = root.replace(root_anchor, root_anchor + '\n' + '\n'.join(root_additions), 1)
+          if toolbox_additions:
+              toolbox = toolbox.replace(toolbox_anchor, toolbox_anchor + '\n' + '\n'.join(toolbox_additions), 1)
+
+          root_path.write_text(root, encoding='utf-8')
+          toolbox_path.write_text(toolbox, encoding='utf-8')
+
+          targets = [
+              Path('html/password.html'),
+              Path('html/political-spectrum.html'),
+              Path('html/shell.html'),
+              Path('html/shortcuts/index.html'),
+              Path('html/shortcuts/shortcuts.html'),
+              Path('html/uuid.html'),
+              Path('html/vat.html'),
+              Path('html/xml.html'),
+              Path('html/yaml.html'),
+              Path('html/year-pwa/index.html'),
+          ]
+          missing = [str(path) for path in targets if not path.is_file()]
+          if missing:
+              raise SystemExit('Missing target files: ' + ', '.join(missing))
+
+          for href, _, _ in root_links:
+              if f'href="{href}"' not in root:
+                  raise SystemExit(f'Missing root link after update: {href}')
+          for href, _, _ in toolbox_links:
+              if f'href="{href}"' not in toolbox:
+                  raise SystemExit(f'Missing toolbox link after update: {href}')
+          PY
+
+      - name: Commit generated changes
+        shell: bash
+        run: |
+          rm -f .github/workflows/update-html-index-links.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html html/index.html .github/workflows/update-html-index-links.yml
+          git diff --cached --check
+          git commit -m "Update HTML tool indexes"
+          git push origin HEAD:agent/update-html-index-links
