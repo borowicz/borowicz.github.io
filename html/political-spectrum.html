@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Political Spectrum — Interactive 2026</title>
+  <style>
+    :root {
+      --bg-1: #eef2ff;
+      --bg-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --axis: #172033;
+      --shadow: 0 18px 60px rgba(15, 23, 42, .12);
+      --shadow-soft: 0 8px 24px rgba(15, 23, 42, .08);
+      --ring: rgba(59, 130, 246, .25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: stretch;
+      padding: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, .18), transparent 28%),
+        radial-gradient(circle at top right, rgba(167, 139, 250, .12), transparent 24%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    }
+
+    .canvas {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      border: 0;
+      border-radius: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .97), rgba(255, 255, 255, .91));
+      box-shadow: none;
+      user-select: none;
+      touch-action: none;
+      backdrop-filter: blur(14px);
+    }
+
+    .canvas::before,
+    .canvas::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(25px);
+      opacity: .62;
+    }
+
+    .canvas::before {
+      top: -60px;
+      left: -50px;
+      width: 240px;
+      height: 240px;
+      background: rgba(96, 165, 250, .15);
+    }
+
+    .canvas::after {
+      right: -45px;
+      bottom: -75px;
+      width: 280px;
+      height: 280px;
+      background: rgba(167, 139, 250, .13);
+    }
+
+    .toolbar {
+      position: absolute;
+      inset: 15px 17px auto auto;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px 8px 13px;
+      border: 1px solid rgba(148, 163, 184, .28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .79);
+      box-shadow: var(--shadow-soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar .count {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .toolbar .hint {
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .toolbar button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 15px;
+      background: linear-gradient(180deg, #fff, #f1f5f9);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, .34), 0 2px 10px rgba(15, 23, 42, .08);
+      color: var(--text);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    .toolbar button:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, #fff, #e2e8f0);
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, .44), 0 6px 14px rgba(15, 23, 42, .10);
+    }
+
+    .toolbar button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    svg {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    text {
+      fill: var(--text);
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, .84);
+      stroke-width: 5px;
+      stroke-linejoin: round;
+    }
+
+    .meta-label {
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: 3px;
+      fill: #64748b;
+      stroke-width: 0;
+    }
+
+    .title {
+      font-size: 64px;
+      font-weight: 860;
+      letter-spacing: .4px;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      font-weight: 560;
+      fill: var(--muted);
+      stroke-width: 0;
+    }
+
+    .point-label {
+      font-size: 20px;
+      font-weight: 790;
+      letter-spacing: .15px;
+    }
+
+    .group-label,
+    .center-label {
+      font-size: 29px;
+      font-weight: 790;
+      letter-spacing: .4px;
+    }
+
+    .vertical-label {
+      font-size: 31px;
+      font-weight: 880;
+      letter-spacing: 8px;
+      fill: #1e293b;
+    }
+
+    .axis-glow {
+      stroke: rgba(59, 130, 246, .10);
+      stroke-width: 32;
+      stroke-linecap: round;
+    }
+
+    .axis-track {
+      stroke: rgba(148, 163, 184, .34);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .axis {
+      stroke-width: 14;
+      stroke-linecap: butt;
+    }
+
+    .axis-arrowhead {
+      filter: drop-shadow(0 3px 4px rgba(15, 23, 42, .14));
+    }
+
+    .guide {
+      stroke: rgba(148, 163, 184, .20);
+      stroke-width: 1.5;
+      stroke-dasharray: 7 11;
+    }
+
+    .connector,
+    .bracket {
+      stroke: #1e293b;
+      stroke-width: 4.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .down-arrowhead { fill: #1e293b; }
+
+    .zone-caption {
+      font-size: 15px;
+      font-weight: 850;
+      letter-spacing: 2.2px;
+      fill: #94a3b8;
+      stroke-width: 0;
+    }
+
+    .point-hit {
+      fill: transparent;
+      cursor: grab;
+      pointer-events: all;
+    }
+
+    .point.dragging .point-hit { cursor: grabbing; }
+
+    .selection-ring {
+      fill: none;
+      stroke: rgba(59, 130, 246, .52);
+      stroke-width: 4;
+      opacity: 0;
+      transition: opacity .14s ease;
+    }
+
+    .point.hovered .selection-ring,
+    .point.focused .selection-ring,
+    .point.pinned .selection-ring,
+    .point.dragging .selection-ring {
+      opacity: 1;
+    }
+
+    .dot {
+      stroke: rgba(15, 23, 42, .96);
+      stroke-width: 2.6;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 13px rgba(15, 23, 42, .18));
+      transition: transform .12s ease, filter .12s ease;
+    }
+
+    .point.hovered .dot,
+    .point.focused .dot,
+    .point.pinned .dot {
+      transform: scale(1.06);
+      filter: drop-shadow(0 12px 18px rgba(15, 23, 42, .22));
+    }
+
+    .point.dragging .dot {
+      transform: scale(1.11);
+      filter: drop-shadow(0 16px 23px rgba(15, 23, 42, .26));
+    }
+
+    /* Stick figures */
+    .person {
+      pointer-events: none;
+      transform-box: fill-box;
+      transform-origin: center bottom;
+      animation: idleBob 2.25s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .person-line,
+    .person-head,
+    .person-eye,
+    .person-mouth,
+    .person-brow,
+    .motion-line {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .person-line,
+    .person-head,
+    .person-mouth,
+    .person-brow,
+    .motion-line {
+      fill: none;
+      stroke: #111827;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .person-head { fill: rgba(255, 255, 255, .98); }
+    .person-eye { fill: #111827; }
+    .person-brow { opacity: 0; }
+    .person-mouth { display: none; }
+    .mouth-smile { display: block; }
+
+    .arm-left,
+    .arm-right,
+    .leg-left,
+    .leg-right {
+      transform-box: fill-box;
+      transform-origin: top center;
+    }
+
+    .motion-line {
+      opacity: 0;
+      stroke-width: 2.5;
+    }
+
+    .question-mark,
+    .anger-mark {
+      opacity: 0;
+      font-size: 21px;
+      font-weight: 900;
+      stroke-width: 3px;
+    }
+
+    .point.mood-happy .mouth-smile,
+    .point.mood-smug .mouth-smile { display: block; }
+
+    .point.mood-happy .mouth-flat,
+    .point.mood-happy .mouth-frown,
+    .point.mood-happy .mouth-shout,
+    .point.mood-smug .mouth-flat,
+    .point.mood-smug .mouth-frown,
+    .point.mood-smug .mouth-shout { display: none; }
+
+    .point.mood-confused .mouth-flat,
+    .point.mood-tired .mouth-flat { display: block; }
+
+    .point.mood-confused .mouth-smile,
+    .point.mood-confused .mouth-frown,
+    .point.mood-confused .mouth-shout,
+    .point.mood-tired .mouth-smile,
+    .point.mood-tired .mouth-frown,
+    .point.mood-tired .mouth-shout { display: none; }
+
+    .point.mood-confused .question-mark { opacity: 1; }
+
+    .point.mood-angry .mouth-shout,
+    .point.mood-alarmed .mouth-frown { display: block; }
+
+    .point.mood-angry .mouth-smile,
+    .point.mood-angry .mouth-flat,
+    .point.mood-angry .mouth-frown,
+    .point.mood-alarmed .mouth-smile,
+    .point.mood-alarmed .mouth-flat,
+    .point.mood-alarmed .mouth-shout { display: none; }
+
+    .point.mood-angry .person-brow,
+    .point.mood-alarmed .person-brow { opacity: 1; }
+
+    .point.mood-angry .anger-mark { opacity: 1; }
+
+    .point.dragging .person {
+      animation: walkingBob .28s ease-in-out infinite alternate;
+    }
+
+    .point.dragging .arm-left,
+    .point.dragging .leg-right {
+      animation: swingForward .34s ease-in-out infinite alternate;
+    }
+
+    .point.dragging .arm-right,
+    .point.dragging .leg-left {
+      animation: swingBack .34s ease-in-out infinite alternate;
+    }
+
+    .point.dragging .motion-line { opacity: .72; }
+
+    .point.reacting .person {
+      animation: reactionPop .45s cubic-bezier(.2, .9, .3, 1.25) 1;
+    }
+
+    /* Hover / press description */
+    .quip-bubble {
+      pointer-events: none;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .15s ease, visibility .15s ease;
+      filter: drop-shadow(0 9px 16px rgba(15, 23, 42, .13));
+    }
+
+    .quip-bubble.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .quip-box {
+      fill: rgba(255, 255, 255, .985);
+      stroke: rgba(15, 23, 42, .92);
+      stroke-width: 2.25;
+    }
+
+    .quip-tail {
+      fill: rgba(255, 255, 255, .985);
+      stroke: rgba(15, 23, 42, .92);
+      stroke-width: 2.25;
+      stroke-linejoin: round;
+    }
+
+    .quip-title {
+      font-size: 13px;
+      font-weight: 880;
+      letter-spacing: 1.45px;
+      fill: #64748b;
+      stroke-width: 0;
+    }
+
+    .quip-text {
+      font-size: 17px;
+      font-weight: 775;
+      fill: #0f172a;
+      stroke-width: 0;
+    }
+
+    .quip-help {
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .8px;
+      fill: #94a3b8;
+      stroke-width: 0;
+    }
+
+    .quip-bubble.pop { animation: bubblePop .32s cubic-bezier(.2, .9, .3, 1.25); }
+
+    @keyframes idleBob {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-3px) rotate(1deg); }
+    }
+
+    @keyframes walkingBob {
+      from { transform: translateY(0) rotate(-2deg); }
+      to { transform: translateY(-6px) rotate(2deg); }
+    }
+
+    @keyframes swingForward {
+      from { transform: rotate(-22deg); }
+      to { transform: rotate(22deg); }
+    }
+
+    @keyframes swingBack {
+      from { transform: rotate(22deg); }
+      to { transform: rotate(-22deg); }
+    }
+
+    @keyframes reactionPop {
+      0% { transform: translateY(0) scale(1); }
+      45% { transform: translateY(-11px) scale(1.12); }
+      70% { transform: translateY(2px) scale(.97); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes bubblePop {
+      0% { opacity: .20; }
+      100% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .person,
+      .point.dragging .person,
+      .point.dragging .arm-left,
+      .point.dragging .arm-right,
+      .point.dragging .leg-left,
+      .point.dragging .leg-right,
+      .point.reacting .person,
+      .quip-bubble.pop {
+        animation: none !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 0; }
+      .canvas { border-radius: 0; }
+      .toolbar { top: 8px; right: 8px; padding: 7px 9px; font-size: 11px; }
+      .toolbar .hint { display: none; }
+      .toolbar .count { padding: 6px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <div class="toolbar" aria-label="Chart controls">
+      <span class="count">9 draggable people</span>
+      <span class="hint">Hover to inspect · press to pin · drag to move</span>
+      <button type="button" id="resetButton">Reset</button>
+    </div>
+
+    <svg id="spectrum" viewBox="0 0 1536 912" role="img" aria-labelledby="title desc">
+      <title id="title">The Political Spectrum — Interactive 2026</title>
+      <desc id="desc">Nine independently draggable political points with animated stick figures. Hover or press a point to reveal a humorous description.</desc>
+
+      <defs>
+        <linearGradient id="axisGrad" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#2563eb" />
+          <stop offset=".5" stop-color="#334155" />
+          <stop offset="1" stop-color="#ef4444" />
+        </linearGradient>
+      </defs>
+
+      <text x="768" y="75" text-anchor="middle" class="meta-label">INTERACTIVE DIAGRAM · 2026</text>
+      <text x="768" y="128" text-anchor="middle" class="title">The Political Spectrum</text>
+      <text x="768" y="161" text-anchor="middle" class="subtitle">Nine people, one axis, absolutely no chance of agreement.</text>
+
+      <!-- Hidden until hover, keyboard focus, dragging, or press/click. -->
+      <g id="quipBubble" class="quip-bubble hidden" transform="translate(598 177)">
+        <rect class="quip-box" x="0" y="0" width="340" height="83" rx="18" />
+        <path id="quipTail" class="quip-tail" d="M160 82 L170 96 L180 82 Z" />
+        <text id="quipTitle" x="170" y="20" text-anchor="middle" class="quip-title">POINT</text>
+        <text x="170" y="44" text-anchor="middle" class="quip-text">
+          <tspan id="quipLine1" x="170" dy="0"></tspan>
+          <tspan id="quipLine2" x="170" dy="19"></tspan>
+        </text>
+        <text id="quipHelp" x="170" y="76" text-anchor="middle" class="quip-help">PRESS TO PIN</text>
+      </g>
+
+      <line x1="245" y1="268" x2="245" y2="748" class="guide" />
+      <line x1="768" y1="268" x2="768" y2="748" class="guide" />
+      <line x1="1291" y1="268" x2="1291" y2="748" class="guide" />
+
+      <text x="93" y="430" text-anchor="middle" class="vertical-label" transform="rotate(-90 93 430)">LEFT</text>
+      <text x="1443" y="430" text-anchor="middle" class="vertical-label" transform="rotate(90 1443 430)">RIGHT</text>
+
+      <text x="365" y="550" text-anchor="middle" class="zone-caption">POLITICALLY LEFT</text>
+      <text x="768" y="550" text-anchor="middle" class="zone-caption">THE DANGEROUS MIDDLE</text>
+      <text x="1171" y="550" text-anchor="middle" class="zone-caption">POLITICALLY RIGHT</text>
+
+      <!-- Manual arrowheads keep their size and position predictable. -->
+      <line x1="188" y1="407" x2="1348" y2="407" class="axis-glow" />
+      <line x1="188" y1="407" x2="1348" y2="407" class="axis-track" />
+      <line x1="188" y1="407" x2="1348" y2="407" class="axis" stroke="url(#axisGrad)" />
+      <path class="axis-arrowhead" fill="#2563eb" d="M160 407 L188 394 L188 420 Z" aria-hidden="true" />
+      <path class="axis-arrowhead" fill="#ef4444" d="M1376 407 L1348 394 L1348 420 Z" aria-hidden="true" />
+
+      <g id="pointsLayer"></g>
+
+      <!-- Static range annotations: points may cross freely. -->
+      <path d="M222 585 V617 H650 V585" class="bracket" />
+      <line x1="436" y1="617" x2="436" y2="655" class="connector" />
+      <path class="down-arrowhead" d="M428 655 H444 L436 670 Z" />
+      <text x="436" y="718" text-anchor="middle" class="group-label">politically left</text>
+
+      <path d="M886 585 V617 H1314 V585" class="bracket" />
+      <line x1="1100" y1="617" x2="1100" y2="655" class="connector" />
+      <path class="down-arrowhead" d="M1092 655 H1108 L1100 670 Z" />
+      <text x="1100" y="718" text-anchor="middle" class="group-label">politically right</text>
+
+      <line x1="768" y1="532" x2="768" y2="778" class="connector" />
+      <path class="down-arrowhead" d="M760 778 H776 L768 793 Z" />
+      <text x="768" y="842" text-anchor="middle" class="center-label">center / normality*</text>
+      <text x="768" y="868" text-anchor="middle" class="quip-help">*definition changes without notice</text>
+    </svg>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const svg = document.getElementById('spectrum');
+      const pointsLayer = document.getElementById('pointsLayer');
+      const resetButton = document.getElementById('resetButton');
+
+      const axisMin = 215;
+      const axisMax = 1321;
+      const bubbleWidth = 340;
+      const bubbleY = 177;
+      const moodClasses = [
+        'mood-happy',
+        'mood-smug',
+        'mood-confused',
+        'mood-tired',
+        'mood-angry',
+        'mood-alarmed'
+      ];
+
+      const specs = [
+        { name: 'revolutionary', color: '#ff355d', x: 235 },
+        { name: 'socialist', color: '#ff5a4f', x: 368 },
+        { name: 'progressive', color: '#ff8736', x: 501 },
+        { name: 'liberal', color: '#ffb020', x: 634 },
+        { name: 'centrist', color: '#67d400', x: 768 },
+        { name: 'conservative', color: '#f2b51d', x: 902 },
+        { name: 'traditionalist', color: '#ff8736', x: 1035 },
+        { name: 'reactionary', color: '#ff5a4f', x: 1168 },
+        { name: 'hardliner', color: '#ff355d', x: 1301 }
+      ];
+
+      const initialPositions = specs.map(spec => spec.x);
+      const positions = [...initialPositions];
+
+      const zones = [
+        {
+          max: 10,
+          title: 'TOO FAR LEFT',
+          mood: 'mood-angry',
+          quips: [
+            ['Too far left.', 'Even the revolution wants a meeting.'],
+            ['Collectivization complete.', 'The group chat belongs to everyone.'],
+            ['Maximum theory achieved.', 'Reality has left the building.']
+          ]
+        },
+        {
+          max: 22,
+          title: 'HARD LEFT',
+          mood: 'mood-alarmed',
+          quips: [
+            ['Manifesto territory.', 'There are already 47 working groups.'],
+            ['Everything is structural.', 'Including the coffee machine.'],
+            ['Redistribution mode.', 'Starting with your lunch.']
+          ]
+        },
+        {
+          max: 35,
+          title: 'PROGRESSIVE ZONE',
+          mood: 'mood-happy',
+          quips: [
+            ['Progressive expansion pack.', 'Now with extra committees.'],
+            ['Virtue signal acquired.', 'Practical effect still loading.'],
+            ['Policy by hashtag.', 'Implementation sold separately.']
+          ]
+        },
+        {
+          max: 45,
+          title: 'CENTER-LEFT',
+          mood: 'mood-confused',
+          quips: [
+            ['Normality — 2012 edition.', 'Now awaiting ideological review.'],
+            ['Common sense drifted left.', 'Nobody updated the map.'],
+            ['Moderately progressive.', 'Still invited to brunch.']
+          ]
+        },
+        {
+          max: 55,
+          title: 'NORMALITY',
+          mood: 'mood-happy',
+          quips: [
+            ['Normality.', 'Suspiciously controversial.'],
+            ['The dangerous middle.', 'Both sides are typing.'],
+            ['Centrist detected.', 'Everyone is slightly disappointed.']
+          ]
+        },
+        {
+          max: 65,
+          title: 'CENTER-RIGHT',
+          mood: 'mood-tired',
+          quips: [
+            ['Anti-DEI detected.', 'HR has entered the chat.'],
+            ['Normality moved right.', 'The labels stayed behind.'],
+            ['One unpopular question.', 'Apparently an extremist now.']
+          ]
+        },
+        {
+          max: 77,
+          title: 'CONSERVATIVE',
+          mood: 'mood-smug',
+          quips: [
+            ['Tradition intensifies.', 'The lawn has been defended.'],
+            ['Fiscal responsibility.', 'Until the subsidy arrives.'],
+            ['Conservative mode.', 'Change requires three signatures.']
+          ]
+        },
+        {
+          max: 89,
+          title: 'HARD RIGHT',
+          mood: 'mood-confused',
+          quips: [
+            ['Apparently far-right now.', 'You moved three pixels.'],
+            ['Restore point selected.', 'Date: approximately 1985.'],
+            ['The Overton window moved.', 'Nobody left a forwarding address.']
+          ]
+        },
+        {
+          max: 100,
+          title: 'TOO FAR RIGHT',
+          mood: 'mood-angry',
+          quips: [
+            ['Too far right.', 'Even history closed the tab.'],
+            ['Factory settings requested.', 'Date: approximately 1955.'],
+            ['Maximum tradition achieved.', 'The future has been declined.']
+          ]
+        }
+      ];
+
+      const quipBubble = document.getElementById('quipBubble');
+      const quipTail = document.getElementById('quipTail');
+      const quipTitle = document.getElementById('quipTitle');
+      const quipLine1 = document.getElementById('quipLine1');
+      const quipLine2 = document.getElementById('quipLine2');
+      const quipHelp = document.getElementById('quipHelp');
+
+      let pointGroups = [];
+      let hitAreas = [];
+      let activeIndex = null;
+      let hoverIndex = null;
+      let focusIndex = null;
+      let pinnedIndex = null;
+      let transientIndex = null;
+      let pressState = null;
+      let transientTimer = null;
+      let reactionTimer = null;
+      let lastBubbleKey = '';
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+      function personMarkup(delay) {
+        return `
+          <g class="person" style="--delay:${delay}s">
+            <circle class="person-head" cx="0" cy="300" r="12" />
+            <circle class="person-eye" cx="-4" cy="298" r="1.55" />
+            <circle class="person-eye" cx="4" cy="298" r="1.55" />
+            <path class="person-brow" d="M-8 293 L-3 295 M3 295 L8 293" />
+            <path class="person-mouth mouth-smile" d="M-5 304 Q0 309 5 304" />
+            <path class="person-mouth mouth-flat" d="M-4.5 306 H4.5" />
+            <path class="person-mouth mouth-frown" d="M-5 309 Q0 304 5 309" />
+            <ellipse class="person-mouth mouth-shout" cx="0" cy="306" rx="4.2" ry="3.5" />
+            <line class="person-line" x1="0" y1="312" x2="0" y2="344" />
+            <line class="person-line arm-left" x1="0" y1="320" x2="-15" y2="333" />
+            <line class="person-line arm-right" x1="0" y1="320" x2="15" y2="332" />
+            <line class="person-line leg-left" x1="0" y1="344" x2="-11" y2="366" />
+            <line class="person-line leg-right" x1="0" y1="344" x2="11" y2="366" />
+            <path class="motion-line" d="M-24 325 H-34 M-24 336 H-38" />
+            <text class="anger-mark" x="13" y="285">!</text>
+            <text class="question-mark" x="13" y="285">?</text>
+          </g>
+        `;
+      }
+
+      function renderPoints() {
+        pointsLayer.innerHTML = specs.map((spec, index) => {
+          const labelY = index % 2 === 0 ? 467 : 504;
+          return `
+            <g class="point" data-index="${index}" data-name="${spec.name}" transform="translate(${spec.x} 0)">
+              <rect
+                class="point-hit"
+                x="-38"
+                y="278"
+                width="76"
+                height="164"
+                rx="34"
+                tabindex="0"
+                role="slider"
+                aria-label="${spec.name} position"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              />
+              ${personMarkup((-0.22 * index).toFixed(2))}
+              <circle class="selection-ring" cx="0" cy="407" r="31" />
+              <circle class="dot" cx="0" cy="407" r="23" fill="${spec.color}" />
+              <text x="0" y="${labelY}" text-anchor="middle" class="point-label">${spec.name}</text>
+            </g>
+          `;
+        }).join('');
+
+        pointGroups = [...pointsLayer.querySelectorAll('.point')];
+        hitAreas = pointGroups.map(group => group.querySelector('.point-hit'));
+      }
+
+      function clientXToSvgX(clientX) {
+        const point = svg.createSVGPoint();
+        point.x = clientX;
+        point.y = 0;
+        const matrix = svg.getScreenCTM();
+        return matrix ? point.matrixTransform(matrix.inverse()).x : clientX;
+      }
+
+      function positionPercent(index) {
+        return Math.round(((positions[index] - axisMin) / (axisMax - axisMin)) * 100);
+      }
+
+      function zoneForPercent(percent) {
+        return zones.find(zone => percent <= zone.max) || zones[zones.length - 1];
+      }
+
+      function applyMood(index) {
+        const group = pointGroups[index];
+        const zone = zoneForPercent(positionPercent(index));
+        group.classList.remove(...moodClasses);
+        group.classList.add(zone.mood);
+      }
+
+      function updatePinnedClasses() {
+        pointGroups.forEach((group, index) => {
+          group.classList.toggle('pinned', index === pinnedIndex);
+          hitAreas[index].setAttribute('aria-pressed', index === pinnedIndex ? 'true' : 'false');
+        });
+      }
+
+      function currentInfoIndex() {
+        return activeIndex ?? hoverIndex ?? focusIndex ?? transientIndex ?? pinnedIndex;
+      }
+
+      function popBubble() {
+        quipBubble.classList.remove('pop');
+        void quipBubble.getBoundingClientRect();
+        quipBubble.classList.add('pop');
+      }
+
+      function animateReaction(index) {
+        pointGroups[index].classList.remove('reacting');
+        void pointGroups[index].getBoundingClientRect();
+        pointGroups[index].classList.add('reacting');
+        window.clearTimeout(reactionTimer);
+        reactionTimer = window.setTimeout(() => {
+          pointGroups[index]?.classList.remove('reacting');
+        }, 470);
+      }
+
+      function updateBubblePosition(index) {
+        const pointX = positions[index];
+        const bubbleX = clamp(pointX - bubbleWidth / 2, 112, 1536 - bubbleWidth - 112);
+        const localTailX = clamp(pointX - bubbleX, 24, bubbleWidth - 24);
+        quipBubble.setAttribute('transform', `translate(${bubbleX} ${bubbleY})`);
+        quipTail.setAttribute(
+          'd',
+          `M${localTailX - 10} 82 L${localTailX} 96 L${localTailX + 10} 82 Z`
+        );
+      }
+
+      function refreshBubble(forcePop = false) {
+        const index = currentInfoIndex();
+
+        if (index === null || index === undefined) {
+          quipBubble.classList.add('hidden');
+          lastBubbleKey = '';
+          return;
+        }
+
+        const percent = positionPercent(index);
+        const zone = zoneForPercent(percent);
+        const spec = specs[index];
+        const zoneIndex = zones.indexOf(zone);
+        const pair = zone.quips[(index + zoneIndex) % zone.quips.length];
+        const isPinned = pinnedIndex === index;
+        const key = `${index}:${zone.title}:${isPinned}`;
+
+        quipTitle.textContent =
+          `${spec.name.toUpperCase()} · ${percent}% FROM LEFT${isPinned ? ' · PINNED' : ''}`;
+        quipLine1.textContent = pair[0];
+        quipLine2.textContent = pair[1];
+        quipHelp.textContent = isPinned ? 'PRESS AGAIN TO UNPIN' : 'PRESS TO PIN';
+        updateBubblePosition(index);
+        quipBubble.classList.remove('hidden');
+
+        if (forcePop || key !== lastBubbleKey) {
+          lastBubbleKey = key;
+          popBubble();
+        }
+      }
+
+      function setTransient(index, duration = 1100) {
+        window.clearTimeout(transientTimer);
+        transientIndex = index;
+        refreshBubble();
+        transientTimer = window.setTimeout(() => {
+          transientIndex = null;
+          refreshBubble();
+        }, duration);
+      }
+
+      function setPointPosition(index, requestedX, showTransient = false) {
+        positions[index] = clamp(requestedX, axisMin, axisMax);
+        pointGroups[index].setAttribute('transform', `translate(${positions[index]} 0)`);
+
+        const percent = positionPercent(index);
+        hitAreas[index].setAttribute('aria-valuenow', percent);
+        hitAreas[index].setAttribute('aria-valuetext', `${percent}% from the left`);
+        applyMood(index);
+
+        if (showTransient && currentInfoIndex() === null) {
+          setTransient(index);
+        } else {
+          refreshBubble();
+        }
+      }
+
+      function startPress(event, index) {
+        pointGroups[index].parentNode.appendChild(pointGroups[index]);
+
+        activeIndex = index;
+        pressState = {
+          index,
+          pointerId: event.pointerId,
+          startClientX: event.clientX,
+          moved: false
+        };
+
+        hitAreas[index].setPointerCapture(event.pointerId);
+        refreshBubble(true);
+        event.preventDefault();
+      }
+
+      function movePress(event) {
+        if (!pressState || activeIndex === null) return;
+
+        const distance = Math.abs(event.clientX - pressState.startClientX);
+        if (distance > 5 && !pressState.moved) {
+          pressState.moved = true;
+          pointGroups[activeIndex].classList.add('dragging');
+        }
+
+        if (pressState.moved) {
+          setPointPosition(activeIndex, clientXToSvgX(event.clientX));
+        }
+      }
+
+      function endPress(event, cancelled = false) {
+        if (!pressState || activeIndex === null) return;
+
+        const index = activeIndex;
+        const hit = hitAreas[index];
+
+        if (event.pointerId != null && hit.hasPointerCapture(event.pointerId)) {
+          hit.releasePointerCapture(event.pointerId);
+        }
+
+        pointGroups[index].classList.remove('dragging');
+
+        if (!cancelled && !pressState.moved) {
+          pinnedIndex = pinnedIndex === index ? null : index;
+          updatePinnedClasses();
+          animateReaction(index);
+        } else if (!cancelled && pressState.moved) {
+          setTransient(index, 1200);
+        }
+
+        activeIndex = null;
+        pressState = null;
+        refreshBubble(true);
+      }
+
+      function bindPointEvents() {
+        hitAreas.forEach((hit, index) => {
+          hit.addEventListener('pointerenter', event => {
+            if (event.pointerType && event.pointerType !== 'mouse') return;
+            hoverIndex = index;
+            pointGroups[index].classList.add('hovered');
+            refreshBubble(true);
+          });
+
+          hit.addEventListener('pointerleave', event => {
+            if (event.pointerType && event.pointerType !== 'mouse') return;
+            if (activeIndex === index) return;
+            hoverIndex = hoverIndex === index ? null : hoverIndex;
+            pointGroups[index].classList.remove('hovered');
+            refreshBubble();
+          });
+
+          hit.addEventListener('pointerdown', event => startPress(event, index));
+          hit.addEventListener('pointermove', movePress);
+          hit.addEventListener('pointerup', event => endPress(event));
+          hit.addEventListener('pointercancel', event => endPress(event, true));
+
+          hit.addEventListener('lostpointercapture', () => {
+            if (activeIndex === index && pressState) {
+              pointGroups[index].classList.remove('dragging');
+              activeIndex = null;
+              pressState = null;
+              refreshBubble();
+            }
+          });
+
+          hit.addEventListener('focus', () => {
+            focusIndex = index;
+            pointGroups[index].classList.add('focused');
+            refreshBubble(true);
+          });
+
+          hit.addEventListener('blur', () => {
+            focusIndex = focusIndex === index ? null : focusIndex;
+            pointGroups[index].classList.remove('focused');
+            refreshBubble();
+          });
+
+          hit.addEventListener('keydown', event => {
+            const step = event.shiftKey ? 28 : 10;
+
+            if (event.key === 'ArrowLeft') {
+              event.preventDefault();
+              setPointPosition(index, positions[index] - step, true);
+              animateReaction(index);
+            } else if (event.key === 'ArrowRight') {
+              event.preventDefault();
+              setPointPosition(index, positions[index] + step, true);
+              animateReaction(index);
+            } else if (event.key === 'Home') {
+              event.preventDefault();
+              setPointPosition(index, axisMin, true);
+              animateReaction(index);
+            } else if (event.key === 'End') {
+              event.preventDefault();
+              setPointPosition(index, axisMax, true);
+              animateReaction(index);
+            } else if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              pinnedIndex = pinnedIndex === index ? null : index;
+              updatePinnedClasses();
+              animateReaction(index);
+              refreshBubble(true);
+            } else if (event.key === 'Escape') {
+              event.preventDefault();
+              pinnedIndex = null;
+              transientIndex = null;
+              updatePinnedClasses();
+              refreshBubble();
+            }
+          });
+        });
+      }
+
+      function resetAll() {
+        positions.splice(0, positions.length, ...initialPositions);
+        pinnedIndex = null;
+        hoverIndex = null;
+        focusIndex = null;
+        transientIndex = null;
+        activeIndex = null;
+        pressState = null;
+        window.clearTimeout(transientTimer);
+
+        pointGroups.forEach((group, index) => {
+          group.setAttribute('transform', `translate(${positions[index]} 0)`);
+          group.classList.remove('hovered', 'focused', 'pinned', 'dragging', 'reacting');
+          const percent = positionPercent(index);
+          hitAreas[index].setAttribute('aria-valuenow', percent);
+          hitAreas[index].setAttribute('aria-valuetext', `${percent}% from the left`);
+          hitAreas[index].setAttribute('aria-pressed', 'false');
+          applyMood(index);
+        });
+
+        quipBubble.classList.add('hidden');
+        lastBubbleKey = '';
+      }
+
+      renderPoints();
+      bindPointEvents();
+      resetButton.addEventListener('click', resetAll);
+      resetAll();
+    })();
+  </script>
+</body>
+</html>

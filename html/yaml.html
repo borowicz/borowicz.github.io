@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YAML Tools</title>
+<style>
+:root{--bg:#0b1020;--panel:rgba(18,24,46,.92);--panel2:rgba(255,255,255,.04);--border:rgba(255,255,255,.12);--text:#edf2ff;--muted:#97a3c6;--accent:#7c9cff;--accent2:#9c7cff;--good:#49c68a;--warn:#ffbf5e;--bad:#ff7d7d;--radius:22px;--shadow:0 22px 60px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(124,156,255,.22),transparent 30%),radial-gradient(circle at top right,rgba(156,124,255,.18),transparent 28%),linear-gradient(180deg,#0a1020 0%,#10182b 100%)}
+body{padding:24px}.page{width:min(1160px,100%);margin:0 auto;display:grid;gap:18px}.hero,.card{border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);background:var(--panel);box-shadow:var(--shadow);overflow:hidden}.hero{padding:28px;display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:stretch}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}h1{margin:0 0 10px;font-size:clamp(32px,5vw,52px);line-height:.98;letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.7;max-width:70ch}.hero-stats{display:grid;gap:12px}.stat{border:1px solid var(--border);border-radius:18px;background:var(--panel2);padding:16px}.stat strong{display:block;font-size:26px;margin-bottom:6px;letter-spacing:-.03em}.stat span{color:var(--muted);font-size:14px;line-height:1.55}.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;align-items:center}.card-header h2{margin:0;font-size:19px}.card-header span,.muted{color:var(--muted);font-size:13px}.card-body{padding:20px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:grid;gap:8px}.field.full{grid-column:1/-1}label{font-size:14px;color:var(--muted)}input,select,button,textarea{font:inherit}input,select,textarea{width:100%;min-height:52px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);padding:12px 14px;outline:none}textarea{min-height:220px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:rgba(124,156,255,.65);box-shadow:0 0 0 4px rgba(124,156,255,.08)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{min-height:48px;padding:0 16px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;transition:.2s ease}.btn:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,rgba(124,156,255,.95),rgba(156,124,255,.95));border-color:transparent}.result-main{border:1px solid var(--border);border-radius:20px;padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03))}.result-main strong{display:block;font-size:clamp(28px,5vw,44px);line-height:1;letter-spacing:-.04em;margin-bottom:8px}.result-main p{margin:0;color:var(--muted);line-height:1.65}.details-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.detail{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.04);padding:14px}.detail strong{display:block;font-size:20px;margin-bottom:5px}.detail span{color:var(--muted);font-size:13px;line-height:1.5}.two-panels{display:grid;grid-template-columns:1fr 1fr;gap:12px}.output{white-space:pre-wrap;word-break:break-word}.pill{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-size:14px}.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}table{width:100%;border-collapse:collapse}th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}th{background:rgba(255,255,255,.04)}.swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.swatch{border-radius:18px;overflow:hidden;border:1px solid var(--border)}.swatch-color{height:90px}.swatch-meta{padding:10px;font-size:13px;color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.note{margin-top:14px;padding:14px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);line-height:1.65;font-size:14px}
+@media (max-width: 980px){.hero,.layout,.two-panels{grid-template-columns:1fr}.details-grid,.form-grid,.swatches{grid-template-columns:1fr 1fr}}
+@media (max-width: 640px){body{padding:14px}.hero,.card-body{padding:16px}.form-grid,.details-grid,.swatches{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+<section class="hero">
+<div>
+<div class="eyebrow">🧾 <a href="/" style="color:#ccc">github.io html / css / js</a></div>
+<h1>YAML Tools</h1>
+<p>Prosty walidator YAML i konwerter YAML → JSON dla typowych struktur opartych na wcięciach. Działa dobrze dla prostych configów statycznych.</p>
+</div>
+<div class="hero-stats"><div class="stat"><strong id="heroYaml">YAML</strong><span>Walidacja składni i podgląd JSON.</span></div><div class="stat"><strong id="heroStatus">—</strong><span>Status parsowania.</span></div></div>
+</section>
+
+<section class="layout">
+<article class="card"><div class="card-header"><h2>YAML input</h2><span>Proste mapy i listy</span></div><div class="card-body">
+<textarea id="yamlInput" spellcheck="false" class="mono">name: demo
+enabled: true
+ports:
+  - 80
+  - 443
+database:
+  host: localhost
+  user: root</textarea>
+<div class="actions"><button class="btn primary" id="parseBtn">Parse</button><button class="btn" id="sampleBtn">Sample</button></div>
+<div class="note">To lekki parser do prostych plików YAML. Zaawansowane feature'y YAML nie są tu obsługiwane.</div>
+</div></article>
+<article class="card"><div class="card-header"><h2>JSON output</h2><span>Podgląd wyniku</span></div><div class="card-body">
+<div class="result-main"><strong id="yamlStatus">—</strong><p id="yamlDesc">Kliknij Parse, aby sprawdzić i zamienić YAML na JSON.</p></div>
+<textarea id="jsonOutput" spellcheck="false" class="mono"></textarea>
+</div></article>
+</section>
+
+</div>
+<script>
+const input=document.getElementById('yamlInput'), out=document.getElementById('jsonOutput');
+function parseScalar(v){if(v==='true')return true;if(v==='false')return false;if(v==='null')return null;if(/^[-+]?\d+(\.\d+)?$/.test(v))return Number(v);return v.replace(/^['"]|['"]$/g,'');}
+function parseYAML(text){
+  const lines=text.replace(/\t/g,'  ').split(/\r?\n/).filter(l=>l.trim()!=='' && !l.trim().startsWith('#'));
+  let idx=0;
+  function indentOf(line){return line.match(/^ */)[0].length}
+  function parseBlock(baseIndent){
+    let isArray=false; let arr=[]; let obj={};
+    while(idx<lines.length){
+      const line=lines[idx]; const indent=indentOf(line); if(indent<baseIndent) break; if(indent>baseIndent) throw new Error('Nieprawidłowe wcięcie przy linii: '+line.trim());
+      const trimmed=line.trim();
+      if(trimmed.startsWith('- ')){
+        isArray=true;
+        const item=trimmed.slice(2);
+        idx++;
+        if(item===''){arr.push(parseBlock(baseIndent+2));}
+        else if(item.includes(': ') || item.endsWith(':')){
+          const fake=' '.repeat(baseIndent+2)+item; lines.splice(idx,0,fake); arr.push(parseBlock(baseIndent+2));
+        } else arr.push(parseScalar(item));
+      } else {
+        if(isArray) throw new Error('Mieszanie listy i mapy.');
+        const m=trimmed.match(/^([^:]+):(.*)$/); if(!m) throw new Error('Brak ":" w linii: '+trimmed);
+        const key=m[1].trim(); const rest=m[2].trim(); idx++;
+        if(rest===''){ obj[key]=parseBlock(baseIndent+2); }
+        else obj[key]=parseScalar(rest);
+      }
+    }
+    return isArray?arr:obj;
+  }
+  return parseBlock(0);
+}
+function render(){try{const data=parseYAML(input.value); yamlStatus.textContent='OK'; yamlDesc.textContent='YAML został sparsowany poprawnie.'; jsonOutput.value=JSON.stringify(data,null,2); heroStatus.textContent='OK';}catch(e){yamlStatus.textContent='Błąd'; yamlDesc.textContent=e.message; jsonOutput.value=''; heroStatus.textContent='Błąd';}}
+parseBtn.onclick=render; sampleBtn.onclick=()=>{input.value=`app:\n  name: static-tools\n  version: 1\nfeatures:\n  - yaml\n  - json\n  - markdown\n`; render();}; render();
+</script>
+</body></html>
