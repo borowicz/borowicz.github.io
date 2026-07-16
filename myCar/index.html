@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Analyze and visualize myCar Android XML exports — fuel, service, bills, charts." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="myCar" />
+  <title>myCar · analysis</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="assets/i18n.js" defer></script>
+  <script src="assets/mycar-data.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-header">
+      <div>
+        <h1 id="uiTitle">myCar · analysis</h1>
+        <p class="sub" id="uiSubtitle"></p>
+        <div class="meta-chip" id="metaChips"></div>
+      </div>
+      <div class="toolbar">
+        <label class="lang-label">
+          <span id="uiLanguageLabel">Language</span>
+          <select id="langSelect" aria-label="Language"></select>
+        </label>
+        <label class="file-btn">
+          <span id="uiChooseXml">Choose XML</span>
+          <input type="file" id="fileInput" accept=".xml,text/xml,application/xml" hidden />
+        </label>
+        <button type="button" id="reloadDefault" class="ghost-btn">m.xml</button>
+      </div>
+    </header>
+
+    <div id="offlineBanner" class="offline-banner" hidden></div>
+    <div id="errorBox" class="error" hidden></div>
+    <div id="loadingBox" class="loading">Loading…</div>
+
+    <div id="dashboard" hidden>
+      <section class="quick-search panel" aria-label="Quick search">
+        <div class="quick-search-row">
+          <label class="quick-search-field">
+            <span id="uiQuickSearchLabel">Quick search</span>
+            <input
+              type="search"
+              id="quickSearch"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Search all fields… (/)"
+            />
+          </label>
+          <div class="quick-chips" id="quickTypeChips" role="group" aria-label="Type filters"></div>
+          <button type="button" id="clearFilters" class="ghost-btn">Clear filters</button>
+        </div>
+        <p class="quick-hint muted small" id="uiQuickSearchHint"></p>
+      </section>
+
+      <section class="cards" id="cards" aria-label="Summary"></section>
+
+      <div class="grid-2">
+        <section class="panel">
+          <h2 id="uiChartMonthly">Monthly costs</h2>
+          <div class="chart-box tall">
+            <canvas id="chartMonthly"></canvas>
+          </div>
+        </section>
+        <section class="panel">
+          <h2 id="uiChartPie">Cost breakdown</h2>
+          <div class="chart-box">
+            <canvas id="chartPie"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <div class="grid-2 equal">
+        <section class="panel">
+          <h2 id="uiChartPrice">Fuel price over time</h2>
+          <div class="chart-box">
+            <canvas id="chartPrice"></canvas>
+          </div>
+        </section>
+        <section class="panel">
+          <h2 id="uiChartConsumption">Consumption (L/100 km)</h2>
+          <div class="chart-box">
+            <canvas id="chartConsumption"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <h2 id="uiEntries">Entries</h2>
+        <div class="filters">
+          <label>
+            <span id="uiFilterType">Type</span>
+            <select id="filterType">
+              <option value="">All</option>
+              <option value="refuel">Refuel</option>
+              <option value="service_record">Service</option>
+              <option value="bill">Bill</option>
+            </select>
+          </label>
+          <label>
+            <span id="uiFilterMonth">Month</span>
+            <select id="filterMonth">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span id="uiFilterSearch">Search</span>
+            <input type="search" id="filterSearch" placeholder="" />
+          </label>
+          <span class="count" id="entriesCount"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="entries">
+            <thead>
+              <tr>
+                <th id="uiThDate">Date</th>
+                <th id="uiThType">Type</th>
+                <th id="uiThOdo" style="text-align:right">Odometer</th>
+                <th id="uiThDesc">Description</th>
+                <th id="uiThCost" style="text-align:right">Cost</th>
+                <th id="uiThCar">Car</th>
+              </tr>
+            </thead>
+            <tbody id="entriesBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <span id="uiFooter">myCar XML viewer · JavaScript + Chart.js (CDN) · source:</span>
+      <span id="footerSource">—</span>
+      <span class="footer-sep">·</span>
+      <a
+        id="footerPlayLink"
+        href="https://play.google.com/store/apps/details?id=com.aguirre.android.mycar.activity"
+        target="_blank"
+        rel="noopener noreferrer"
+      >myCar on Google Play</a>
+    </footer>
+  </div>
+</body>
+</html>
