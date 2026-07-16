@@ -34,6 +34,14 @@
           <span id="uiLanguageLabel">Language</span>
           <select id="langSelect" aria-label="Language"></select>
         </label>
+        <label class="lang-label dataset-label">
+          <span id="uiSavedDataLabel">Saved data</span>
+          <select id="savedDataSelect" aria-label="Saved data">
+            <option value="">—</option>
+          </select>
+        </label>
+        <button type="button" id="deleteSavedBtn" class="ghost-btn" hidden>Delete</button>
+        <button type="button" id="installBtn" class="ghost-btn" hidden>Install</button>
         <label class="file-btn">
           <span id="uiChooseXml">Choose XML</span>
           <input type="file" id="fileInput" accept=".xml,text/xml,application/xml" hidden />
@@ -60,6 +68,7 @@
             />
           </label>
           <div class="quick-chips" id="quickTypeChips" role="group" aria-label="Type filters"></div>
+          <div class="quick-chips" id="quickRangeChips" role="group" aria-label="Date range"></div>
           <button type="button" id="clearFilters" class="ghost-btn">Clear filters</button>
         </div>
         <p class="quick-hint muted small" id="uiQuickSearchHint"></p>
@@ -97,6 +106,60 @@
         </section>
       </div>
 
+      <div class="grid-2 equal">
+        <section class="panel">
+          <h2 id="uiChartRolling3">Rolling 3 mo.</h2>
+          <div class="chart-box">
+            <canvas id="chartRolling3"></canvas>
+          </div>
+        </section>
+        <section class="panel">
+          <h2 id="uiChartRolling12">Rolling 12 mo.</h2>
+          <div class="chart-box">
+            <canvas id="chartRolling12"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <div class="grid-2 equal">
+        <section class="panel">
+          <h2 id="uiByGarage">Service by garage</h2>
+          <div class="chart-box">
+            <canvas id="chartGarage"></canvas>
+          </div>
+          <div class="table-wrap compact-table">
+            <table class="entries">
+              <thead>
+                <tr>
+                  <th id="uiThGarage">Garage</th>
+                  <th id="uiThGarageCount" style="text-align:right">#</th>
+                  <th id="uiThGarageCost" style="text-align:right">Cost</th>
+                </tr>
+              </thead>
+              <tbody id="garageBody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel">
+          <h2 id="uiByBillType">Bills by type</h2>
+          <div class="chart-box">
+            <canvas id="chartBillType"></canvas>
+          </div>
+          <div class="table-wrap compact-table">
+            <table class="entries">
+              <thead>
+                <tr>
+                  <th id="uiThBillType">Type</th>
+                  <th id="uiThBillCount" style="text-align:right">#</th>
+                  <th id="uiThBillCost" style="text-align:right">Cost</th>
+                </tr>
+              </thead>
+              <tbody id="billTypeBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
       <section class="panel">
         <h2 id="uiEntries">Entries</h2>
         <div class="filters">
@@ -107,6 +170,18 @@
               <option value="refuel">Refuel</option>
               <option value="service_record">Service</option>
               <option value="bill">Bill</option>
+            </select>
+          </label>
+          <label id="filterCarWrap" hidden>
+            <span id="uiFilterCar">Car</span>
+            <select id="filterCar">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span id="uiFilterYear">Year</span>
+            <select id="filterYear">
+              <option value="">All</option>
             </select>
           </label>
           <label>

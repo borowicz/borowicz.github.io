@@ -133,6 +133,11 @@ header .sub {
   min-width: 4.5rem;
 }
 
+.dataset-label select {
+  min-width: 14rem;
+  max-width: min(22rem, 70vw);
+}
+
 .chip-filter {
   border-color: rgba(56, 189, 248, 0.45);
   color: #7dd3fc;
@@ -465,6 +470,42 @@ table.entries .empty {
   padding: 1rem 1.25rem;
   border-radius: var(--radius);
   margin-bottom: 1rem;
+}
+
+.error.status-ok {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #a7f3d0;
+}
+
+.error .linkish,
+.offline-banner .linkish {
+  background: none;
+  border: none;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  margin: 0 0.15rem;
+}
+
+.hash-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  word-break: break-all;
+}
+
+.offline-banner.info-banner {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #bae6fd;
+}
+
+.compact-table {
+  margin-top: 0.75rem;
+  max-height: 220px;
+  overflow: auto;
 }
 
 footer {

@@ -1,6 +1,5 @@
 /**
  * myCar XML parser + analytics (browser).
- * Mirrors the PHP MyCarData logic for pure client-side use.
  */
 (function (global) {
   'use strict';
@@ -21,23 +20,15 @@
   }
 
   function uniqueTimestamp(dateStr, bucket) {
-    // Normalize "YYYY-MM-DD HH:mm" → ISO-like for Date.parse
     let normalized = String(dateStr || '').trim().replace(' ', 'T');
     if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(normalized)) {
       normalized += ':00';
     }
     let ts = Date.parse(normalized);
-    if (Number.isNaN(ts)) {
-      ts = Date.parse(dateStr);
-    }
-    if (Number.isNaN(ts)) {
-      ts = Date.now();
-    }
-    // second precision (same idea as PHP strtotime)
+    if (Number.isNaN(ts)) ts = Date.parse(dateStr);
+    if (Number.isNaN(ts)) ts = Date.now();
     ts = Math.floor(ts / 1000);
-    while (bucket[ts] != null) {
-      ts += 1;
-    }
+    while (bucket[ts] != null) ts += 1;
     return ts;
   }
 
@@ -47,10 +38,28 @@
     );
   }
 
-  /**
-   * @param {string} xmlText
-   * @param {string} [sourceName]
-   */
+  async function hashText(text) {
+    const input = String(text || '');
+    if (global.crypto && global.crypto.subtle) {
+      try {
+        const buf = await global.crypto.subtle.digest(
+          'SHA-256',
+          new TextEncoder().encode(input)
+        );
+        return Array.from(new Uint8Array(buf))
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('');
+      } catch (_) {
+        /* fall through */
+      }
+    }
+    let h = 5381;
+    for (let i = 0; i < input.length; i++) {
+      h = ((h << 5) + h) ^ input.charCodeAt(i);
+    }
+    return 'fb_' + (h >>> 0).toString(16) + '_' + input.length.toString(16);
+  }
+
   function parseMyCarXml(xmlText, sourceName) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlText, 'application/xml');
@@ -62,10 +71,6 @@
     }
 
     const root = doc.documentElement;
-    if (!root || root.tagName.toLowerCase() !== 'mycar') {
-      // still allow if structure is similar
-    }
-
     const preferences = {};
     const prefsNode = childrenNamed(root, 'preferences')[0];
     if (prefsNode) {
@@ -74,9 +79,9 @@
       });
     }
 
-    let currency = preferences.prefsCurrency || 'EUR';
-
-    const carNode = childrenNamed(root, 'car')[0];
+    const currency = preferences.prefsCurrency || 'EUR';
+    const carNodes = childrenNamed(root, 'car');
+    const carNode = carNodes[0];
     const car = {
       name: carNode ? text(carNode, 'name') : '',
       price: carNode ? toFloat(text(carNode, 'price')) : 0,
@@ -166,6 +171,11 @@
       .sort((a, b) => b - a)
       .map((k) => bucket[k]);
 
+    const cars = Array.from(
+      new Set(entries.map((e) => e.car).filter(Boolean))
+    ).sort();
+    if (car.name && !cars.includes(car.name)) cars.unshift(car.name);
+
     const fuelSeries = buildFuelSeries(entries);
     const summary = buildSummary(entries, car, fuelSeries);
     const monthly = buildMonthlySeries(entries);
@@ -174,10 +184,15 @@
       source: sourceName || 'm.xml',
       currency,
       car,
+      cars,
       preferences,
       summary,
       monthly,
       fuelSeries,
+      rolling3: buildRolling(monthly, 3),
+      rolling12: buildRolling(monthly, 12),
+      byGarage: groupByField(entries, 'service_record', 'garage'),
+      byBillType: groupByField(entries, 'bill', 'billType'),
       byType: {
         refuel: summary.fuelCost,
         service_record: summary.serviceCost,
@@ -215,7 +230,7 @@
         const qty = Number(r.quantity);
         if (km > 10 && km < 2500 && qty > 0) {
           item.km = Math.round(km * 10) / 10;
-          item.consumption = Math.round((100 * qty) / km * 100) / 100;
+          item.consumption = Math.round(((100 * qty) / km) * 100) / 100;
         }
       }
 
@@ -346,24 +361,125 @@
     return out;
   }
 
+  function buildRolling(monthly, window) {
+    const keys = Object.keys(monthly || {}).sort();
+    const out = [];
+    for (let i = 0; i < keys.length; i++) {
+      const start = Math.max(0, i - window + 1);
+      let total = 0;
+      let fuel = 0;
+      for (let j = start; j <= i; j++) {
+        total += monthly[keys[j]].total || 0;
+        fuel += monthly[keys[j]].refuel || 0;
+      }
+      out.push({
+        month: keys[i],
+        windowMonths: window,
+        totalCost: Math.round(total * 100) / 100,
+        fuelCost: Math.round(fuel * 100) / 100,
+      });
+    }
+    return out;
+  }
+
+  function groupByField(entries, type, field) {
+    /** @type {Record<string, { name: string, count: number, cost: number }>} */
+    const map = {};
+    (entries || []).forEach((e) => {
+      if (e.type !== type) return;
+      const name = (e[field] && String(e[field]).trim()) || '—';
+      if (!map[name]) map[name] = { name: name, count: 0, cost: 0 };
+      map[name].count += 1;
+      map[name].cost += Number(e.cost) || 0;
+    });
+    return Object.keys(map)
+      .map((k) => ({
+        name: map[k].name,
+        count: map[k].count,
+        cost: Math.round(map[k].cost * 100) / 100,
+      }))
+      .sort((a, b) => b.cost - a.cost);
+  }
+
+  function filterEntries(entries, opts) {
+    opts = opts || {};
+    let rows = entries || [];
+    if (opts.type) rows = rows.filter((r) => r.type === opts.type);
+    if (opts.car) rows = rows.filter((r) => r.car === opts.car);
+    if (opts.year) {
+      rows = rows.filter((r) =>
+        String(r.month || r.date || '').startsWith(opts.year)
+      );
+    }
+    if (opts.month) rows = rows.filter((r) => r.month === opts.month);
+    if (opts.dateFrom) {
+      rows = rows.filter((r) => String(r.date).slice(0, 10) >= opts.dateFrom);
+    }
+    if (opts.dateTo) {
+      rows = rows.filter((r) => String(r.date).slice(0, 10) <= opts.dateTo);
+    }
+    if (opts.search) {
+      const q = String(opts.search).toLowerCase();
+      rows = rows.filter((r) => {
+        const hay = [
+          r.description,
+          r.note,
+          r.type,
+          r.car,
+          r.garage,
+          r.billType,
+          r.station,
+          r.date,
+          r.month,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        return hay.includes(q);
+      });
+    }
+    return rows;
+  }
+
   /**
-   * Rebuild analytics for a filtered subset of entries.
-   * Keeps car / currency / source / full month list for filters.
+   * Range relative to dataset end (dateTo), not wall clock.
+   * @param {string|null} dateTo
+   * @param {number} days
    */
+  function rangeFromDateTo(dateTo, days) {
+    const end = String(dateTo || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(end) || !days) return {};
+    const endDate = new Date(end + 'T00:00:00Z');
+    const startDate = new Date(endDate.getTime() - days * 86400000);
+    const iso = (d) => d.toISOString().slice(0, 10);
+    return { dateFrom: iso(startDate), dateTo: end };
+  }
+
   function reaggregate(dashboard, entries) {
     const list = Array.isArray(entries) ? entries : [];
     const fuelSeries = buildFuelSeries(list);
     const summary = buildSummary(list, dashboard.car || {}, fuelSeries);
     const monthly = buildMonthlySeries(list);
+    const cars = Array.from(
+      new Set(list.map((e) => e.car).filter(Boolean))
+    ).sort();
+
+    if (cars.length === 1) summary.carName = cars[0];
+    else if (cars.length > 1) summary.carName = cars.join(', ');
 
     return {
       source: dashboard.source,
       currency: dashboard.currency,
       car: dashboard.car,
+      cars: dashboard.cars || cars,
       preferences: dashboard.preferences,
       summary,
       monthly,
       fuelSeries,
+      rolling3: buildRolling(monthly, 3),
+      rolling12: buildRolling(monthly, 12),
+      byGarage: groupByField(list, 'service_record', 'garage'),
+      byBillType: groupByField(list, 'bill', 'billType'),
       byType: {
         refuel: summary.fuelCost,
         service_record: summary.serviceCost,
@@ -375,5 +491,13 @@
     };
   }
 
-  global.MyCarData = { parseMyCarXml, reaggregate };
+  global.MyCarData = {
+    parseMyCarXml,
+    reaggregate,
+    filterEntries,
+    rangeFromDateTo,
+    buildRolling,
+    groupByField,
+    hashText,
+  };
 })(typeof window !== 'undefined' ? window : globalThis);
