@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">MuuToo cow icon</title>
+  <rect width="512" height="512" rx="112" fill="#f7b0c3"/>
+  <circle cx="256" cy="270" r="150" fill="#fff9f4" stroke="#251d24" stroke-width="18"/>
+  <path d="M151 167 87 116c-15-12-36 2-31 21l30 104" fill="#8fd8bd" stroke="#251d24" stroke-width="18" stroke-linejoin="round"/>
+  <path d="m361 167 64-51c15-12 36 2 31 21l-30 104" fill="#8fd8bd" stroke="#251d24" stroke-width="18" stroke-linejoin="round"/>
+  <ellipse cx="256" cy="329" rx="96" ry="70" fill="#f7b0c3" stroke="#251d24" stroke-width="16"/>
+  <circle cx="220" cy="326" r="10" fill="#251d24"/>
+  <circle cx="292" cy="326" r="10" fill="#251d24"/>
+  <circle cx="202" cy="241" r="15" fill="#251d24"/>
+  <circle cx="310" cy="241" r="15" fill="#251d24"/>
+  <path d="M192 205c22-20 43-25 65-8M319 205c-22-20-43-25-65-8" fill="none" stroke="#251d24" stroke-width="14" stroke-linecap="round"/>
+  <path d="M220 374c23 18 49 18 72 0" fill="none" stroke="#251d24" stroke-width="12" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,34 @@
+{
+  "id": "./",
+  "name": "MuuToo! — The Mad Feminist Cow Test",
+  "short_name": "MuuToo!",
+  "description": "A humorous bilingual personality quiz starring a very opinionated feminist cow.",
+  "lang": "en",
+  "start_url": "./#home",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#eaf6f1",
+  "theme_color": "#dff8ee",
+  "categories": ["entertainment", "lifestyle", "games"],
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/png/cow-home.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Start Test", "short_name": "Test", "url": "./#quiz", "icons": [{ "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }] },
+    { "name": "Daily Moo", "short_name": "Daily Moo", "url": "./#daily", "icons": [{ "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }] },
+    { "name": "Results", "short_name": "Results", "url": "./#results", "icons": [{ "src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }] }
+  ]
+}
