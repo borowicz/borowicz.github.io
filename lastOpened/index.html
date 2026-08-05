@@ -248,6 +248,52 @@
       letter-spacing: -0.015em;
     }
 
+
+
+    .privacy-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 25px;
+      padding: 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      background: linear-gradient(145deg, color-mix(in srgb, var(--surface-strong) 92%, transparent), color-mix(in srgb, var(--accent-2) 16%, var(--surface)));
+      box-shadow: 0 16px 42px rgba(49, 83, 59, .10), inset 0 1px 0 rgba(255,255,255,.36);
+    }
+    .privacy-proof-item {
+      min-width: 0;
+      padding: 13px 12px;
+      border-radius: 13px;
+      background: color-mix(in srgb, var(--surface-strong) 68%, transparent);
+    }
+    .privacy-proof-icon {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 9px;
+      border-radius: 10px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+    }
+    .privacy-proof-icon svg { width: 17px; height: 17px; }
+    .privacy-proof-item strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.25;
+      letter-spacing: -.01em;
+    }
+    .privacy-proof-item span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
     .hero-actions {
       display: flex;
       align-items: center;
@@ -318,7 +364,7 @@
     .preview-frame {
       position: relative;
       z-index: 2;
-      width: min(100%, 560px);
+      width: min(100%, 620px);
       border: 1px solid var(--line-strong);
       border-radius: 28px;
       overflow: hidden;
@@ -470,6 +516,81 @@
     .chip-privacy { right: -5px; top: 55px; animation: float 5s ease-in-out infinite; }
     .chip-speed { left: -18px; bottom: 60px; animation: float 5s 1.2s ease-in-out infinite; }
     @keyframes float { 50% { transform: translateY(-8px); } }
+
+
+    .showcase {
+      padding-top: 10px;
+      padding-bottom: 96px;
+    }
+    .showcase-panel {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 28px;
+      align-items: center;
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: var(--surface);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .showcase-copy h3 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.06;
+      letter-spacing: -.04em;
+    }
+    .showcase-copy > p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .showcase-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+    .showcase-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .showcase-item-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(65,102,74,.16);
+    }
+    .showcase-item-icon svg { width: 20px; height: 20px; }
+    .showcase-item strong {
+      display: block;
+      font-size: 16px;
+      letter-spacing: -.02em;
+    }
+    .showcase-item span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .showcase-shot {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      background: var(--surface-strong);
+      box-shadow: var(--shadow);
+    }
+    .showcase-shot img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
 
     .section { padding: 96px 0; }
     .section-head { max-width: 730px; margin-bottom: 44px; }
@@ -690,6 +811,9 @@
       .privacy-visual { min-height: 320px; order: 2; }
       .privacy-content { text-align: center; }
       .privacy-list { max-width: 620px; margin-inline: auto; text-align: left; }
+      .showcase-panel { grid-template-columns: 1fr; }
+      .showcase-copy { text-align: center; }
+      .showcase-list { max-width: 620px; margin-inline: auto; text-align: left; }
     }
 
     @media (max-width: 680px) {
@@ -699,6 +823,10 @@
       .hero { padding: 60px 0 56px; }
       h1 { font-size: clamp(43px, 13vw, 64px); }
       .hero-copy { font-size: 17px; }
+      .privacy-proof { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; text-align: left; }
+      .privacy-proof-item { display: grid; grid-template-columns: 31px 1fr; column-gap: 10px; align-items: start; }
+      .privacy-proof-icon { grid-row: 1 / span 2; margin: 0; }
+      .privacy-proof-item span { margin-top: 3px; }
       .visual-wrap { min-height: 390px; }
       .app-window { transform: none; padding: 10px; }
       .app-window:hover { transform: translateY(-3px); }
@@ -712,6 +840,9 @@
       .feature-card { min-height: 0; }
       .privacy-panel { padding: 30px 20px; border-radius: 25px; }
       .privacy-list { grid-template-columns: 1fr; }
+      .showcase-panel { padding: 22px 16px; border-radius: 25px; }
+      .showcase-item { grid-template-columns: 36px 1fr; gap: 10px; }
+      .showcase-item-icon { width: 36px; height: 36px; border-radius: 11px; }
       .privacy-visual { min-height: 270px; }
       .shield-ring { width: 220px; }
       .shield { width: 125px; height: 140px; }
@@ -772,6 +903,24 @@
             <span class="gradient-text" data-i18n="heroLine2">you were doing.</span>
           </h1>
           <p class="hero-copy" data-i18n="heroCopy">A fast, lightweight and private macOS utility for reopening recent apps and files you explicitly authorize.</p>
+
+          <div class="privacy-proof" aria-label="Privacy advantages">
+            <div class="privacy-proof-item">
+              <div class="privacy-proof-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7.5h16v9H4z"/><path d="M8 20h8M12 16.5V20"/></svg></div>
+              <strong data-i18n="proofLocalTitle">100% local</strong>
+              <span data-i18n="proofLocalCopy">History and settings stay on your Mac.</span>
+            </div>
+            <div class="privacy-proof-item">
+              <div class="privacy-proof-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 18h10a4 4 0 0 0 .7-7.94A6 6 0 0 0 5.7 8.4 4.8 4.8 0 0 0 6.5 18Z"/><path d="m5 5 14 14"/></svg></div>
+              <strong data-i18n="proofCloudTitle">No cloud, no backend</strong>
+              <span data-i18n="proofCloudCopy">Nothing is uploaded to a developer server.</span>
+            </div>
+            <div class="privacy-proof-item">
+              <div class="privacy-proof-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 7.8 7.5 9.5 4.3-1.7 7.5-4.7 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <strong data-i18n="proofPermissionTitle">Only what you allow</strong>
+              <span data-i18n="proofPermissionCopy">Read-only access to folders you select.</span>
+            </div>
+          </div>
           <div class="hero-actions">
             <a class="button primary" href="https://x.com/lastOpenedApp" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.49 22H3.38l7.24-8.28L2.97 2h6.4l4.42 5.84L18.9 2Zm-1.1 17.84h1.72L8.43 4.05H6.58L17.8 19.84Z"/></svg>
@@ -797,7 +946,7 @@
           </div>
 
           <div class="preview-frame">
-            <img id="appPreview" class="preview-image" src="lastOpened.png" alt="lastOpened application preview">
+            <img id="appPreview" class="preview-image" src="about-comic.png" alt="lastOpened illustrated about artwork">
           </div>
           </div>
         </div>
@@ -858,6 +1007,35 @@
           <div class="step" data-reveal><div class="step-number">01</div><h3 data-i18n="s1Title">Open the panel</h3><p data-i18n="s1Copy">Use one global shortcut from anywhere on your Mac.</p></div>
           <div class="step" data-reveal><div class="step-number">02</div><h3 data-i18n="s2Title">Search or move</h3><p data-i18n="s2Copy">Start typing, switch views or use the arrow keys.</p></div>
           <div class="step" data-reveal><div class="step-number">03</div><h3 data-i18n="s3Title">Press Return</h3><p data-i18n="s3Copy">Reopen the selected app or approved file and continue working.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="container">
+        <div class="showcase-panel" data-reveal>
+          <div class="showcase-copy">
+            <p class="kicker" data-i18n="showcaseKicker">See it in action</p>
+            <h3 data-i18n="showcaseTitle">A clean, focused view of your recent activity.</h3>
+            <p data-i18n="showcaseCopy">After the shortcut flow, the real interface takes over: simple views, useful context and a familiar macOS feel.</p>
+            <div class="showcase-list">
+              <div class="showcase-item">
+                <div class="showcase-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+                <div><strong data-i18n="showcaseItem1Title">Closed, Running and Recent</strong><span data-i18n="showcaseItem1Copy">Switch between views effortlessly and stay in the same keyboard-first flow.</span></div>
+              </div>
+              <div class="showcase-item">
+                <div class="showcase-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="8"/></svg></div>
+                <div><strong data-i18n="showcaseItem2Title">Rich details</strong><span data-i18n="showcaseItem2Copy">See when something was opened and how often you come back to it.</span></div>
+              </div>
+              <div class="showcase-item">
+                <div class="showcase-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19c4-6 10-6 14 0"/><path d="M6 10a6 6 0 1 1 12 0c0 2.8-2.5 5.3-6 8-3.5-2.7-6-5.2-6-8Z"/></svg></div>
+                <div><strong data-i18n="showcaseItem3Title">Built for macOS</strong><span data-i18n="showcaseItem3Copy">Native look and feel, local-first privacy and a workflow that stays out of your way.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-shot">
+            <img src="lastOpened-screenshot.png" alt="lastOpened application screenshot">
+          </div>
         </div>
       </div>
     </section>
@@ -928,6 +1106,12 @@
         heroLine1: "Back to what",
         heroLine2: "you were doing.",
         heroCopy: "A fast, lightweight and private macOS utility for reopening recent apps and files you explicitly authorize.",
+        proofLocalTitle: "100% local",
+        proofLocalCopy: "History and settings stay on your Mac.",
+        proofCloudTitle: "No cloud, no backend",
+        proofCloudCopy: "Nothing is uploaded to a developer server.",
+        proofPermissionTitle: "Only what you allow",
+        proofPermissionCopy: "Read-only access to folders you select.",
         follow: "Follow the release",
         explore: "Explore features",
         heroNote: "One shortcut → search or move → Return",
@@ -982,6 +1166,15 @@
         ctaKicker: "Coming to macOS",
         ctaTitle: "Spend less time finding. Get back to doing.",
         ctaCopy: "lastOpened is currently going through release-candidate validation. Follow the official account for progress and launch updates.",
+        showcaseKicker: "See it in action",
+        showcaseTitle: "A clean, focused view of your recent activity.",
+        showcaseCopy: "After the shortcut flow, the real interface takes over: simple views, useful context and a familiar macOS feel.",
+        showcaseItem1Title: "Closed, Running and Recent",
+        showcaseItem1Copy: "Switch between views effortlessly and stay in the same keyboard-first flow.",
+        showcaseItem2Title: "Rich details",
+        showcaseItem2Copy: "See when something was opened and how often you come back to it.",
+        showcaseItem3Title: "Built for macOS",
+        showcaseItem3Copy: "Native look and feel, local-first privacy and a workflow that stays out of your way.",
         footerMade: "Made for macOS.",
         footerPrivacy: "Privacy",
         footerTop: "Back to top ↑",
@@ -998,6 +1191,12 @@
         heroLine1: "Wróć do tego,",
         heroLine2: "co właśnie robiłeś.",
         heroCopy: "Szybkie, lekkie i prywatne narzędzie dla macOS do ponownego otwierania ostatnich aplikacji i plików, na które wyraźnie zezwolisz.",
+        proofLocalTitle: "100% lokalnie",
+        proofLocalCopy: "Historia i ustawienia zostają na Twoim Macu.",
+        proofCloudTitle: "Bez chmury i serwera",
+        proofCloudCopy: "Nic nie jest wysyłane na serwer twórcy.",
+        proofPermissionTitle: "Tylko za Twoją zgodą",
+        proofPermissionCopy: "Dostęp tylko do odczytu wybranych folderów.",
         follow: "Obserwuj premierę",
         explore: "Zobacz funkcje",
         heroNote: "Jeden skrót → wyszukaj lub wybierz → Return",

@@ -24,3 +24,10 @@ The original application screenshot is shown without cropping or recoloring.
 ## Publish with GitHub Pages
 
 Copy the files to the publishing branch or `/docs` directory, then select that source in **Settings → Pages**.
+
+
+## Added visual assets
+
+- `about-comic.png` — comic-style About artwork used in the hero section
+- `lastOpened-screenshot.png` — product screenshot shown below the shortcut section
+- `app-icon-comic.png` — comic-style app icon asset
