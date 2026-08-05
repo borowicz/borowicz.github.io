@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630"><stop stop-color="#090a0d"/><stop offset=".52" stop-color="#13101e"/><stop offset="1" stop-color="#07151a"/></linearGradient>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientTransform="translate(260 100) rotate(35) scale(440 350)"><stop stop-color="#8957ec" stop-opacity=".48"/><stop offset="1" stop-color="#8957ec" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientTransform="translate(1040 170) rotate(145) scale(390 300)"><stop stop-color="#22d3ee" stop-opacity=".25"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient>
+    <linearGradient id="icon" x1="462" y1="166" x2="627" y2="330"><stop stop-color="#b08aff"/><stop offset=".55" stop-color="#6f3de0"/><stop offset="1" stop-color="#1ca9c6"/></linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <rect x="94" y="86" width="96" height="96" rx="26" fill="url(#icon)"/>
+  <path d="M124 111h29a13 13 0 0 1 13 13v26" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <path d="m156 139 10 11 10-11M160 157h-29a13 13 0 0 1-13-13v-25" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m128 130-10-11-10 11" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="216" y="151" fill="#f7f7fb" font-family="-apple-system,BlinkMacSystemFont,Arial" font-size="48" font-weight="700" letter-spacing="-2">lastOpened</text>
+  <text x="94" y="294" fill="#f7f7fb" font-family="-apple-system,BlinkMacSystemFont,Arial" font-size="78" font-weight="760" letter-spacing="-4">Back to what</text>
+  <text x="94" y="380" fill="#9f7bff" font-family="-apple-system,BlinkMacSystemFont,Arial" font-size="78" font-weight="760" letter-spacing="-4">you were doing.</text>
+  <text x="98" y="448" fill="#a9adb8" font-family="-apple-system,BlinkMacSystemFont,Arial" font-size="28">Recent apps and authorized files. One shortcut away.</text>
+  <rect x="94" y="503" width="330" height="58" rx="17" fill="#ffffff" fill-opacity=".07" stroke="#ffffff" stroke-opacity=".14"/>
+  <text x="124" y="541" fill="#d5d7de" font-family="-apple-system,BlinkMacSystemFont,Arial" font-size="22" font-weight="600">x.com/lastOpenedApp</text>
+</svg>

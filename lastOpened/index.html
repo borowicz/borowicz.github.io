@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="lastOpened is a fast, private, keyboard-first macOS utility for reopening recent apps and files you explicitly authorize.">
+  <meta name="theme-color" content="#F4F7EE">
+  <meta property="og:title" content="lastOpened — Back to what you were doing">
+  <meta property="og:description" content="A fast, private, keyboard-first launcher for recent macOS apps and authorized files.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="social-preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>lastOpened — Recent apps and files, one shortcut away</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #F4F7EE;
+      --bg-soft: #E8EFDF;
+      --surface: rgba(250, 252, 247, 0.82);
+      --surface-strong: #FAFCF7;
+      --surface-hover: #E8EFDF;
+      --text: #202820;
+      --muted: #5F6C5B;
+      --subtle: #7E8979;
+      --line: rgba(65, 102, 74, 0.14);
+      --line-strong: rgba(65, 102, 74, 0.24);
+      --accent: #41664A;
+      --accent-2: #C9D8AF;
+      --accent-soft: rgba(65, 102, 74, 0.12);
+      --success: #4D7A56;
+      --shadow: 0 32px 90px rgba(42, 71, 48, 0.18);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #17231B;
+      --bg-soft: #203026;
+      --surface: rgba(35, 52, 40, 0.82);
+      --surface-strong: #2A3C2E;
+      --surface-hover: #344A39;
+      --text: #F3F7EF;
+      --muted: #C2CFBE;
+      --subtle: #93A08F;
+      --line: rgba(229, 239, 216, 0.12);
+      --line-strong: rgba(229, 239, 216, 0.22);
+      --accent: #AFC9A0;
+      --accent-2: #8FB49A;
+      --accent-soft: rgba(143, 180, 154, 0.14);
+      --success: #9BC3A4;
+      --shadow: 0 32px 100px rgba(0, 0, 0, 0.36);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 13% 2%, rgba(201, 216, 175, 0.52), transparent 32rem),
+        radial-gradient(circle at 88% 18%, rgba(143, 180, 154, 0.22), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, system-ui, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img, svg { display: block; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max));
+      margin-inline: auto;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 12px;
+      top: -80px;
+      z-index: 999;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--text);
+      color: var(--bg);
+      transition: top .2s ease;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(18px) saturate(145%);
+      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .site-header.scrolled {
+      border-color: var(--line);
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 720;
+      letter-spacing: -0.025em;
+      font-size: 18px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #E1E9BF, #7FA086 52%, #41664A);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 8px 26px rgba(96, 124, 72, .25);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .nav-links a { transition: color .18s ease; }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .segmented, .icon-button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 11px;
+      gap: 2px;
+    }
+    .segmented button {
+      border: 0;
+      min-width: 36px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      color: inherit;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .segmented button.active {
+      color: var(--text);
+      background: var(--surface-strong);
+      box-shadow: 0 2px 10px rgba(0,0,0,.12);
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .icon-button svg { width: 17px; height: 17px; }
+    .icon-button:hover { color: var(--text); border-color: var(--line-strong); }
+
+    .hero {
+      padding: 100px 0 76px;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 22px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 5px rgba(102,217,154,.10), 0 0 18px rgba(102,217,154,.55);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(46px, 7vw, 82px);
+      line-height: .98;
+      letter-spacing: -0.065em;
+      font-weight: 760;
+    }
+    .gradient-text {
+      display: block;
+      color: transparent;
+      background: linear-gradient(105deg, #6F9278 8%, #41664A 48%, #8FB49A 86%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-copy {
+      max-width: 640px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2.2vw, 21px);
+      letter-spacing: -0.015em;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 680;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button.primary {
+      border-color: transparent;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #4E7457, #31533B 58%, #41664A);
+      box-shadow: 0 12px 36px rgba(49, 83, 59, .28), inset 0 1px 0 rgba(255,255,255,.28);
+    }
+    .button.secondary { background: var(--surface); }
+    .button.secondary:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+    .button svg { width: 17px; height: 17px; }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--subtle);
+      font-size: 12px;
+    }
+    .hero-note kbd {
+      padding: 2px 7px;
+      border: 1px solid var(--line-strong);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      color: var(--muted);
+      background: var(--surface-strong);
+      font-family: inherit;
+      font-size: 11px;
+    }
+
+    .visual-wrap {
+      position: relative;
+      min-height: 530px;
+      display: grid;
+      place-items: center;
+    }
+    .visual-glow {
+      position: absolute;
+      inset: 8% -5% 4%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(143,180,154,.28), rgba(201,216,175,.15) 38%, transparent 70%);
+      filter: blur(25px);
+      pointer-events: none;
+    }
+
+
+    .preview-frame {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 560px);
+      border: 1px solid var(--line-strong);
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--surface-strong);
+      box-shadow: var(--shadow);
+      transform: perspective(1100px) rotateY(-2deg) rotateX(1deg);
+      transition: transform .35s ease;
+    }
+    .preview-frame:hover { transform: perspective(1100px) rotateY(-1deg) translateY(-4px); }
+    .preview-image { width: 100%; height: auto; object-fit: contain; border-radius: 0; }
+
+    .app-window {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 530px);
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 23px;
+      background: rgba(18,20,27,.90);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.10);
+      transform: perspective(1100px) rotateY(-5deg) rotateX(2deg);
+      transition: transform .35s ease;
+    }
+    :root[data-theme="light"] .app-window {
+      background: rgba(248,249,252,.94);
+      border-color: rgba(30,35,50,.13);
+    }
+    .app-window:hover { transform: perspective(1100px) rotateY(-2deg) rotateX(1deg) translateY(-5px); }
+
+    .window-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 12px;
+    }
+    .traffic { display: flex; gap: 7px; }
+    .traffic i { width: 9px; height: 9px; border-radius: 50%; background: #4a4d56; }
+    .window-title { color: #8e929e; font-size: 11px; font-weight: 650; }
+    .window-shortcut {
+      color: #8e929e;
+      font-size: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 5px;
+      padding: 2px 5px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: rgba(255,255,255,.055);
+      color: #c2c5ce;
+    }
+    :root[data-theme="light"] .search-box { background: rgba(0,0,0,.035); border-color: rgba(0,0,0,.08); color: #575c68; }
+    .search-box svg { width: 17px; opacity: .65; }
+    .search-caret { width: 1px; height: 19px; background: #9b6cff; animation: blink 1.05s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .view-tabs {
+      display: flex;
+      gap: 4px;
+      margin: 12px 0 8px;
+      padding: 4px;
+      border-radius: 11px;
+      background: rgba(255,255,255,.035);
+    }
+    .view-tab {
+      flex: 1;
+      padding: 7px 8px;
+      border-radius: 8px;
+      text-align: center;
+      color: #777c89;
+      font-size: 11px;
+      font-weight: 650;
+    }
+    .view-tab.active { color: #e8e9ef; background: rgba(255,255,255,.08); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+    :root[data-theme="light"] .view-tab.active { color: #2b2f39; background: white; box-shadow: 0 2px 10px rgba(30,35,50,.07); }
+
+    .result-list { display: grid; gap: 5px; }
+    .result {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      align-items: center;
+      gap: 11px;
+      min-height: 54px;
+      padding: 7px 10px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+    }
+    .result.active {
+      border-color: rgba(157,116,255,.32);
+      background: linear-gradient(90deg, rgba(139,92,246,.20), rgba(34,211,238,.05));
+    }
+    .app-icon {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 760;
+      color: white;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.30), 0 4px 12px rgba(0,0,0,.20);
+    }
+    .icon-purple { background: linear-gradient(145deg,#b291ff,#6541cf); }
+    .icon-blue { background: linear-gradient(145deg,#56c8ff,#1771d4); }
+    .icon-gray { background: linear-gradient(145deg,#8c919c,#424751); }
+    .icon-orange { background: linear-gradient(145deg,#ffb457,#dd6428); }
+    .result-name { color: #e7e8ed; font-size: 12px; font-weight: 680; }
+    :root[data-theme="light"] .result-name { color: #252832; }
+    .result-meta { margin-top: 1px; color: #737884; font-size: 10px; }
+    .result-time { color: #6d727e; font-size: 10px; }
+
+    .window-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 9px 4px 1px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      color: #717681;
+      font-size: 10px;
+    }
+    .window-hints { display: flex; align-items: center; gap: 10px; }
+    .window-hints span { display: inline-flex; align-items: center; gap: 4px; }
+    .window-hints kbd { font: inherit; color: #9a9eaa; }
+
+    .floating-chip {
+      position: absolute;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 13px;
+      background: var(--surface);
+      box-shadow: 0 18px 55px rgba(0,0,0,.22);
+      backdrop-filter: blur(18px);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+    .floating-chip svg { width: 16px; color: var(--accent-2); }
+    .chip-privacy { right: -5px; top: 55px; animation: float 5s ease-in-out infinite; }
+    .chip-speed { left: -18px; bottom: 60px; animation: float 5s 1.2s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-8px); } }
+
+    .section { padding: 96px 0; }
+    .section-head { max-width: 730px; margin-bottom: 44px; }
+    .kicker {
+      margin: 0 0 12px;
+      color: #41664A;
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.04;
+      letter-spacing: -0.048em;
+    }
+    .section-head p {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .feature-card {
+      min-height: 260px;
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: var(--line-strong); background: var(--surface-strong); }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 27px;
+      border-radius: 13px;
+      color: #41664A;
+      background: var(--accent-soft);
+      border: 1px solid rgba(65,102,74,.16);
+    }
+    .feature-icon svg { width: 21px; height: 21px; }
+    .feature-card h3 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .feature-card p { margin: 11px 0 0; color: var(--muted); font-size: 14px; }
+
+    .workflow {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .workflow::before {
+      content: "";
+      position: absolute;
+      top: 36px;
+      left: 17%;
+      right: 17%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(65,102,74,.48), rgba(143,180,154,.42), transparent);
+    }
+    .step { position: relative; z-index: 1; text-align: center; padding: 0 20px; }
+    .step-number {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: 22px;
+      background: var(--surface-strong);
+      box-shadow: 0 15px 40px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.08);
+      color: #41664A;
+      font-weight: 780;
+      font-size: 20px;
+    }
+    .step h3 { margin: 0; font-size: 18px; }
+    .step p { margin: 9px auto 0; max-width: 280px; color: var(--muted); font-size: 14px; }
+
+    .privacy-panel {
+      display: grid;
+      grid-template-columns: .88fr 1.12fr;
+      gap: 48px;
+      align-items: center;
+      padding: clamp(28px, 5vw, 58px);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 92% 12%, rgba(143,180,154,.12), transparent 24rem),
+        radial-gradient(circle at 6% 88%, rgba(201,216,175,.18), transparent 28rem),
+        var(--surface);
+      overflow: hidden;
+    }
+    .privacy-visual {
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .shield-ring {
+      position: absolute;
+      width: 290px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(65,102,74,.20);
+      box-shadow: 0 0 0 36px rgba(65,102,74,.045), 0 0 0 78px rgba(143,180,154,.035);
+    }
+    .shield {
+      position: relative;
+      width: 158px;
+      height: 177px;
+      display: grid;
+      place-items: center;
+      clip-path: polygon(50% 0, 91% 16%, 87% 69%, 50% 100%, 13% 69%, 9% 16%);
+      background: linear-gradient(155deg, rgba(143,180,154,.96), rgba(65,102,74,.96) 58%, rgba(49,83,59,.96));
+      filter: drop-shadow(0 26px 45px rgba(49,83,59,.30));
+    }
+    .shield::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      clip-path: inherit;
+      background: linear-gradient(160deg, rgba(255,255,255,.22), transparent 38%);
+    }
+    .shield svg { position: relative; z-index: 2; width: 52px; height: 52px; color: white; }
+
+    .privacy-content h2 { font-size: clamp(34px, 4vw, 48px); }
+    .privacy-content > p { margin: 18px 0 0; color: var(--muted); font-size: 17px; }
+    .privacy-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 18px;
+      margin-top: 28px;
+    }
+    .privacy-item { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 13px; }
+    .privacy-item svg { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 2px; color: var(--success); }
+
+    .language-strip {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 34px;
+    }
+    .language-strip span {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .cta {
+      padding-top: 38px;
+      padding-bottom: 106px;
+    }
+    .cta-panel {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: clamp(38px, 7vw, 82px) 24px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(201,216,175,.18), rgba(23,35,27,.82) 47%, rgba(143,180,154,.12));
+    }
+    :root[data-theme="light"] .cta-panel { background: linear-gradient(135deg, rgba(225,233,191,.34), rgba(250,252,247,.94) 47%, rgba(143,180,154,.16)); }
+    .cta-panel::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -80% 20% 15%;
+      background: radial-gradient(circle, rgba(143,180,154,.25), transparent 56%);
+      filter: blur(20px);
+    }
+    .cta-panel h2 { max-width: 780px; margin: 0 auto; }
+    .cta-panel p { max-width: 650px; margin: 18px auto 0; color: var(--muted); font-size: 17px; }
+    .cta-panel .hero-actions { justify-content: center; }
+
+    footer { border-top: 1px solid var(--line); }
+    .footer-inner {
+      min-height: 112px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--subtle);
+      font-size: 12px;
+    }
+    .footer-links { display: flex; align-items: center; gap: 18px; }
+    .footer-links a:hover { color: var(--text); }
+
+    [data-reveal] {
+      opacity: 1;
+      transform: translateY(18px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    [data-reveal].visible { opacity: 1; transform: none; }
+
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 72px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 54px; }
+      .hero-content { text-align: center; }
+      .hero-copy { margin-inline: auto; }
+      .hero-actions, .hero-note { justify-content: center; }
+      .visual-wrap { min-height: 490px; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .privacy-panel { grid-template-columns: 1fr; gap: 18px; }
+      .privacy-visual { min-height: 320px; order: 2; }
+      .privacy-content { text-align: center; }
+      .privacy-list { max-width: 620px; margin-inline: auto; text-align: left; }
+    }
+
+    @media (max-width: 680px) {
+      .container { width: min(calc(100% - 26px), var(--max)); }
+      .nav { min-height: 64px; }
+      .brand span:last-child { display: none; }
+      .hero { padding: 60px 0 56px; }
+      h1 { font-size: clamp(43px, 13vw, 64px); }
+      .hero-copy { font-size: 17px; }
+      .visual-wrap { min-height: 390px; }
+      .app-window { transform: none; padding: 10px; }
+      .app-window:hover { transform: translateY(-3px); }
+      .floating-chip { display: none; }
+      .result { grid-template-columns: 34px 1fr; }
+      .result-time { display: none; }
+      .section { padding: 72px 0; }
+      .feature-grid, .workflow { grid-template-columns: 1fr; }
+      .workflow { gap: 34px; }
+      .workflow::before { display: none; }
+      .feature-card { min-height: 0; }
+      .privacy-panel { padding: 30px 20px; border-radius: 25px; }
+      .privacy-list { grid-template-columns: 1fr; }
+      .privacy-visual { min-height: 270px; }
+      .shield-ring { width: 220px; }
+      .shield { width: 125px; height: 140px; }
+      .footer-inner { min-height: 140px; flex-direction: column; justify-content: center; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="lastOpened home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7.5 5.5h7.2a3.8 3.8 0 0 1 3.8 3.8v7.2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16.2 13.1 18.5 16l2.3-2.9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16.3 18.5H9.2a3.7 3.7 0 0 1-3.7-3.7V7.6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="m7.8 10.9-2.3-3-2.3 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>lastOpened</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#features" data-i18n="navFeatures">Features</a>
+        <a href="#workflow" data-i18n="navWorkflow">How it works</a>
+        <a href="#privacy" data-i18n="navPrivacy">Privacy</a>
+        <a href="https://x.com/lastOpenedApp" target="_blank" rel="noopener">X / @lastOpenedApp</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="segmented" role="group" aria-label="Language">
+          <button type="button" data-lang="en" class="active" aria-pressed="true">EN</button>
+          <button type="button" data-lang="pl" aria-pressed="false">PL</button>
+        </div>
+        <button class="icon-button" id="themeButton" type="button" aria-label="Switch theme" title="Switch theme">
+          <svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content" data-reveal>
+          <div class="eyebrow"><span class="status-dot"></span><span data-i18n="status">Release candidate in validation</span></div>
+          <h1>
+            <span data-i18n="heroLine1">Back to what</span>
+            <span class="gradient-text" data-i18n="heroLine2">you were doing.</span>
+          </h1>
+          <p class="hero-copy" data-i18n="heroCopy">A fast, lightweight and private macOS utility for reopening recent apps and files you explicitly authorize.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://x.com/lastOpenedApp" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.49 22H3.38l7.24-8.28L2.97 2h6.4l4.42 5.84L18.9 2Zm-1.1 17.84h1.72L8.43 4.05H6.58L17.8 19.84Z"/></svg>
+              <span data-i18n="follow">Follow the release</span>
+            </a>
+            <a class="button secondary" href="#features">
+              <span data-i18n="explore">Explore features</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+          </div>
+          <div class="hero-note"><kbd>⌥ Space</kbd><span data-i18n="heroNote">One shortcut → search or move → Return</span></div>
+        </div>
+
+        <div class="visual-wrap" data-reveal>
+          <div class="visual-glow"></div>
+          <div class="floating-chip chip-privacy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 7.8 7.5 9.5 4.3-1.7 7.5-4.7 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span data-i18n="chipPrivate">Local & private</span>
+          </div>
+          <div class="floating-chip chip-speed">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4.5 13h7L11 22l8.5-11h-7L13 2Z"/></svg>
+            <span data-i18n="chipFast">Keyboard-first</span>
+          </div>
+
+          <div class="preview-frame">
+            <img id="appPreview" class="preview-image" src="lastOpened.png" alt="lastOpened application preview">
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker" data-i18n="featuresKicker">Designed for flow</p>
+          <h2 data-i18n="featuresTitle">Less hunting. More returning.</h2>
+          <p data-i18n="featuresCopy">Applications and authorized files share one fast panel, one search field and one predictable keyboard workflow.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+            <h3 data-i18n="f1Title">Recent, Closed, Running</h3>
+            <p data-i18n="f1Copy">Jump between recently used, recently closed and currently running applications without leaving the keyboard.</p>
+          </article>
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 6.5h6l2 2h9v10h-17v-12Z"/><path d="M7 13h10"/></svg></div>
+            <h3 data-i18n="f2Title">Your files, your folders</h3>
+            <p data-i18n="f2Copy">Optionally add folders through the macOS picker. lastOpened searches only inside the locations you authorize.</p>
+          </article>
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/><path d="M8 11h6"/></svg></div>
+            <h3 data-i18n="f3Title">Filters that stay out of the way</h3>
+            <p data-i18n="f3Copy">Narrow results by date, category, document type, media format or URL source, then clear everything in one action.</p>
+          </article>
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/><rect x="3" y="3" width="18" height="18" rx="5"/></svg></div>
+            <h3 data-i18n="f4Title">Quick Look built in</h3>
+            <p data-i18n="f4Copy">Preview a selected file with the system Quick Look experience before opening it.</p>
+          </article>
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 8h8v8H8z"/><path d="M4 12h4M16 12h4M12 4v4M12 16v4"/></svg></div>
+            <h3 data-i18n="f5Title">Fast on large result sets</h3>
+            <p data-i18n="f5Copy">Results render progressively in small batches, keeping the panel responsive without rescanning the filesystem.</p>
+          </article>
+          <article class="feature-card" data-reveal>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 8h10M7 12h7M7 16h4"/><path d="M4 3h16v18H4z"/></svg></div>
+            <h3 data-i18n="f6Title">Made for your language</h3>
+            <p data-i18n="f6Copy">System language, English, Polish, German, Spanish and French are supported across the complete interface.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker" data-i18n="workflowKicker">One simple loop</p>
+          <h2 data-i18n="workflowTitle">Shortcut. Select. Return.</h2>
+          <p data-i18n="workflowCopy">The interface is intentionally small. The workflow is intentionally obvious.</p>
+        </div>
+        <div class="workflow">
+          <div class="step" data-reveal><div class="step-number">01</div><h3 data-i18n="s1Title">Open the panel</h3><p data-i18n="s1Copy">Use one global shortcut from anywhere on your Mac.</p></div>
+          <div class="step" data-reveal><div class="step-number">02</div><h3 data-i18n="s2Title">Search or move</h3><p data-i18n="s2Copy">Start typing, switch views or use the arrow keys.</p></div>
+          <div class="step" data-reveal><div class="step-number">03</div><h3 data-i18n="s3Title">Press Return</h3><p data-i18n="s3Copy">Reopen the selected app or approved file and continue working.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="privacy">
+      <div class="container">
+        <div class="privacy-panel" data-reveal>
+          <div class="privacy-visual" aria-hidden="true">
+            <div class="shield-ring"></div>
+            <div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="10" width="10" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/><path d="M12 14v2"/></svg></div>
+          </div>
+          <div class="privacy-content">
+            <p class="kicker" data-i18n="privacyKicker">Private by design</p>
+            <h2 data-i18n="privacyTitle">Your activity stays on your Mac.</h2>
+            <p data-i18n="privacyCopy">lastOpened keeps its history, preferences and authorized folder bookmarks inside the App Sandbox container. There is no developer-operated backend.</p>
+            <div class="privacy-list">
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p1">No account</span></div>
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p2">No analytics or ads</span></div>
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p3">No document-content reading</span></div>
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p4">No Full Disk Access</span></div>
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p5">No clipboard or typed-text collection</span></div>
+              <div class="privacy-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span data-i18n="p6">Read-only access to selected folders</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="language-strip" aria-label="Supported languages" data-reveal>
+          <span>System</span><span>English</span><span>Polski</span><span>Deutsch</span><span>Español</span><span>Français</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-panel" data-reveal>
+          <p class="kicker" data-i18n="ctaKicker">Coming to macOS</p>
+          <h2 data-i18n="ctaTitle">Spend less time finding. Get back to doing.</h2>
+          <p data-i18n="ctaCopy">lastOpened is currently going through release-candidate validation. Follow the official account for progress and launch updates.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://x.com/lastOpenedApp" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.49 22H3.38l7.24-8.28L2.97 2h6.4l4.42 5.84L18.9 2Zm-1.1 17.84h1.72L8.43 4.05H6.58L17.8 19.84Z"/></svg>
+              <span>@lastOpenedApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div><span>© <span id="year"></span> lastOpened.</span> <span data-i18n="footerMade">Made for macOS.</span></div>
+      <div class="footer-links">
+        <a href="#privacy" data-i18n="footerPrivacy">Privacy</a>
+        <a href="https://x.com/lastOpenedApp" target="_blank" rel="noopener">X / @lastOpenedApp</a>
+        <a href="#top" data-i18n="footerTop">Back to top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        skip: "Skip to content",
+        navFeatures: "Features",
+        navWorkflow: "How it works",
+        navPrivacy: "Privacy",
+        status: "Release candidate in validation",
+        heroLine1: "Back to what",
+        heroLine2: "you were doing.",
+        heroCopy: "A fast, lightweight and private macOS utility for reopening recent apps and files you explicitly authorize.",
+        follow: "Follow the release",
+        explore: "Explore features",
+        heroNote: "One shortcut → search or move → Return",
+        chipPrivate: "Local & private",
+        chipFast: "Keyboard-first",
+        mockSearch: "Search apps and files",
+        mockRecent: "Recent",
+        mockClosed: "Closed",
+        mockRunning: "Running",
+        mockFiles: "Files",
+        mockActivated: "Activated 4 min ago",
+        mockOpened: "Opened 12 min ago",
+        mockClosedMeta: "Closed 18 min ago",
+        mockRunningMeta: "Running now",
+        mockResults: "4 results",
+        mockMove: "Move",
+        mockOpen: "Open",
+        mockClose: "Close",
+        featuresKicker: "Designed for flow",
+        featuresTitle: "Less hunting. More returning.",
+        featuresCopy: "Applications and authorized files share one fast panel, one search field and one predictable keyboard workflow.",
+        f1Title: "Recent, Closed, Running",
+        f1Copy: "Jump between recently used, recently closed and currently running applications without leaving the keyboard.",
+        f2Title: "Your files, your folders",
+        f2Copy: "Optionally add folders through the macOS picker. lastOpened searches only inside the locations you authorize.",
+        f3Title: "Filters that stay out of the way",
+        f3Copy: "Narrow results by date, category, document type, media format or URL source, then clear everything in one action.",
+        f4Title: "Quick Look built in",
+        f4Copy: "Preview a selected file with the system Quick Look experience before opening it.",
+        f5Title: "Fast on large result sets",
+        f5Copy: "Results render progressively in small batches, keeping the panel responsive without rescanning the filesystem.",
+        f6Title: "Made for your language",
+        f6Copy: "System language, English, Polish, German, Spanish and French are supported across the complete interface.",
+        workflowKicker: "One simple loop",
+        workflowTitle: "Shortcut. Select. Return.",
+        workflowCopy: "The interface is intentionally small. The workflow is intentionally obvious.",
+        s1Title: "Open the panel",
+        s1Copy: "Use one global shortcut from anywhere on your Mac.",
+        s2Title: "Search or move",
+        s2Copy: "Start typing, switch views or use the arrow keys.",
+        s3Title: "Press Return",
+        s3Copy: "Reopen the selected app or approved file and continue working.",
+        privacyKicker: "Private by design",
+        privacyTitle: "Your activity stays on your Mac.",
+        privacyCopy: "lastOpened keeps its history, preferences and authorized folder bookmarks inside the App Sandbox container. There is no developer-operated backend.",
+        p1: "No account",
+        p2: "No analytics or ads",
+        p3: "No document-content reading",
+        p4: "No Full Disk Access",
+        p5: "No clipboard or typed-text collection",
+        p6: "Read-only access to selected folders",
+        ctaKicker: "Coming to macOS",
+        ctaTitle: "Spend less time finding. Get back to doing.",
+        ctaCopy: "lastOpened is currently going through release-candidate validation. Follow the official account for progress and launch updates.",
+        footerMade: "Made for macOS.",
+        footerPrivacy: "Privacy",
+        footerTop: "Back to top ↑",
+        metaTitle: "lastOpened — Recent apps and files, one shortcut away",
+        metaDescription: "lastOpened is a fast, private, keyboard-first macOS utility for reopening recent apps and files you explicitly authorize.",
+        themeLabel: "Switch theme"
+      },
+      pl: {
+        skip: "Przejdź do treści",
+        navFeatures: "Funkcje",
+        navWorkflow: "Jak to działa",
+        navPrivacy: "Prywatność",
+        status: "Kandydat do wydania w trakcie walidacji",
+        heroLine1: "Wróć do tego,",
+        heroLine2: "co właśnie robiłeś.",
+        heroCopy: "Szybkie, lekkie i prywatne narzędzie dla macOS do ponownego otwierania ostatnich aplikacji i plików, na które wyraźnie zezwolisz.",
+        follow: "Obserwuj premierę",
+        explore: "Zobacz funkcje",
+        heroNote: "Jeden skrót → wyszukaj lub wybierz → Return",
+        chipPrivate: "Lokalnie i prywatnie",
+        chipFast: "Sterowanie klawiaturą",
+        mockSearch: "Szukaj aplikacji i plików",
+        mockRecent: "Ostatnie",
+        mockClosed: "Zamknięte",
+        mockRunning: "Uruchomione",
+        mockFiles: "Pliki",
+        mockActivated: "Aktywowano 4 min temu",
+        mockOpened: "Otwarto 12 min temu",
+        mockClosedMeta: "Zamknięto 18 min temu",
+        mockRunningMeta: "Teraz uruchomiona",
+        mockResults: "4 wyniki",
+        mockMove: "Wybierz",
+        mockOpen: "Otwórz",
+        mockClose: "Zamknij",
+        featuresKicker: "Stworzone dla płynnej pracy",
+        featuresTitle: "Mniej szukania. Więcej działania.",
+        featuresCopy: "Aplikacje i autoryzowane pliki w jednym szybkim panelu, z jednym polem wyszukiwania i przewidywalną obsługą klawiaturą.",
+        f1Title: "Ostatnie, zamknięte, uruchomione",
+        f1Copy: "Przełączaj się między ostatnio używanymi, niedawno zamkniętymi i aktualnie uruchomionymi aplikacjami bez odrywania rąk od klawiatury.",
+        f2Title: "Twoje pliki, Twoje foldery",
+        f2Copy: "Opcjonalnie dodaj foldery przez systemowy wybór macOS. lastOpened szuka wyłącznie w lokalizacjach, na które zezwolisz.",
+        f3Title: "Filtry, które nie przeszkadzają",
+        f3Copy: "Zawężaj wyniki według daty, kategorii, rodzaju dokumentu, formatu multimediów lub źródła URL, a potem wyczyść wszystko jednym ruchem.",
+        f4Title: "Wbudowany Quick Look",
+        f4Copy: "Podejrzyj zaznaczony plik za pomocą systemowego Quick Look, zanim go otworzysz.",
+        f5Title: "Szybko także przy wielu wynikach",
+        f5Copy: "Wyniki pojawiają się stopniowo w małych partiach, dzięki czemu panel pozostaje responsywny bez ponownego skanowania systemu plików.",
+        f6Title: "W Twoim języku",
+        f6Copy: "Język systemowy, angielski, polski, niemiecki, hiszpański i francuski są obsługiwane w całym interfejsie.",
+        workflowKicker: "Jeden prosty schemat",
+        workflowTitle: "Skrót. Wybór. Return.",
+        workflowCopy: "Interfejs jest celowo mały. Sposób działania celowo oczywisty.",
+        s1Title: "Otwórz panel",
+        s1Copy: "Użyj jednego globalnego skrótu z dowolnego miejsca na Macu.",
+        s2Title: "Szukaj lub wybierz",
+        s2Copy: "Zacznij pisać, zmień widok albo użyj klawiszy strzałek.",
+        s3Title: "Naciśnij Return",
+        s3Copy: "Ponownie otwórz wybraną aplikację lub zatwierdzony plik i kontynuuj pracę.",
+        privacyKicker: "Prywatność z założenia",
+        privacyTitle: "Twoja aktywność zostaje na Macu.",
+        privacyCopy: "lastOpened przechowuje historię, ustawienia i zakładki do autoryzowanych folderów wewnątrz kontenera App Sandbox. Nie istnieje żaden serwer obsługiwany przez twórcę.",
+        p1: "Bez konta",
+        p2: "Bez analityki i reklam",
+        p3: "Bez odczytywania treści dokumentów",
+        p4: "Bez pełnego dostępu do dysku",
+        p5: "Bez zbierania schowka i wpisywanego tekstu",
+        p6: "Tylko odczyt wybranych folderów",
+        ctaKicker: "Wkrótce na macOS",
+        ctaTitle: "Mniej czasu na szukanie. Więcej na działanie.",
+        ctaCopy: "lastOpened przechodzi obecnie walidację kandydata do wydania. Obserwuj oficjalne konto, aby śledzić postępy i informacje o premierze.",
+        footerMade: "Stworzone dla macOS.",
+        footerPrivacy: "Prywatność",
+        footerTop: "Na górę ↑",
+        metaTitle: "lastOpened — ostatnie aplikacje i pliki pod jednym skrótem",
+        metaDescription: "lastOpened to szybkie, prywatne narzędzie dla macOS sterowane klawiaturą, które ponownie otwiera ostatnie aplikacje i autoryzowane pliki.",
+        themeLabel: "Zmień motyw"
+      }
+    };
+
+    const root = document.documentElement;
+    const langButtons = document.querySelectorAll("[data-lang]");
+    const themeButton = document.getElementById("themeButton");
+    const metaDescription = document.querySelector('meta[name="description"]');
+    const appPreview = document.getElementById("appPreview");
+
+    function setLanguage(language, persist = true) {
+      const lang = translations[language] ? language : "en";
+      root.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.dataset.i18n;
+        if (translations[lang][key] !== undefined) node.textContent = translations[lang][key];
+      });
+      document.title = translations[lang].metaTitle;
+      metaDescription.setAttribute("content", translations[lang].metaDescription);
+      themeButton.setAttribute("aria-label", translations[lang].themeLabel);
+      themeButton.setAttribute("title", translations[lang].themeLabel);
+      appPreview.alt = lang === "pl" ? "Podgląd aplikacji lastOpened" : "lastOpened application preview";
+      langButtons.forEach((button) => {
+        const active = button.dataset.lang === lang;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      if (persist) localStorage.setItem("lastOpenedLanguage", lang);
+    }
+
+    function setTheme(theme, persist = true) {
+      const nextTheme = theme === "light" ? "light" : "dark";
+      root.dataset.theme = nextTheme;
+      themeButton.innerHTML = nextTheme === "dark"
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+      if (persist) localStorage.setItem("lastOpenedTheme", nextTheme);
+    }
+
+    langButtons.forEach((button) => button.addEventListener("click", () => setLanguage(button.dataset.lang)));
+    themeButton.addEventListener("click", () => setTheme(root.dataset.theme === "dark" ? "light" : "dark"));
+
+    const preferredLanguage = localStorage.getItem("lastOpenedLanguage") || (navigator.language.toLowerCase().startsWith("pl") ? "pl" : "en");
+    const preferredTheme = localStorage.getItem("lastOpenedTheme") || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    setLanguage(preferredLanguage, false);
+    setTheme(preferredTheme, false);
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const header = document.querySelector(".site-header");
+    const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 8);
+    updateHeader();
+    addEventListener("scroll", updateHeader, { passive: true });
+
+    const revealItems = document.querySelectorAll("[data-reveal]");
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach((item) => observer.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("visible"));
+    }
+  </script>
+</body>
+</html>
