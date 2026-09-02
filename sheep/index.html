@@ -10,8 +10,8 @@
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif; line-height:1.6; }
-        .hero { position:relative; overflow:hidden; min-height:78vh; display:flex; align-items:flex-end; background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(11,10,16,.15) 55%,var(--bg) 100%), url("surreal.png") center center / cover no-repeat; }
-        .hero-content { position:relative; z-index:3; width:min(760px, calc(100% - 40px)); margin:0 auto; padding:80px 0 70px; }
+        .hero { position:relative; overflow:hidden; min-height:72vh; display:flex; align-items:flex-end; background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(11,10,16,.22) 50%,var(--bg) 100%), url("surreal.png") center center / cover no-repeat; }
+        .hero-content { position:relative; z-index:3; width:min(760px, calc(100% - 40px)); margin:0 auto; padding:72px 0 120px; }
         h1 { margin:0 0 14px; font-size:clamp(3.2rem,9vw,6rem); line-height:.95; letter-spacing:-.06em; }
         .tagline { max-width:560px; margin:0; font-size:clamp(1.2rem,3vw,1.55rem); color:#ddd8e1; }
         main { width:min(var(--max), calc(100% - 40px)); margin:0 auto; }
@@ -24,24 +24,26 @@
         .soon-platform { color:var(--muted); }
         .soon { position:absolute; top:-9px; right:-5px; padding:3px 7px; border:1px solid #514c5d; border-radius:999px; background:var(--bg); color:var(--muted); font-size:.62rem; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
         .sheep-layer { position:absolute; inset:0; z-index:2; pointer-events:none; }
-        .hero-sheep { position:absolute; bottom:4%; width:clamp(90px,11vw,170px); filter:drop-shadow(0 10px 14px rgba(0,0,0,.4)); animation:sheep-walk 18s linear infinite, sheep-hop 1.8s ease-in-out infinite; }
+        .hero-sheep { position:absolute; bottom:8px; width:clamp(80px,10vw,150px); filter:drop-shadow(0 10px 14px rgba(0,0,0,.4)); animation:sheep-walk 18s linear infinite, sheep-hop 1.8s ease-in-out infinite; }
         .sheep-1 { animation-delay:-3s,0s; }
-        .sheep-2 { width:clamp(75px,9vw,140px); opacity:.85; animation-delay:-10s,-.7s; }
-        .sheep-3 { width:clamp(60px,7vw,110px); opacity:.7; animation-delay:-15s,-1.2s; }
+        .sheep-2 { width:clamp(68px,8vw,124px); opacity:.85; animation-delay:-10s,-.7s; }
+        .sheep-3 { width:clamp(54px,6.5vw,100px); opacity:.7; animation-delay:-15s,-1.2s; }
         @keyframes sheep-walk { from { left:calc(100% + 190px); } to { left:-190px; } }
-        @keyframes sheep-hop { 0%,100% { transform:translateY(0) rotate(-2deg); } 45%,55% { transform:translateY(-18px) rotate(2deg); } }
+        @keyframes sheep-hop { 0%,100% { transform:translateY(0) rotate(-2deg); } 45%,55% { transform:translateY(-14px) rotate(2deg); } }
         .simple { font-size:1.15rem; color:var(--text); line-height:1.9; }
         .single-sheep { display:block; width:min(260px,65vw); margin:32px auto 0; border-radius:18px; }
-        .shots { display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
+        .shots { display:grid; grid-template-columns:1.35fr 1fr; gap:16px; align-items:start; }
+        figure { margin:0; }
         .shots img, .phones img { width:100%; border-radius:18px; border:1px solid var(--line); background:#08070c; display:block; }
         .shots-side { display:grid; gap:16px; }
         .caption { margin:8px 0 0; font-size:.88rem; color:#8b8694; }
-        .phones { display:grid; grid-template-columns:1fr 1fr .7fr; gap:16px; margin-top:16px; align-items:start; }
+        .phones { display:grid; grid-template-columns:minmax(180px,280px) minmax(140px,220px); gap:20px; margin-top:20px; align-items:end; justify-content:start; }
+        .phones .watch img { border-radius:28px; }
         footer { padding:40px 0 60px; color:#77727f; font-size:.9rem; }
         footer a { color:#bbb6c4; text-decoration:none; }
         footer a:hover { color:var(--text); }
         @media (max-width:800px) { .shots,.phones { grid-template-columns:1fr; } .platforms { grid-template-columns:repeat(2,1fr); } .platform:last-child { grid-column:1/-1; } }
-        @media (max-width:600px) { .hero { min-height:68vh; background-position:center top; } .hero-content { padding-bottom:45px; } section { padding:48px 0; } }
+        @media (max-width:600px) { .hero { min-height:64vh; background-position:center top; } .hero-content { padding-bottom:96px; } section { padding:48px 0; } }
         @media (prefers-reduced-motion:reduce) { .hero-sheep { animation:none; } .sheep-1 { left:65%; } .sheep-2 { left:20%; } .sheep-3 { display:none; } }
     </style>
 </head>
@@ -69,16 +71,16 @@
         <div class="shots">
             <figure>
                 <img src="shots/ipad-count.jpg" alt="iPad — count jumping sheep">
-                <figcaption class="caption">iPad · Count jumping sheep.</figcaption>
+                <figcaption class="caption">iPad</figcaption>
             </figure>
             <div class="shots-side">
                 <figure>
                     <img src="shots/ipad-flock.jpg" alt="iPad — bring the flock">
-                    <figcaption class="caption">Flock mode. More sheep. More absurd.</figcaption>
+                    <figcaption class="caption">Flock</figcaption>
                 </figure>
                 <figure>
                     <img src="shots/airplay.jpg" alt="AirPlay — same joke, bigger glass">
-                    <figcaption class="caption">AirPlay · Same joke. Bigger glass.</figcaption>
+                    <figcaption class="caption">AirPlay</figcaption>
                 </figure>
             </div>
         </div>
@@ -87,7 +89,7 @@
                 <img src="shots/iphone-jump.jpg" alt="iPhone — jumping sheep">
                 <figcaption class="caption">iPhone</figcaption>
             </figure>
-            <figure>
+            <figure class="watch">
                 <img src="shots/watch.jpg" alt="Apple Watch — sheep on a fence">
                 <figcaption class="caption">Apple Watch</figcaption>
             </figure>
