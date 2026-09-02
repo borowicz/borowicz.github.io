@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sheep Me to Sleep</title>
+
+    <meta
+            name="description"
+            content="A tiny app for falling asleep by counting sheep."
+    >
+
+    <style>
+        :root {
+            --bg: #0b0a10;
+            --text: #f5f2e9;
+            --muted: #aaa5b4;
+            --line: #292633;
+            --card: #15131c;
+            --max: 760px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "SF Pro Text",
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif;
+            line-height: 1.6;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            min-height: 78vh;
+            display: flex;
+            align-items: flex-end;
+
+            background:
+                    linear-gradient(
+                            to bottom,
+                            rgba(0,0,0,0.05),
+                            rgba(11,10,16,0.15) 55%,
+                            var(--bg) 100%
+                    ),
+                    url("surreal.png") center center / cover no-repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+
+            width: min(var(--max), calc(100% - 40px));
+            margin: 0 auto;
+            padding: 80px 0 70px;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: clamp(3.2rem, 9vw, 6rem);
+            line-height: 0.95;
+            letter-spacing: -0.06em;
+        }
+
+        .tagline {
+            max-width: 560px;
+            margin: 0;
+            font-size: clamp(1.2rem, 3vw, 1.55rem);
+            color: #ddd8e1;
+        }
+
+        main {
+            width: min(var(--max), calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 64px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        h2 {
+            margin: 0 0 18px;
+            font-size: 1.8rem;
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .lead {
+            color: var(--text);
+            font-size: 1.25rem;
+        }
+
+        /* Platforms */
+
+        .platform-section {
+            padding-top: 54px;
+        }
+
+        .platform-intro {
+            margin-bottom: 28px;
+        }
+
+        .platforms {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .platform {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 82px;
+            padding: 14px 8px;
+
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
+
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 650;
+            text-align: center;
+        }
+
+        .platform.soon-platform {
+            color: var(--muted);
+        }
+
+        .soon {
+            position: absolute;
+            top: -9px;
+            right: -5px;
+
+            padding: 3px 7px;
+
+            border: 1px solid #514c5d;
+            border-radius: 999px;
+
+            background: var(--bg);
+
+            color: var(--muted);
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        /* Sheep animation */
+
+        .sheep-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hero-sheep {
+            position: absolute;
+            bottom: 4%;
+
+            width: clamp(90px, 11vw, 170px);
+
+            filter: drop-shadow(0 10px 14px rgba(0,0,0,.4));
+
+            animation:
+                    sheep-walk 18s linear infinite,
+                    sheep-hop 1.8s ease-in-out infinite;
+        }
+
+        .sheep-1 {
+            animation-delay: -3s, 0s;
+        }
+
+        .sheep-2 {
+            width: clamp(75px, 9vw, 140px);
+            opacity: .85;
+            animation-delay: -10s, -.7s;
+        }
+
+        .sheep-3 {
+            width: clamp(60px, 7vw, 110px);
+            opacity: .7;
+            animation-delay: -15s, -1.2s;
+        }
+
+        @keyframes sheep-walk {
+            from {
+                left: calc(100% + 190px);
+            }
+
+            to {
+                left: -190px;
+            }
+        }
+
+        @keyframes sheep-hop {
+            0%, 100% {
+                transform: translateY(0) rotate(-2deg);
+            }
+
+            45%, 55% {
+                transform: translateY(-18px) rotate(2deg);
+            }
+        }
+
+        /* Content */
+
+        .simple {
+            font-size: 1.15rem;
+            color: var(--text);
+            line-height: 1.9;
+        }
+
+        .single-sheep {
+            display: block;
+            width: min(260px, 65vw);
+            margin: 32px auto 0;
+            border-radius: 18px;
+        }
+
+        footer {
+            padding: 40px 0 60px;
+            color: #77727f;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 700px) {
+            .platforms {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .platform:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 68vh;
+                background-position: center top;
+            }
+
+            .hero-content {
+                padding-bottom: 45px;
+            }
+
+            section {
+                padding: 48px 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-sheep {
+                animation: none;
+            }
+
+            .sheep-1 {
+                left: 65%;
+            }
+
+            .sheep-2 {
+                left: 20%;
+            }
+
+            .sheep-3 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="hero">
+
+    <div class="sheep-layer" aria-hidden="true">
+        <img class="hero-sheep sheep-1" src="ofca.png" alt="">
+        <img class="hero-sheep sheep-2" src="ofca.png" alt="">
+        <img class="hero-sheep sheep-3" src="ofca.png" alt="">
+    </div>
+
+    <div class="hero-content">
+        <h1>Sheep Me<br>to Sleep</h1>
+
+        <p class="tagline">
+            A tiny app for falling asleep by counting sheep.
+        </p>
+    </div>
+
+</header>
+
+
+<main>
+
+    <section>
+        <p class="lead">
+            Watch sheep jump across the screen, choose the pace,
+            turn on ambient sound or voice counting,
+            and set a sleep timer.
+        </p>
+
+        <p>
+            You can even send the sheep to your TV with AirPlay.
+        </p>
+    </section>
+
+
+    <section class="platform-section">
+
+        <h2>One flock. Many screens.</h2>
+
+        <p class="platform-intro">
+            One simple app across the Apple ecosystem.
+        </p>
+
+        <div class="platforms">
+
+            <div class="platform">
+                iPhone
+            </div>
+
+            <div class="platform">
+                iPad
+            </div>
+
+            <div class="platform">
+                Mac
+            </div>
+
+            <div class="platform">
+                Apple Watch
+            </div>
+
+            <div class="platform soon-platform">
+                Apple TV
+                <span class="soon">Coming Soon</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section>
+        <h2>Simple on purpose.</h2>
+
+        <div class="simple">
+            No account.<br>
+            No cloud.<br>
+            No subscription.<br>
+            No sleep tracking.<br>
+            No AI sleep coach.
+        </div>
+
+        <p class="lead" style="margin-top: 28px;">
+            Just sheep.
+        </p>
+
+        <img
+                class="single-sheep"
+                src="classic-10-squash.png"
+                alt="Cartoon sheep"
+        >
+    </section>
+
+
+    <section>
+        <h2>Free.</h2>
+
+        <p>
+            Sheep Me to Sleep is completely free.
+        </p>
+
+        <p>
+            Optional tips support development,
+            but they do not unlock anything.
+        </p>
+    </section>
+
+
+    <section>
+        <h2>Status</h2>
+
+        <p class="lead">
+            Almost ready for v1.
+        </p>
+    </section>
+
+
+    <footer>
+        Sheep Me to Sleep · Built by Andrzej Borowicz
+    </footer>
+
+</main>
+
+</body>
+</html>
