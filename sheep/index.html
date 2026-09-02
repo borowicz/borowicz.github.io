@@ -32,17 +32,19 @@
         @keyframes sheep-hop { 0%,100% { transform:translateY(0) rotate(-2deg); } 45%,55% { transform:translateY(-14px) rotate(2deg); } }
         .simple { font-size:1.15rem; color:var(--text); line-height:1.9; }
         .single-sheep { display:block; width:min(260px,65vw); margin:32px auto 0; border-radius:18px; }
-        .shots { display:grid; grid-template-columns:1.35fr 1fr; gap:16px; align-items:start; }
-        figure { margin:0; }
-        .shots img, .phones img { width:100%; border-radius:18px; border:1px solid var(--line); background:#08070c; display:block; }
-        .shots-side { display:grid; gap:16px; }
-        .caption { margin:8px 0 0; font-size:.88rem; color:#8b8694; }
-        .phones { display:grid; grid-template-columns:minmax(180px,280px) minmax(140px,220px); gap:20px; margin-top:20px; align-items:end; justify-content:start; }
-        .phones .watch img { border-radius:28px; }
+        .gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+        .gallery figure { margin:0; min-width:0; }
+        .shot-frame { display:flex; align-items:center; justify-content:center; min-height:280px; padding:14px; border:1px solid var(--line); border-radius:18px; background:#08070c; overflow:hidden; }
+        .shot-frame img { display:block; width:100%; height:100%; max-height:440px; object-fit:contain; border-radius:12px; }
+        .shot-frame.phone img { max-width:280px; }
+        .shot-frame.watch img { max-width:220px; }
+        .caption { margin:8px 2px 0; font-size:.88rem; color:#8b8694; }
+        .gallery .wide { grid-column:1 / -1; }
+        .gallery .wide .shot-frame { min-height:360px; }
         footer { padding:40px 0 60px; color:#77727f; font-size:.9rem; }
         footer a { color:#bbb6c4; text-decoration:none; }
         footer a:hover { color:var(--text); }
-        @media (max-width:800px) { .shots,.phones { grid-template-columns:1fr; } .platforms { grid-template-columns:repeat(2,1fr); } .platform:last-child { grid-column:1/-1; } }
+        @media (max-width:800px) { .gallery { grid-template-columns:1fr; } .gallery .wide { grid-column:auto; } .shot-frame, .gallery .wide .shot-frame { min-height:220px; } .platforms { grid-template-columns:repeat(2,1fr); } .platform:last-child { grid-column:1/-1; } }
         @media (max-width:600px) { .hero { min-height:64vh; background-position:center top; } .hero-content { padding-bottom:96px; } section { padding:48px 0; } }
         @media (prefers-reduced-motion:reduce) { .hero-sheep { animation:none; } .sheep-1 { left:65%; } .sheep-2 { left:20%; } .sheep-3 { display:none; } }
     </style>
@@ -68,29 +70,41 @@
 
     <section>
         <h2>The joke, on every screen.</h2>
-        <div class="shots">
-            <figure>
-                <img src="shots/ipad-count.jpg" alt="iPad — count jumping sheep">
+        <p>Same sheep. Different screens.</p>
+
+        <div class="gallery">
+            <figure class="wide">
+                <div class="shot-frame">
+                    <img src="shots/ipad-count.jpg" alt="iPad — count jumping sheep">
+                </div>
                 <figcaption class="caption">iPad</figcaption>
             </figure>
-            <div class="shots-side">
-                <figure>
-                    <img src="shots/ipad-flock.jpg" alt="iPad — bring the flock">
-                    <figcaption class="caption">Flock</figcaption>
-                </figure>
-                <figure>
-                    <img src="shots/airplay.jpg" alt="AirPlay — same joke, bigger glass">
-                    <figcaption class="caption">AirPlay</figcaption>
-                </figure>
-            </div>
-        </div>
-        <div class="phones">
+
             <figure>
-                <img src="shots/iphone-jump.jpg" alt="iPhone — jumping sheep">
+                <div class="shot-frame">
+                    <img src="shots/ipad-flock.jpg" alt="iPad — bring the flock">
+                </div>
+                <figcaption class="caption">Flock</figcaption>
+            </figure>
+
+            <figure>
+                <div class="shot-frame">
+                    <img src="shots/airplay.jpg" alt="AirPlay — same joke, bigger glass">
+                </div>
+                <figcaption class="caption">AirPlay</figcaption>
+            </figure>
+
+            <figure>
+                <div class="shot-frame phone">
+                    <img src="shots/iphone-jump.jpg" alt="iPhone — jumping sheep">
+                </div>
                 <figcaption class="caption">iPhone</figcaption>
             </figure>
-            <figure class="watch">
-                <img src="shots/watch.jpg" alt="Apple Watch — sheep on a fence">
+
+            <figure>
+                <div class="shot-frame watch">
+                    <img src="shots/watch.jpg" alt="Apple Watch — sheep on a fence">
+                </div>
                 <figcaption class="caption">Apple Watch</figcaption>
             </figure>
         </div>
