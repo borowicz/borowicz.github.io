@@ -1,293 +1,552 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#075f55">
-  <meta name="description" content="README.aloud is a text player for your files. Open a file, press Play, and listen offline on iPhone, iPad, and Mac.">
-  <meta property="og:title" content="README.aloud — A text player for your files">
-  <meta property="og:description" content="Open. Play. Listen. Your files stay on your device.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/icon-512.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
-  <link rel="apple-touch-icon" href="assets/icon-180.png">
-  <title>README.aloud — A simple lightweight text player for your files</title>
-  <style>
-    :root {
-      --bg: #f6f8f7;
-      --surface: rgba(255,255,255,.78);
-      --text: #10211f;
-      --muted: #5f6d69;
-      --line: #dbe3e0;
-      --brand: #056c61;
-      --brand-2: #063f3a;
-      --hero: #075f55;
-      --shadow: 0 18px 50px rgba(11, 48, 43, .12);
-      --radius: 28px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 85% 8%, rgba(13,114,101,.08), transparent 28rem),
-        var(--bg);
-      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#075f55">
+    <meta name="description"
+          content="README.aloud is a text player for your files. Open a file, press Play, and listen offline on iPhone, iPad, and Mac.">
+    <meta property="og:title" content="README.aloud — A text player for your files">
+    <meta property="og:description" content="Open. Play. Listen. Your files stay on your device.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/icon-512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" href="assets/icon-180.png">
+    <title>README.aloud — A simple lightweight text player for your files</title>
+    <style>
+        :root {
+            --bg: #f6f8f7;
+            --surface: rgba(255, 255, 255, .78);
+            --text: #10211f;
+            --muted: #5f6d69;
+            --line: #dbe3e0;
+            --brand: #056c61;
+            --brand-2: #063f3a;
+            --hero: #075f55;
+            --shadow: 0 18px 50px rgba(11, 48, 43, .12);
+            --radius: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: radial-gradient(circle at 85% 8%, rgba(13, 114, 101, .08), transparent 28rem),
+            var(--bg);
+            font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
             Inter, Segoe UI, Helvetica, Arial, sans-serif;
-    }
-    a { color: inherit; }
-    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
-    header {
-      position: sticky; top: 0; z-index: 10;
-      backdrop-filter: blur(14px);
-      background: rgba(6, 51, 46, .85);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      color: #fff;
-    }
-    nav {
-      min-height: 68px;
-      display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    }
-    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; font-weight:750; letter-spacing:-.02em; }
-    .brand img { width:34px; height:34px; border-radius:10px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
-    .navlinks { display:flex; gap:24px; }
-    .navlinks a { text-decoration:none; opacity:.92; font-size:.95rem; }
-    .navlinks a:hover { opacity:1; }
-    .hero {
-      background: linear-gradient(140deg, #0c776b 0%, #06584f 55%, #043e39 100%);
-      color:#fff; overflow:hidden;
-    }
-    .hero-grid {
-      min-height: 670px;
-      display:grid; grid-template-columns: 1fr .82fr;
-      align-items:center; gap:64px; padding:72px 0;
-    }
-    .eyebrow {
-      display:inline-flex; padding:7px 12px; border-radius:999px;
-      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.14);
-      font-size:.9rem; font-weight:650;
-    }
-    h1 {
-      margin: 20px 0 14px; font-size: clamp(3.1rem, 7vw, 6.2rem);
-      line-height:.95; letter-spacing:-.065em;
-    }
-    .hero h2 {
-      margin:0 0 20px; font-size:clamp(1.45rem, 2.7vw, 2rem);
-      color:rgba(255,255,255,.83); font-weight:600;
-    }
-    .hero p { max-width: 650px; color:rgba(255,255,255,.82); font-size:1.12rem; }
-    .hero-art { display:flex; justify-content:center; }
-    .hero-art img {
-      width:min(430px, 75vw); border-radius: 34px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.28);
-    }
-    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
-    .button {
-      display:inline-flex; align-items:center; justify-content:center;
-      min-height:48px; padding:0 18px; border-radius:14px;
-      text-decoration:none; font-weight:700;
-      border:1px solid transparent; transition:.18s ease;
-    }
-    .button.primary { background:#fff; color:var(--brand-2); }
-    .button.secondary { border-color:rgba(255,255,255,.24); background:rgba(255,255,255,.08); color:#fff; }
-    .button:hover { transform:translateY(-1px); }
-    section { padding:94px 0; }
-    .section-head { max-width: 700px; margin-bottom:42px; }
-    .section-head h2 { margin:0 0 10px; font-size:clamp(2rem,4vw,3rem); letter-spacing:-.045em; }
-    .section-head p { margin:0; color:var(--muted); font-size:1.08rem; }
-    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
-    .card {
-      background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
-      padding:28px; box-shadow: var(--shadow);
-    }
-    .card .num {
-      width:44px; height:44px; display:grid; place-items:center; border-radius:14px;
-      background:#e6f3f0; color:var(--brand); font-weight:800; margin-bottom:18px;
-    }
-    .card h3 { margin:0 0 8px; font-size:1.15rem; }
-    .card p { margin:0; color:var(--muted); }
-    .band {
-      background:#ecf3f1; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    }
-    .split { display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
-    .quote {
-      border-left:4px solid var(--brand); padding-left:22px; font-size:clamp(1.45rem,2.6vw,2rem);
-      line-height:1.35; letter-spacing:-.025em;
-    }
-    .formats { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
-    .pill {
-      padding:9px 13px; border-radius:999px; background:#fff; border:1px solid var(--line);
-      font-weight:650;
-    }
-    .checks { display:grid; gap:13px; margin-top:24px; }
-    .check { display:flex; gap:10px; align-items:flex-start; color:#29403b; }
-    .check b { color:var(--brand); }
-    .cta {
-      background:linear-gradient(140deg, #075f55, #043f3a);
-      color:#fff; border-radius:36px; padding:56px; box-shadow:var(--shadow);
-    }
-    .cta h2 { margin:0 0 12px; font-size:clamp(2rem,4vw,3.2rem); letter-spacing:-.045em; }
-    .cta p { color:rgba(255,255,255,.8); max-width:680px; }
-    footer { padding:34px 0 46px; color:var(--muted); }
-    .footer-inner { display:flex; justify-content:space-between; gap:20px; padding-top:20px; border-top:1px solid var(--line); }
-    .mini { font-size:.92rem; }
-    @media (max-width: 900px) {
-      .hero-grid, .split { grid-template-columns:1fr; gap:42px; }
-      .hero-grid { min-height:auto; }
-      .grid-4 { grid-template-columns:repeat(2,1fr); }
-      .hero-art { order:-1; }
-      .hero-art img { width:min(340px,70vw); }
-    }
-    @media (max-width: 600px) {
-      .wrap { width:min(100% - 28px, 1120px); }
-      .navlinks { display:none; }
-      section { padding:70px 0; }
-      .grid-4 { grid-template-columns:1fr; }
-      .cta { padding:32px 24px; }
-      h1 { font-size:3.2rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior:auto; }
-      .button { transition:none; }
-    }
-  </style>
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .wrap {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(14px);
+            background: rgba(6, 51, 46, .85);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            color: #fff;
+        }
+
+        nav {
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 750;
+            letter-spacing: -.02em;
+        }
+
+        .brand img {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+        }
+
+        .navlinks {
+            display: flex;
+            gap: 24px;
+        }
+
+        .navlinks a {
+            text-decoration: none;
+            opacity: .92;
+            font-size: .95rem;
+        }
+
+        .navlinks a:hover {
+            opacity: 1;
+        }
+
+        .hero {
+            background: linear-gradient(140deg, #0c776b 0%, #06584f 55%, #043e39 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            min-height: 670px;
+            display: grid;
+            grid-template-columns: 1fr .82fr;
+            align-items: center;
+            gap: 64px;
+            padding: 72px 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .14);
+            font-size: .9rem;
+            font-weight: 650;
+        }
+
+        h1 {
+            margin: 20px 0 14px;
+            font-size: clamp(3.1rem, 7vw, 6.2rem);
+            line-height: .95;
+            letter-spacing: -.065em;
+        }
+
+        .hero h2 {
+            margin: 0 0 20px;
+            font-size: clamp(1.45rem, 2.7vw, 2rem);
+            color: rgba(255, 255, 255, .83);
+            font-weight: 600;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: rgba(255, 255, 255, .82);
+            font-size: 1.12rem;
+        }
+
+        .hero-art {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-art img {
+            width: min(430px, 75vw);
+            border-radius: 34px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .28);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid transparent;
+            transition: .18s ease;
+        }
+
+        .button.primary {
+            background: #fff;
+            color: var(--brand-2);
+        }
+
+        .button.secondary {
+            border-color: rgba(255, 255, 255, .24);
+            background: rgba(255, 255, 255, .08);
+            color: #fff;
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+        }
+
+        section {
+            padding: 94px 0;
+        }
+
+        .section-head {
+            max-width: 700px;
+            margin-bottom: 42px;
+        }
+
+        .section-head h2 {
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -.045em;
+        }
+
+        .section-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.08rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .card .num {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: #e6f3f0;
+            color: var(--brand);
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 1.15rem;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .band {
+            background: #ecf3f1;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 70px;
+            align-items: center;
+        }
+
+        .quote {
+            border-left: 4px solid var(--brand);
+            padding-left: 22px;
+            font-size: clamp(1.45rem, 2.6vw, 2rem);
+            line-height: 1.35;
+            letter-spacing: -.025em;
+        }
+
+        .formats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .pill {
+            padding: 9px 13px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid var(--line);
+            font-weight: 650;
+        }
+
+        .checks {
+            display: grid;
+            gap: 13px;
+            margin-top: 24px;
+        }
+
+        .check {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            color: #29403b;
+        }
+
+        .check b {
+            color: var(--brand);
+        }
+
+        .cta {
+            background: linear-gradient(140deg, #075f55, #043f3a);
+            color: #fff;
+            border-radius: 36px;
+            padding: 56px;
+            box-shadow: var(--shadow);
+        }
+
+        .cta h2 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            letter-spacing: -.045em;
+        }
+
+        .cta p {
+            color: rgba(255, 255, 255, .8);
+            max-width: 680px;
+        }
+
+        footer {
+            padding: 34px 0 46px;
+            color: var(--muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+
+        .mini {
+            font-size: .92rem;
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid, .split {
+                grid-template-columns:1fr;
+                gap: 42px;
+            }
+
+            .hero-grid {
+                min-height: auto;
+            }
+
+            .grid-4 {
+                grid-template-columns:repeat(2, 1fr);
+            }
+
+            .hero-art {
+                order: -1;
+            }
+
+            .hero-art img {
+                width: min(340px, 70vw);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .wrap {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .navlinks {
+                display: none;
+            }
+
+            section {
+                padding: 70px 0;
+            }
+
+            .grid-4 {
+                grid-template-columns:1fr;
+            }
+
+            .cta {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 3.2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .button {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <nav aria-label="Primary">
-      <a class="brand" href="#">
-        <img src="assets/favicon-32.png" alt="">
-        <span>README.aloud</span>
-      </a>
-      <div class="navlinks">
-        <a href="#features">Features</a>
-        <a href="#files">Files</a>
-        <a href="#privacy">Privacy</a>
-        <a href="#about">About</a>
-      </div>
-    </nav>
-  </div>
+    <div class="wrap">
+        <nav aria-label="Primary">
+            <a class="brand" href="#">
+                <img src="assets/favicon-32.png" alt="">
+                <span>README.aloud</span>
+            </a>
+            <div class="navlinks">
+                <a href="#features">Features</a>
+                <a href="#files">Files</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#about">About</a>
+            </div>
+        </nav>
+    </div>
 </header>
 
 <main>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">iPhone · iPad · Mac</span>
-        <h1>README.aloud</h1>
-        <h2>A simple lightweight text player <br />for your files<br/></h2>
-        <p>Open a file. Press Play. Listen. README.aloud turns the text inside your documents into private, offline listening.
-            <br/>No account, no cloud, no limits.
-            <br/>Apple voices
-            <br/>This is a text player, not an ebook reader.
-        </p>
-        <div class="actions">
-          <a class="button primary" href="#about">Learn more</a>
-          <a class="button secondary" href="#files">See supported files</a>
+    <section class="hero">
+        <div class="wrap hero-grid">
+            <div>
+                <span class="eyebrow">iPhone · iPad · Mac</span>
+                <h1>README.aloud</h1>
+                <h2>A simple lightweight text player <br/>for your files<br/></h2>
+                <p>Open a file. Press Play. Listen. README.aloud turns the text inside your documents into private,
+                    offline listening.
+                    <br/>No account, no cloud, no limits.
+                    <br/>Apple voices
+                    <br/>This is a text player, not an ebook reader.
+                </p>
+                <div class="actions">
+                    <a class="button primary" href="#about">Learn more</a>
+                    <a class="button secondary" href="#files">See supported files</a>
+                </div>
+            </div>
+            <div class="hero-art">
+                <img src="assets/icon.png" alt="README.aloud app icon: an open book wearing headphones">
+            </div>
         </div>
-      </div>
-      <div class="hero-art">
-        <img src="assets/icon.png" alt="README.aloud app icon: an open book wearing headphones">
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="features">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Listening comes first.</h2>
-        <p>The text on screen is there for context, search, bookmarks, and navigation. The main interface is audio.</p>
-      </div>
-      <div class="grid-4">
-        <article class="card">
-          <div class="num">01</div>
-          <h3>Open → Play → Listen</h3>
-          <p>Start with a file you already have and get to playback without building a library.</p>
-        </article>
-        <article class="card">
-          <div class="num">02</div>
-          <h3>Lock → Pocket</h3>
-          <p>On iPhone and iPad, keep listening after Home or with the screen locked.</p>
-        </article>
-        <article class="card">
-          <div class="num">03</div>
-          <h3>Apple voices first</h3>
-          <p>Use the system voices already available on your Apple devices and choose your listening speed.</p>
-        </article>
-        <article class="card">
-          <div class="num">04</div>
-          <h3>Free to use</h3>
-          <p>No account, no subscription, no ads, and no feature paywall. Tips unlock nothing.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+    <section id="features">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Listening comes first.</h2>
+                <p>The text on screen is there for context, search, bookmarks, and navigation. The main interface is
+                    audio.</p>
+            </div>
+            <div class="grid-4">
+                <article class="card">
+                    <div class="num">01</div>
+                    <h3>Open → Play → Listen</h3>
+                    <p>Start with a file you already have and get to playback without building a library.</p>
+                </article>
+                <article class="card">
+                    <div class="num">02</div>
+                    <h3>Lock → Pocket</h3>
+                    <p>On iPhone and iPad, keep listening after Home or with the screen locked.</p>
+                </article>
+                <article class="card">
+                    <div class="num">03</div>
+                    <h3>Apple voices first</h3>
+                    <p>Use the system voices already available on your Apple devices and choose your listening
+                        speed.</p>
+                </article>
+                <article class="card">
+                    <div class="num">04</div>
+                    <h3>Free to use</h3>
+                    <p>No account, no subscription, no ads, and no feature paywall. Tips unlock nothing.</p>
+                </article>
+            </div>
+        </div>
+    </section>
 
-  <section id="files" class="band">
-    <div class="wrap split">
-      <div>
-        <div class="section-head">
-          <h2>Your files. Not a bookstore.</h2>
-          <p>README.aloud works with compatible local documents and ebooks. It extracts text and sends it to playback.</p>
+    <section id="files" class="band">
+        <div class="wrap split">
+            <div>
+                <div class="section-head">
+                    <h2>Your files. Not a bookstore.</h2>
+                    <p>README.aloud works with compatible local documents and ebooks. It extracts text and sends it to
+                        playback.</p>
+                </div>
+                <div class="formats" aria-label="Supported formats">
+                    <span class="pill">EPUB</span>
+                    <span class="pill">MOBI</span>
+                    <span class="pill">PRC</span>
+                    <span class="pill">PDF (text layer)</span>
+                    <span class="pill">TXT</span>
+                    <span class="pill">RTF</span>
+                </div>
+            </div>
+            <div>
+                <div class="quote">Protected files are rejected. Scanned PDFs are not sent to OCR.</div>
+                <div class="checks">
+                    <div class="check"><b>✓</b><span>No DRM circumvention.</span></div>
+                    <div class="check"><b>✓</b><span>No cloud conversion.</span></div>
+                    <div class="check"><b>✓</b><span>No audiobook export.</span></div>
+                </div>
+            </div>
         </div>
-        <div class="formats" aria-label="Supported formats">
-          <span class="pill">EPUB</span>
-          <span class="pill">MOBI</span>
-          <span class="pill">PRC</span>
-          <span class="pill">PDF (text layer)</span>
-          <span class="pill">TXT</span>
-          <span class="pill">RTF</span>
-        </div>
-      </div>
-      <div>
-        <div class="quote">Protected files are rejected. Scanned PDFs are not sent to OCR.</div>
-        <div class="checks">
-          <div class="check"><b>✓</b><span>No DRM circumvention.</span></div>
-          <div class="check"><b>✓</b><span>No cloud conversion.</span></div>
-          <div class="check"><b>✓</b><span>No audiobook export.</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="privacy">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Private by design.</h2>
-        <p>Your documents stay on your device. The v1 product has no account, backend, document upload, analytics/tracking SDK, advertising, cloud AI, or subscription.</p>
-      </div>
-      <div class="grid-4">
-        <article class="card"><h3>No account</h3><p>Open the app and use it. There is no sign-in flow.</p></article>
-        <article class="card"><h3>No upload</h3><p>Your document is processed locally rather than sent to a service.</p></article>
-        <article class="card"><h3>No tracking</h3><p>No third-party analytics or advertising layer.</p></article>
-        <article class="card"><h3>No paywall</h3><p>The app is fully functional. Optional tips do not unlock features.</p></article>
-      </div>
-    </div>
-      <div class="wrap" id="about">
-          <div class="cta">
-              <h2>A text player. Nothing more complicated than that.</h2>
-              <p>README.aloud is built around a simple idea: your files already contain the text. Your device already has a voice. The app provides the player.</p>
-              <div class="actions">
-                  <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
-                  <a class="button primary" href="#" aria-label="App Store link">App Store — coming soon</a>
-                  <a class="button secondary" href="https://github.com/" rel="noopener">GitHub</a>
-              </div>
-          </div>
-      </div>
-  </section>
+    <section id="privacy">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Private by design.</h2>
+                <p>Your documents stay on your device. The v1 product has no account, backend, document upload,
+                    analytics/tracking SDK, advertising, cloud AI, or subscription.</p>
+            </div>
+            <div class="grid-4">
+                <article class="card"><h3>No account</h3>
+                    <p>Open the app and use it. There is no sign-in flow.</p></article>
+                <article class="card"><h3>No upload</h3>
+                    <p>Your document is processed locally rather than sent to a service.</p></article>
+                <article class="card"><h3>No tracking</h3>
+                    <p>No third-party analytics or advertising layer.</p></article>
+                <article class="card"><h3>No paywall</h3>
+                    <p>The app is fully functional. Optional tips do not unlock features.</p></article>
+            </div>
+            <br/>
+        </div>
+        <div class="wrap" id="about">
+            <div class="cta">
+                <h2>A simple lightweight text player. Nothing more complicated than that.</h2>
+                <p>README.aloud is built around a simple idea: your files already contain the text. Your device already
+                    has a voice. The app provides the player.</p>
+                <div class="actions">
+                    <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
+                    <a class="button primary" href="#" aria-label="App Store link">App Store — coming soon</a>
+                    <a class="button secondary" href="https://github.com/" rel="noopener">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer>
-  <div class="wrap footer-inner">
-    <div><strong>README.aloud</strong><div class="mini">A text player for your files.</div></div>
-      <a class="emaillink" href="#">Support email</a>
-      <a href="privacy.html" style="color:#ddd8e1">Privacy Policy</a>
-    <div class="mini">Open. Play. Listen.
+    <div class="wrap footer-inner">
+        <div><strong>README.aloud</strong>
+            <div class="mini">A text player for your files.</div>
+        </div>
+        <a class="emaillink" href="#">Support email</a>
+        <a href="privacy.html" style="color:#ddd8e1">Privacy Policy</a>
+        <div class="mini">Open. Play. Listen.
 
+        </div>
     </div>
-  </div>
 </footer>
 
 <script>
