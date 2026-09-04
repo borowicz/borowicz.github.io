@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pl" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#315c9d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="IPA Atlas" />
+    <meta name="description" content="Atlas internetowych osobowości i interaktywny test zachowań online." />
+    <title>Internet Personality Atlas</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icon-192.png" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Internet Personality Atlas">
+        <span class="brand-mark">IPA</span>
+        <span class="brand-copy"><b>Internet</b><small>Personality Atlas</small></span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#atlas" data-t="navAtlas">Atlas</a>
+        <a href="#method" data-t="navMethod">Metoda</a>
+        <button class="nav-test" type="button" data-start-test="short" data-t="navTest">Test</button>
+      </nav>
+      <div class="header-actions">
+        <button class="install-button" id="installApp" type="button" hidden><span aria-hidden="true">⇩</span> <span data-t="install">Zainstaluj</span></button>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="pl" aria-pressed="true">PL</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="de" aria-pressed="false">DE</button>
+        </div>
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+    <div class="network-status" id="networkStatus" role="status" aria-live="polite" hidden></div>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="pulse"></span><span data-t="eyebrow">Psychologia sekcji komentarzy</span></div>
+          <h1 data-t-html="heroTitle">W internecie nie masz jednej osobowości.<br /><em>Masz cały panel administracyjny.</em></h1>
+          <p class="hero-lead" data-t="heroLead">Poznaj role, które przyjmujemy online — od Weryfikatora po Trolla — i sprawdź, kto najczęściej przejmuje Twoją klawiaturę.</p>
+          <div class="hero-actions">
+            <button class="button button-primary" type="button" data-start-test="short"><span data-t="shortTest">Szybki test</span><small data-t="shortMeta">10 pytań · ~2 min</small></button>
+            <button class="button button-secondary" type="button" data-start-test="long"><span data-t="longTest">Pełny profil</span><small data-t="longMeta">30 pytań · ~6 min</small></button>
+          </div>
+          <p class="fine-print" data-t="notDiagnosis">To narzędzie edukacyjne, nie diagnoza psychologiczna. Internet i tak już ma wystarczająco wielu samozwańczych terapeutów.</p>
+        </div>
+        <div class="hero-art-wrap">
+          <div class="sticker sticker-a">99+<small data-t="roles">ról</small></div>
+          <img src="assets/hero-internet-atlas.png" alt="Comic ensemble of internet commenter archetypes" />
+          <div class="sticker sticker-b">PL · EN · DE</div>
+        </div>
+      </section>
+
+      <section class="ticker" aria-label="Examples">
+        <div><span>FACT-CHECKER</span><span>TR0LL</span><span>MORAL GUARDIAN</span><span>LURKER</span><span>CONTRARIAN</span><span>MEME MAKER</span><span>MEDIATOR</span><span>DOOMPOSTER</span></div>
+      </section>
+
+      <section class="section atlas-section" id="atlas">
+        <div class="section-heading">
+          <div><p class="kicker" data-t="catalogKicker">Atlas zachowań</p><h2 data-t="catalogTitle">Obsada internetu</h2></div>
+          <p data-t="catalogLead">Nie są to sztywne osobowości. To role, które zmieniają się wraz z tematem, emocją, grupą i liczbą lajków.</p>
+        </div>
+        <div class="catalog-tools">
+          <label class="search-box"><span>⌕</span><input id="roleSearch" type="search" data-t-placeholder="search" placeholder="Szukaj typu lub zachowania…" /></label>
+          <div class="filter-row" id="categoryFilters" aria-label="Role categories"></div>
+        </div>
+        <div class="role-grid" id="roleGrid"></div>
+        <p class="role-count" id="roleCount" aria-live="polite"></p>
+      </section>
+
+      <section class="section method-section" id="method">
+        <div class="method-card">
+          <p class="kicker" data-t="methodKicker">Co mierzymy</p>
+          <h2 data-t="methodTitle">Zachowanie, nie duszę</h2>
+          <p data-t="methodLead">Jedna osoba może rano prostować fakty, po południu bronić swojej grupy, a wieczorem zostać kolekcjonerem ostatniego słowa. Kontekst robi połowę roboty, algorytm dorzuca resztę.</p>
+          <div class="formula"><span data-t="formulaA">człowiek</span><b>+</b><span data-t="formulaB">emocja</span><b>+</b><span data-t="formulaC">grupa</span><b>+</b><span data-t="formulaD">platforma</span><b>=</b><strong data-t="formulaE">rola online</strong></div>
+          <div class="method-points">
+            <div><b>01</b><span data-t="methodPoint1">Skala 1–5 zamiast odpowiedzi „tak/nie”</span></div>
+            <div><b>02</b><span data-t="methodPoint2">Każda odpowiedź waży kilka powiązanych ról</span></div>
+            <div><b>03</b><span data-t="methodPoint3">Top 5 jest normalizowane do czytelnych 100%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section test-cta" id="test">
+        <div class="test-cta-copy">
+          <p class="kicker" data-t="testKicker">Twój profil</p>
+          <h2 data-t="testCtaTitle">Kto dziś pisze z Twojej klawiatury?</h2>
+          <p data-t="testCtaLead">Odpowiedz intuicyjnie. Wynik pokaże pięć dominujących ról i ich udział w Twoim aktualnym stylu zachowania online.</p>
+        </div>
+        <div class="test-side">
+          <aside class="dog-helper">
+            <img src="assets/dog-mascot.png" data-t-alt="dogAlt" alt="Spokojny pies-pomocnik przy laptopie" />
+            <p data-t="dogLine">Spokojnie. Tu nie ma złych odpowiedzi — są tylko bardzo internetowe.</p>
+          </aside>
+        <div class="test-options">
+          <button class="test-option" type="button" data-start-test="short"><span class="option-number">10</span><span><b data-t="quickLabel">Szybki skan</b><small data-t="quickDesc">Dobry, gdy kawa stygnie.</small></span><i>↗</i></button>
+          <button class="test-option featured" type="button" data-start-test="long"><span class="option-number">30</span><span><b data-t="fullLabel">Pełny profil</b><small data-t="fullDesc">Więcej pytań, mniej zgadywania.</small></span><i>↗</i></button>
+        </div>
+        </div>
+      </section>
+
+      <section class="section research-section" id="research">
+        <div class="section-heading">
+          <div><p class="kicker" data-t="researchKicker">Podstawa badawcza</p><h2 data-t="researchTitle">Z nauką, bez białego fartucha</h2></div>
+          <p data-t="researchLead">Atlas łączy badane role uczestników, motywacje komentowania, efekt rozhamowania online, moralne oburzenie i zachowania trollingowe. Sam test jest narzędziem edukacyjnym, a nie walidowaną skalą kliniczną.</p>
+        </div>
+        <div class="research-grid">
+          <a href="https://journals.sagepub.com/doi/10.1089/1094931041291295" target="_blank" rel="noreferrer"><span>01</span><b>Online disinhibition</b><small>Suler, 2004</small></a>
+          <a href="https://www.sciencedirect.com/science/article/abs/pii/S0191886914000324" target="_blank" rel="noreferrer"><span>02</span><b>Trolling & personality</b><small>Buckels et al., 2014</small></a>
+          <a href="https://www.science.org/doi/10.1126/sciadv.abe5641" target="_blank" rel="noreferrer"><span>03</span><b>Moral outrage</b><small>Brady et al., 2021</small></a>
+          <a href="https://www.frontiersin.org/journals/communication/articles/10.3389/fcomm.2023.1276245/full" target="_blank" rel="noreferrer"><span>04</span><b>Online response roles</b><small>Megersa, 2023</small></a>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="test-dialog" id="testDialog" aria-labelledby="testTitle">
+      <div class="test-shell">
+        <header class="test-header">
+          <div><span class="test-brand">IPA / TEST</span><small id="testModeLabel"></small></div>
+          <button id="closeTest" class="test-close" type="button" aria-label="Close">×</button>
+        </header>
+        <div class="test-progress" id="testProgress"><span></span></div>
+        <section class="question-view" id="questionView">
+          <p class="question-index" id="questionIndex"></p>
+          <h2 id="testTitle"></h2>
+          <p class="answer-hint" data-t="answerHint">Na ile to do Ciebie pasuje?</p>
+          <div class="likert" id="likert" role="radiogroup" aria-label="Answer"></div>
+          <div class="test-nav"><button type="button" id="prevQuestion" data-t="previous">Wstecz</button><button type="button" id="nextQuestion" disabled><span data-t="next">Dalej</span> →</button></div>
+        </section>
+        <section class="results-view" id="resultsView" hidden>
+          <div class="result-intro"><p class="kicker" data-t="resultKicker">Twój wynik</p><h2 data-t="resultTitle">Pięć ról przy konsoli</h2><p id="resultSummary"></p></div>
+          <div class="results-layout">
+            <div class="donut-wrap"><div class="result-donut" id="resultDonut"><div><b>TOP 5</b><small data-t="shareLabel">udział profilu</small></div></div><div class="donut-legend" id="donutLegend"></div></div>
+            <div class="result-list" id="resultList"></div>
+          </div>
+          <div class="result-note"><b data-t="howRead">Jak czytać wynik?</b><p data-t="howReadText">Procenty pokazują udział w Twojej piątce, nie kliniczne prawdopodobieństwo. Role mogą zmieniać się zależnie od platformy, tematu i nastroju.</p></div>
+          <div class="result-actions"><button class="button button-primary" id="retakeTest" type="button"><span data-t="retake">Powtórz test</span><small data-t="retakeMeta">Internet mógł Cię już zmienić</small></button><button class="button button-secondary" id="closeResults" type="button"><span data-t="backAtlas">Wróć do atlasu</span><small data-t="backMeta">Poznaj całą obsadę</small></button></div>
+        </section>
+      </div>
+    </dialog>
+
+    <footer>
+      <div class="brand"><span class="brand-mark">IPA</span><span class="brand-copy"><b>Internet</b><small>Personality Atlas</small></span></div>
+      <p data-t="footer">Stworzone dla ludzi, którzy kiedyś chcieli napisać „tylko jeden komentarz”.</p>
+    </footer>
+  </body>
+</html>
