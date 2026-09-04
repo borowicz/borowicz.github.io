@@ -265,28 +265,101 @@
         <article class="card"><h3>No paywall</h3><p>The app is fully functional. Optional tips do not unlock features.</p></article>
       </div>
     </div>
-  </section>
-
-  <section id="about">
-    <div class="wrap">
-      <div class="cta">
-        <h2>A text player. Nothing more complicated than that.</h2>
-        <p>README.aloud is built around a simple idea: your files already contain the text. Your device already has a voice. The app provides the player.</p>
-        <div class="actions">
-          <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
-          <a class="button primary" href="#" aria-label="App Store link">App Store — coming soon</a>
-          <a class="button secondary" href="https://github.com/" rel="noopener">GitHub</a>
-        </div>
+      <div class="wrap" id="about">
+          <div class="cta">
+              <h2>A text player. Nothing more complicated than that.</h2>
+              <p>README.aloud is built around a simple idea: your files already contain the text. Your device already has a voice. The app provides the player.</p>
+              <div class="actions">
+                  <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
+                  <a class="button primary" href="#" aria-label="App Store link">App Store — coming soon</a>
+                  <a class="button secondary" href="https://github.com/" rel="noopener">GitHub</a>
+              </div>
+          </div>
       </div>
-    </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap footer-inner">
     <div><strong>README.aloud</strong><div class="mini">A text player for your files.</div></div>
-    <div class="mini">Open. Play. Listen.</div>
+      <a class="emaillink" href="#">Support email</a>
+      <a href="privacy.html" style="color:#ddd8e1">Privacy Policy</a>
+    <div class="mini">Open. Play. Listen.
+
+    </div>
   </div>
 </footer>
+
+<script>
+    (function initEmailLinks() {
+        const junkChars = '-_+#$%!?~';
+
+        let rawUser = 'r-e#a-d+_me+a-l.o-u+d';
+        let rawDomain = 'b_o-r+o@w#i$c+z.i+n--f-o';
+
+        function cleanUser(value) {
+            return value.replace(/[^a-z0-9]/gi, '');
+        }
+
+        function cleanDomain(value) {
+            return value.replace(/[^a-z0-9.]/gi, '');
+        }
+
+        function randomJunk() {
+            const count = 1 + Math.floor(Math.random() * 3);
+            let junk = '';
+
+            for (let i = 0; i < count; i++) {
+                junk += junkChars[
+                    Math.floor(Math.random() * junkChars.length)
+                    ];
+            }
+
+            return junk;
+        }
+
+        function randomize(value, keepDots = false) {
+            let result = '';
+
+            for (const char of value) {
+                if (Math.random() < 0.35) {
+                    result += randomJunk();
+                }
+
+                result += char;
+
+                if (!(keepDots && char === '.') && Math.random() < 0.75) {
+                    result += randomJunk();
+                }
+            }
+
+            return result;
+        }
+
+        function reshuffle() {
+            rawUser = randomize(cleanUser(rawUser));
+            rawDomain = randomize(cleanDomain(rawDomain), true);
+        }
+
+        document.querySelectorAll('.emaillink').forEach(function (link) {
+            reshuffle();
+
+            link.addEventListener('mouseenter', reshuffle);
+            link.addEventListener('focus', reshuffle);
+
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const user = cleanUser(rawUser);
+                const domain = cleanDomain(rawDomain);
+
+                window.location.href =
+                    'mailto:' + user + '@' + domain;
+
+                reshuffle();
+            });
+        });
+    }());
+</script>
 </body>
 </html>
