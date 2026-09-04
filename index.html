@@ -390,6 +390,48 @@
             gap: 22px;
             align-items: start;
         }
+        .project-banners {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .project-banner {
+            position: relative;
+            display: block;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: #101522;
+            box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .project-banner:hover {
+            transform: translateY(-4px);
+            border-color: rgba(126,240,194,0.35);
+            box-shadow: 0 24px 50px rgba(0,0,0,0.36);
+        }
+
+        .project-banner img {
+            width: 100%;
+            aspect-ratio: 1600 / 560;
+            object-fit: cover;
+        }
+
+        .project-banner-link {
+            position: absolute;
+            right: 18px;
+            bottom: 16px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(8,12,24,0.74);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #eef2ff;
+            font-size: 0.82rem;
+            backdrop-filter: blur(10px);
+        }
+
         @media (max-width: 760px) {
             .topbar {
                 position: sticky;
@@ -420,6 +462,17 @@
                 flex: 0 0 auto;
                 padding: 9px 12px;
                 font-size: 0.94rem;
+            }
+
+            .project-banners {
+                grid-template-columns: 1fr;
+            }
+
+            .project-banner-link {
+                right: 10px;
+                bottom: 10px;
+                padding: 6px 9px;
+                font-size: 0.74rem;
             }
 
             .hero {
@@ -557,6 +610,7 @@
         <a href="#home" class="brand">borowicz<span>.github</span>.io</a>
         <nav class="nav">
             <a href="#home">Home</a>
+            <a href="#projects">Projects</a>
             <a href="#htmlTools">Tools</a>
             <a href="#scripts">Scripts</a>
             <a href="#team">Me</a>
@@ -575,6 +629,7 @@
                     ... other highly questionable stuff.<br><br>
                     <strong>/var/www/life</strong><br>
                     Small collection of useful and useless things.
+                    <br/><a href="//x.com/aborowicz">𝕏.com/aborowicz</a><br/>
                 </p>
 
                 <div class="hero-actions">
@@ -604,6 +659,48 @@
                     </div>
                 </div>
             </aside>
+        </div>
+    </section>
+
+    <section class="section projects-section" id="projects">
+        <div class="container">
+            <div class="section-head">
+                <div>
+                    <h2>Projects &amp; sites</h2>
+                    <p>Applications, experiments and questionable ideas that escaped into their own corners of the internet.</p>
+                </div>
+            </div>
+
+            <div class="project-banners">
+<!--                <a class="project-banner" href="https://borowicz.github.io/sheep/" aria-label="Open Sheep Me to Sleep">-->
+<!--                    <img src="./assets/project-banners/sheep.jpg" alt="Sheep Me to Sleep — Sheep jump. You count. Completely free." loading="lazy" />-->
+<!--                    <span class="project-banner-link">borowicz.github.io/sheep ↗</span>-->
+<!--                </a>-->
+<!--                <a class="project-banner" href="https://borowicz.github.io/README.aloud/" aria-label="Open ReadMeAloud">-->
+<!--                    <img src="./assets/project-banners/readmealoud.jpg" alt="ReadMeAloud — A text player for your local files." loading="lazy" />-->
+<!--                    <span class="project-banner-link">borowicz.github.io/README.aloud ↗</span>-->
+<!--                </a>-->
+                <a class="project-banner" href="https://borowicz.github.io/lastOpened/" aria-label="Open LastOpened">
+                    <img src="./assets/lastopened.jpg" alt="LastOpened — Back to what you were doing. Recent apps and files, one shortcut away." loading="lazy" />
+                    <span class="project-banner-link">borowicz.github.io/lastOpened ↗</span>
+                </a>
+                <a class="project-banner" href="https://borowicz.github.io/mc/" aria-label="Open mc">
+                    <img src="./assets/mc.jpg" alt="mc — Small macOS apps. Questionable restraint." loading="lazy" />
+                    <span class="project-banner-link">borowicz.github.io/mc ↗</span>
+                </a>
+                <a class="project-banner" href="https://borowicz.github.io/moootoo/" aria-label="Open MuuToo!">
+                    <img src="./assets/muutoo.jpg" alt="MuuToo! — The Mad Feminist Cow Test." loading="lazy" />
+                    <span class="project-banner-link">borowicz.github.io/moootoo ↗</span>
+                </a>
+                <a class="project-banner" href="https://borowicz.github.io/ipa/" aria-label="Open Internet Personality Atlas">
+                    <img src="./assets/ipa.jpg" alt="Internet Personality Atlas — A visual map of the internet’s many personalities." loading="lazy" />
+                    <span class="project-banner-link">borowicz.github.io/ipa ↗</span>
+                </a>
+                <a class="project-banner" href="https://borowicz.github.io/myCar/" aria-label="Open myCar">
+                    <img src="./assets/mycar.jpg" alt="myCar — Cars, history, notes and analysis in one place." loading="lazy" />
+                    <span class="project-banner-link">borowicz.github.io/myCar ↗</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -905,9 +1002,9 @@
             <div>
                 <h4>Other links</h4>
                 <ul>
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="//github.com/borowicz">gitHub</a></li>
+                    <li><a href="#">./html/index.html</a></li>
+                    <li><a href="//x.com/aborowicz">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -916,4 +1013,7 @@
 
 </body>
 </html>
-<!--borowicz.github.io-->
+<!--
+borowicz.github.io
+andrzej.borowicz.info
+//-->
