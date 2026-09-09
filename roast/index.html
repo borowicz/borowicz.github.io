@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#f6f4ef">
+    <meta name="description"
+          content="RoastOS — short, dry and unnecessary opinions for iPhone, iPad, Mac and Apple Watch.">
+    <title>RoastOS — Your device has opinions.</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        html, body {
+            background: #f6f4ef !important;
+            color: #171717 !important
+        }
+
+        .card, .platform-card, .feature-card, .settings-card, .panel {
+            background: #fff !important;
+            color: #171717 !important;
+            border-color: rgba(23, 23, 23, .14) !important
+        }
+        .platformItem {
+            height: 100%;
+        }
+        p, .muted, .eyebrow {
+            color: #555 !important
+        }
+        h2 .head2 {
+            color: #555 !important;
+            font-size: 1.2rem;
+        }
+        .button, button {
+            background: #171717 !important;
+            color: #fff !important;
+            border-color: #171717 !important
+        }
+
+        .share-section {
+            text-align: center;
+            padding-top: 10vw;
+            padding-bottom: 10vw;
+        }
+        .share-heading {
+            max-width: 980px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .share-heading .number {
+            margin-bottom: 22px;
+        }
+        .share-heading .eyebrow {
+            margin-bottom: 4px;
+        }
+        .share-heading h2 {
+            max-width: none;
+            margin: 18px 0 24px;
+            font-size: clamp(56px, 7vw, 110px);
+            line-height: .9;
+        }
+        .share-intro {
+            max-width: 760px;
+            margin: 0 auto;
+            font-size: clamp(18px, 2vw, 24px);
+            line-height: 1.55;
+        }
+        .share-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            max-width: 1300px;
+            margin: 70px auto 0;
+            align-items: stretch;
+        }
+        .share-grid article.platform {
+            min-height: 570px;
+            padding: 22px !important;
+            text-align: center;
+        }
+        .share-grid article.platform img {
+            height: 340px !important;
+            margin: 0 auto 24px !important;
+        }
+        .share-grid article.platform.iphone img {
+            max-width: 360px !important;
+        }
+        .share-kicker {
+            margin-top: 2px;
+            color: #777;
+            font: 10px 'DM Mono', monospace;
+            letter-spacing: .08em;
+        }
+        .share-grid h3 {
+            margin: 12px 0 10px;
+            font-size: 30px;
+        }
+        .share-grid p {
+            max-width: 340px;
+            margin: 0 auto 28px !important;
+            font-size: 16px;
+            line-height: 1.65;
+        }
+        .share-footnote {
+            max-width: 760px;
+            margin: 52px auto 0;
+            text-align: center;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(25px, 3vw, 36px);
+            line-height: 1.1;
+        }
+        .settings-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 9px;
+            margin-top: 38px;
+        }
+        .settings-links .eyebrow {
+            margin-bottom: 4px;
+        }
+        .settings-links a {
+            color: #171717;
+            text-decoration: none;
+            font: 12px 'DM Mono', monospace;
+            border-bottom: 1px solid rgba(23,23,23,.22);
+            padding-bottom: 3px;
+        }
+        .settings-links a:hover {
+            border-bottom-color: #171717;
+        }
+        .pack-example {
+            margin: 0 0 24px;
+            padding: 14px 0 14px 16px;
+            border-left: 2px solid #171717;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 21px;
+            line-height: 1.15;
+            color: #2d2d2d;
+        }
+        @media (max-width: 900px) {
+            .share-grid {
+                grid-template-columns: 1fr;
+                max-width: 620px;
+            }
+            .share-grid article.platform {
+                min-height: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a class="brand" href="#top"><img src="assets/icon.jpg" alt="RoastOS icon"><span>RoastOS</span></a>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#share">Share</a>
+        <a href="#packs">Custom Packs</a>
+        <a href="#roast">Try a roast</a>
+        <a href="privacy.html">Privacy</a>
+    </nav>
+</header>
+<main id="top">
+    <section class="hero">
+        <div class="eyebrow">YOUR DEVICE HAS OPINIONS</div>
+        <h1>A small interruption<br>with <em>attitude.</em></h1>
+        <p class="lead">RoastOS turns your iPhone, iPad, Mac and Apple Watch into a source of short, dry and occasionally unnecessary observations.</p>
+        <div class="actions"><a class="button primary" href="#roast">Try a roast ↓</a><a class="button"
+                                                                                         href="#platforms">See
+            platforms</a></div>
+        <div class="hero-art">
+            <div class="orb"></div>
+            <img class="hero-icon" src="assets/icon.jpg" alt="RoastOS"></div>
+    </section>
+
+    <section id="about" class="split">
+        <div><span class="number">01</span>
+            <h2>It has opinions.<br><em>You asked for none.</em></h2></div>
+        <div class="copy">
+            <p>Open RoastOS, tap Roast, add a widget, or let a roast arrive while you are busy doing something supposedly important.</p>
+            <p>Read it. Smirk. Roll your eyes. Share the damage if necessary. Then get back to your day.</p>
+            <div class="quote">“Safari tabs are now a distributed archive of unfinished thoughts.”</div>
+        </div>
+    </section>
+
+    <section id="roast" class="try">
+        <span class="number">02</span>
+        <div class="roast-card">
+            <div class="card-top"><span>ROASTOS / UNREQUESTED OPINION</span><span id="counter">01</span></div>
+            <p id="roastText">Your Home Screen has evolved into a museum of good intentions.</p>
+            <button id="roastButton">Roast me again <span>→</span></button>
+        </div>
+    </section>
+
+    <section id="platforms" class="platforms">
+        <div class="platform-heading"><span class="number">03</span>
+            <h2 class="head2">Four places<br>to get <em>roasted.</em></h2></div>
+        <div class="platform-grid">
+            <article class="platform platformItem macos"><img src="assets/macos-latest.jpg" alt="RoastOS for macOS">
+                <h3>macOS</h3>
+                <p>Widgets, optional notifications and a central popup when your Mac feels the need to interrupt you properly.</p></article>
+            <article class="platform platformItem iphone"><img src="assets/iphone-latest.jpg" alt="RoastOS for iPhone">
+                <h3>iPhone</h3>
+                <p>Quick roasts, widgets, optional notifications and one more reason to look at your phone.</p></article>
+            <article class="platform platformItem ipad"><img src="assets/ipad-latest.jpg" alt="RoastOS for iPad">
+                <h3>iPad</h3>
+                <p>Same bad attitude. More screen.</p></article>
+            <article class="platform platformItem watch"><img src="assets/watch.jpg" alt="RoastOS for Apple Watch">
+                <h3>Apple Watch</h3>
+                <p>A standalone roast app for your wrist. No iPhone dependency. No notification circus required.</p></article>
+        </div>
+    </section>
+
+    <section id="share" class="platforms share-section">
+        <div class="platform-heading share-heading">
+            <span class="number">04</span>
+            <div class="eyebrow">SOCIAL DAMAGE, NOW EXPORTABLE</div>
+            <h2 class="head2">Share the <em>damage.</em></h2>
+            <p class="share-intro">RoastOS can turn the current roast into something worth sending. As image or text, depending on how much evidence you want to leave behind.</p>
+        </div>
+        <div class="platform-grid share-grid">
+            <article class="platform platformItem share-card macos">
+                <img src="assets/share_macos.jpeg" alt="Sharing a RoastOS roast on macOS">
+                <div class="share-kicker">FOR WORKPLACE DIPLOMACY</div>
+                <h3>Mac</h3>
+                <p>Share the roast before someone asks why you were staring at a popup and laughing during work hours.</p>
+            </article>
+            <article class="platform platformItem share-card iphone">
+                <img src="assets/share_iphone.jpeg" alt="Sharing a RoastOS roast on iPhone">
+                <div class="share-kicker">GROUP CHAT READY</div>
+                <h3>iPhone</h3>
+                <p>Send it as an image or text. Your group chat was getting dangerously supportive anyway.</p>
+            </article>
+            <article class="platform platformItem share-card ipad">
+                <img src="assets/share_ipad.jpeg" alt="Sharing a RoastOS roast on iPad">
+                <div class="share-kicker">MORE SCREEN, MORE EVIDENCE</div>
+                <h3>iPad</h3>
+                <p>A bigger canvas for the same unnecessary opinion. Present it with the confidence of a keynote nobody requested.</p>
+            </article>
+        </div>
+        <p class="share-footnote">Your device started it. RoastOS merely prepared the attachment.</p>
+    </section>
+
+    <section class="settings">
+        <div>
+            <span class="number">05</span>
+            <div style="float: right;">
+                <article class="platform platformItem share-card ipad">
+                    <img src="assets/dad_jokes.jpg" alt="Using own sentences in a RoastOS">
+                    <h3>Own texts</h3>
+                    <p>Download a TXT pack and import it into RoastOS.</p>
+                </article>
+            </div>
+            <div class="settings-links">
+                <div class="eyebrow">TRY A CUSTOM PACK</div>
+                <a href="packs/developer-roasts.txt" download>Developer Roasts ↘</a>
+                <a href="packs/office-roasts.txt" download>Office Roasts ↘</a>
+                <a href="packs/dad-jokes.txt" download>Dad Jokes ↘</a>
+                <a href="packs/sarcasm-lite.txt" download>Sarcasm Lite ↘</a>
+                <a href="packs/motivation.txt" download>Motivation ↘</a>
+                <a href="packs/private-thoughts.txt" download>Private Thoughts ↘</a>
+            </div>
+        </div>
+        <div><h2>You choose the<br><em>attitude.</em></h2>
+            <ul>
+                <li><span>Mood</span><b>Roast / Normal</b></li>
+                <li><span>Roasts per hour</span><b>1–5</b></li>
+                <li><span>Widget timing</span><b>Apple-managed</b></li>
+                <li><span>Notifications</span><b>Optional · Off by default</b></li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="packs" class="platforms packs-section">
+        <div class="platform-heading"><span class="number">06</span>
+            <h2 class="head2">Custom <em>Packs.</em></h2>
+            <p class="share-intro">Download a TXT pack and import it into RoastOS. One line becomes one entry.</p>
+        </div>
+        <div class="pack-grid">
+            <article><h3>Developer Roasts</h3><p>Playful observations about code, builds, bugs and tabs.</p><div class="pack-example">“Xcode is indexing your patience again.”</div><a class="button" href="packs/developer-roasts.txt" download>Download TXT</a></article>
+            <article><h3>Office Roasts</h3><p>Light workplace sarcasm for meetings, email and spreadsheets.</p><div class="pack-example">“This meeting could have been an email with better lighting.”</div><a class="button" href="packs/office-roasts.txt" download>Download TXT</a></article>
+            <article><h3>Dad Jokes</h3><p>Clean, simple jokes for the whole family.</p><div class="pack-example">“The elevator joke works on so many levels.”</div><a class="button" href="packs/dad-jokes.txt" download>Download TXT</a></article>
+            <article><h3>Sarcasm Lite</h3><p>Gentle sarcasm with the sharp edges filed down.</p><div class="pack-example">“Nothing says simple like a twelve-step shortcut.”</div><a class="button" href="packs/sarcasm-lite.txt" download>Download TXT</a></article>
+            <article><h3>Motivation</h3><p>Short, grounded prompts for steady progress.</p><div class="pack-example">“Make the next useful move.”</div><a class="button" href="packs/motivation.txt" download>Download TXT</a></article>
+            <article><h3>Private Thoughts</h3><p>Quiet, reflective lines with a slightly witty turn.</p><div class="pack-example">“I had a plan, and then the day submitted edits.”</div><a class="button" href="packs/private-thoughts.txt" download>Download TXT</a></article>
+        </div>
+    </section>
+
+    <section class="closing">
+        <img src="assets/about.jpg" alt="RoastOS visual">
+        <div>
+            <div class="eyebrow">LOCAL BY DESIGN</div>
+            <h2>Not a dashboard.<br><em>Just a roast.</em></h2>
+            <p>RoastOS does not require an account, tracking or cloud processing. Its content and app state stay local. On Mac, local device context may be used to make a roast more relevant — it is not uploaded or used to build a profile.</p>
+            <a class="button primary" href="#top">Back to top ↑</a>
+        </div>
+    </section>
+</main>
+<footer>
+    <div>© <span id="year"></span> RoastOS</div>
+    <div>Short opinions for Apple devices · <a href="privacy.html">Privacy</a></div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

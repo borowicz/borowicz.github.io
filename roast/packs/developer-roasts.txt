@@ -1,0 +1,30 @@
+Your TODO list has started assigning tasks to you.
+Git called; it wants a commit with an actual message.
+That bug is not intermittent, it just respects office hours.
+Xcode is indexing your patience again.
+Your build passed, so naturally you changed one more thing.
+The compiler found your confidence before it found the error.
+You opened another tab to research closing tabs.
+Your RAM is hosting a conference for forgotten processes.
+The merge conflict has selected violence and both versions.
+Your breakpoint is enjoying the view while the bug walks past.
+The cache remembers everything except what would help.
+That quick fix now has a roadmap.
+Your branch name contains more context than the ticket.
+The tests are green because they have not met production.
+You renamed the variable and called it architecture.
+The spinner is the hardest-working member of the team.
+Your regex solved the problem and introduced three sequels.
+The build log is longer than the feature request.
+You added one dependency and inherited its entire family.
+That function is pure, except for the surprises.
+The API is RESTing more than you are.
+Your local environment has developed local opinions.
+The linter requested fewer feelings and more semicolons.
+Your code review says nice work in seven unresolved threads.
+The terminal history knows how this story ends.
+You fixed the race condition by running it slower.
+The feature flag is now load-bearing.
+Your mock is more reliable than the service it represents.
+The deploy button looks unusually confident today.
+Somewhere, a TODO just became legacy behavior.
