@@ -1,0 +1,100 @@
+Use Split View when two apps need to exist at the same time. One app is often not the whole story.
+Drag an app from the Dock to the edge of the screen for multitasking. The edge is doing more work than it looks.
+Use Slide Over when you need a temporary second app. It is for quick help, not a permanent roommate.
+Drag text, photos, or files between supported apps. The touchscreen is also a surprisingly good conveyor belt.
+Use the app switcher to return to recent apps instead of reopening them from the Home Screen.
+Hold Command on a hardware keyboard to see available shortcuts in the current app. Random keys are less educational.
+Command-Space opens search with a keyboard. The iPad suddenly feels suspiciously like a computer.
+Command-Tab switches apps on supported keyboard setups. Your Dock can take a break.
+Command-H returns Home when using a keyboard. One key combo, minimal ceremony.
+Press and hold the globe key to switch input languages and keyboards. No Settings expedition required.
+Use Apple Pencil corner gestures when configured for quick system actions. Your stylus has side quests.
+Scribble can turn handwriting into text in supported fields. Typing is optional when your handwriting is legible.
+Use Quick Note to capture an idea without abandoning what you are reading. The thought gets a window, not a detour.
+Drag an image from Photos into a document when supported. Copy and paste, but with fewer steps.
+Use Stage Manager on supported iPad models when you need multiple windows. More windows require more discipline.
+Resize windows instead of immediately maximizing everything. Context is useful.
+Keep the Dock limited to apps you actually use. A 40-app Dock is archaeology.
+Place frequently paired apps near each other so multitasking becomes predictable. Muscle memory beats hunting.
+Use the Command-key shortcut overlay in supported apps. The shortcuts are there; learn a few.
+Connect a mouse or trackpad when long sessions involve precise selection. Touch is excellent until precision becomes the assignment.
+Use an external display on supported iPad models for more workspace. The iPad can borrow desktop territory.
+Turn on Stage Manager only when overlapping windows improve the task. Feature availability is not a requirement.
+Use Files with folder favorites and tags to keep documents findable. “Somewhere in iCloud” is not an archive strategy.
+Scan documents with Notes when you need a quick PDF. The iPad already brought the camera.
+Use Search from the Home Screen to find files, apps, contacts, and more. Swiping through seven pages is optional cardio.
+Pin widgets you actually consult. A dashboard full of information you never read is decorative wallpaper.
+Use Focus modes on iPad so notifications do not interrupt a work session. The larger screen does not make interruptions smaller.
+Learn trackpad gestures for switching spaces if you use a Magic Keyboard. Moving between contexts should not require a meeting.
+Keep a few offline files available before travel. Wi-Fi is excellent right up until it is not.
+Pick a workflow and repeat it. The iPad has plenty of features; your attention has a fixed subscription.
+Use Command-W to close the current window in supported apps. Closing one thing is not quitting everything.
+Use Command-Comma to open settings in supported apps. Menu hunting is optional.
+Use Command-F to search within the current document or page. Scrolling is not a search algorithm.
+Use Command-A to select all text or items in the current context. Context remains important.
+Use Command-Z before rebuilding a mistake manually. Undo is one of computing's better ideas.
+Use Command-C and Command-V for familiar copy and paste workflows. The touchscreen is not required for everything.
+Use Command-X when moving text or content in supported apps. Cut exists for a reason.
+Use Shift-Command-4 on supported keyboard setups when you need a screenshot. Your iPad can document the problem.
+Use screenshots for reference, then delete them when they have served their purpose. The Photos library is not a filing cabinet.
+Use Files Recents to find recently handled documents. Recent work is usually easier to remember than its exact folder.
+Tag important files when supported. Future searches benefit from present-day organization.
+Use folders by project rather than by vague categories. “Stuff” is a poor taxonomy.
+Use descriptive filenames. final-final-really-final is not version control.
+Use cloud storage for documents that need to follow you across devices. Portability is one of the iPad's strengths.
+Keep local copies of critical documents before travel. Connectivity is a dependency until it disappears.
+Use AirDrop for nearby transfers between supported devices. Emailing yourself a file is rarely the fastest route.
+Use Handoff where supported to continue tasks between Apple devices. Context can travel with you.
+Use Universal Clipboard where supported. Copy on one Apple device, paste on another, and continue pretending this is normal.
+Use Safari tab groups for projects, study, or travel. Fifty unrelated tabs are not research.
+Pin Safari tabs you return to constantly. Some tabs have earned permanent residency.
+Use Safari Reader when supported to reduce visual noise. Sometimes the article is enough.
+Use Safari profiles where supported to separate contexts. Work and personal tabs do not always need to share a room.
+Use passwords and passkeys stored securely where appropriate. Memory is not a credential manager.
+Review privacy permissions for apps that request unexpected access. Requests deserve context.
+Use Focus filters where supported to change what information is visible during work. Context matters.
+Use notifications selectively on iPad. A larger screen does not require larger interruptions.
+Use widgets to surface calendars, reminders, weather, or other information you genuinely check. The widget should save time.
+Keep the Home Screen intentional. Every extra icon adds another tiny decision.
+Use App Library or Search instead of maintaining perfect icon geography. The index already exists.
+Use drag and drop between apps for images, text, and files when supported. The iPad is good at moving things around.
+Use the keyboard shortcut overlay when learning a new app. Shortcuts often reveal a faster workflow.
+Use an Apple Pencil for annotation when precise marking is useful. Finger-based precision has limits.
+Use Markup for quick notes and annotations on supported documents and images. Not every edit needs a full editor.
+Use Notes for quick scans, sketches, and structured information. One app can cover more ground than expected.
+Pin important notes so they stay visible. Search is useful; pinned context is faster.
+Use shared notes when collaborating on a document that does not need full project-management machinery.
+Use Reminders with dates for tasks that depend on time. Your brain has enough background processes.
+Use Calendar alerts for meetings and appointments. The iPad should remind you before the meeting does.
+Use Split View with Notes and Safari for research. Reading and recording information can happen together.
+Use Split View with Files and a document editor when organizing project material. Fewer context switches, fewer lost files.
+Use Stage Manager when you need several app windows, not simply because it exists. Tools should serve the task.
+Use an external keyboard for long writing sessions. Touch typing on glass has a ceiling.
+Use a trackpad for long editing sessions. Precision work benefits from pointer control.
+Use keyboard shortcuts for selection and navigation. Repeated pointer movement adds up.
+Use Command-Left and Command-Right where supported for navigation. Your fingers can travel less.
+Use Shift with navigation shortcuts for selection where supported. Keyboard selection can be dramatically faster.
+Use dictation for drafting when speaking is faster than typing. You can edit the result afterward.
+Use Scribble for short handwritten input where it is faster. Handwriting recognition does the conversion.
+Keep Apple Pencil charged when it is part of your daily workflow. Dead accessories are very precise paperweights.
+Use the Files app instead of storing every document in Downloads. Downloads is an inbox, not an archive.
+Move completed files out of Downloads. An inbox that never empties becomes a junk drawer.
+Use Preview or Quick Look capabilities available for supported files before opening a full editor. Inspect first.
+Use external displays only when the additional workspace improves the workflow. More pixels can also mean more places to get distracted.
+Arrange windows so the primary task remains visually dominant. Multitasking should not become equal-opportunity distraction.
+Use Focus during writing, study, or presentations. Notifications have terrible timing instincts.
+Before a presentation, test the display adapter and keyboard. Hardware surprises prefer public appearances.
+Before travel, download important files and tickets. Offline access is cheap insurance.
+Keep enough free storage for downloads and temporary files. A full device has limited enthusiasm.
+Use iCloud or another supported cloud service for documents that need synchronization. Pick one system and stick to it.
+Back up important iPad data. A tablet is still a computer with data worth losing once.
+Review iPad storage before deleting files manually. Recommendations can identify easy wins.
+Use battery settings to spot apps consuming unusual power. The battery report is better than intuition.
+Enable Low Power Mode when you need endurance and supported. Waiting for the final percentage is unnecessary drama.
+Restart the iPad when a problem becomes inexplicably complicated. Fresh state still has value.
+Keep iPadOS updated when practical, especially for security and compatibility fixes.
+Learn a few gestures well instead of memorizing every hidden gesture. Muscle memory beats trivia.
+Use the Dock as a launchpad for frequent workflows, not a museum of every installed app.
+Keep paired apps close in your workflow. Repetition becomes faster when the layout stays predictable.
+Use a consistent project structure across Files, Notes, and cloud storage. Consistency reduces search time.
+Do not install five utilities to solve a problem built into iPadOS. More icons do not equal more productivity.

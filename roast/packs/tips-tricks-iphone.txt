@@ -1,0 +1,100 @@
+Swipe down on the Home Screen and search for an app instead of hunting through pages.
+Press and hold the Space bar to move the text cursor precisely. Tiny keyboard, surprisingly competent trackpad.
+Double-tap the space bar to end a sentence. Your thumbs already know this.
+Swipe left on the Lock Screen to reach the camera quickly. The moment may not wait for your passcode.
+Use Back Tap for a shortcut you actually use. Two taps can save several taps in a menu.
+Long-press a link to preview it before opening. Curiosity can use a preview.
+Swipe down from the top-right corner for Control Center. It is faster than visiting Settings for everything.
+Long-press Control Center controls for expanded options. Many tiny icons have opinions.
+Set up text replacements for addresses, emails, or phrases you type constantly. Your future self has better things to do.
+Use Focus modes for work, sleep, driving, or anything that does not need every notification immediately.
+Pin important conversations in Messages so they stop disappearing into the scroll abyss.
+Use SharePlay when supported instead of explaining which video everyone should open.
+Scan documents from Notes when you need a quick PDF. A scanner app is not always necessary.
+Use Live Text to copy text from photos and images. Your camera can double as a document reader.
+Search inside Photos by objects, places, or people. Your camera roll is a database whether you admit it or not.
+Turn on Optimize iPhone Storage for Photos when local storage becomes a negotiation.
+Use the Files app to keep downloads somewhere predictable. “It is in Downloads somewhere” is not a system.
+Long-press an app icon to jump directly to useful actions. The Home Screen has hidden shortcuts.
+Move apps in batches by holding one and tapping others. Rearranging every icon one by one is self-inflicted.
+Use the keyboard microphone for longer messages. Speaking is often faster than fighting autocorrect.
+Swipe on the keyboard to type when practical. Your finger can draw a sentence surprisingly well.
+Set up Medical ID and emergency contacts before you need them. Preparation is less exciting, but more useful.
+Use Find My before assuming something is permanently lost. Most missing devices are hiding with confidence.
+Share your location temporarily when meeting someone instead of sending map pins repeatedly.
+Use AirDrop with the appropriate receiving setting, then return it when you are done. Convenience does not need to be permanent.
+Check Battery settings for apps using unusual background activity. The report is better than guessing.
+Use Low Power Mode before the battery becomes an emergency. Waiting for 1% is a lifestyle choice.
+If an app behaves strangely, restarting the iPhone can solve problems that force-quitting did not.
+Use Face ID attention settings according to your preference. Security and convenience are configurable.
+Review app permissions after installation. An app asking for everything should explain why.
+Check Location Services permissions periodically. Not every app needs your coordinates.
+Use Privacy & Security settings when an app behaves suspiciously. The phone keeps the receipts.
+Use App Library to find apps without remembering which Home Screen page they occupy.
+Remove rarely used apps from the Home Screen without deleting them. Your app library can hold the archive.
+Use widgets for information you actually check. A widget should save a tap, not decorate one.
+Stack compatible widgets to reduce Home Screen clutter. Vertical organization beats seventeen pages.
+Use Focus filters where supported to change what appears during different activities. Context matters.
+Silence notifications from noisy apps instead of tolerating them all day. Your lock screen is not a news ticker.
+Use scheduled notification summaries if you want fewer interruptions. Not everything deserves real-time delivery.
+Use Safari tab groups for projects or trips. Fifty unrelated tabs are not research.
+Pin Safari tabs you return to frequently. Some tabs have earned permanent residency.
+Use Reader when supported to remove distracting page elements. Sometimes the article is enough.
+Use Private Browsing when appropriate. Privacy is a setting, not a personality trait.
+Use passwords and passkeys stored in Apple's password manager where appropriate. Memory is not a secure vault.
+Enable strong account security such as two-factor authentication where available. A password alone is increasingly optimistic.
+Use iCloud Keychain to keep credentials available across supported Apple devices. Synchronization beats reuse.
+Use Notes folders and pinned notes for recurring information. Search works better when notes have structure.
+Scan receipts or documents into Notes when you need a quick record. Paper does not require permanent residence.
+Use Quick Note where supported to capture an idea without losing your current context.
+Use Reminders with dates or locations when an item depends on time or place. Memory is not an automation engine.
+Use recurring reminders for genuinely recurring tasks. Rewriting the same reminder every week is unnecessary.
+Use Calendar alerts for appointments instead of trusting your biological clock.
+Use Maps to save frequent places. Searching for the same destination every day is optional.
+Download offline maps when traveling if the feature and region support them. Connectivity has moods.
+Share an ETA when meeting someone instead of sending repeated “five minutes” updates.
+Use Wallet for compatible passes and tickets. The physical wallet can take a smaller role.
+Use Apple Pay when available instead of handing over your card details. Fewer exposed numbers is generally better.
+Review subscriptions periodically. “I forgot I had that” is not a pricing model.
+Check iPhone Storage before deleting random photos. Storage recommendations can identify obvious targets.
+Use Recently Deleted carefully when cleaning Photos. Deleting twice is a different kind of commitment.
+Create shared albums when a group needs a common photo collection. Messaging every photo individually is a lot of tapping.
+Use duplicate detection in Photos when available. Your camera roll may contain several copies of the same vacation.
+Favorite important photos so they are easier to retrieve. The best photo should not require archaeology.
+Use screenshots with a purpose. The screenshot folder is not a permanent knowledge management system.
+Use Visual Look Up where supported to identify objects and information in images. The camera can answer questions.
+Use translation features where supported instead of manually retyping text. The phone has already done the hard part.
+Use Dictation for long messages or notes. Your thumbs are not employees of the keyboard.
+Edit dictated text after speaking. Dictation is an assistant, not a sworn witness.
+Use the undo gesture when supported instead of repeatedly deleting text. Glass editing has shortcuts.
+Hold and drag the scrollbar to move quickly through long pages. Scrolling forever is not endurance training.
+Tap the status bar to jump to the top in supported apps. One tap can undo a lot of thumb mileage.
+Use search inside Settings to find a specific option. The Settings app contains more rooms than necessary.
+Use Control Center for quick settings instead of opening Settings for every small change.
+Long-press the Wi-Fi or Bluetooth control for expanded connectivity options. The small button has a larger menu.
+Use Airplane Mode when you need a quick radio reset. It is also useful beyond airplanes.
+Restart the iPhone after major system updates if behavior becomes unusual. Fresh state can matter.
+Keep iOS updated when practical, especially for security fixes. Waiting forever is not a stability strategy.
+Leave enough storage free for normal system operation. A completely full phone is difficult to negotiate with.
+Use iCloud Backup if appropriate and verify that important data is covered. Hope is not a backup.
+Keep a second copy of irreplaceable photos or documents when appropriate. One copy is a gamble.
+Use Family Sharing where appropriate for shared purchases and services. Shared accounts are not the same thing.
+Use Screen Time when you want actual usage data. Numbers can be more convincing than intentions.
+Set app limits only when they match a realistic goal. A limit you instantly ignore is decorative.
+Use Driving Focus to reduce interruptions while driving. The road is a poor notification center.
+Use Sleep Focus to keep overnight alerts under control. Tomorrow can receive today's notifications later.
+Customize the Lock Screen for the information you actually need. Decoration is optional.
+Add useful Lock Screen widgets where supported. Information should arrive before the unlock ritual.
+Use different Lock Screens with different Focus modes when you want clear context changes.
+Use Home Screen pages tied to Focus modes when supported. The phone can change context with you.
+Keep the first Home Screen for high-frequency actions. Everything else can live elsewhere.
+Use App Library search rather than maintaining perfect icon geography. The phone already has an index.
+Use drag and drop between supported apps for text, images, and files. Touch can move more than icons.
+Use Share Sheet favorites for destinations you use often. The first options should be the useful ones.
+Customize the Share Sheet when supported. A hundred irrelevant destinations is not efficiency.
+Use Shortcuts for tasks that involve several repeatable actions. Automation should earn its complexity.
+Do not automate a task you perform once a month unless the setup is genuinely worthwhile. Not every tap needs a robot.
+Use NFC or Shortcuts only when the trigger makes sense. Novelty is not a workflow.
+Before a trip, download tickets and key documents for offline access. Airport Wi-Fi is not a dependency plan.
+Before an important event, charge the phone and check storage. The emergency camera cannot help if it is full.
+Clean up unused browser tabs before a major trip or project. Fewer tabs make important tabs easier to find.

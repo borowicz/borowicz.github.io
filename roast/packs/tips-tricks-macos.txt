@@ -1,0 +1,100 @@
+Use Command-Space before opening Safari. Spotlight is faster than remembering where you put things.
+Command-Shift-4 is a screenshot tool pretending to be a keyboard shortcut.
+Command-Tab switches apps. Staring at the Dock is not an equivalent workflow.
+Command-` switches windows in the current app. macOS hid it in plain sight.
+Press Space on a selected file for Quick Look. Opening the full app was never required.
+Hold Option while clicking the Wi-Fi icon for extra network details. Tiny menu, large confidence boost.
+Use Command-Shift-5 for screenshots and screen recording. No extra ceremony required.
+Command-W closes the current window. Command-Q is for when you actually mean goodbye.
+Press Command-Option-Esc when an app freezes. Negotiation is rarely productive.
+Use Finder tags when folders start reproducing. Color-coding is not a filing system, but it helps.
+Pin frequently used Finder folders to the sidebar. Memory is a poor indexing strategy.
+Use Shift-Command-N in Finder to create a folder instantly. Your mouse has other responsibilities.
+Hold Command while clicking a Finder title to reveal the folder path. Now you can prove where you are.
+Use Quick Look on images, PDFs and documents before launching anything. Preview is often enough.
+Drag files directly from Spotlight results. Search first, then move. Revolutionary concept.
+Use Focus modes to silence notifications during work. The internet will survive your absence.
+Set default apps for common file types once. Choosing the same app manually forever is not customization.
+Use Stage Manager when windows become a small civilization. It is not magic, but it is less chaotic.
+Press Command-H to hide the current app. Sometimes closing is too dramatic.
+Use text replacement for phrases you type repeatedly. Let macOS do the repetitive bit.
+Check Login Items if your Mac takes forever to wake up. Half of that startup parade probably volunteered.
+Use AirDrop for nearby file transfers instead of emailing yourself attachments like it is 2009.
+Learn three shortcuts well. Knowing thirty badly is mostly a collection hobby.
+Use Command-F before scrolling through a long document. The page has a search box for a reason.
+Command-A selects everything in the current context. Context remains important.
+Command-Z is usually cheaper than starting over. Undo is one of civilization's better inventions.
+Use Command-Shift-G in Finder to jump directly to a folder path. Typing is faster than sightseeing.
+Press Command-L in Finder to focus the location field when supported. The filesystem is addressable.
+Use Option-Command-V in Finder to move copied files instead of creating duplicates. Less clutter, fewer regrets.
+Hold Option while dragging a file to create a copy. One modifier, one duplicate.
+Use Command-I to inspect file information without opening it. Metadata has its moments.
+Sort Finder by Date Modified when searching for something you just changed. Recent memory is surprisingly useful.
+Use List View when filenames matter more than thumbnails. A folder is not a photo gallery.
+Use Column View when you need to understand folder hierarchy. Context beats clicking backward repeatedly.
+Use Gallery View for visual assets. Pick the view that matches the job.
+Add frequently used locations to Finder Favorites. Your future self will approve.
+Use iCloud Drive for files that need to follow you between Apple devices. Local-only is not always convenient.
+Keep large archives out of your Desktop. The Desktop is a workspace, not a warehouse.
+Use Desktop and Documents in iCloud Drive only if that workflow suits you. Synchronization is a choice, not a moral obligation.
+Empty Trash when you actually need the storage. Digital rubbish rarely leaves by itself.
+Check About This Mac storage recommendations before deleting random files. Random deletion is not optimization.
+Use Activity Monitor when something feels suspiciously slow. Guessing is slower.
+Sort Activity Monitor by CPU to find unusually busy processes. Your Mac is willing to explain itself.
+Check Memory Pressure before blaming one application. RAM usage is more nuanced than a single percentage.
+Use Force Quit only when an app genuinely stops responding. It is a fire extinguisher, not a launch button.
+Restart the Mac when a problem has become strangely complicated. Rebooting remains undefeated in several categories.
+Install system updates deliberately, especially before important travel or presentations. Timing is a feature.
+Keep enough free disk space for macOS and your applications. A completely full drive is not an achievement.
+Use Time Machine for backups. Future you has poor negotiating power after data loss.
+Verify that backups actually complete. A backup you never checked is a hopeful theory.
+Keep a second backup for irreplaceable work when appropriate. One copy is not a strategy.
+Use Screenshot options to choose where captures are saved. The Desktop does not need every screenshot ever taken.
+Copy text from images with Live Text when supported. Re-typing is sometimes an unnecessary internship.
+Use Preview to annotate PDFs instead of printing them first. Paper is optional.
+Sign documents in Preview when supported. The printer can remain unemployed.
+Combine or reorder PDF pages in Preview. Acrobat is not the only adult in the room.
+Use Markup for quick image annotations. Editing does not always require a production suite.
+Use Dictionary lookup from supported text. The answer may already be on the Mac.
+Press Control-Command-Space to open the emoji and symbol viewer. Typography has a toolbox.
+Use keyboard text replacements for addresses, signatures, and boilerplate. Repetition belongs to machines.
+Use Dictation for longer passages when typing becomes the bottleneck. Your voice is another input device.
+Use Universal Clipboard between nearby Apple devices when configured. Copy on one device, paste on another.
+Use Handoff when continuing supported tasks between Apple devices. Context can travel with you.
+Keep Bluetooth settings tidy by removing devices you no longer use when necessary. Your Mac remembers too much.
+Use Control Center for common toggles instead of digging through Settings. The menu is there to save time.
+Customize Control Center around actions you actually perform. A control you never use is decorative.
+Use hot corners if you like pointer-based shortcuts. Four corners, surprisingly many opinions.
+Use Mission Control to see all open windows at once. Your desktop may have more inhabitants than expected.
+Create additional Spaces for distinct contexts. One desktop does not need to contain your entire life.
+Name Spaces by purpose when useful. “Desktop 7” is not a meaningful project plan.
+Move windows between Spaces instead of duplicating apps unnecessarily. Organization is cheaper than repetition.
+Use full-screen mode for focused tasks when it genuinely helps. Bigger is not automatically better.
+Tile windows when comparing documents. Your eyes prefer stable geometry.
+Use a trackpad gesture to reveal Mission Control. Gestures become useful once they become muscle memory.
+Learn one Finder shortcut every few days. Slow accumulation beats shortcut tourism.
+Use Command-K in supported apps to insert a link. Linking can be faster than formatting manually.
+Use Command-B, Command-I, and Command-U for common formatting in supported apps. Tiny shortcuts, repeated savings.
+Press Escape to cancel many transient actions. Sometimes the fastest command is never mind.
+Use Tab to move between fields in forms. Clicking every box individually is expensive in aggregate.
+Use Shift-Tab to move backward through fields. There is an exit route.
+Press Return when a selected Finder item is ready for renaming. No context menu expedition required.
+Use Command-Delete to move selected files to Trash. The keyboard already knows where rubbish goes.
+Use Option-Command-D to show or hide the Dock. More screen space, fewer distractions.
+Use Control-Command-F for full screen in supported apps. One shortcut can reclaim a lot of pixels.
+Use Command-Plus and Command-Minus to adjust zoom in supported apps. Tiny text is not a productivity metric.
+Use Safari profiles to separate contexts when appropriate. Work and weekend browsing can stop sharing a drawer.
+Use tab groups when a project needs a stable collection of pages. Fifty loose tabs are not a knowledge base.
+Pin tabs you return to constantly. A pinned tab is a bookmark with commitment issues.
+Use Safari Reader when supported to reduce visual noise. Sometimes the article is enough.
+Use Passwords to manage saved credentials rather than keeping them in Notes. Convenience should still have structure.
+Use passkeys where supported. Fewer passwords means fewer opportunities to forget one.
+Use iCloud Keychain across Apple devices when appropriate. Reusing passwords is not synchronization.
+Review privacy permissions when an app asks for something unexpected. Access requests deserve context.
+Check Location Services permissions periodically. Not every app needs to know where you are.
+Use Screen Time when you want data instead of vague guilt. Numbers are occasionally more persuasive.
+Turn off unnecessary notifications at the source. Silence is more effective when configured upstream.
+Use Focus filters where supported to show only relevant information. Less noise can be a feature.
+Keep the menu bar readable by hiding icons you never use when possible. The top edge is finite.
+Use a consistent naming convention for projects and files. Search works better when humans cooperate.
+Archive completed projects instead of leaving everything active. Your filesystem also benefits from retirement.
