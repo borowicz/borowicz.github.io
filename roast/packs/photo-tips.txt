@@ -1,0 +1,100 @@
+Delete obvious duplicates before your camera roll becomes a historical archive.
+Keep your favorite photos easy to find. Scrolling through 8,000 images is not curation.
+Use albums for trips and projects. Memory is helpful, but it has no search index.
+Search Photos by date, place, or subject when supported. The camera roll already knows more than you remember.
+Keep screenshots separate from photos worth keeping. A boarding pass from 2022 is not a family portrait.
+Review screenshots periodically. Temporary information has a habit of applying for permanent residency.
+Use burst photos selectively. Twenty versions of the same blink is rarely a compelling collection.
+Before editing a photo, consider keeping the original. Future you may have different taste.
+Crop with intention. Removing half the background can turn a photograph into a clue.
+Straighten horizons before blaming the architecture.
+Use exposure adjustments gently. A sunset does not need to look like it happened on another planet.
+Do not overuse sharpening. Details and crunchy artifacts are not the same thing.
+Use portrait effects when they improve the subject, not merely because they exist.
+Check the background before taking the photo. The subject is rarely responsible for everything behind them.
+Move closer when appropriate. Digital zoom is often an expensive way to stay far away.
+Clean the camera lens before important photos. A fingerprint is not a cinematic filter.
+Hold the phone steady in low light. Night mode appreciates cooperation.
+Give night photos a moment to finish processing. Immediate movement is an excellent way to invent blur.
+Use the volume buttons as shutter controls when that makes framing easier.
+Use the timer when you need a stable group photo. Your arm does not need to appear in every composition.
+Turn on the grid if it helps you compose straight horizons and balanced frames.
+Try different angles before taking twenty nearly identical photos from the same position.
+Leave some space around important subjects when you may want to crop later.
+Use natural light when available. The sun has been refining this feature for a while.
+Avoid placing the brightest light directly behind the subject unless the silhouette is intentional.
+Check reflections before shooting through windows. Glass has opinions about photography.
+Look for distracting objects near heads and edges. Background clutter loves important photos.
+Take the photo before asking whether it is perfect. Some moments do not offer a second attempt.
+Do not photograph everything. A camera roll with fewer but better memories is easier to revisit.
+Favorite the best photo from a sequence and move on. Decision fatigue is not part of photography.
+Use Live Photos thoughtfully. Sometimes the tiny movement contains the memory.
+Extract a still from a Live Photo when one frame works better than the original.
+Use editing to correct a photo, not to negotiate with reality.
+Compare edited and original versions before keeping an aggressive edit.
+Use filters consistently if you want a recognizable look. Random filters create a visual family reunion.
+Keep important originals backed up. Your camera roll is not the only copy worth having.
+Check cloud photo synchronization before deleting photos from a device. Sync is not the same as a second opinion.
+Free storage by removing genuine clutter rather than deleting your best memories first.
+Review large videos when storage gets tight. Video is excellent at quietly eating gigabytes.
+Trim long videos to the useful section. Your future self probably does not need the parking lot.
+Favorite useful reference photos separately from personal memories when your photo system allows it.
+Photograph serial numbers and receipts when useful, then store them where they can actually be found.
+Use document scanning for documents instead of photographing a desk from three meters away.
+Use Live Text when you need text from a photo. Re-typing a label is an avoidable side quest.
+Search for screenshots containing text when your photo system supports text recognition.
+Take a quick reference photo before moving cables or equipment. Your future self may appreciate the evidence.
+Photograph a hotel room number if you routinely forget it. The camera can remember boring things too.
+Use maps or location metadata when you need to remember where a photo was taken.
+Be mindful of location metadata before sharing photos publicly.
+Remove sensitive information from a photo before sharing it. Cropping does not always remove metadata.
+Check the edges of a photo for addresses, documents, badges, or other private information.
+Do not assume a blurred background hides every detail. Review what is actually visible.
+Use screenshots for temporary information and delete them afterward.
+Do not keep five copies of the same meme because the first four were apparently historic.
+Create a simple album structure instead of dozens of hyper-specific albums.
+Use shared albums for group trips when appropriate. Everyone can contribute without creating a second chat.
+Ask before adding other people's photos to shared collections when privacy matters.
+Choose the strongest group photo, not merely the newest one.
+Take a few candid photos between posed shots. People tend to relax when they stop performing.
+Photograph details as well as landmarks. The small things often become the better memory.
+Include context in travel photos. A face floating against a famous building is technically a location record.
+Use a wide perspective when the scene needs space, but check the edges for distractions.
+Use the standard lens when you want natural-looking proportions.
+Step back instead of immediately switching to an extreme wide angle when practical.
+Use macro capabilities for genuinely small subjects. A leaf does not need to look like a continent.
+Stabilize the phone against a solid surface for long-exposure or low-light shots when possible.
+Use a tripod or stable support for repeated product or document photos.
+Keep the lens clean when shooting food. Nobody ordered fingerprint soup.
+Photograph food in useful light before moving the plate around for twenty minutes.
+Use portrait mode carefully around hair, glasses, and fine edges. Software occasionally needs supervision.
+Check focus before capturing an important close-up.
+Tap the intended subject to focus when automatic focus chooses a different celebrity.
+Adjust exposure when the subject is much darker or brighter than the background.
+Lock focus and exposure when you need consistency across several shots.
+Use panorama only when the scene benefits from it. Not every hallway needs to become a landscape.
+Move smoothly during panorama shots. The scenery is not supposed to melt.
+Keep moving subjects in mind when choosing shutter or camera modes. People rarely hold still for software.
+Take multiple photos of fast action, then keep one good frame instead of all of them.
+Use screen brightness carefully when reviewing photos at night. Your eyes have already filed a complaint.
+Review important photos on a larger screen when precise editing matters.
+Use a consistent crop ratio for a series of photos intended for the same project.
+Keep original aspect ratios when cropping is not necessary. The sensor did the work; let it breathe.
+Do not edit every photo. Some photographs are already finished.
+Use Favorites as a shortlist, not as a second full camera roll.
+Delete accidental pocket photos. Your lock screen has probably documented enough fabric.
+Review recently deleted items before permanent deletion when clearing storage.
+Export or share important edited photos in the required format and resolution.
+Check image resolution before using a photo for printing. A thumbnail is not a poster.
+Keep a full-resolution copy when image quality matters.
+Use filenames or albums for project photos when the photos need to leave the Photos app.
+Take before-and-after photos from the same position when documenting changes.
+Use reference photos to remember settings, layouts, or physical connections.
+Photograph important labels before throwing away packaging. Future you may need that tiny number.
+Back up photos before a major device reset or migration.
+After moving to a new device, verify that important photos actually transferred.
+Do not delete old photos immediately after migration. Give synchronization time to finish.
+Use a consistent workflow: capture, select, edit, archive. The order saves time.
+A good photo library is searchable, backed up, and slightly smaller than yesterday.
+Use Favorites to build a small shortlist of photos worth showing. The rest can remain safely anonymous.
+Before sharing a screenshot, inspect the whole image for names, notifications, and account details.

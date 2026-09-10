@@ -1,0 +1,100 @@
+Use a unique password for every important account.
+Use a password manager for strong, unique passwords.
+Prefer passkeys when a service supports them.
+Turn on two-factor authentication for critical accounts.
+Prefer an authenticator app or security key over SMS when available.
+Keep two-factor backup codes somewhere safe.
+Never share a verification code with someone who contacts you unexpectedly.
+Treat unexpected login alerts seriously.
+Secure your primary email account especially well.
+Review active sessions on important accounts periodically.
+Remove old devices from trusted-device lists.
+Keep recovery email addresses and phone numbers current.
+Use a separate password for your password manager.
+Lock your phone with a strong passcode.
+Avoid simple phone passcodes such as birthdays or repeated digits.
+Enable biometric authentication where appropriate.
+Turn on Find My or the equivalent device-location service.
+Enable remote lock or erase features before a device is lost.
+Keep your operating system updated.
+Update browsers and frequently used applications too.
+Remove applications you no longer use.
+Install apps from official stores or trusted vendor sources.
+Check the developer before installing an unfamiliar app.
+Read app permission requests critically.
+Review location permissions periodically.
+Review microphone and camera permissions.
+Review photo and file access permissions.
+Remove permissions you no longer need.
+Do not install unknown browser extensions.
+Review installed browser extensions occasionally.
+Keep your browser updated.
+Do not bypass a browser security warning because you are in a hurry.
+Check the domain name before entering a password.
+Be suspicious of lookalike domains.
+Remember that HTTPS does not prove a website is trustworthy.
+Open sensitive accounts through the official app or a trusted bookmark.
+Do not log into banking through unexpected message links.
+Treat urgent messages as a reason to slow down.
+Verify unusual payment requests through another communication channel.
+Be cautious with unexpected attachments.
+Do not enable macros or scripts in documents from untrusted sources.
+Do not install remote-access software because an unexpected caller asks you to.
+Never give an unsolicited caller remote access to your computer.
+Do not share your screen casually during calls.
+Lock your computer before leaving it unattended.
+Use automatic screen locking on laptops and desktops.
+Encrypt device storage when supported.
+Keep recovery keys somewhere secure.
+Back up important files regularly.
+Keep at least one backup separate from the computer.
+Test restoring a file from your backup occasionally.
+Do not keep the only copy of important documents on one device.
+Understand the difference between cloud sync and backup.
+Check which devices can access your cloud storage.
+Review shared folders and cloud links.
+Restrict access to sensitive shared files.
+Do not upload confidential documents to random online tools.
+Be cautious when using public computers for sensitive accounts.
+Avoid entering passwords on computers you do not control.
+Be cautious on public Wi-Fi.
+Prefer a trusted network or cellular data for sensitive tasks.
+Disable automatic connection to unknown Wi-Fi networks.
+Forget old Wi-Fi networks you no longer trust.
+Use a strong password for your home Wi-Fi.
+Change the default administrator password on your router.
+Keep router firmware updated.
+Use modern Wi-Fi security such as WPA2 or WPA3.
+Use a guest network for visitors when your router supports it.
+Separate untrusted smart-home devices from important computers when possible.
+Disable router features you do not need.
+Use a firewall where appropriate.
+Do not expose remote administration services directly to the internet without understanding the risk.
+Use a VPN for a clear security or privacy purpose, not as a magic shield.
+Do not assume a VPN makes you anonymous.
+Do not accept unexpected Bluetooth pairing requests.
+Do not plug unknown USB drives into your computer.
+Use your own charging accessories when practical.
+Keep antivirus or built-in malware protection enabled.
+Do not install multiple random antivirus products.
+Read operating-system security warnings before dismissing them.
+Use standard user accounts for everyday work when appropriate.
+Do not approve administrator prompts without reading them.
+Keep sensitive work away from unknown removable drives.
+Erase a device properly before selling or giving it away.
+Remove transferred devices from your accounts.
+Revoke third-party app access when you stop using an integration.
+Review connected applications in important accounts.
+Do not approve unexpected login prompts.
+If authentication prompts repeat unexpectedly, change the password and review sessions.
+Do not use publicly obvious answers to security questions.
+Limit personal information published publicly.
+Treat QR codes like links and check their destination.
+Verify the merchant, amount, and domain before paying online.
+Enable transaction alerts for banking and payment accounts.
+Review bank and payment activity regularly.
+Report lost payment cards promptly.
+Use virtual card numbers when your bank offers them.
+Do not save passwords on shared computers.
+Private browsing does not make you anonymous.
+Check downloaded files before opening them.

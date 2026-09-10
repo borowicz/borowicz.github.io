@@ -1,0 +1,100 @@
+Start with the one task that actually changes the day. The rest can wait its turn.
+Write down the next physical action instead of a vague project name.
+Keep a short active task list. Twenty priorities is a committee, not a priority list.
+Choose three important tasks for the day. Everything else can audition later.
+Put deadlines on tasks that genuinely have deadlines. Otherwise every task becomes mysteriously urgent.
+Use the calendar for commitments, not as a decorative list of intentions.
+Block focused time for work that requires uninterrupted attention.
+Do not schedule every minute. A calendar with no gaps has already failed to account for reality.
+Turn off nonessential notifications during deep work. Your attention is not a public service.
+Batch small administrative tasks when possible. Context switching has a hidden tax.
+Check email at deliberate times when your role allows it. An inbox is not a live performance.
+Process an email once when practical: answer, delegate, archive, or turn it into a task.
+Do not use your inbox as a task manager unless you enjoy finding old obligations by accident.
+Keep meeting notes close to the calendar event. Future you will appreciate the context.
+Decline meetings that have no clear purpose when you have the authority to do so.
+Ask for an agenda when a meeting is expected to require preparation.
+End meetings with explicit owners and next actions. “We should” is not an assignment.
+Leave transition time between demanding meetings. Brains do not have instant reload.
+Protect your best hours for your hardest work when your schedule allows it.
+Do repetitive work at the same time of day when possible. Routine reduces setup cost.
+Use templates for work you genuinely repeat. Reinventing the same paragraph is not creativity.
+Automate repetitive tasks when the setup cost is lower than the future repetition.
+Do not automate a task performed twice a year unless the automation is unusually simple.
+Keep frequently used files and tools easy to reach. Friction compounds.
+Use consistent file names. final-final-2 is a cry for help.
+Keep downloads as an inbox, not a permanent archive.
+Move completed files out of active working folders. Clutter makes search more expensive.
+Use folders when they improve retrieval, not because folders exist.
+Search for a file before manually opening twelve folders. The computer has an index.
+Keep one obvious place for current project files. Scattered truth creates duplicate truth.
+Archive completed projects instead of leaving them permanently active.
+Use bookmarks for pages you actually revisit. Twenty open tabs are not bookmarks.
+Close browser tabs that have stopped being useful. Your RAM has noticed.
+Use tab groups for projects that genuinely need a collection of pages.
+Do not open a new tab to avoid deciding what to do with the current one.
+Capture ideas quickly, then process them later. A note is not automatically a plan.
+Review your notes periodically. An uncategorized thought can become digital archaeology.
+Keep reference material separate from actionable tasks.
+Turn vague tasks into concrete verbs: call, write, review, send, decide.
+Estimate tasks roughly before scheduling them. Ten-minute jobs have a suspicious tendency to become two hours.
+Add buffer to estimates when interruptions are normal. Your calendar lives in the real world.
+Break large tasks into visible milestones. “Finish project” is not a useful next action.
+Start difficult work with a deliberately small first step. Momentum likes low entry fees.
+If a task takes less than a minute and truly has no downside, doing it immediately can be reasonable.
+Do not use the one-minute rule as an excuse to avoid important work.
+Batch notifications and low-value messages instead of reacting to every arrival.
+Use Focus modes when you need fewer competing inputs.
+Keep your phone out of reach during demanding work when possible. Distance is a surprisingly effective setting.
+Use a timer for short focus sessions when starting is the hard part.
+Take real breaks between long focus periods. Staring at a different application is not always a break.
+Stand up between long work sessions. The chair has already made its argument.
+Keep meetings shorter when the subject does not require the full slot.
+Use asynchronous communication when a question does not need a meeting.
+Write the question clearly before asking for help. Good questions reduce round trips.
+Put the required decision near the top of a long message.
+Use concise subject lines that explain the action or topic.
+Do not copy people on messages merely because they might someday care.
+Archive information you do not need to see every day.
+Keep a small list of waiting-for items so delegated work does not disappear.
+Set reminders for promises you made to other people. Memory should not be the only project manager.
+Review waiting-for items before sending follow-ups. Context saves awkward emails.
+Finish one meaningful unit of work before reorganizing your entire system.
+Do not spend an hour customizing a task app to avoid a twenty-minute task.
+Use the simplest tool that handles the job. Complexity has maintenance costs.
+Keep shortcuts for actions you perform repeatedly. Small savings add up.
+Learn keyboard shortcuts for your most-used applications, not every application on the planet.
+Use search commands and quick launchers when they are faster than navigating menus.
+Reduce the number of places where tasks can enter your system. Five inboxes are still five inboxes.
+Choose a single trusted task list for personal commitments.
+Choose a single trusted calendar for appointments and time-specific commitments.
+Separate reference material from things that require action.
+Review your task list before adding more tasks. The list may already have enough ambition.
+Delete tasks that no longer matter. Completion is not the only legitimate ending.
+Renegotiate unrealistic deadlines early. Calendar physics rarely improves with optimism.
+Do the work before optimizing the workflow when the workflow itself is not the problem.
+Measure output when possible, not just hours spent. A long day can still produce very little.
+Keep a record of recurring problems. Patterns are easier to fix when they are visible.
+Create checklists for tasks where forgetting one step is expensive.
+Use checklists for repeatable procedures, not for making coffee sound like a launch sequence.
+Prepare tomorrow's first task before ending today when that reduces startup friction.
+Leave your workspace in a state that makes the next session easy to begin.
+Write down unresolved thoughts before stopping work. Otherwise they may schedule themselves for 2 a.m.
+Separate urgent from important. They are occasionally the same thing, but not by default.
+Do not let notifications decide your priorities.
+Protect time for work that has no immediate notification attached to it.
+Use recurring reminders for genuinely recurring obligations.
+Review recurring tasks periodically. Some recurring tasks are simply historical artifacts.
+Keep a short list of someday ideas instead of adding them to today's queue.
+Say no to low-value commitments when you have the option. Capacity is finite.
+Group errands by location when practical. Geography can be a productivity tool.
+Prepare frequently used materials in advance. Setup is part of the task.
+Keep common templates, links, and references in one predictable place.
+Use notes to record decisions, not just information. The reason matters later.
+At the end of a project, record what should be reused next time.
+Do a quick weekly review if it helps you catch forgotten commitments.
+Do not turn the weekly review into a four-hour ceremony.
+Keep systems boring enough that you will actually maintain them.
+Use automation for reminders, not as a substitute for deciding what matters.
+Make the next action obvious enough that you can start without another planning session.
+Productivity is not filling every empty minute. Empty space is part of the system.
