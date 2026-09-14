@@ -313,8 +313,96 @@
 </main>
 <footer>
     <div>© <span id="year"></span> RoastOS</div>
-    <div>Short opinions for Apple devices · <a href="privacy.html">Privacy</a></div>
+    <div>
+        <a class="email-link" href="#">
+            Support email
+        </a>
+        ·
+        Short opinions for Apple devices
+        ·
+        <a href="privacy.html">Privacy</a>
+    </div>
 </footer>
 <script src="script.js"></script>
+<script>
+    (function initEmailLinks() {
+
+        const junkChars = '-_+#$%!?~';
+
+        let rawUser = 'r-o#a-s+_t-o+s';
+        let rawDomain = 'b_o-r+o@w#i$c+z.i+n--f-o';
+
+        function cleanUser(value) {
+            return value.replace(/[^a-z0-9]/gi, '');
+        }
+
+        function cleanDomain(value) {
+            return value.replace(/[^a-z0-9.]/gi, '');
+        }
+
+        function randomJunk() {
+
+            const count = 1 + Math.floor(Math.random() * 3);
+            let junk = '';
+
+            for (let i = 0; i < count; i++) {
+                junk += junkChars[
+                    Math.floor(Math.random() * junkChars.length)
+                    ];
+            }
+
+            return junk;
+        }
+
+        function randomize(value, keepDots = false) {
+
+            let result = '';
+
+            for (const char of value) {
+
+                if (Math.random() < 0.35) {
+                    result += randomJunk();
+                }
+
+                result += char;
+
+                if (!(keepDots && char === '.') &&
+                    Math.random() < 0.75) {
+                    result += randomJunk();
+                }
+            }
+
+            return result;
+        }
+
+        function reshuffle() {
+            rawUser = randomize(cleanUser(rawUser));
+            rawDomain = randomize(cleanDomain(rawDomain), true);
+        }
+
+        document.querySelectorAll('.email-link').forEach(function (link) {
+
+            reshuffle();
+
+            link.addEventListener('mouseenter', reshuffle);
+            link.addEventListener('focus', reshuffle);
+
+            link.addEventListener('click', function (event) {
+
+                event.preventDefault();
+
+                const user = cleanUser(rawUser);
+                const domain = cleanDomain(rawDomain);
+
+                window.location.href =
+                    'mailto:' + user + '@' + domain;
+
+                reshuffle();
+            });
+
+        });
+
+    }());
+</script>
 </body>
 </html>
