@@ -13,6 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
     <link rel="apple-touch-icon" href="assets/icon-180.png">
     <title>README.aloud — A simple lightweight text player for your files</title>
+
     <style>
         :root {
             --bg: #f6f8f7;
@@ -38,10 +39,11 @@
         body {
             margin: 0;
             color: var(--text);
-            background: radial-gradient(circle at 85% 8%, rgba(13, 114, 101, .08), transparent 28rem),
-            var(--bg);
-            font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-            Inter, Segoe UI, Helvetica, Arial, sans-serif;
+            background:
+                    radial-gradient(circle at 85% 8%, rgba(13, 114, 101, .08), transparent 28rem),
+                    var(--bg);
+            font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display",
+            "SF Pro Text", Inter, Segoe UI, Helvetica, Arial, sans-serif;
         }
 
         a {
@@ -216,7 +218,7 @@
 
         .grid-4 {
             display: grid;
-            grid-template-columns:repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 18px;
         }
 
@@ -258,7 +260,7 @@
 
         .split {
             display: grid;
-            grid-template-columns:1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 70px;
             align-items: center;
         }
@@ -339,9 +341,148 @@
             font-size: .92rem;
         }
 
+        /* Screenshot carousel */
+
+        .screens-carousel {
+            position: relative;
+            margin: 0 auto 94px;
+            width: min(1120px, calc(100% - 40px));
+            height: 600px;
+            overflow: hidden;
+            border-radius: var(--radius);
+            background: #0c1715;
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .screens-track {
+            display: flex;
+            height: 100%;
+            transition: transform .35s ease;
+            will-change: transform;
+        }
+
+        .screen-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .screen-slide img {
+            display: block;
+            width: auto;
+            height: 600px;
+            max-width: none;
+            max-height: 600px;
+            object-fit: contain;
+            border-radius: 18px;
+            flex: 0 0 auto;
+        }
+
+        .screens-nav {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .screens-nav button {
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(16, 33, 31, .72);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 1.45rem;
+            line-height: 1;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        .screens-nav button:hover {
+            background: rgba(16, 33, 31, .9);
+        }
+
+        .screens-dots {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            display: flex;
+            gap: 7px;
+            transform: translateX(-50%);
+            padding: 8px 11px;
+            border-radius: 999px;
+            background: rgba(16, 33, 31, .58);
+            backdrop-filter: blur(10px);
+        }
+
+        .screens-dots button {
+            width: 7px;
+            height: 7px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .42);
+            cursor: pointer;
+        }
+
+        .screens-dots button.active {
+            background: #fff;
+            transform: scale(1.25);
+        }
+
+        @media (max-width: 600px) {
+            .screens-carousel {
+                width: calc(100% - 28px);
+                height: 600px;
+                margin-bottom: 70px;
+                border-radius: 22px;
+            }
+
+            .screen-slide {
+                padding: 0;
+            }
+
+            .screen-slide img {
+                height: 600px;
+                max-height: 600px;
+                width: auto;
+                max-width: none;
+            }
+
+            .screens-nav {
+                padding: 0 10px;
+            }
+
+            .screens-nav button {
+                width: 42px;
+                height: 42px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .screens-track {
+                transition: none;
+            }
+        }
+
         @media (max-width: 900px) {
-            .hero-grid, .split {
-                grid-template-columns:1fr;
+            .hero-grid,
+            .split {
+                grid-template-columns: 1fr;
                 gap: 42px;
             }
 
@@ -350,7 +491,7 @@
             }
 
             .grid-4 {
-                grid-template-columns:repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .hero-art {
@@ -376,7 +517,7 @@
             }
 
             .grid-4 {
-                grid-template-columns:1fr;
+                grid-template-columns: 1fr;
             }
 
             .cta {
@@ -399,7 +540,9 @@
         }
     </style>
 </head>
+
 <body>
+
 <header>
     <div class="wrap">
         <nav aria-label="Primary">
@@ -407,6 +550,7 @@
                 <img src="assets/favicon-32.png" alt="">
                 <span>README.aloud</span>
             </a>
+
             <div class="navlinks">
                 <a href="#features">Features</a>
                 <a href="#files">Files</a>
@@ -418,70 +562,201 @@
 </header>
 
 <main>
+
     <section class="hero">
         <div class="wrap hero-grid">
             <div>
                 <span class="eyebrow">iPhone · iPad · Mac</span>
+
                 <h1>README.aloud</h1>
-                <h2>A simple lightweight text player <br/>for your files<br/></h2>
-                <p>Open a file. Press Play. Listen. README.aloud turns the text inside your documents into private,
-                    offline listening.
-                    <br/>No account, no cloud, no limits.
-                    <br/>Apple voices
-                    <br/>This is a text player, not an ebook reader.
+
+                <h2>
+                    A simple lightweight text player
+                    <br/>
+                    for your files
+                    <br/>
+                </h2>
+
+                <p>
+                    Open a file. Press Play. Listen. README.aloud turns the text inside
+                    your documents into private, offline listening.
+                    <br/>
+                    No account, no cloud, no limits.
+                    <br/>
+                    Apple voices
+                    <br/>
+                    This is a text player, not an ebook reader.
                 </p>
+
                 <div class="actions">
                     <a class="button primary" href="#about">Learn more</a>
                     <a class="button secondary" href="#files">See supported files</a>
                 </div>
             </div>
+
             <div class="hero-art">
-                <img src="assets/icon.png" alt="README.aloud app icon: an open book wearing headphones">
+                <img
+                        src="assets/icon.png"
+                        alt="README.aloud app icon: an open book wearing headphones">
             </div>
         </div>
     </section>
 
     <section id="features">
         <div class="wrap">
+
             <div class="section-head">
                 <h2>Listening comes first.</h2>
-                <p>The text on screen is there for context, search, bookmarks, and navigation. The main interface is
-                    audio.</p>
+                <p>
+                    The text on screen is there for context, search, bookmarks,
+                    and navigation. The main interface is audio.
+                </p>
             </div>
+
             <div class="grid-4">
+
                 <article class="card">
                     <div class="num">01</div>
                     <h3>Open → Play → Listen</h3>
-                    <p>Start with a file you already have and get to playback without building a library.</p>
+                    <p>
+                        Start with a file you already have and get to playback
+                        without building a library.
+                    </p>
                 </article>
+
                 <article class="card">
                     <div class="num">02</div>
                     <h3>Lock → Pocket</h3>
-                    <p>On iPhone and iPad, keep listening after Home or with the screen locked.</p>
+                    <p>
+                        On iPhone and iPad, keep listening after Home or with
+                        the screen locked.
+                    </p>
                 </article>
+
                 <article class="card">
                     <div class="num">03</div>
                     <h3>Apple voices first</h3>
-                    <p>Use the system voices already available on your Apple devices and choose your listening
-                        speed.</p>
+                    <p>
+                        Use the system voices already available on your Apple
+                        devices and choose your listening speed.
+                    </p>
                 </article>
+
                 <article class="card">
                     <div class="num">04</div>
                     <h3>Free to use</h3>
-                    <p>No account, no subscription, no ads, and no feature paywall. Tips unlock nothing.</p>
+                    <p>
+                        No account, no subscription, no ads, and no feature
+                        paywall. Tips unlock nothing.
+                    </p>
                 </article>
+
             </div>
+        </div>
+    </section>
+
+    <section aria-label="README.aloud screenshots" style="padding-bottom:0;">
+        <div class="screens-carousel" data-carousel>
+
+            <div class="screens-track">
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_mac1.jpg"
+                            alt="README.aloud on Mac — screenshot 1"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_mac2.jpg"
+                            alt="README.aloud on Mac — screenshot 2"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_mac3.jpg"
+                            alt="README.aloud on Mac — screenshot 3"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_mac4.jpg"
+                            alt="README.aloud on Mac — screenshot 4"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_ipad1.jpg"
+                            alt="README.aloud on iPad — screenshot 1"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_ipad2.jpg"
+                            alt="README.aloud on iPad — screenshot 2"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_iphone1.jpg"
+                            alt="README.aloud on iPhone — screenshot 1"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_iphone2.jpg"
+                            alt="README.aloud on iPhone — screenshot 2"
+                            loading="lazy">
+                </div>
+
+                <div class="screen-slide">
+                    <img
+                            src="assets/c_iphone3.jpg"
+                            alt="README.aloud on iPhone — screenshot 3"
+                            loading="lazy">
+                </div>
+
+            </div>
+
+            <div class="screens-nav" aria-hidden="false">
+                <button
+                        type="button"
+                        data-prev
+                        aria-label="Previous screenshot">‹</button>
+
+                <button
+                        type="button"
+                        data-next
+                        aria-label="Next screenshot">›</button>
+            </div>
+
+            <div
+                    class="screens-dots"
+                    role="tablist"
+                    aria-label="Choose screenshot"></div>
+
         </div>
     </section>
 
     <section id="files" class="band">
         <div class="wrap split">
+
             <div>
                 <div class="section-head">
-                    <h2>Your files. Not a bookstore.</h2>
-                    <p>README.aloud works with compatible local documents and ebooks. It extracts text and sends it to
-                        playback.</p>
+                    <h2>Your files.<br>Not a bookstore.</h2>
+                    <p>
+                        README.aloud works with compatible local documents and ebooks.
+                        It extracts text and sends it to playback.
+                    </p>
                 </div>
+
                 <div class="formats" aria-label="Supported formats">
                     <span class="pill">EPUB</span>
                     <span class="pill">MOBI</span>
@@ -491,63 +766,253 @@
                     <span class="pill">RTF</span>
                 </div>
             </div>
+
             <div>
-                <div class="quote">Protected files are rejected. Scanned PDFs are not sent to OCR.</div>
-                <div class="checks">
-                    <div class="check"><b>✓</b><span>No DRM circumvention.</span></div>
-                    <div class="check"><b>✓</b><span>No cloud conversion.</span></div>
-                    <div class="check"><b>✓</b><span>No audiobook export.</span></div>
+                <div class="quote">
+                    Protected files are rejected. Scanned PDFs are not sent to OCR.
                 </div>
+
+                <div class="checks">
+                    <div class="check">
+                        <b>✓</b>
+                        <span>No DRM circumvention.</span>
+                    </div>
+
+                    <div class="check">
+                        <b>✓</b>
+                        <span>No cloud conversion.</span>
+                    </div>
+
+                    <div class="check">
+                        <b>✓</b>
+                        <span>No audiobook export.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <strong>Polish websites with free ebooks:</strong><br />
+                <a href="https://wolnelektury.pl/" target="_blank" rel="noopener noreferrer">Wolne Lektury - wolnelektury.pl</a><br />
+                <a href="https://polona.pl/" target="_blank" rel="noopener noreferrer">Polona (National Digital Library) - polona.pl</a><br />
+                <a href="https://pl.wikisource.org/" target="_blank" rel="noopener noreferrer">Wikisource (Polish edition) - pl.wikisource.org</a><br />
+                <a href="https://chmuraczytania.pl/" target="_blank" rel="noopener noreferrer">Chmura Czytania - chmuraczytania.pl</a>
+            </div>
+
+            <div class="card">
+                <strong>English-language websites:</strong><br />
+                <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg - gutenberg.org</a><br />
+                <a href="https://standardebooks.org/" target="_blank" rel="noopener noreferrer">Standard Ebooks - standardebooks.org</a><br />
+                <a href="https://manybooks.net/" target="_blank" rel="noopener noreferrer">ManyBooks - manybooks.net</a><br />
+                <a href="https://openlibrary.org/" target="_blank" rel="noopener noreferrer">Open Library - openlibrary.org</a>
             </div>
         </div>
     </section>
 
     <section id="privacy">
         <div class="wrap">
+
             <div class="section-head">
                 <h2>Private by design.</h2>
-                <p>Your documents stay on your device. The v1 product has no account, backend, document upload,
-                    analytics/tracking SDK, advertising, cloud AI, or subscription.</p>
+                <p>
+                    Your documents stay on your device. The v1 product has no account,
+                    backend, document upload, analytics/tracking SDK, advertising,
+                    cloud AI, or subscription.
+                </p>
             </div>
+
             <div class="grid-4">
-                <article class="card"><h3>No account</h3>
-                    <p>Open the app and use it. There is no sign-in flow.</p></article>
-                <article class="card"><h3>No upload</h3>
-                    <p>Your document is processed locally rather than sent to a service.</p></article>
-                <article class="card"><h3>No tracking</h3>
-                    <p>No third-party analytics or advertising layer.</p></article>
-                <article class="card"><h3>No paywall</h3>
-                    <p>The app is fully functional. Optional tips do not unlock features.</p></article>
+
+                <article class="card">
+                    <h3>No account</h3>
+                    <p>
+                        Open the app and use it. There is no sign-in flow.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>No upload</h3>
+                    <p>
+                        Your document is processed locally rather than sent to a service.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>No tracking</h3>
+                    <p>
+                        No third-party analytics or advertising layer.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>No paywall</h3>
+                    <p>
+                        The app is fully functional. Optional tips do not unlock features.
+                    </p>
+                </article>
+
             </div>
         </div>
+
         <br/>
+
         <div class="wrap" id="about">
             <div class="cta">
-                <h2>A simple lightweight text player. Nothing more complicated than that.</h2>
-                <p>README.aloud is built around a simple idea: your files already contain the text. Your device already
-                    has a voice. The app provides the player.</p>
+
+                <h2>
+                    A simple lightweight text player.
+                    Nothing more complicated than that.
+                </h2>
+
+                <p>
+                    README.aloud is built around a simple idea:
+                    your files already contain the text. Your device already
+                    has a voice. The app provides the player.
+                </p>
+
                 <div class="actions">
                     <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
-                    <a class="button primary" href="#" aria-label="App Store link">App Store — coming soon</a>
-                    <a class="button secondary" href="https://github.com/" rel="noopener">GitHub</a>
+
+                    <a
+                            class="button primary"
+                            href="#"
+                            aria-label="App Store link">
+                        App Store — coming soon
+                    </a>
+
+                    <a
+                            class="button secondary"
+                            href="https://github.com/"
+                            rel="noopener">
+                        GitHub
+                    </a>
                 </div>
+
             </div>
         </div>
     </section>
+
 </main>
 
 <footer>
     <div class="wrap footer-inner">
-        <div><strong>README.aloud</strong>
+
+        <div>
+            <strong>README.aloud</strong>
             <div class="mini">A text player for your files.</div>
         </div>
-        <a class="emaillink" href="#">Support email</a>
-        <a href="privacy.html" style="color:#ddd8e1">Privacy Policy</a>
-        <div class="mini">Open. Play. Listen.
 
+        <a class="emaillink" href="#">Support email</a>
+
+        <a href="privacy.html" style="color:#ddd8e1">
+            Privacy Policy
+        </a>
+
+        <div class="mini">
+            Open. Play. Listen.
         </div>
+
     </div>
 </footer>
+
+<script>
+    (function initScreensCarousel() {
+        const carousel = document.querySelector('[data-carousel]');
+        if (!carousel) return;
+
+        const track = carousel.querySelector('.screens-track');
+        const slides = Array.from(
+            carousel.querySelectorAll('.screen-slide')
+        );
+        const dots = carousel.querySelector('.screens-dots');
+        const prev = carousel.querySelector('[data-prev]');
+        const next = carousel.querySelector('[data-next]');
+
+        let index = 0;
+        let timer;
+
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+
+            dot.type = 'button';
+            dot.setAttribute('role', 'tab');
+            dot.setAttribute(
+                'aria-label',
+                'Show screenshot ' + (i + 1)
+            );
+
+            dot.addEventListener('click', () => goTo(i));
+
+            dots.appendChild(dot);
+        });
+
+        function update() {
+            track.style.transform =
+                'translateX(-' + (index * 100) + '%)';
+
+            dots.querySelectorAll('button').forEach((dot, i) => {
+                const active = i === index;
+
+                dot.classList.toggle('active', active);
+
+                dot.setAttribute(
+                    'aria-selected',
+                    active ? 'true' : 'false'
+                );
+            });
+        }
+
+        function goTo(nextIndex) {
+            index =
+                (nextIndex + slides.length) %
+                slides.length;
+
+            update();
+            restart();
+        }
+
+        function restart() {
+            window.clearInterval(timer);
+
+            timer = window.setInterval(() => {
+                index = (index + 1) % slides.length;
+                update();
+            }, 5000);
+        }
+
+        prev.addEventListener(
+            'click',
+            () => goTo(index - 1)
+        );
+
+        next.addEventListener(
+            'click',
+            () => goTo(index + 1)
+        );
+
+        carousel.addEventListener(
+            'mouseenter',
+            () => window.clearInterval(timer)
+        );
+
+        carousel.addEventListener(
+            'mouseleave',
+            restart
+        );
+
+        carousel.addEventListener(
+            'focusin',
+            () => window.clearInterval(timer)
+        );
+
+        carousel.addEventListener(
+            'focusout',
+            restart
+        );
+
+        update();
+        restart();
+    }());
+</script>
 
 <script>
     (function initEmailLinks() {
@@ -565,12 +1030,17 @@
         }
 
         function randomJunk() {
-            const count = 1 + Math.floor(Math.random() * 3);
+            const count =
+                1 + Math.floor(Math.random() * 3);
+
             let junk = '';
 
             for (let i = 0; i < count; i++) {
                 junk += junkChars[
-                    Math.floor(Math.random() * junkChars.length)
+                    Math.floor(
+                        Math.random() *
+                        junkChars.length
+                    )
                     ];
             }
 
@@ -581,13 +1051,17 @@
             let result = '';
 
             for (const char of value) {
+
                 if (Math.random() < 0.35) {
                     result += randomJunk();
                 }
 
                 result += char;
 
-                if (!(keepDots && char === '.') && Math.random() < 0.75) {
+                if (
+                    !(keepDots && char === '.') &&
+                    Math.random() < 0.75
+                ) {
                     result += randomJunk();
                 }
             }
@@ -596,29 +1070,56 @@
         }
 
         function reshuffle() {
-            rawUser = randomize(cleanUser(rawUser));
-            rawDomain = randomize(cleanDomain(rawDomain), true);
+            rawUser = randomize(
+                cleanUser(rawUser)
+            );
+
+            rawDomain = randomize(
+                cleanDomain(rawDomain),
+                true
+            );
         }
 
-        document.querySelectorAll('.emaillink').forEach(function (link) {
-            reshuffle();
-
-            link.addEventListener('mouseenter', reshuffle);
-            link.addEventListener('focus', reshuffle);
-
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                const user = cleanUser(rawUser);
-                const domain = cleanDomain(rawDomain);
-
-                window.location.href =
-                    'mailto:' + user + '@' + domain;
+        document
+            .querySelectorAll('.emaillink')
+            .forEach(function (link) {
 
                 reshuffle();
+
+                link.addEventListener(
+                    'mouseenter',
+                    reshuffle
+                );
+
+                link.addEventListener(
+                    'focus',
+                    reshuffle
+                );
+
+                link.addEventListener(
+                    'click',
+                    function (event) {
+
+                        event.preventDefault();
+
+                        const user =
+                            cleanUser(rawUser);
+
+                        const domain =
+                            cleanDomain(rawDomain);
+
+                        window.location.href =
+                            'mailto:' +
+                            user +
+                            '@' +
+                            domain;
+
+                        reshuffle();
+                    }
+                );
             });
-        });
     }());
 </script>
+
 </body>
 </html>
