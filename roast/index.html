@@ -145,6 +145,17 @@
                 min-height: 0;
             }
         }
+
+        .platformItem img.store-badge {
+            all: unset;
+            display: inline;
+            width: 150px !important;
+            height: auto !important;
+            max-width: 150px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -193,11 +204,22 @@
 
     <section id="platforms" class="platforms">
         <div class="platform-heading"><span class="number">03</span>
-            <h2 class="head2">Four places<br>to get <em>roasted.</em></h2></div>
+            <h2 class="head2">Four places<br>to get <em>roasted.</em></h2>
+<!--            <div style="text-align: center;"><a href="https://apps.apple.com/"-->
+<!--               target="_blank"-->
+<!--               rel="noopener noreferrer"-->
+<!--               aria-label="Sheep Me to Sleep for iPhone"><img-->
+<!--               style="height: 200px;"-->
+<!--               class="platform-store-badge"-->
+<!--               src="assets/app-store.svg"-->
+<!--               alt="Download on the App Store"></a></div>-->
+        </div>
         <div class="platform-grid">
             <article class="platform platformItem macos"><img src="assets/macos-latest.jpg" alt="RoastOS for macOS">
                 <h3>macOS</h3>
-                <p>Widgets, optional notifications and a central popup when your Mac feels the need to interrupt you properly.</p></article>
+                <p>Widgets, optional notifications and a central popup when your Mac feels the need to interrupt you properly.
+                <br><br><a href="https://apps.apple.com/app/roastos/id6809114434"><b>now availabe in App Store</b></a></p>
+            </article>
             <article class="platform platformItem iphone"><img src="assets/iphone-latest.jpg" alt="RoastOS for iPhone">
                 <h3>iPhone</h3>
                 <p>Quick roasts, widgets, optional notifications and one more reason to look at your phone.</p></article>
