@@ -498,8 +498,8 @@
         .appstore-grid .card {
             min-width: 0;
             min-height: 0;
-            height: 180px;
-            padding: 22px 28px;
+            height: 240px;
+            padding: 12px 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -519,9 +519,9 @@
         .appstore-grid .card img.app-store-badge {
             all: unset;
             display: inline-block !important;
-            width: 120px !important;
-            min-width: 120px !important;
-            max-width: 120px !important;
+            /*width: 120px !important;*/
+            /*min-width: 120px !important;*/
+            /*max-width: 120px !important;*/
             height: auto !important;
             max-height: none !important;
             margin: 0 !important;
@@ -529,6 +529,11 @@
             opacity: .48;
             object-fit: contain !important;
             vertical-align: middle;
+        }
+        img.app-store-badge {
+            width: 180px !important;
+            min-width: 120px !important;
+            /*!*max-width: 120px !important;*!   */
         }
 
         .appstore-grid .coming-soon {
@@ -720,8 +725,8 @@
             <div class="grid-3 appstore-grid">
                 <article class="card">
                     <h3>MacOS</h3>
-                    <p><img class="app-store-badge" src="assets/apple-icon-white.svg" alt="App Store"></p>
-                    <span class="coming-soon">Coming soon</span>
+                    <p><img class="app-store-badge" src="assets/apple-icon.svg" alt="App Store"></p>
+                    <a href="https://apps.apple.com/app/readme-aloud/id6808113903" target="_blank"><span class="coming-soon">available in the App Store</span></a>
                 </article>
                 <article class="card">
                     <h3>iPhone</h3>
