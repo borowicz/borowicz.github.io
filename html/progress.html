@@ -1,379 +1,328 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>year life progress</title>
-    <style>
-        :root {
-            --bar-height: 28px;
-            /*--bar-radius: 10px;*/
-            --bg: #fff;
-            --frame: #e9e9e9;
-            --fill: #333333;
-            --empty: #cccccc;
-            /*--bar-radius: calc(var(--bar-height) / 2);*/
-            --text: #333;
-        }
-
-        body {
-            margin: 0;
-            padding: 24px;
-            background: var(--bg);
-            color: var(--text);
-            font-family: sans-serif;
-        }
-
-        h1 {
-            font-size: 22px;
-            margin: 0 0 18px
-        }
-
-        h2 {
-            font-size: 18px;
-            margin: 24px 0 10px
-        }
-
-        .panel {
-            display: grid;
-            gap: 16px;
-            max-width: 980px;
-            margin-inline: auto;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 12px;
-            align-items: center;
-        }
-
-        input[type="date"], select {
-            background: #eee;
-            color: var(--text);
-            border: 1px solid #2a2a2a;
-            /*border-radius: 8px;*/
-            padding: 8px 10px;
-            font-size: 14px;
-        }
-
-        button {
-            background: #eee;
-            border: none;
-            color: #000;
-            padding: 8px 14px;
-            /*border-radius: 10px;*/
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        button:active {
-            transform: translateY(1px)
-        }
-
-        .frame {
-            position: relative;
-            border: 2px solid var(--frame);
-            /*border-radius: 16px;*/
-            padding: 16px;
-        }
-
-        .bar-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .bar {
-            position: relative;
-            flex: 1;
-            height: var(--bar-height);
-            background: var(--empty);
-            border-radius: var(--bar-radius);
-            overflow: visible;
-            box-shadow: inset 0 0 0 2px #222;
-        }
-
-        .fill {
-            height: 100%;
-            width: 0%;
-            background: var(--fill);
-            transition: width 320ms ease;
-        }
-
-        .over {
-            position: absolute;
-            top: 0;
-            left: 100%;
-            height: 100%;
-            background: var(--fill);
-            opacity: .6;
-            pointer-events: none;
-        }
-
-        .label {
-            position: absolute;
-            inset: -14px 0 auto 0;
-            width: 100%;
-            text-align: center;
-            font-weight: 800;
-        }
-
-        .percent {
-            min-width: 72px;
-            text-align: right;
-            font-weight: bold;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .meta {
-            margin-top: 6px;
-            font-size: 13px;
-            opacity: .9;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        .grid-2 {
-            display: grid;
-            gap: 18px;
-            grid-template-columns: 1fr;
-        }
-
-        @media (min-width: 820px) {
-            .grid-2 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Life Progress — Time, Space & Fun Stats</title>
+<style>
+:root{
+  --bg:#0b0c10; --panel:#12141a; --panel2:#171a21; --text:#f5f7fb; --muted:#9ba3b3;
+  --line:#282d38; --accent:#8fb8ff; --accent2:#b59cff; --good:#8bd6ad;
+  --core-bg:rgba(75,120,210,.10); --space-bg:rgba(132,92,220,.10);
+  --estimate-bg:rgba(206,149,58,.10); --fun-bg:rgba(201,91,145,.10);
+  --radius:22px; --shadow:0 16px 48px rgba(0,0,0,.28);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#f4f5f7;--panel:#fff;--panel2:#f7f8fa;--text:#111319;--muted:#606878;--line:#dde1e8;
+    --accent:#345eff;--accent2:#7b4dff;--good:#16794a;--shadow:0 12px 32px rgba(24,32,48,.09);
+    --core-bg:rgba(52,94,255,.065); --space-bg:rgba(123,77,255,.065);
+    --estimate-bg:rgba(186,124,24,.075); --fun-bg:rgba(195,71,128,.065);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:radial-gradient(1200px 700px at 20% -10%,rgba(143,184,255,.09),transparent 55%),radial-gradient(900px 600px at 100% 0%,rgba(181,156,255,.08),transparent 45%),var(--bg);
+  color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif
+}
+main{max-width:1120px;margin:0 auto;padding:28px 18px 72px}
+header{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin:6px 0 26px}
+.hero-head{display:flex;gap:18px;align-items:flex-start;justify-content:space-between}
+.hero-copy{min-width:0}
+h1{font-size:clamp(38px,6vw,66px);line-height:.95;letter-spacing:-.045em;margin:0 0 10px;font-weight:800}
+.kicker{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800;color:var(--accent)}
+.subtitle{max-width:740px;color:var(--muted);font-size:16px;margin:0}
+.language{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.language label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:9px 34px 9px 11px;outline:none}
+select:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.controls{background:color-mix(in srgb,var(--panel) 93%,transparent);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:11px 12px;outline:none}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.note{grid-column:1/-1;color:var(--muted);font-size:12px;margin-top:2px}
+.section{margin:30px 0 0;border-radius:28px;padding:18px;background:linear-gradient(180deg,var(--section-bg),transparent 95%);border:1px solid color-mix(in srgb,var(--section-accent) 14%,var(--line));}
+.section.core{--section-bg:var(--core-bg);--section-accent:#6f9dff}.section.space{--section-bg:var(--space-bg);--section-accent:#ae8dff}.section.estimate{--section-bg:var(--estimate-bg);--section-accent:#e1b866}.section.fun{--section-bg:var(--fun-bg);--section-accent:#dd83ae}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:13px;padding:0 2px}.section h2{margin:0;font-size:24px;letter-spacing:-.025em}.section-head p{margin:0;color:var(--muted);font-size:13px;max-width:700px}
+.section-badge{display:inline-flex;align-items:center;gap:6px;margin-bottom:7px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--section-accent)}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:14px}
+.card{background:color-mix(in srgb,var(--panel) 94%,transparent);border:1px solid color-mix(in srgb,var(--section-accent) 10%,var(--line));border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;min-width:0}
+.card .label,.metric .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800}
+.big{font-size:clamp(58px,8vw,94px);letter-spacing:-.06em;font-weight:850;line-height:.9;margin:14px 0}.meta{color:var(--muted);font-size:13px}
+.progress{height:14px;border-radius:999px;background:var(--panel2);overflow:hidden;border:1px solid var(--line);margin-top:18px}.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:inherit;transition:width .4s ease}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.metric-grid.three{grid-template-columns:repeat(3,1fr)}
+.metric{position:relative;padding:18px;border:1px solid color-mix(in srgb,var(--section-accent) 8%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--panel2) 96%,transparent)}
+.metric .value{font-size:25px;font-weight:800;letter-spacing:-.03em;margin-top:8px}.metric .detail{font-size:12px;color:var(--muted);margin-top:5px;max-width:95%}
+.estimated-tag{position:absolute;top:14px;right:14px;font-size:9px;font-weight:900;letter-spacing:.12em;color:var(--section-accent);opacity:.95}
+.row{display:flex;justify-content:space-between;gap:14px;align-items:baseline}.row strong{font-size:13px}.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.divider{height:1px;background:var(--line);margin:18px 0}.small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
+.info{display:inline-grid;place-items:center;width:17px;height:17px;border:1px solid color-mix(in srgb,var(--section-accent) 35%,var(--line));border-radius:50%;font-size:10px;font-weight:900;color:var(--section-accent);cursor:help;vertical-align:middle;margin-left:4px;position:relative}
+.info::after{content:attr(data-tip);position:absolute;z-index:20;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(4px);width:240px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-size:11px;font-weight:500;line-height:1.4;text-align:left;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .14s ease,transform .14s ease}
+.info:hover::after,.info:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px;padding:10px 2px 0;color:var(--muted);font-size:11px}.legend span{display:inline-flex;align-items:center;gap:7px}.swatch{width:9px;height:9px;border-radius:3px;display:inline-block}.swatch.core{background:#6f9dff}.swatch.space{background:#ae8dff}.swatch.estimate{background:#e1b866}.swatch.fun{background:#dd83ae}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+@media(max-width:850px){.controls{grid-template-columns:1fr 1fr}.hero{grid-template-columns:1fr}.metric-grid,.metric-grid.three{grid-template-columns:repeat(2,1fr)}header{display:block}.hero-head{display:block}.language{margin-top:14px}}
+@media(max-width:560px){main{padding:20px 12px 50px}.controls{grid-template-columns:1fr}.metric-grid,.metric-grid.three{grid-template-columns:1fr 1fr}.big{font-size:57px}.card{padding:16px}.section{margin-top:20px;padding:14px;border-radius:22px}.section-head{display:block}.section-head p{margin-top:4px}.info::after{left:auto;right:-8px;transform:translateY(4px);width:210px}.info:hover::after,.info:focus-visible::after{transform:translateY(0)}}
+</style>
 </head>
 <body>
-<div class="panel">
-    <h1>Progress Bars: Year & Life</h1>
-    <div>
-        <!-- YEAR PROGRESS -->
-        <section>
-            <h2 id="year-progress-title"></h2>
-            <div class="controls">
-                <label for="date" id="label-date"></label>
-                <input id="date" type="date"/>
-                <button id="use-today"></button>
-                <div id="info" aria-live="polite"></div>
-                <div id="bar-title" class="label">2025 Progress Bar</div>
-            </div>
-            <br><br>
-            <h2 id="year-label"></h2>
-            <div class="frame" role="group" aria-labelledby="bar-title">
-                <div class="bar-container">
-                    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                         aria-valuenow="0" aria-label="Year progress">
-                        <div class="fill" id="fill"></div>
-                        <span class="sr-only" id="sr"></span>
-                    </div>
-                    <div class="percent" id="percent">0.00%</div>
-                </div>
-            </div>
-            <div class="meta" id="meta-year"></div>
-        </section>
-
-        <!-- LIFE ESTIMATION -->
-        <section>
-            <h2 id="label-life-estimated"></h2>
-            <div class="frame" role="group" aria-labelledby="life-title">
-                <div class="bar-container">
-                    <div class="bar" id="life-bar" role="progressbar" aria-valuemin="0"
-                         aria-valuemax="100" aria-valuenow="0"
-                         aria-label="Estimated life progress">
-                        <div class="fill" id="life-fill"></div>
-                        <div class="over" id="life-over"></div>
-                        <span class="sr-only" id="life-sr"></span>
-                    </div>
-                    <div class="percent" id="life-percent">0.00%</div>
-                </div>
-            </div>
-            <br><br>
-
-            <!-- LIFE CONTROLS -->
-            <section>
-                <h2 id="label-life-strip"></h2>
-                <div class="controls">
-                    <label for="dob" id="label-dob"></label>
-                    <input id="dob" type="date"/>
-                    <label for="sex" id="label-sex"></label>
-                    <select id="sex" aria-label="Sex">
-                        <option value="M">Male (74.93)</option>
-                        <option value="K">Female (82.26)</option>
-                    </select>
-                    <button id="life-today"></button>
-                    <div id="life-info" aria-live="polite"></div>
-                    <div id="life-title" class="label">Life Progress Bar</div>
-                </div>
-                <br><br>
-            </section>
-            <div class="meta" id="life-meta"></div>
-        </section>
+<main>
+<header>
+  <div class="hero-head">
+    <div class="hero-copy">
+      <div class="kicker" id="kicker">Year Me Up · Life Progress</div>
+      <h1 id="pageTitle">Your life, in numbers.</h1>
+      <p class="subtitle" id="pageSubtitle">The primary layer is calculated from time and astronomy. Population-based numbers are deliberately separated into <strong>Estimated / Fun Stats</strong>.</p>
     </div>
-    <p class="status" style="text-align: center; color: #1a2347">&copy; <a class="muted" href="./../../" title="borowicz.github.io">borowicz.github.io</a>
-</div>
+    <div class="language">
+      <label for="language" id="languageLabel">Language</label>
+      <select id="language" aria-label="Language">
+        <option value="en">English</option><option value="pl">Polski</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<section class="controls" aria-label="Life settings">
+  <div class="field"><label for="dob" id="dobLabel">Date of birth</label><input id="dob" type="date" value="1980-01-01"></div>
+  <div class="field"><label for="lifespan" id="lifespanLabel">Life span target (years)</label><input id="lifespan" type="number" min="1" max="150" step="0.1" value="80"></div>
+  <div class="field"><label for="reference" id="referenceLabel">Reference time</label><input id="reference" type="datetime-local"></div>
+  <div class="note" id="settingsNote" style="text-align: center;">Life Progress is a mathematical model, not a prediction of an individual lifespan. Change the target to explore a different horizon.</div>
+  <div class="note" style="text-align: center;">//borowicz.github.io/html/progress.html</div>
+</section>
+
+<section class="section core">
+  <div class="section-head"><div><div class="section-badge" id="coreBadge">Core · measured from time</div><h2 id="coreTitle">Life Progress</h2><p id="coreDesc">Core metrics derived directly from date/time. No population statistic is used for the main progress calculation.</p></div></div>
+  <div class="hero">
+    <article class="card">
+      <div class="label" id="lifePctLabel">Life Progress <span class="info" tabindex="0" data-tip="Percentage of elapsed time between the date of birth and the selected life-span target.">i</span></div>
+      <div class="big" id="lifePct">—</div>
+      <div class="meta" id="lifeRange">Enter a valid date of birth to calculate your horizon.</div>
+      <div class="progress" aria-label="Life progress"><span id="lifeBar"></span></div>
+    </article>
+    <article class="card">
+      <div class="label" id="exactAgeLabel">Exact age <span class="info" tabindex="0" data-tip="Elapsed time since birth, expressed as years using a mean tropical year of 365.2425 days.">i</span></div>
+      <div class="big" id="ageYears">—</div>
+      <div class="meta" id="exactAgeMeta">Years elapsed since birth.</div>
+      <div class="divider"></div>
+      <div class="row"><strong id="targetLabel">Target</strong><span id="targetYears">—</span></div>
+    </article>
+  </div>
+
+  <div class="metric-grid" style="margin-top:14px">
+    <div class="metric"><div class="label" id="daysLivedLabel">Days lived <span class="info" tabindex="0" data-tip="Elapsed days since the local start of the date of birth.">i</span></div><div class="value" id="daysLived">—</div><div class="detail" id="daysLivedDetail">Elapsed calendar days.</div></div>
+    <div class="metric"><div class="label" id="daysLeftLabel">Days remaining <span class="info" tabindex="0" data-tip="Remaining days until the selected life-span horizon.">i</span></div><div class="value" id="daysLeft">—</div><div class="detail" id="daysLeftDetail">Until the selected horizon.</div></div>
+    <div class="metric"><div class="label" id="weeksLeftLabel">Weeks remaining <span class="info" tabindex="0" data-tip="Remaining days divided by seven.">i</span></div><div class="value" id="weeksLeft">—</div><div class="detail" id="weeksLeftDetail">Remaining days ÷ 7.</div></div>
+    <div class="metric"><div class="label" id="decadePctLabel">Decade progress <span class="info" tabindex="0" data-tip="Progress through the current ten-year age band: 20s, 30s, 40s, and so on.">i</span></div><div class="value" id="decadePct">—</div><div class="detail" id="decadeDetail">—</div></div>
+  </div>
+  <div class="legend"><span><i class="swatch core"></i><span id="coreLegend">Core time-based metrics</span></span></div>
+</section>
+
+<section class="section space">
+  <div class="section-head"><div><div class="section-badge" id="spaceBadge">Space · astronomy</div><h2 id="spaceTitle">Space</h2><p id="spaceDesc">Astronomical perspectives of the same lifetime. These are computational views, not population averages.</p></div></div>
+  <div class="metric-grid three">
+    <div class="metric"><div class="label" id="orbitsLabel">Trips around the Sun <span class="info" tabindex="0" data-tip="Approximate number of Earth orbits completed since birth, using 365.2425 days per orbit.">i</span></div><div class="value" id="orbits">—</div><div class="detail" id="orbitsDetail">One Earth orbit ≈ one year.</div></div>
+    <div class="metric"><div class="label" id="spaceKmLabel">Distance through space <span class="info" tabindex="0" data-tip="Illustrative distance from elapsed time × 230 km/s, the figure used in the supplied concept.">i</span></div><div class="value" id="spaceKm">—</div><div class="detail" id="spaceKmDetail">Illustrative Solar System travel at 230 km/s.</div></div>
+    <div class="metric"><div class="label" id="marsAgeLabel">Age on Mars <span class="info" tabindex="0" data-tip="Elapsed Earth days divided by one Martian year (686.98 Earth days).">i</span></div><div class="value" id="marsAge">—</div><div class="detail" id="marsAgeDetail">Based on a Martian year ≈ 686.98 Earth days.</div></div>
+  </div>
+  <div class="legend"><span><i class="swatch space"></i><span id="spaceLegend">Astronomy-derived views</span></span></div>
+</section>
+
+<section class="section estimate">
+  <div class="section-head"><div><div class="section-badge" id="estimateBadge">Estimated · population concepts</div><h2 id="estimateTitle">Life Estimates</h2><p id="estimateDesc">Population-average concepts from the supplied material. These values are estimates, clearly separated from measured personal data.</p></div></div>
+  <div class="metric-grid three">
+    <div class="metric"><span class="estimated-tag" id="estimatedTag1">ESTIMATED</span><div class="label" id="sleepYearsLabel">Years asleep <span class="info" tabindex="0" data-tip="Illustrative model using roughly one-third of life asleep, matching the supplied concept.">i</span></div><div class="value" id="sleepYears">—</div><div class="detail" id="sleepYearsDetail">Using the source concept of roughly 1/3 of life asleep.</div></div>
+    <div class="metric"><span class="estimated-tag" id="estimatedTag2">ESTIMATED</span><div class="label" id="workYearsLabel">Working time <span class="info" tabindex="0" data-tip="The supplied material gives about 80,000 working hours over a career. Display converts that to years using 40 hours × 52 weeks.">i</span></div><div class="value" id="workYears">—</div><div class="detail" id="workYearsDetail">~80,000 hours over a career.</div></div>
+    <div class="metric"><span class="estimated-tag" id="estimatedTag3">ESTIMATED</span><div class="label" id="freeYearsLabel">Free-time view <span class="info" tabindex="0" data-tip="Illustrative 70-year model after subtracting one-third sleep and the supplied 80,000-hour career estimate.">i</span></div><div class="value" id="freeYears">—</div><div class="detail" id="freeYearsDetail">Illustrative remainder after sleep and work in a 70-year model.</div></div>
+  </div>
+  <div class="legend"><span><i class="swatch estimate"></i><span id="estimateLegend">Estimated population averages / source concepts</span></span></div>
+</section>
+
+<section class="section fun">
+  <div class="section-head"><div><div class="section-badge" id="funBadge">Estimated · playful</div><h2 id="funTitle">Estimated / Fun Stats</h2><p id="funDesc">Playful population statistics. They are not measurements from your device, your health data, or your behavior.</p></div></div>
+  <div class="metric-grid">
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="dreamsLabel">Dreams <span class="info" tabindex="0" data-tip="Source concept: 3–5 dreams per night; this model uses the midpoint of 4.">i</span></div><div class="value" id="dreams">—</div><div class="detail" id="dreamsDetail">3–5 dreams/night → midpoint 4 used.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="socksLabel">Lost socks <span class="info" tabindex="0" data-tip="Source concept: about 15 socks per year.">i</span></div><div class="value" id="socks">—</div><div class="detail" id="socksDetail">~15 socks/year.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="fridgeLabel">Fridge staring <span class="info" tabindex="0" data-tip="Source concept: about 10 hours per year spent staring into an open refrigerator.">i</span></div><div class="value" id="fridge">—</div><div class="detail" id="fridgeDetail">~10 hours/year.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="clicksLabel">Mouse clicks <span class="info" tabindex="0" data-tip="Source concept: about 1.5 million mouse clicks per year for an office worker.">i</span></div><div class="value" id="clicks">—</div><div class="detail" id="clicksDetail">~1.5 million/year for an office worker.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="foodLabel">Food eaten <span class="info" tabindex="0" data-tip="Source concept: about 35 tonnes over a lifetime.">i</span></div><div class="value" id="food">—</div><div class="detail" id="foodDetail">~35 tonnes over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="coffeeLabel">Coffee <span class="info" tabindex="0" data-tip="Source concept: about 10,000 litres over a lifetime.">i</span></div><div class="value" id="coffee">—</div><div class="detail" id="coffeeDetail">~10,000 litres over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="kissingLabel">Kissing <span class="info" tabindex="0" data-tip="Source concept: about two weeks spent kissing over a lifetime.">i</span></div><div class="value" id="kissing">—</div><div class="detail" id="kissingDetail">~2 weeks over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="pubLabel">Pub time <span class="info" tabindex="0" data-tip="Source concept: about one year in bars and pubs over a lifetime.">i</span></div><div class="value" id="pub">—</div><div class="detail" id="pubDetail">~1 year over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="shoppingLabel">Shopping <span class="info" tabindex="0" data-tip="Source concept: about 8.5 years spent shopping.">i</span></div><div class="value" id="shopping">—</div><div class="detail" id="shoppingDetail">~8.5 years over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="tvLabel">Television <span class="info" tabindex="0" data-tip="Source concept: more than 8 years watching television.">i</span></div><div class="value" id="tv">—</div><div class="detail" id="tvDetail">~8 years over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="socialLabel">Social media <span class="info" tabindex="0" data-tip="Source concept: about 3 years in social media.">i</span></div><div class="value" id="social">—</div><div class="detail" id="socialDetail">~3 years over a lifetime.</div></div>
+    <div class="metric"><span class="estimated-tag">ESTIMATED</span><div class="label" id="mealsLabel">Meals <span class="info" tabindex="0" data-tip="Source concept: about 80,000 meals by age 70.">i</span></div><div class="value" id="meals">—</div><div class="detail" id="mealsDetail">~80,000 meals by age 70.</div></div>
+  </div>
+  <div class="legend"><span><i class="swatch fun"></i><span id="funLegend">Playful, population-based estimates</span></span></div>
+</section>
+
+<footer>
+  <span id="footerCore">Core: time + astronomy.</span>
+  <span id="footerEstimate">Estimated / Fun Stats: population averages and supplied source concepts.</span>
+  <span id="footerLocal">All calculations run locally in this single file.</span>
+</footer>
+</main>
 
 <script>
-    const DAY_MS = 86400000;
-    const toUTCDate = (y, m, d) => new Date(Date.UTC(y, m, d));
-    const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const DAY_MS = 86400000;
+  const YEAR_DAYS = 365.2425;
+  const MARS_YEAR_DAYS = 686.98;
+  const KM_PER_SEC = 230;
 
-    const LABELS = {
-        dob: "Date of Birth",
-        sex: "Sex",
-        lifeTitle: "Life Progress Bar",
-        yearProgressTitle: "Year Progress Bar",
-        dateLabel: "Reference Date:",
-        useToday: "Use Today",
-        yearLabelPrefix: "Year",
-        lifeLabel: "Life Estimated",
-        lifeStrip: "Life Strip",
-        useTodayLife: "Use Today"
-    };
+  const reference = $('reference');
+  const language = $('language');
+  const nowLocal = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const localISO = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  reference.value = localISO(nowLocal);
 
-    // Year progress calculation
-    function yearProgressPercent(date) {
-        const start = toUTCDate(date.getUTCFullYear(), 0, 1);
-        const end = toUTCDate(date.getUTCFullYear() + 1, 0, 1);
-        const now = new Date(Date.UTC(
-            date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23
-        ));
-        return clamp(((now - start) / (end - start)) * 100, 0, 100);
+  const dictionaries = {
+    en: {
+      langName:'English', kicker:'Year Me Up · Life Progress', title:'Your life, in numbers.', subtitle:'The primary layer is calculated from time and astronomy. Population-based numbers are deliberately separated into <strong>Estimated / Fun Stats</strong>.',
+      language:'Language', dob:'Date of birth', lifespan:'Life span target (years)', reference:'Reference time', settingsNote:'Life Progress is a mathematical model, not a prediction of an individual lifespan. Change the target to explore a different horizon.',
+      coreBadge:'Core · measured from time', coreTitle:'Life Progress', coreDesc:'Core metrics derived directly from date/time. No population statistic is used for the main progress calculation.', lifeProgress:'Life Progress', exactAge:'Exact age', exactAgeMeta:'Years elapsed since birth.', target:'Target', daysLived:'Days lived', daysLivedDetail:'Elapsed calendar days.', daysLeft:'Days remaining', daysLeftDetail:'Until the selected horizon.', weeksLeft:'Weeks remaining', weeksLeftDetail:'Remaining days ÷ 7.', decadePct:'Decade progress', coreLegend:'Core time-based metrics', invalid:'Enter a valid date of birth to calculate your horizon.',
+      spaceBadge:'Space · astronomy', spaceTitle:'Space', spaceDesc:'Astronomical perspectives of the same lifetime. These are computational views, not population averages.', orbits:'Trips around the Sun', orbitsDetail:'One Earth orbit ≈ one year.', spaceKm:'Distance through space', spaceKmDetail:'Illustrative Solar System travel at 230 km/s.', marsAge:'Age on Mars', marsAgeDetail:'Based on a Martian year ≈ 686.98 Earth days.', spaceLegend:'Astronomy-derived views',
+      estimateBadge:'Estimated · population concepts', estimateTitle:'Life Estimates', estimateDesc:'Population-average concepts from the supplied material. These values are estimates, clearly separated from measured personal data.', estimated:'ESTIMATED', sleepYears:'Years asleep', sleepYearsDetail:'Using the source concept of roughly 1/3 of life asleep.', workYears:'Working time', workYearsDetail:'~80,000 hours over a career.', freeYears:'Free-time view', freeYearsDetail:'Illustrative remainder after sleep and work in a 70-year model.', estimateLegend:'Estimated population averages / source concepts',
+      funBadge:'Estimated · playful', funTitle:'Estimated / Fun Stats', funDesc:'Playful population statistics. They are not measurements from your device, your health data, or your behavior.', dreams:'Dreams', dreamsDetail:'3–5 dreams/night → midpoint 4 used.', socks:'Lost socks', socksDetail:'~15 socks/year.', fridge:'Fridge staring', fridgeDetail:'~10 hours/year.', clicks:'Mouse clicks', clicksDetail:'~1.5 million/year for an office worker.', food:'Food eaten', foodDetail:'~35 tonnes over a lifetime.', coffee:'Coffee', coffeeDetail:'~10,000 litres over a lifetime.', kissing:'Kissing', kissingDetail:'~2 weeks over a lifetime.', pub:'Pub time', pubDetail:'~1 year over a lifetime.', shopping:'Shopping', shoppingDetail:'~8.5 years over a lifetime.', tv:'Television', tvDetail:'~8 years over a lifetime.', social:'Social media', socialDetail:'~3 years over a lifetime.', meals:'Meals', mealsDetail:'~80,000 meals by age 70.', funLegend:'Playful, population-based estimates',
+      footerCore:'Core: time + astronomy.', footerEstimate:'Estimated / Fun Stats: population averages and supplied source concepts.', footerLocal:'All calculations run locally in this single file.',
+      tooltipLife:'Percentage of elapsed time between the date of birth and the selected life-span target.', tooltipAge:'Elapsed time since birth, expressed as years using a mean tropical year of 365.2425 days.', tooltipDaysLived:'Elapsed days since the local start of the date of birth.', tooltipDaysLeft:'Remaining days until the selected life-span horizon.', tooltipWeeksLeft:'Remaining days divided by seven.', tooltipDecade:'Progress through the current ten-year age band: 20s, 30s, 40s, and so on.', tooltipOrbits:'Approximate number of Earth orbits completed since birth, using 365.2425 days per orbit.', tooltipSpace:'Illustrative distance from elapsed time × 230 km/s, the figure used in the supplied concept.', tooltipMars:'Elapsed Earth days divided by one Martian year (686.98 Earth days).', tooltipSleep:'Illustrative model using roughly one-third of life asleep, matching the supplied concept.', tooltipWork:'The supplied material gives about 80,000 working hours over a career. Display converts that to years using 40 hours × 52 weeks.', tooltipFree:'Illustrative 70-year model after subtracting one-third sleep and the supplied 80,000-hour career estimate.', tooltipDreams:'Source concept: 3–5 dreams per night; this model uses the midpoint of 4.', tooltipSocks:'Source concept: about 15 socks per year.', tooltipFridge:'Source concept: about 10 hours per year spent staring into an open refrigerator.', tooltipClicks:'Source concept: about 1.5 million mouse clicks per year for an office worker.', tooltipFood:'Source concept: about 35 tonnes over a lifetime.', tooltipCoffee:'Source concept: about 10,000 litres over a lifetime.', tooltipKissing:'Source concept: about two weeks spent kissing over a lifetime.', tooltipPub:'Source concept: about one year in bars and pubs over a lifetime.', tooltipShopping:'Source concept: about 8.5 years spent shopping.', tooltipTV:'Source concept: more than 8 years watching television.', tooltipSocial:'Source concept: about 3 years in social media.', tooltipMeals:'Source concept: about 80,000 meals by age 70.'
+    },
+    pl: {
+      langName:'Polski', kicker:'Year Me Up · Postęp życia', title:'Twoje życie, w liczbach.', subtitle:'Główna warstwa jest liczona na podstawie czasu i astronomii. Statystyki populacyjne są celowo oddzielone jako <strong>Szacunki / Fun Stats</strong>.',
+      language:'Język', dob:'Data urodzenia', lifespan:'Docelowa długość życia (lata)', reference:'Czas odniesienia', settingsNote:'Life Progress to model matematyczny, a nie prognoza indywidualnej długości życia. Zmień cel, aby zobaczyć inną perspektywę.',
+      coreBadge:'Core · czas', coreTitle:'Postęp życia', coreDesc:'Podstawowe metryki wynikające bezpośrednio z daty i czasu. Główne obliczenie nie korzysta ze statystyk populacyjnych.', lifeProgress:'Postęp życia', exactAge:'Dokładny wiek', exactAgeMeta:'Lata, które upłynęły od urodzenia.', target:'Cel', daysLived:'Przeżyte dni', daysLivedDetail:'Upływające dni kalendarzowe.', daysLeft:'Pozostałe dni', daysLeftDetail:'Do wybranego horyzontu.', weeksLeft:'Pozostałe tygodnie', weeksLeftDetail:'Pozostałe dni ÷ 7.', decadePct:'Postęp dekady', coreLegend:'Metryki oparte na czasie', invalid:'Podaj prawidłową datę urodzenia, aby obliczyć horyzont.',
+      spaceBadge:'Kosmos · astronomia', spaceTitle:'Kosmos', spaceDesc:'Astronomiczne spojrzenie na ten sam okres życia. To obliczenia, a nie średnie populacyjne.', orbits:'Okrążenia wokół Słońca', orbitsDetail:'Jedno okrążenie Ziemi ≈ jeden rok.', spaceKm:'Przebyty dystans w kosmosie', spaceKmDetail:'Ilustracyjny dystans przy 230 km/s.', marsAge:'Wiek na Marsie', marsAgeDetail:'Na podstawie marsjańskiego roku ≈ 686,98 dnia ziemskiego.', spaceLegend:'Widoki oparte na astronomii',
+      estimateBadge:'Szacunki · statystyki populacyjne', estimateTitle:'Szacunkowe życie', estimateDesc:'Koncepcje oparte na średnich populacyjnych z dostarczonego materiału. Są wyraźnie oddzielone od danych osobistych.', estimated:'SZACUNEK', sleepYears:'Lata snu', sleepYearsDetail:'Założenie ze źródła: około 1/3 życia przypada na sen.', workYears:'Czas pracy', workYearsDetail:'~80 000 godzin w karierze.', freeYears:'Widok czasu wolnego', freeYearsDetail:'Ilustracyjna reszta po śnie i pracy w modelu 70-letnim.', estimateLegend:'Szacunki populacyjne / koncepcje ze źródła',
+      funBadge:'Szacunki · z przymrużeniem oka', funTitle:'Szacunki / Fun Stats', funDesc:'Zabawne statystyki populacyjne. Nie są pomiarami z urządzenia, danych zdrowotnych ani zachowania użytkownika.', dreams:'Sny', dreamsDetail:'3–5 snów/noc → użyto środka 4.', socks:'Zgubione skarpetki', socksDetail:'~15 skarpet/rok.', fridge:'Patrzenie do lodówki', fridgeDetail:'~10 godzin/rok.', clicks:'Kliknięcia myszką', clicksDetail:'~1,5 mln/rok dla pracownika biurowego.', food:'Zjedzone jedzenie', foodDetail:'~35 ton przez całe życie.', coffee:'Kawa', coffeeDetail:'~10 000 litrów przez całe życie.', kissing:'Pocałunki', kissingDetail:'~2 tygodnie przez całe życie.', pub:'Czas w pubach', pubDetail:'~1 rok przez całe życie.', shopping:'Zakupy', shoppingDetail:'~8,5 roku przez całe życie.', tv:'Telewizja', tvDetail:'~8 lat przez całe życie.', social:'Media społecznościowe', socialDetail:'~3 lata przez całe życie.', meals:'Posiłki', mealsDetail:'~80 000 posiłków do 70. roku życia.', funLegend:'Zabawne szacunki oparte na statystykach populacyjnych',
+      footerCore:'Core: czas + astronomia.', footerEstimate:'Szacunki / Fun Stats: średnie populacyjne i koncepcje ze źródła.', footerLocal:'Wszystkie obliczenia działają lokalnie w tym jednym pliku.',
+      tooltipLife:'Procent upływu czasu między datą urodzenia a wybranym celem długości życia.', tooltipAge:'Czas od urodzenia wyrażony w latach przy użyciu średniego roku tropikalnego 365,2425 dnia.', tooltipDaysLived:'Liczba dni, które upłynęły od początku daty urodzenia.', tooltipDaysLeft:'Liczba dni pozostałych do wybranego horyzontu życia.', tooltipWeeksLeft:'Pozostałe dni podzielone przez siedem.', tooltipDecade:'Postęp w bieżącym dziesięcioletnim przedziale wieku: 20, 30, 40 lat itd.', tooltipOrbits:'Przybliżona liczba pełnych obiegów Ziemi wokół Słońca od urodzenia, przy 365,2425 dnia na obieg.', tooltipSpace:'Ilustracyjny dystans: upływ czasu × 230 km/s, zgodnie z koncepcją źródłową.', tooltipMars:'Liczba dni ziemskich podzielona przez długość roku marsjańskiego (686,98 dnia ziemskiego).', tooltipSleep:'Ilustracyjny model zakładający około 1/3 życia we śnie.', tooltipWork:'Materiał podaje około 80 000 godzin pracy w karierze. Widok przelicza to na lata przy 40 h × 52 tygodnie.', tooltipFree:'Ilustracyjny model 70-letni po odjęciu 1/3 snu i 80 000 godzin pracy.', tooltipDreams:'Koncepcja źródłowa: 3–5 snów na noc; model używa średniej 4.', tooltipSocks:'Koncepcja źródłowa: około 15 skarpet rocznie.', tooltipFridge:'Koncepcja źródłowa: około 10 godzin rocznie przy otwartej lodówce.', tooltipClicks:'Koncepcja źródłowa: około 1,5 mln kliknięć myszką rocznie u pracownika biurowego.', tooltipFood:'Koncepcja źródłowa: około 35 ton jedzenia przez całe życie.', tooltipCoffee:'Koncepcja źródłowa: około 10 000 litrów kawy przez całe życie.', tooltipKissing:'Koncepcja źródłowa: około dwa tygodnie całowania w całym życiu.', tooltipPub:'Koncepcja źródłowa: około rok w barach i pubach w całym życiu.', tooltipShopping:'Koncepcja źródłowa: około 8,5 roku na zakupach.', tooltipTV:'Koncepcja źródłowa: ponad 8 lat oglądania telewizji.', tooltipSocial:'Koncepcja źródłowa: około 3 lata w mediach społecznościowych.', tooltipMeals:'Koncepcja źródłowa: około 80 000 posiłków do 70. roku życia.'
+    },
+    de: {
+      langName:'Deutsch', kicker:'Year Me Up · Lebensfortschritt', title:'Dein Leben, in Zahlen.', subtitle:'Die Hauptansicht wird aus Zeit und Astronomie berechnet. Bevölkerungsstatistiken sind bewusst als <strong>Schätzungen / Fun Stats</strong> getrennt.',
+      language:'Sprache', dob:'Geburtsdatum', lifespan:'Ziel-Lebensdauer (Jahre)', reference:'Bezugszeit', settingsNote:'Life Progress ist ein mathematisches Modell, keine Vorhersage der individuellen Lebenserwartung. Ändere das Ziel für einen anderen Horizont.',
+      coreBadge:'Core · Zeit', coreTitle:'Lebensfortschritt', coreDesc:'Grundmetriken, direkt aus Datum/Zeit berechnet. Für den Hauptfortschritt wird keine Bevölkerungsstatistik verwendet.', lifeProgress:'Lebensfortschritt', exactAge:'Genaues Alter', exactAgeMeta:'Vergangene Jahre seit der Geburt.', target:'Ziel', daysLived:'Gelebte Tage', daysLivedDetail:'Vergangene Kalendertage.', daysLeft:'Verbleibende Tage', daysLeftDetail:'Bis zum gewählten Horizont.', weeksLeft:'Verbleibende Wochen', weeksLeftDetail:'Verbleibende Tage ÷ 7.', decadePct:'Fortschritt des Jahrzehnts', coreLegend:'Zeitbasierte Kernmetriken', invalid:'Gib ein gültiges Geburtsdatum ein, um den Horizont zu berechnen.',
+      spaceBadge:'Kosmos · Astronomie', spaceTitle:'Kosmos', spaceDesc:'Astronomische Perspektiven auf dieselbe Lebenszeit. Dies sind Berechnungen, keine Bevölkerungsmittelwerte.', orbits:'Umrundungen der Sonne', orbitsDetail:'Eine Erdumlaufbahn ≈ ein Jahr.', spaceKm:'Zurückgelegte Strecke im All', spaceKmDetail:'Illustrative Strecke mit 230 km/s.', marsAge:'Alter auf dem Mars', marsAgeDetail:'Basierend auf einem Marsjahr ≈ 686,98 Erdtagen.', spaceLegend:'Astronomisch abgeleitete Ansichten',
+      estimateBadge:'Schätzung · Bevölkerung', estimateTitle:'Lebensschätzungen', estimateDesc:'Bevölkerungsdurchschnitte aus dem gelieferten Material. Diese Werte sind Schätzungen und klar von persönlichen Messwerten getrennt.', estimated:'SCHÄTZUNG', sleepYears:'Jahre im Schlaf', sleepYearsDetail:'Quelle: ungefähr 1/3 des Lebens wird schlafend verbracht.', workYears:'Arbeitszeit', workYearsDetail:'~80.000 Stunden während einer Berufslaufbahn.', freeYears:'Freizeit-Modell', freeYearsDetail:'Illustrativer Rest nach Schlaf und Arbeit im 70-Jahre-Modell.', estimateLegend:'Bevölkerungsschätzungen / Quellkonzepte',
+      funBadge:'Schätzung · spielerisch', funTitle:'Schätzungen / Fun Stats', funDesc:'Spielerische Bevölkerungsstatistiken. Keine Messwerte von Gerät, Gesundheitsdaten oder Verhalten.', dreams:'Träume', dreamsDetail:'3–5 Träume/Nacht → verwendet: 4.', socks:'Verlorene Socken', socksDetail:'~15 Socken/Jahr.', fridge:'In den Kühlschrank starren', fridgeDetail:'~10 Stunden/Jahr.', clicks:'Mausklicks', clicksDetail:'~1,5 Mio./Jahr für Büroangestellte.', food:'Gegessene Nahrung', foodDetail:'~35 Tonnen im Leben.', coffee:'Kaffee', coffeeDetail:'~10.000 Liter im Leben.', kissing:'Küssen', kissingDetail:'~2 Wochen im Leben.', pub:'Zeit im Pub', pubDetail:'~1 Jahr im Leben.', shopping:'Einkaufen', shoppingDetail:'~8,5 Jahre im Leben.', tv:'Fernsehen', tvDetail:'~8 Jahre im Leben.', social:'Social Media', socialDetail:'~3 Jahre im Leben.', meals:'Mahlzeiten', mealsDetail:'~80.000 Mahlzeiten bis 70.', funLegend:'Spielerische, populationsbasierte Schätzungen',
+      footerCore:'Core: Zeit + Astronomie.', footerEstimate:'Schätzungen / Fun Stats: Bevölkerungsmittelwerte und Quellkonzepte.', footerLocal:'Alle Berechnungen laufen lokal in dieser einen Datei.',
+      tooltipLife:'Prozentsatz der vergangenen Zeit zwischen Geburtsdatum und gewähltem Lebensziel.', tooltipAge:'Vergangene Zeit seit der Geburt, als Jahre mit 365,2425 Tagen pro mittlerem tropischem Jahr.', tooltipDaysLived:'Vergangene Tage seit Beginn des Geburtsdatums.', tooltipDaysLeft:'Verbleibende Tage bis zum gewählten Lebenshorizont.', tooltipWeeksLeft:'Verbleibende Tage geteilt durch sieben.', tooltipDecade:'Fortschritt innerhalb des aktuellen Zehnjahres-Altersbands: 20er, 30er, 40er usw.', tooltipOrbits:'Ungefähre Anzahl der Erdumläufe seit der Geburt, mit 365,2425 Tagen pro Umlauf.', tooltipSpace:'Illustrative Strecke: vergangene Zeit × 230 km/s, entsprechend der gelieferten Konzeption.', tooltipMars:'Vergangene Erdtage geteilt durch ein Marsjahr (686,98 Erdtage).', tooltipSleep:'Illustratives Modell mit ungefähr einem Drittel des Lebens im Schlaf.', tooltipWork:'Das Material nennt etwa 80.000 Arbeitsstunden. Die Anzeige wandelt dies mit 40 h × 52 Wochen in Jahre um.', tooltipFree:'Illustratives 70-Jahre-Modell nach Abzug von 1/3 Schlaf und 80.000 Arbeitsstunden.', tooltipDreams:'Quellkonzept: 3–5 Träume pro Nacht; das Modell verwendet 4.', tooltipSocks:'Quellkonzept: etwa 15 Socken pro Jahr.', tooltipFridge:'Quellkonzept: etwa 10 Stunden pro Jahr vor dem offenen Kühlschrank.', tooltipClicks:'Quellkonzept: etwa 1,5 Mio. Mausklicks pro Jahr für Büroangestellte.', tooltipFood:'Quellkonzept: etwa 35 Tonnen Nahrung im Leben.', tooltipCoffee:'Quellkonzept: etwa 10.000 Liter Kaffee im Leben.', tooltipKissing:'Quellkonzept: etwa zwei Wochen Küssen im Leben.', tooltipPub:'Quellkonzept: etwa ein Jahr in Bars und Pubs im Leben.', tooltipShopping:'Quellkonzept: etwa 8,5 Jahre Einkaufen.', tooltipTV:'Quellkonzept: mehr als 8 Jahre Fernsehen.', tooltipSocial:'Quellkonzept: etwa 3 Jahre soziale Medien.', tooltipMeals:'Quellkonzept: etwa 80.000 Mahlzeiten bis 70.'
+    },
+    fr: {
+      langName:'Français', kicker:'Year Me Up · Progression de vie', title:'Votre vie, en chiffres.', subtitle:'La couche principale est calculée à partir du temps et de l’astronomie. Les statistiques de population sont volontairement séparées dans <strong>Estimations / Fun Stats</strong>.',
+      language:'Langue', dob:'Date de naissance', lifespan:'Durée de vie cible (années)', reference:'Heure de référence', settingsNote:'Life Progress est un modèle mathématique, pas une prédiction de la durée de vie individuelle. Modifiez la cible pour explorer un autre horizon.',
+      coreBadge:'Core · temps', coreTitle:'Progression de vie', coreDesc:'Métriques principales calculées directement à partir de la date et de l’heure. Aucune statistique de population n’entre dans le calcul principal.', lifeProgress:'Progression de vie', exactAge:'Âge exact', exactAgeMeta:'Années écoulées depuis la naissance.', target:'Cible', daysLived:'Jours vécus', daysLivedDetail:'Jours calendaires écoulés.', daysLeft:'Jours restants', daysLeftDetail:'Jusqu’à l’horizon choisi.', weeksLeft:'Semaines restantes', weeksLeftDetail:'Jours restants ÷ 7.', decadePct:'Progression de la décennie', coreLegend:'Métriques basées sur le temps', invalid:'Saisissez une date de naissance valide pour calculer votre horizon.',
+      spaceBadge:'Espace · astronomie', spaceTitle:'Espace', spaceDesc:'Perspectives astronomiques sur la même durée de vie. Ce sont des calculs, pas des moyennes de population.', orbits:'Tours autour du Soleil', orbitsDetail:'Une orbite terrestre ≈ une année.', spaceKm:'Distance parcourue dans l’espace', spaceKmDetail:'Distance illustrative à 230 km/s.', marsAge:'Âge sur Mars', marsAgeDetail:'Basé sur une année martienne ≈ 686,98 jours terrestres.', spaceLegend:'Vues dérivées de l’astronomie',
+      estimateBadge:'Estimation · population', estimateTitle:'Estimations de vie', estimateDesc:'Concepts issus de moyennes de population présentes dans le matériau fourni. Ces valeurs sont des estimations, séparées des données personnelles mesurées.', estimated:'ESTIMATION', sleepYears:'Années de sommeil', sleepYearsDetail:'Concept source : environ 1/3 de la vie est consacré au sommeil.', workYears:'Temps de travail', workYearsDetail:'~80 000 heures sur une carrière.', freeYears:'Vue du temps libre', freeYearsDetail:'Reste illustratif après sommeil et travail dans un modèle de 70 ans.', estimateLegend:'Estimations de population / concepts source',
+      funBadge:'Estimation · ludique', funTitle:'Estimations / Fun Stats', funDesc:'Statistiques de population amusantes. Ce ne sont pas des mesures de votre appareil, de vos données de santé ou de votre comportement.', dreams:'Rêves', dreamsDetail:'3–5 rêves/nuit → moyenne utilisée : 4.', socks:'Chaussettes perdues', socksDetail:'~15 chaussettes/an.', fridge:'Regarder dans le réfrigérateur', fridgeDetail:'~10 heures/an.', clicks:'Clics de souris', clicksDetail:'~1,5 million/an pour un employé de bureau.', food:'Nourriture consommée', foodDetail:'~35 tonnes sur une vie.', coffee:'Café', coffeeDetail:'~10 000 litres sur une vie.', kissing:'Baisers', kissingDetail:'~2 semaines sur une vie.', pub:'Temps au pub', pubDetail:'~1 an sur une vie.', shopping:'Achats', shoppingDetail:'~8,5 ans sur une vie.', tv:'Télévision', tvDetail:'~8 ans sur une vie.', social:'Réseaux sociaux', socialDetail:'~3 ans sur une vie.', meals:'Repas', mealsDetail:'~80 000 repas jusqu’à 70 ans.', funLegend:'Estimations ludiques basées sur des statistiques de population',
+      footerCore:'Core : temps + astronomie.', footerEstimate:'Estimations / Fun Stats : moyennes de population et concepts source.', footerLocal:'Tous les calculs sont effectués localement dans ce fichier unique.',
+      tooltipLife:'Pourcentage du temps écoulé entre la date de naissance et la durée de vie cible.', tooltipAge:'Temps écoulé depuis la naissance exprimé en années avec une année tropicale moyenne de 365,2425 jours.', tooltipDaysLived:'Jours écoulés depuis le début de la date de naissance.', tooltipDaysLeft:'Jours restants jusqu’à l’horizon de vie choisi.', tooltipWeeksLeft:'Jours restants divisés par sept.', tooltipDecade:'Progression dans la tranche d’âge actuelle de dix ans : 20, 30, 40 ans, etc.', tooltipOrbits:'Nombre approximatif d’orbites terrestres depuis la naissance, avec 365,2425 jours par orbite.', tooltipSpace:'Distance illustrative : temps écoulé × 230 km/s, selon la conception fournie.', tooltipMars:'Nombre de jours terrestres écoulés divisé par une année martienne (686,98 jours terrestres).', tooltipSleep:'Modèle illustratif utilisant environ un tiers de la vie consacré au sommeil.', tooltipWork:'Le matériau fourni indique environ 80 000 heures de travail. La valeur est convertie en années avec 40 h × 52 semaines.', tooltipFree:'Modèle illustratif de 70 ans après retrait d’un tiers de sommeil et de 80 000 heures de travail.', tooltipDreams:'Concept source : 3–5 rêves par nuit ; le modèle utilise 4.', tooltipSocks:'Concept source : environ 15 chaussettes par an.', tooltipFridge:'Concept source : environ 10 heures par an devant un réfrigérateur ouvert.', tooltipClicks:'Concept source : environ 1,5 million de clics de souris par an pour un employé de bureau.', tooltipFood:'Concept source : environ 35 tonnes de nourriture sur une vie.', tooltipCoffee:'Concept source : environ 10 000 litres de café sur une vie.', tooltipKissing:'Concept source : environ deux semaines de baisers sur une vie.', tooltipPub:'Concept source : environ un an dans les bars et pubs sur une vie.', tooltipShopping:'Concept source : environ 8,5 ans consacrés aux achats.', tooltipTV:'Concept source : plus de 8 ans devant la télévision.', tooltipSocial:'Concept source : environ 3 ans sur les réseaux sociaux.', tooltipMeals:'Concept source : environ 80 000 repas jusqu’à 70 ans.'
+    },
+    es: {
+      langName:'Español', kicker:'Year Me Up · Progreso de vida', title:'Tu vida, en números.', subtitle:'La capa principal se calcula a partir del tiempo y la astronomía. Las estadísticas de población están separadas deliberadamente como <strong>Estimaciones / Fun Stats</strong>.',
+      language:'Idioma', dob:'Fecha de nacimiento', lifespan:'Objetivo de duración de vida (años)', reference:'Hora de referencia', settingsNote:'Life Progress es un modelo matemático, no una predicción de la duración de vida individual. Cambia el objetivo para explorar otro horizonte.',
+      coreBadge:'Core · tiempo', coreTitle:'Progreso de vida', coreDesc:'Métricas principales derivadas directamente de fecha/hora. Ninguna estadística poblacional se usa para el cálculo principal.', lifeProgress:'Progreso de vida', exactAge:'Edad exacta', exactAgeMeta:'Años transcurridos desde el nacimiento.', target:'Objetivo', daysLived:'Días vividos', daysLivedDetail:'Días naturales transcurridos.', daysLeft:'Días restantes', daysLeftDetail:'Hasta el horizonte seleccionado.', weeksLeft:'Semanas restantes', weeksLeftDetail:'Días restantes ÷ 7.', decadePct:'Progreso de la década', coreLegend:'Métricas basadas en el tiempo', invalid:'Introduce una fecha de nacimiento válida para calcular el horizonte.',
+      spaceBadge:'Espacio · astronomía', spaceTitle:'Espacio', spaceDesc:'Perspectivas astronómicas de la misma vida. Son cálculos, no medias de población.', orbits:'Vueltas alrededor del Sol', orbitsDetail:'Una órbita terrestre ≈ un año.', spaceKm:'Distancia recorrida por el espacio', spaceKmDetail:'Distancia ilustrativa a 230 km/s.', marsAge:'Edad en Marte', marsAgeDetail:'Basada en un año marciano ≈ 686,98 días terrestres.', spaceLegend:'Vistas derivadas de la astronomía',
+      estimateBadge:'Estimación · población', estimateTitle:'Estimaciones de vida', estimateDesc:'Conceptos basados en medias poblacionales del material proporcionado. Son estimaciones, separadas de los datos personales medidos.', estimated:'ESTIMACIÓN', sleepYears:'Años dormidos', sleepYearsDetail:'Concepto fuente: aproximadamente 1/3 de la vida se pasa durmiendo.', workYears:'Tiempo de trabajo', workYearsDetail:'~80.000 horas durante una carrera profesional.', freeYears:'Vista del tiempo libre', freeYearsDetail:'Resto ilustrativo después de sueño y trabajo en un modelo de 70 años.', estimateLegend:'Medias poblacionales estimadas / conceptos fuente',
+      funBadge:'Estimación · divertida', funTitle:'Estimaciones / Fun Stats', funDesc:'Estadísticas poblacionales divertidas. No son mediciones del dispositivo, datos de salud ni comportamiento personal.', dreams:'Sueños', dreamsDetail:'3–5 sueños/noche → se usa el punto medio: 4.', socks:'Calcetines perdidos', socksDetail:'~15 calcetines/año.', fridge:'Mirar dentro de la nevera', fridgeDetail:'~10 horas/año.', clicks:'Clics del ratón', clicksDetail:'~1,5 millones/año para un trabajador de oficina.', food:'Comida ingerida', foodDetail:'~35 toneladas a lo largo de la vida.', coffee:'Café', coffeeDetail:'~10.000 litros a lo largo de la vida.', kissing:'Besos', kissingDetail:'~2 semanas a lo largo de la vida.', pub:'Tiempo en pubs', pubDetail:'~1 año a lo largo de la vida.', shopping:'Compras', shoppingDetail:'~8,5 años a lo largo de la vida.', tv:'Televisión', tvDetail:'~8 años a lo largo de la vida.', social:'Redes sociales', socialDetail:'~3 años a lo largo de la vida.', meals:'Comidas', mealsDetail:'~80.000 comidas hasta los 70 años.', funLegend:'Estimaciones divertidas basadas en estadísticas poblacionales',
+      footerCore:'Core: tiempo + astronomía.', footerEstimate:'Estimaciones / Fun Stats: medias poblacionales y conceptos fuente.', footerLocal:'Todos los cálculos se ejecutan localmente en este único archivo.',
+      tooltipLife:'Porcentaje del tiempo transcurrido entre la fecha de nacimiento y el objetivo de duración de vida.', tooltipAge:'Tiempo transcurrido desde el nacimiento expresado en años usando un año tropical medio de 365,2425 días.', tooltipDaysLived:'Días transcurridos desde el inicio de la fecha de nacimiento.', tooltipDaysLeft:'Días restantes hasta el horizonte de vida seleccionado.', tooltipWeeksLeft:'Días restantes divididos por siete.', tooltipDecade:'Progreso dentro de la franja de diez años actual: 20, 30, 40 años, etc.', tooltipOrbits:'Número aproximado de órbitas terrestres completadas desde el nacimiento, usando 365,2425 días por órbita.', tooltipSpace:'Distancia ilustrativa: tiempo transcurrido × 230 km/s, según el concepto suministrado.', tooltipMars:'Días terrestres transcurridos divididos por un año marciano (686,98 días terrestres).', tooltipSleep:'Modelo ilustrativo que usa aproximadamente un tercio de la vida dedicado al sueño.', tooltipWork:'El material indica unas 80.000 horas de trabajo. Se convierten a años usando 40 h × 52 semanas.', tooltipFree:'Modelo ilustrativo de 70 años después de restar un tercio de sueño y 80.000 horas de trabajo.', tooltipDreams:'Concepto fuente: 3–5 sueños por noche; el modelo usa 4.', tooltipSocks:'Concepto fuente: unos 15 calcetines al año.', tooltipFridge:'Concepto fuente: unas 10 horas al año mirando una nevera abierta.', tooltipClicks:'Concepto fuente: unos 1,5 millones de clics de ratón al año para un trabajador de oficina.', tooltipFood:'Concepto fuente: unas 35 toneladas de comida a lo largo de la vida.', tooltipCoffee:'Concepto fuente: unos 10.000 litros de café a lo largo de la vida.', tooltipKissing:'Concepto fuente: unas dos semanas besándose a lo largo de la vida.', tooltipPub:'Concepto fuente: alrededor de un año en bares y pubs a lo largo de la vida.', tooltipShopping:'Concepto fuente: unos 8,5 años haciendo compras.', tooltipTV:'Concepto fuente: más de 8 años viendo televisión.', tooltipSocial:'Concepto fuente: unos 3 años en redes sociales.', tooltipMeals:'Concepto fuente: unas 80.000 comidas hasta los 70 años.'
     }
+  };
 
-    // Update year UI
-    const fillEl = document.getElementById('fill');
-    const pctEl = document.getElementById('percent');
-    const srEl = document.getElementById('sr');
-    const infoEl = document.getElementById('info');
-    const metaYear = document.getElementById('meta-year');
-    const input = document.getElementById('date');
-    const btnToday = document.getElementById('use-today');
-    const barTitleEl = document.getElementById('bar-title');
+  const textMap = {
+    kicker:'kicker',pageTitle:'title',languageLabel:'language',dobLabel:'dob',lifespanLabel:'lifespan',referenceLabel:'reference',settingsNote:'settingsNote',
+    coreBadge:'coreBadge',coreTitle:'coreTitle',coreDesc:'coreDesc',lifePctLabel:'lifeProgress',exactAgeLabel:'exactAge',exactAgeMeta:'exactAgeMeta',targetLabel:'target',daysLivedLabel:'daysLived',daysLivedDetail:'daysLivedDetail',daysLeftLabel:'daysLeft',daysLeftDetail:'daysLeftDetail',weeksLeftLabel:'weeksLeft',weeksLeftDetail:'weeksLeftDetail',decadePctLabel:'decadePct',coreLegend:'coreLegend',
+    spaceBadge:'spaceBadge',spaceTitle:'spaceTitle',spaceDesc:'spaceDesc',orbitsLabel:'orbits',orbitsDetail:'orbitsDetail',spaceKmLabel:'spaceKm',spaceKmDetail:'spaceKmDetail',marsAgeLabel:'marsAge',marsAgeDetail:'marsAgeDetail',spaceLegend:'spaceLegend',
+    estimateBadge:'estimateBadge',estimateTitle:'estimateTitle',estimateDesc:'estimateDesc',estimatedTag1:'estimated',estimatedTag2:'estimated',estimatedTag3:'estimated',sleepYearsLabel:'sleepYears',sleepYearsDetail:'sleepYearsDetail',workYearsLabel:'workYears',workYearsDetail:'workYearsDetail',freeYearsLabel:'freeYears',freeYearsDetail:'freeYearsDetail',estimateLegend:'estimateLegend',
+    funBadge:'funBadge',funTitle:'funTitle',funDesc:'funDesc',dreamsLabel:'dreams',dreamsDetail:'dreamsDetail',socksLabel:'socks',socksDetail:'socksDetail',fridgeLabel:'fridge',fridgeDetail:'fridgeDetail',clicksLabel:'clicks',clicksDetail:'clicksDetail',foodLabel:'food',foodDetail:'foodDetail',coffeeLabel:'coffee',coffeeDetail:'coffeeDetail',kissingLabel:'kissing',kissingDetail:'kissingDetail',pubLabel:'pub',pubDetail:'pubDetail',shoppingLabel:'shopping',shoppingDetail:'shoppingDetail',tvLabel:'tv',tvDetail:'tvDetail',socialLabel:'social',socialDetail:'socialDetail',mealsLabel:'meals',mealsDetail:'mealsDetail',funLegend:'funLegend',
+    footerCore:'footerCore',footerEstimate:'footerEstimate',footerLocal:'footerLocal'
+  };
 
-    function updateYear(date) {
-        const pct = yearProgressPercent(date);
-        fillEl.style.width = pct.toFixed(2) + '%';
-        pctEl.textContent = pct.toFixed(2) + '%';
-        srEl.textContent = `Elapsed ${pct.toFixed(2)}% of year ${date.getUTCFullYear()}.`;
-        barTitleEl.textContent = `${date.getUTCFullYear()} Progress Bar`;
-        infoEl.textContent = `Calculated for: ${date.toISOString().slice(0, 10)} (UTC)`;
-        metaYear.textContent = '';
-        document.getElementById('year-label').textContent = `${LABELS.yearLabelPrefix} ${date.getUTCFullYear()}`;
-    }
+  const tooltipMap = {
+    lifePctLabel:'tooltipLife',exactAgeLabel:'tooltipAge',daysLivedLabel:'tooltipDaysLived',daysLeftLabel:'tooltipDaysLeft',weeksLeftLabel:'tooltipWeeksLeft',decadePctLabel:'tooltipDecade',
+    orbitsLabel:'tooltipOrbits',spaceKmLabel:'tooltipSpace',marsAgeLabel:'tooltipMars',sleepYearsLabel:'tooltipSleep',workYearsLabel:'tooltipWork',freeYearsLabel:'tooltipFree',
+    dreamsLabel:'tooltipDreams',socksLabel:'tooltipSocks',fridgeLabel:'tooltipFridge',clicksLabel:'tooltipClicks',foodLabel:'tooltipFood',coffeeLabel:'tooltipCoffee',kissingLabel:'tooltipKissing',pubLabel:'tooltipPub',shoppingLabel:'tooltipShopping',tvLabel:'tooltipTV',socialLabel:'tooltipSocial',mealsLabel:'tooltipMeals'
+  };
 
-    input.addEventListener('input', () => {
-        if (!input.value) return;
-        const [y, m, d] = input.value.split('-').map(Number);
-        updateYear(toUTCDate(y, m - 1, d));
+  const fmt = (n,d=0) => new Intl.NumberFormat(currentLang,{maximumFractionDigits:d,minimumFractionDigits:d}).format(n);
+  const compact = n => new Intl.NumberFormat(currentLang,{notation:'compact',maximumFractionDigits:2}).format(n);
+  const set = (id,value) => { const el=$(id); if(el) el.textContent=value; };
+  const setHTML = (id,value) => { const el=$(id); if(el) el.innerHTML=value; };
+  let currentLang = 'en';
+
+  function dateFromLocalInput(v){ if(!v) return null; const d=new Date(v); return Number.isNaN(d.getTime())?null:d; }
+  function dateFromDateInput(v){ if(!v) return null; const [y,m,day]=v.split('-').map(Number); if(!y||!m||!day)return null; return new Date(y,m-1,day,0,0,0,0); }
+  function clamp(v,a,b){ return Math.min(b,Math.max(a,v)); }
+  function localeDate(d){ return new Intl.DateTimeFormat(currentLang,{year:'numeric',month:'long',day:'numeric'}).format(d); }
+
+  function applyLanguage(lang){
+    currentLang = dictionaries[lang] ? lang : 'en';
+    const t=dictionaries[currentLang];
+    document.documentElement.lang=currentLang;
+    document.title=`${t.title.replace(/[.!?]$/,'')} — Year Me Up`;
+    Object.entries(textMap).forEach(([id,key])=>{
+      if(id==='pageTitle'||id==='kicker') set(id,t[key]);
+      else setHTML(id,t[key]);
     });
+    Object.entries(tooltipMap).forEach(([id,key])=>{
+      const info=$(id)?.querySelector('.info'); if(info) info.setAttribute('data-tip',t[key]);
+    });
+    $('invalidText')?.remove();
+    language.value=currentLang;
+    update();
+  }
 
-    btnToday.addEventListener('click', () => updateYear(new Date()));
+  function update(){
+    const birth=dateFromDateInput($('dob').value);
+    const ref=dateFromLocalInput(reference.value)||new Date();
+    const targetYears=Math.max(1,parseFloat($('lifespan').value)||80);
+    set('targetYears',`${fmt(targetYears,1)} ${dictionaries[currentLang].langName==='Polski'?'lat':'years'}`);
 
-    // Life progress
-    const EXPECTANCY = {M: 74.93, K: 82.26};
-
-    function lifeProgress(dobUTC, sex, ref = new Date()) {
-        const expectancyYears = EXPECTANCY[sex] || EXPECTANCY.M;
-        const totalMs = expectancyYears * 365.2425 * DAY_MS;
-        const endMs = dobUTC.getTime() + totalMs;
-        const nowUTC = new Date(Date.UTC(
-            ref.getUTCFullYear(), ref.getUTCMonth(), ref.getUTCDate() + 1
-        ));
-        const elapsedMs = Math.max(0, nowUTC - dobUTC);
-        const pct = (elapsedMs / totalMs) * 100;
-        const ageYears = elapsedMs / (365.2425 * DAY_MS);
-        const leftYears = Math.max(0, expectancyYears - ageYears);
-        return {pct, ageYears, leftYears, expectedEndDate: new Date(endMs), refUTC: nowUTC};
+    if(!birth || ref<=birth){
+      ['lifePct','ageYears','daysLived','daysLeft','weeksLeft','decadePct','orbits','spaceKm','marsAge','sleepYears','workYears','freeYears','dreams','socks','fridge','clicks','food','coffee','kissing','pub','shopping','tv','social','meals'].forEach(id=>set(id,'—'));
+      $('lifeBar').style.width='0%';
+      set('lifeRange',dictionaries[currentLang].invalid);set('decadeDetail','—');return;
     }
 
-    const lifeFill = document.getElementById('life-fill');
-    const lifePct = document.getElementById('life-percent');
-    const lifeSr = document.getElementById('life-sr');
-    const lifeInfo = document.getElementById('life-info');
-    const lifeMeta = document.getElementById('life-meta');
-    const dobInput = document.getElementById('dob');
-    const sexSelect = document.getElementById('sex');
-    const lifeTodayBtn = document.getElementById('life-today');
-    const lifeOver = document.getElementById('life-over');
-    const lifeBar = document.getElementById('life-bar');
-    const lifeTitleEl = document.getElementById('life-title');
+    const elapsedMs=ref-birth; const elapsedDays=elapsedMs/DAY_MS; const targetMs=targetYears*YEAR_DAYS*DAY_MS;
+    const lifeProgress=clamp(elapsedMs/targetMs,0,1); const ageYears=elapsedDays/YEAR_DAYS; const daysTarget=targetYears*YEAR_DAYS;
+    const daysLeft=Math.max(0,daysTarget-elapsedDays); const weeksLeft=daysLeft/7;
 
-    function updateLife() {
-        if (!dobInput.value) return;
-        const [y, m, d] = dobInput.value.split('-').map(Number);
-        const dobUTC = toUTCDate(y, m - 1, d);
-        const {pct, ageYears, leftYears, expectedEndDate, refUTC} = lifeProgress(dobUTC, sexSelect.value);
+    set('lifePct',`${fmt(lifeProgress*100,2)}%`);set('ageYears',fmt(ageYears,2));set('daysLived',fmt(Math.floor(elapsedDays)));set('daysLeft',fmt(Math.ceil(daysLeft)));set('weeksLeft',fmt(weeksLeft,1));
+    set('lifeRange',`${localeDate(birth)} → ${localeDate(new Date(birth.getTime()+targetMs))}`);$('lifeBar').style.width=`${lifeProgress*100}%`;
 
-        if (pct <= 100) {
-            lifeBar.style.flex = '1 1 auto';
-            lifeFill.style.width = pct.toFixed(2) + '%';
-            lifeOver.style.width = '0px';
-        } else {
-            const container = lifeBar.parentElement;
-            const base = container.clientWidth - lifePct.offsetWidth - 12;
-            const desired = Math.max(0, base * (pct / 100));
-            lifeBar.style.flex = `0 0 ${desired}px`;
-            lifeBar.style.width = desired + 'px';
-            lifeFill.style.width = '100%';
-            lifeOver.style.width = '0px';
-        }
+    const decadeStartAge=Math.floor(ageYears/10)*10; const decadeProgress=clamp((ageYears-decadeStartAge)/10,0,1);
+    const decadeWord={en:'decade',pl:'dekada',de:'Jahrzehnt',fr:'décennie',es:'década'}[currentLang];
+    set('decadePct',`${fmt(decadeProgress*100,1)}%`); set('decadeDetail',`${decadeStartAge}s · ${fmt(10-(ageYears-decadeStartAge),2)} ${dictionaries[currentLang].langName==='Polski'?'lat pozostało':'years remaining'}`);
 
-        lifePct.textContent = pct.toFixed(2) + '%';
-        lifeSr.textContent = `Elapsed ${pct.toFixed(2)}% of expected life.`;
-        lifeTitleEl.textContent = `Life Progress Bar — ${sexSelect.value === 'M' ? 'Male' : 'Female'}`;
-        lifeInfo.textContent = `As of: ${refUTC.toISOString().slice(0, 10)} (UTC)`;
-        lifeMeta.textContent =
-            `Age: ${ageYears.toFixed(2)} years • Remaining ~${leftYears.toFixed(2)} years • Est. end: ${expectedEndDate.toISOString().slice(0, 10)} (UTC)`;
-    }
+    const solarOrbits=elapsedDays/YEAR_DAYS; const spaceKm=elapsedMs/1000*KM_PER_SEC; const marsAge=elapsedDays/MARS_YEAR_DAYS;
+    set('orbits',fmt(solarOrbits,2));set('spaceKm',`${compact(spaceKm)} km`);set('marsAge',fmt(marsAge,2));
 
-    dobInput.addEventListener('input', updateLife);
-    sexSelect.addEventListener('change', updateLife);
-    lifeTodayBtn.addEventListener('click', updateLife);
-    window.addEventListener('resize', updateLife);
+    const sleep=ageYears/3; const careerHours=80000; const careerYears=careerHours/(40*52); const freeYears=Math.max(0,70-(70/3)-careerYears);
+    set('sleepYears',`${fmt(sleep,2)} y`);set('workYears',`${fmt(Math.min(careerYears,ageYears),2)} y`);set('freeYears',`${fmt(freeYears,1)} y / 70`);
 
-    (function init() {
-        const now = new Date();
-        updateYear(now);
-        input.value = now.toISOString().slice(0, 10);
+    set('dreams',compact(ageYears*365.2425*4));set('socks',compact(ageYears*15));set('fridge',`${fmt(ageYears*10,1)} h`);set('clicks',compact(ageYears*1500000));
+    set('food',`${fmt(35*lifeProgress,1)} t`);set('coffee',`${fmt(10000*lifeProgress,0)} L`);set('kissing',`${fmt(14*lifeProgress,1)} d`);set('pub',`${fmt(365*lifeProgress,0)} d`);set('shopping',`${fmt(8.5*lifeProgress,2)} y`);set('tv',`${fmt(8*lifeProgress,2)} y`);set('social',`${fmt(3*lifeProgress,2)} y`);set('meals',compact(Math.min(80000,(ageYears/70)*80000)));
+  }
 
-        const hint = new Date();
-        hint.setUTCFullYear(hint.getUTCFullYear() - 50);
-        dobInput.value = hint.toISOString().slice(0, 10);
-        updateLife();
+  language.addEventListener('change',()=>{ localStorage.setItem('ymu-life-progress-language',language.value); applyLanguage(language.value); });
+  ['dob','lifespan','reference'].forEach(id=>$(id).addEventListener('input',update));
 
-        const labelMap = {
-            'label-dob': 'dob',
-            'label-sex': 'sex',
-            'life-title': 'lifeTitle',
-            'year-progress-title': 'yearProgressTitle',
-            'label-date': 'dateLabel',
-            'use-today': 'useToday',
-            'label-life-estimated': 'lifeLabel',
-            'label-life-strip': 'lifeStrip',
-            'life-today': 'useTodayLife'
-        };
-        for (const [id, key] of Object.entries(labelMap)) {
-            document.getElementById(id).textContent = LABELS[key];
-        }
-        document.getElementById('year-label').textContent = `${LABELS.yearLabelPrefix} ${now.getUTCFullYear()}`;
-    })();
+  const saved=localStorage.getItem('ymu-life-progress-language');
+  applyLanguage(saved && dictionaries[saved] ? saved : 'en');
+  setInterval(()=>{
+    const active=document.activeElement===reference;
+    if(!active){ const d=new Date(); reference.value=localISO(d); }
+    update();
+  },1000);
+})();
 </script>
-<br>
-<hr>
-
 </body>
 </html>
