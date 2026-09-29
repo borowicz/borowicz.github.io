@@ -39,9 +39,8 @@
         body {
             margin: 0;
             color: var(--text);
-            background:
-                    radial-gradient(circle at 85% 8%, rgba(13, 114, 101, .08), transparent 28rem),
-                    var(--bg);
+            background: radial-gradient(circle at 85% 8%, rgba(13, 114, 101, .08), transparent 28rem),
+            var(--bg);
             font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display",
             "SF Pro Text", Inter, Segoe UI, Helvetica, Arial, sans-serif;
         }
@@ -530,6 +529,7 @@
             object-fit: contain !important;
             vertical-align: middle;
         }
+
         img.app-store-badge {
             width: 180px !important;
             min-width: 120px !important;
@@ -659,6 +659,7 @@
                 <div class="actions">
                     <a class="button primary" href="#about">Learn more</a>
                     <a class="button secondary" href="#files">See supported files</a>
+                    <a class="button primary" href="https://apps.apple.com/us/app/readme-aloud/id6808113903">App Store</a>
                 </div>
             </div>
 
@@ -721,22 +722,25 @@
 
             </div>
 
-            <br />
+            <br/>
             <div class="grid-3 appstore-grid">
                 <article class="card">
                     <h3>MacOS</h3>
-                    <p><img class="app-store-badge" src="assets/apple-icon.svg" alt="App Store"></p>
-                    <a href="https://apps.apple.com/app/readme-aloud/id6808113903" target="_blank"><span class="coming-soon">available in the App Store</span></a>
+                    <a href="https://apps.apple.com/app/readme-aloud/id6808113903" target="_blank">
+                        <p><img class="app-store-badge" src="assets/apple-icon.svg" alt="App Store"></p>
+                        <span class="coming-soon">available in the App Store</span></a>
                 </article>
                 <article class="card">
                     <h3>iPhone</h3>
-                    <p><img class="app-store-badge" src="assets/apple-icon-white.svg" alt="App Store"></p>
-                    <span class="coming-soon">Coming soon</span>
+                    <a href="https://apps.apple.com/app/readme-aloud/id6808113903" target="_blank">
+                        <p><img class="app-store-badge" src="assets/apple-icon-white.svg" alt="App Store"></p>
+                        <span class="coming-soon">available in the App Store</span></a>
                 </article>
                 <article class="card">
                     <h3>iPad</h3>
-                    <p><img class="app-store-badge" src="assets/apple-icon-white.svg" alt="App Store"></p>
-                    <span class="coming-soon">Coming soon</span>
+                    <a href="https://apps.apple.com/app/readme-aloud/id6808113903" target="_blank">
+                        <p><img class="app-store-badge" src="assets/apple-icon.svg" alt="App Store"></p>
+                        <span class="coming-soon">available in the App Store</span></a>
                 </article>
             </div>
         </div>
@@ -816,12 +820,14 @@
                 <button
                         type="button"
                         data-prev
-                        aria-label="Previous screenshot">‹</button>
+                        aria-label="Previous screenshot">‹
+                </button>
 
                 <button
                         type="button"
                         data-next
-                        aria-label="Next screenshot">›</button>
+                        aria-label="Next screenshot">›
+                </button>
             </div>
 
             <div
@@ -878,19 +884,26 @@
             </div>
 
             <div class="card">
-                <strong>Polish websites with free ebooks:</strong><br />
-                <a href="https://wolnelektury.pl/" target="_blank" rel="noopener noreferrer">Wolne Lektury - wolnelektury.pl</a><br />
-                <a href="https://polona.pl/" target="_blank" rel="noopener noreferrer">Polona (National Digital Library) - polona.pl</a><br />
-                <a href="https://pl.wikisource.org/" target="_blank" rel="noopener noreferrer">Wikisource (Polish edition) - pl.wikisource.org</a><br />
-                <a href="https://chmuraczytania.pl/" target="_blank" rel="noopener noreferrer">Chmura Czytania - chmuraczytania.pl</a>
+                <strong>Polish websites with free ebooks:</strong><br/>
+                <a href="https://wolnelektury.pl/" target="_blank" rel="noopener noreferrer">Wolne Lektury -
+                    wolnelektury.pl</a><br/>
+                <a href="https://polona.pl/" target="_blank" rel="noopener noreferrer">Polona (National Digital Library)
+                    - polona.pl</a><br/>
+                <a href="https://pl.wikisource.org/" target="_blank" rel="noopener noreferrer">Wikisource (Polish
+                    edition) - pl.wikisource.org</a><br/>
+                <a href="https://chmuraczytania.pl/" target="_blank" rel="noopener noreferrer">Chmura Czytania -
+                    chmuraczytania.pl</a>
             </div>
 
             <div class="card">
-                <strong>English-language websites:</strong><br />
-                <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg - gutenberg.org</a><br />
-                <a href="https://standardebooks.org/" target="_blank" rel="noopener noreferrer">Standard Ebooks - standardebooks.org</a><br />
-                <a href="https://manybooks.net/" target="_blank" rel="noopener noreferrer">ManyBooks - manybooks.net</a><br />
-                <a href="https://openlibrary.org/" target="_blank" rel="noopener noreferrer">Open Library - openlibrary.org</a>
+                <strong>English-language websites:</strong><br/>
+                <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">Project Gutenberg -
+                    gutenberg.org</a><br/>
+                <a href="https://standardebooks.org/" target="_blank" rel="noopener noreferrer">Standard Ebooks -
+                    standardebooks.org</a><br/>
+                <a href="https://manybooks.net/" target="_blank" rel="noopener noreferrer">ManyBooks - manybooks.net</a><br/>
+                <a href="https://openlibrary.org/" target="_blank" rel="noopener noreferrer">Open Library -
+                    openlibrary.org</a>
             </div>
         </div>
     </section>
@@ -957,21 +970,21 @@
                 </p>
 
                 <div class="actions">
-<!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
+                    <!-- Replace these href values with your real App Store / GitHub URLs before launch. -->
 
-<a
-class="button primary"
-href="#"
-aria-label="App Store link">
-App Store — coming soon
-</a>
+                    <a
+                            class="button primary"
+                            href="https://apps.apple.com/us/app/readme-aloud/id6808113903"
+                            aria-label="App Store link">
+                        Available in App Store (MacOS, iPhone, iPad)
+                    </a>
 
-<!--                    <a-->
-<!--                            class="button secondary"-->
-<!--                            href="https://github.com/"-->
-<!--                            rel="noopener">-->
-<!--                        GitHub-->
-<!--                    </a>-->
+                    <!--                    <a-->
+                    <!--                            class="button secondary"-->
+                    <!--                            href="https://github.com/"-->
+                    <!--                            rel="noopener">-->
+                    <!--                        GitHub-->
+                    <!--                    </a>-->
                 </div>
 
             </div>
