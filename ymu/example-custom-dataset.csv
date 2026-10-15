@@ -1,0 +1,13 @@
+date,everyYear,description
+01-15,true,DEMO: Personal milestone
+02-02,true,DEMO: Project planning day
+03-17,true,DEMO: Spring check-in
+04-22,true,DEMO: Reading day
+06-05,true,DEMO: Summer goals review
+07-01,true,DEMO: Midyear review
+09-15,true,DEMO: Autumn reset
+10-14,true,DEMO: Custom dataset day
+11-20,true,DEMO: Winter planning
+12-31,true,DEMO: Year-end review
+2026-11-05,false,DEMO: One-time reminder 2026
+2027-02-18,false,DEMO: One-time reminder 2027
