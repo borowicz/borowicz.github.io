@@ -29,61 +29,59 @@
 </head>
 <body>
   <h1>Privacy Policy — Year Me Up</h1>
-  <p class="updated">Last updated: 14 October 2026</p>
+  <p class="updated">Last updated: 15 October 2026</p>
 
-  <p>Year Me Up (“the App”) is a widget-first app for macOS, iPhone, and iPad. It does not require an account. It does not track you, does not sell your data, and does not send your personal data to a developer-operated server.</p>
+  <p>Year Me Up (“the App”) is a native app for macOS, iPhone, and iPad. It does not require an account and does not operate a developer server for collecting your personal data. The App does not use advertising or third-party analytics, does not track you across other companies’ apps or websites, and does not sell personal data.</p>
 
-  <p>This policy describes what data the App can access, where that data stays, and when any data is sent to Apple.</p>
+  <p>This policy explains what information the App accesses, how the App stores it, and when information may be sent to Apple services. The App does not provide its own cloud synchronisation service.</p>
 
-  <h2>Data that stays on your device</h2>
-  <p>The following data is read or stored only on your device (and in the shared App Group used by the App and its widgets). It is not uploaded to a developer server:</p>
+  <h2>Information stored on your device</h2>
+  <p>The App stores its settings, widget configurations, prepared widget data, and user-created content locally, including in the shared App Group used by the App and its widgets. The App does not send the following content to a developer-operated server:</p>
   <ul>
-    <li><strong>Calendar events</strong> — read only after you turn on Calendar integration and explicitly allow Calendar access. Used to prepare widget snapshots on your device. Events are not uploaded and are not used for tracking.</li>
-    <li><strong>Contact names and birthdays</strong> — read only after you allow Contacts access and turn on contact birthdays. Used only for widgets. Contacts are not uploaded and are not used for tracking.</li>
-    <li><strong>Custom photos</strong> — imported only when you select them with the system Photos picker or a file you choose. Images are re-encoded without GPS or EXIF metadata and stored in the App Group so widgets can display them. The App does not request full photo-library access.</li>
-    <li><strong>Settings, widget configurations, and other app data</strong> — stored locally and in the App Group. Widgets read prepared snapshots only; they never request Calendar, Contacts, or Location permission themselves.</li>
+    <li><strong>Calendar events</strong> — read only when you enable calendar integration and grant Calendar permission. They are used to prepare calendar-related information on your device.</li>
+    <li><strong>Contact names and birthdays</strong> — read only when you grant Contacts permission and enable contact birthdays. They are used to prepare relevant information on your device.</li>
+    <li><strong>Custom dates and events</strong> — events you create or import from a CSV file are stored locally in the App Group for use by the App and supported widgets. You can export your custom event list to CSV or clear that list in Dates &amp; Events settings. The App does not upload the CSV or event list.</li>
+    <li><strong>Custom photos and backgrounds</strong> — images are imported only when you explicitly select them through the system photo picker or a file-selection interface. The App processes selected images for use as backgrounds and re-encodes them without carrying over the source image’s EXIF/GPS metadata. The resulting images are stored locally in the App Group and can be removed through the relevant photo/background controls.</li>
+    <li><strong>Settings and widget snapshots</strong> — preferences, widget configuration, and prepared data are stored locally so the App and widgets can display your chosen content.</li>
   </ul>
-  <p>All of the above remains available to you after a trial ends or if you delete the App (subject to normal iOS/macOS behavior). You can manage or remove retained photos and settings inside the App.</p>
 
-  <h2>Location</h2>
-  <p>Location is used only after you turn on “current location” and explicitly allow Location access.</p>
-  <ul>
-    <li>Sunrise and sunset times are calculated on your device.</li>
-    <li>When you enable current location, the App may send your location to Apple WeatherKit to request local weather. This is a request to Apple, not to a Year Me Up server.</li>
-    <li>Manual place search uses Apple’s geocoding service and does not require Location Services permission.</li>
-  </ul>
-  <p>Location is not used for tracking, advertising, or profiling. The App does not request Always-location permission.</p>
+  <h2>Retention and deletion</h2>
+  <p>Expiry of the 14-day trial does not, by itself, mean that your locally stored settings, custom events, or photos are deleted. You can remove custom events and custom photos using the controls provided by the App. Exported CSV files are saved to a destination you choose; if you later share or save a file outside the App, that copy is subject to the destination service or recipient’s practices.</p>
+  <p>Deleting the App may remove locally stored App data. Do not rely on uninstalling the App as a way to preserve or export your information. Export any custom events you want to keep before uninstalling. If you have enabled device backups, operating-system backup settings and Apple’s handling of backups also apply.</p>
 
-  <h2>Apple services</h2>
-  <p>The App uses the following Apple services:</p>
+  <h2>Location, place search, and weather</h2>
   <ul>
-    <li><strong>StoreKit</strong> — for the optional 14-day trial (free non-consumable) and one-time lifetime unlock. Purchases, restores, and Family Sharing are handled by Apple. There is no subscription and no automatic charge.</li>
-    <li><strong>WeatherKit</strong> — when you enable current location, as described above.</li>
-    <li><strong>Apple geocoding</strong> — for manual place search.</li>
-    <li><strong>App Store / system services</strong> — standard Apple infrastructure (HTTPS).</li>
+    <li><strong>On-device calculations</strong> — sunrise, sunset, and related astronomical values are calculated on your device using the selected location.</li>
+    <li><strong>Current location</strong> — when you choose to use the device’s current location and grant Location permission, the App may use that location for location-dependent features.</li>
+    <li><strong>Manual place search</strong> — searching for a place uses Apple’s geocoding service. This does not require Location Services permission, but your search input is sent to Apple to resolve the place.</li>
+    <li><strong>Weather</strong> — when the App requests weather from Apple WeatherKit, it sends the coordinates of the selected location to Apple. Those coordinates may come from your current device location or from a place you selected manually. This request goes to Apple, not to a Year Me Up server.</li>
   </ul>
-  <p>Apple’s own privacy policies apply to data processed by these services.</p>
+  <p>The App does not use location for advertising, tracking, or profiling, and it does not request Always-location permission. Apple’s processing of geocoding and weather requests is governed by Apple’s terms and privacy practices.</p>
 
-  <h2>What we do not do</h2>
-  <ul>
-    <li>No user account or sign-in.</li>
-    <li>No tracking, analytics SDKs, or advertising identifiers.</li>
-    <li>No sale of personal data.</li>
-    <li>No developer-operated backend that receives your calendar, contacts, photos, or location.</li>
-    <li>No camera, microphone, or unrestricted photo-library access.</li>
-  </ul>
+  <h2>Purchases and Apple services</h2>
+  <p>The App uses Apple services for the optional 14-day full-access trial and the one-time lifetime unlock. StoreKit handles purchase processing, purchase restoration, and Family Sharing where supported. Year Me Up does not receive your payment-card details. The App has no subscription or automatic-renewal charge.</p>
+  <p>Weather requests and manual place search may also use Apple WeatherKit and Apple’s geocoding service, as described above. Information processed by these services is subject to <a href="https://www.apple.com/legal/privacy/">Apple’s Privacy Policy</a> and the terms applicable to each service.</p>
 
   <h2>Widgets and Live Activity</h2>
-  <p>Widgets and the Countdown Live Activity (iOS) read only data the App has already prepared and published to the App Group. They do not independently request system permissions.</p>
+  <p>Widgets and the Countdown Live Activity on iOS read data already prepared by the App and published to the shared App Group. They do not independently request Calendar, Contacts, or Location permission and do not send widget content to a developer-operated server.</p>
+
+  <h2>What the App does not do</h2>
+  <ul>
+    <li>No account or sign-in requirement.</li>
+    <li>No advertising, advertising identifiers, or third-party analytics SDKs.</li>
+    <li>No sale of personal data or tracking across other companies’ apps and websites.</li>
+    <li>No developer-operated backend receiving your calendar, contacts, custom photos, custom events, or location.</li>
+    <li>No unrestricted photo-library access, camera access, or microphone access is required for the features described in this policy.</li>
+  </ul>
 
   <h2>Children</h2>
-  <p>Year Me Up does not knowingly collect personal information from children. It is a general productivity app.</p>
+  <p>Year Me Up is a general date, time, and widget app. The developer does not knowingly collect children’s personal information through the App or a developer-operated service.</p>
 
-  <h2>Changes</h2>
-  <p>This policy may be updated. The “Last updated” date at the top will change when it does. Continued use of the App after an update means you accept the revised policy.</p>
+  <h2>Changes to this policy</h2>
+  <p>This policy may be revised as the App changes. The revision date at the top identifies the latest version published at this address.</p>
 
   <h2>Contact</h2>
-  <p>If you have questions about this privacy policy, contact the developer through the support channel listed on the App Store product page or at the support address provided in App Store Connect.</p>
+  <p>For questions about this privacy policy, use the support contact listed on the Year Me Up App Store product page.</p>
 
   <footer>
     <p>© 2026 Year Me Up. All rights reserved.</p>
