@@ -46,14 +46,14 @@
   </ul>
   <p>Local settings, imported events, and photos are retained while the relevant app data remains on your device, including after the trial ends. You can delete custom photos individually and clear your custom event list in the App. If you uninstall the App, the operating system normally removes its app-specific data, but device backups and copies you exported or shared may persist according to the services and settings you use. The App has no developer-operated account or server from which to retrieve or delete a personal-data profile.</p>
 
-  <h2>Location</h2>
-  <p>Location is used only after you turn on “current location” and explicitly allow Location access.</p>
+  <h2>Location and place search</h2>
+  <p>Automatic device location is used only after you turn on “current location” and explicitly allow Location access. You can instead search for or select a place manually; this does not require Location Services permission.</p>
   <ul>
-    <li>Sunrise and sunset times are calculated on your device.</li>
-    <li>When you enable current location, the App may send your location to Apple WeatherKit to request local weather. This is a request to Apple, not to a Year Me Up server.</li>
-    <li>Manual place search sends the place or address query you enter to Apple’s geocoding service. It does not require Location Services permission.</li>
+    <li>Sunrise and sunset times are calculated on your device using the selected coordinates and time zone.</li>
+    <li>When a location is configured for the weather feature, the selected coordinates may be sent to Apple WeatherKit to request current local weather. This applies to both automatic device location and a manually selected place. The request is sent to Apple, not to a Year Me Up server.</li>
+    <li>Manual place search sends the place or address query you enter to Apple’s geocoding service. The resulting place may be used for on-device astronomy calculations and to request weather from Apple WeatherKit.</li>
   </ul>
-  <p>Location is not used for tracking, advertising, or profiling. The App does not request Always-location permission.</p>
+  <p>Location and place information are not used by the developer for tracking, advertising, or profiling. The App does not request Always-location permission.</p>
 
   <h2>Apple services</h2>
   <p>The App uses the following Apple services:</p>
