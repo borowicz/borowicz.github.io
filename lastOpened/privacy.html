@@ -125,74 +125,173 @@
 </head>
 <body>
   <main>
-    <p class="eyebrow">LastOpened for macOS</p>
+    <p class="eyebrow">LastOpened for macOS · Version 1.1</p>
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: August 6, 2026</p>
+    <p class="updated">Last updated: November 9, 2026</p>
 
     <p class="summary">
-      LastOpened is designed to work locally on your Mac. It does not collect,
-      transmit, sell, or share personal data.
+      LastOpened is a local-first macOS utility. Application history, selected-folder
+      metadata, bookmarks and optional source results are processed on your Mac.
+      The app does not send this information to the developer or operate a data-collection server.
     </p>
 
-    <h2>Data collection</h2>
+    <h2>Data collection and network use</h2>
     <p>
-      LastOpened does not collect personal data. The app does not use analytics
-      SDKs, advertising SDKs, trackers, user accounts, or a developer-operated
-      backend.
+      LastOpened has no user-account system, analytics or advertising SDK, first-party
+      telemetry, or developer-operated backend. Its current Privacy Manifest declares
+      no tracking and no collected data. The app does not upload application history,
+      file names, searches, settings, selected URLs, Calendar or Reminders metadata,
+      Photos or Music metadata, or Terminal commands to the developer.
+    </p>
+    <p>
+      Opening a website, file or another application may cause Safari, the destination
+      application, macOS or Apple services to access a network. This is not a telemetry
+      connection to a LastOpened developer server.
     </p>
 
-    <h2>Local data</h2>
+    <h2>Application activity</h2>
     <p>
-      Application history, file metadata, searches, settings, and optional
-      Safari bookmarks are stored locally on the user's Mac.
+      LastOpened observes macOS workspace notifications for application launch,
+      activation and termination. A local application record may contain the app name,
+      bundle identifier, local bundle path, latest activity timestamps and an optional
+      cumulative launch counter. The app keeps one bounded latest-state record per
+      application, not a complete event timeline.
     </p>
     <p>
-      LastOpened accesses files only inside folders explicitly selected by the
-      user. Folder access is read-only and uses macOS security-scoped bookmarks.
+      Up to 250 application records are retained. The available retention choices are
+      7 days, 30 days (the default for new installations), 90 days, or until you delete
+      the data. Records are pruned locally when they expire or exceed the record limit.
+      You can pause or disable history, clear it, change retention, or ignore selected apps.
+    </p>
+    <p>
+      LastOpened does not measure foreground time, session duration, idle time or
+      productivity. It does not collect general window titles, typed text, clipboard
+      contents or screenshots.
     </p>
 
-    <h2>Optional Safari access</h2>
+    <h2>Files and selected folders</h2>
     <p>
-      Safari access is optional. It is used only after the user enables the
-      feature and grants the required macOS permission. LastOpened saves pages
-      only for services or domains explicitly selected by the user.
+      File discovery starts only after you select folders through the standard macOS
+      picker. Access is read-only and restored with app-scoped security bookmarks.
+      Search and filtering use file metadata within the folders you authorized; the
+      app does not read document contents to index or filter them. A bounded fallback
+      metadata scan checks no more than 5,000 entries per run.
     </p>
     <p>
-      Safari page titles and URLs are stored locally on the Mac and are not sent
-      to the developer.
+      LastOpened does not request Full Disk Access and does not scan your entire home
+      folder or disk by default. Quick Look previews are shown only when you explicitly
+      request a preview through the macOS interface.
+    </p>
+
+    <h2>Optional Calendar integration</h2>
+    <p>
+      Calendar is off until you enable it in Settings. LastOpened then requests the
+      macOS Calendar permission needed to read local event metadata. macOS labels this
+      permission Full Access because EventKit does not provide a read-only Calendar
+      permission. LastOpened uses the access to display event metadata; it does not
+      create, edit or delete Calendar data. Opening an event asks Calendar to show its
+      date and does not change the event.
+    </p>
+
+    <h2>Optional Reminders integration</h2>
+    <p>
+      Reminders is off until you enable it in Settings. LastOpened requests Reminders
+      Full Access to read local reminder metadata. It displays at most 100 incomplete
+      reminders and does not create, edit or delete reminders or keep a separate
+      Reminders activity history. Opening a reminder launches the Reminders app; it
+      does not select or modify the specific reminder.
+    </p>
+
+    <h2>Optional Photos integration</h2>
+    <p>
+      Photos is off until you enable it in Settings. PhotoKit and macOS may describe
+      the permission as Read &amp; Write Access, but LastOpened uses it to read metadata
+      for up to 100 recent, non-hidden assets available within your current full or
+      limited Photos access. It can display small on-device thumbnails; thumbnail
+      requests do not download assets from iCloud. The app does not create, edit or
+      delete Photos assets or retain a Photos activity history.
+    </p>
+    <p>
+      Opening an asset normally opens Photos. A separate optional direct-open action
+      may request Apple Automation permission to spotlight the selected local asset.
+      If Automation is unavailable or denied, Photos opens normally.
+    </p>
+
+    <h2>Optional Music integration</h2>
+    <p>
+      Music is off until you enable it in Settings. After you grant Media &amp; Apple
+      Music access, LastOpened reads local Music library metadata for up to 100 songs
+      with a last-played date. It does not read audio contents, start playback, modify
+      the library, persist a Music activity history or send Music data to the developer.
+    </p>
+
+    <h2>Optional Terminal history</h2>
+    <p>
+      Terminal history is off until you enable it and explicitly select a local
+      <code>.zsh_history</code> file through the macOS picker. Access is read-only and
+      restored with an app-scoped security bookmark. The viewer displays up to 200
+      recent distinct commands in memory and offers Copy Command. LastOpened does not
+      execute or rerun commands and does not create a separate command-history database.
+    </p>
+
+    <h2>Optional Safari bookmarks</h2>
+    <p>
+      Safari URL bookmarking is off by default, and no service or domain is selected
+      by default. It operates only after you enable the feature, choose at least one
+      service or domain, and Safari is the frontmost app. While active, LastOpened reads
+      only the title and URL of the current tab in Safari's front window. A matching
+      page can be saved as a local <code>.webloc</code> bookmark after the dwell period
+      you selected (11, 30 or 42 seconds; 42 seconds is the default).
+    </p>
+    <p>
+      LastOpened does not read complete Safari history, background tabs, cookies,
+      page contents, form values, downloads or data from other browsers. Saved
+      bookmarks remain inside the app sandbox and can be inspected or deleted in Settings.
+    </p>
+
+    <h2>Permissions and local storage</h2>
+    <p>
+      Optional integrations remain disabled until you enable them. The relevant
+      macOS permission is requested when needed. You can review or revoke permissions
+      in System Settings → Privacy &amp; Security. Preferences, app history, folder
+      bookmarks and managed URL bookmarks are stored locally inside the app container.
+      LastOpened does not synchronize this information to a developer cloud service.
     </p>
 
     <h2>In-App Purchases</h2>
     <p>
       Optional tips are processed by Apple through the App Store and StoreKit.
-      LastOpened does not receive or store payment card details or other payment
-      information.
+      LastOpened does not receive or store payment-card details. Purchase processing
+      is subject to Apple's terms and privacy policy.
     </p>
 
     <h2>Diagnostics</h2>
     <p>
-      LastOpened does not include a developer-operated telemetry or crash
-      reporting service. Apple may process diagnostics according to the user's
-      macOS privacy settings and Apple's own privacy policy.
+      LastOpened does not include a developer-operated telemetry or crash-reporting
+      service. macOS may create or share system diagnostic reports according to your
+      Apple diagnostics settings and Apple's privacy policy.
     </p>
 
     <h2>Data deletion</h2>
     <p>
-      Locally stored application history and bookmarks can be deleted from the
-      app's settings. Removing the app also removes its locally stored
-      application data, subject to normal macOS behavior.
+      You can pause, disable or clear application history and change its retention
+      period in Settings. Managed Safari bookmarks can be deleted in Settings.
+      Disabling Terminal history releases access to the selected file. You can remove
+      authorized folders from the app and revoke system permissions in macOS System
+      Settings. Removing LastOpened also removes its local app-container data, subject
+      to normal macOS behavior and any separate copies you have made.
     </p>
 
     <h2>Changes to this policy</h2>
     <p>
-      This policy may be updated when LastOpened changes. The current version
-      will remain available on the app's support website.
+      This policy may be updated when LastOpened changes. The current version will
+      remain available at this address. The date above identifies the latest revision.
     </p>
 
     <h2>Contact</h2>
     <p>
       Questions about this privacy policy may be sent to
-      lastopened(at)borowicz.info
+      <a href="mailto:lastopened@borowicz.info">lastopened@borowicz.info</a>.
     </p>
 
     <footer>&copy; 2026 Borowicz. LastOpened is a macOS application.</footer>
